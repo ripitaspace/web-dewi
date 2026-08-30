@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { BlogPost } from "@/modules/cms";
 
@@ -361,10 +362,13 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
           </span>
         </a>
         <nav className="nav-links" aria-label="Navigasi utama">
-          <a href="#thinking">Pemikiran</a>
-          <a href="#blog">Tulisan</a>
-          <a href="#builder">Builder</a>
-          <a href="#ripita">RIPITA</a>
+          <Link href="/" className="active">Beranda</Link>
+          <Link href="/tentang">Tentang</Link>
+          <Link href="/pemikiran">Pemikiran</Link>
+          <Link href="/karya">Karya</Link>
+          <Link href="/belajar">Belajar</Link>
+          <Link href="/kerja-bersama">Kerja Bersama</Link>
+          <Link href="/ripita">RIPITA</Link>
         </nav>
         <div className="nav-actions">
           <button className="btn" id="replayBtn" type="button" onClick={handleReplay}>
@@ -453,217 +457,6 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
               <i className="spice s4" aria-hidden="true"></i>
               <i className="spice s5" aria-hidden="true"></i>
               <i className="spice s6" aria-hidden="true"></i>
-
-              <div className="hero-copy">
-                <p>
-                  Aku menghubungkan accounting, bisnis, teknologi, pendidikan,
-                  dan desain untuk mengubah persoalan rumit menjadi pemahaman,
-                  karya, dan sistem yang dapat terus bertumbuh.
-                </p>
-                <div className="hero-actions">
-                  <a className="btn primary" href="#thinking">
-                    Jelajahi Cara Pikirku <span>→</span>
-                  </a>
-                  <a className="btn" href="#builder">
-                    Lihat yang Sedang Kubangun
-                  </a>
-                </div>
-                <p className="hero-annotation">Rupa Indonesia. Akal Masa Depan.</p>
-              </div>
-
-              <div
-                className={`builder-reveal ${
-                  isBuilderInteractive ? "is-interactive" : ""
-                }`}
-                id="builderReveal"
-                aria-label="Preview RIPITA Knowledge Builder"
-              >
-                <div className="builder-frame">
-                  <div className="builder-top">
-                    <div className="dots">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                    <span>RIPITA Knowledge Builder · Draft</span>
-                    <div className="mode-switch" aria-label="Mode preview">
-                      <button
-                        className={`mode-chip ${
-                          demoMode === "baca" ? "active" : ""
-                        }`}
-                        type="button"
-                        onClick={() => setDemoMode("baca")}
-                      >
-                        Baca
-                      </button>
-                      <button
-                        className={`mode-chip ${
-                          demoMode === "eksplorasi" ? "active" : ""
-                        }`}
-                        type="button"
-                        onClick={() => setDemoMode("eksplorasi")}
-                      >
-                        Eksplorasi
-                      </button>
-                    </div>
-                  </div>
-                  <div className="builder-layout">
-                    <aside className="builder-panel">
-                      <h3>Block Library</h3>
-                      <div className="builder-search">Cari blok…</div>
-                      <div className="block-stack">
-                        <div className="block-mini">
-                          <i>?</i>Main Question
-                        </div>
-                        <div className="block-mini">
-                          <i>▦</i>Balance Sheet
-                        </div>
-                        <div className="block-mini active">
-                          <i>↔</i>Cash Flow Bridge
-                        </div>
-                        <div className="block-mini">
-                          <i>◫</i>Scenario Simulator
-                        </div>
-                        <div className="block-mini">
-                          <i>✓</i>Knowledge Check
-                        </div>
-                      </div>
-                    </aside>
-                    <div className="builder-canvas">
-                      <article className="page-preview">
-                        <header className="page-preview-head">
-                          <small>Ruang Pikir · Financial Playground</small>
-                          <h2>Mengapa laba naik, tetapi uang tidak ada?</h2>
-                        </header>
-                        <div className="preview-blocks">
-                          <div className="preview-block">
-                            <span className="tiny-label">Pertanyaan utama</span>
-                            <p
-                              style={{
-                                fontSize: "0.62rem",
-                                lineHeight: 1.5,
-                                margin: "6px 0 0",
-                              }}
-                            >
-                              Di mana laba berubah menjadi piutang, persediaan,
-                              atau kewajiban?
-                            </p>
-                          </div>
-                          <div className="preview-block selected">
-                            <span className="tiny-label">Cash Flow Bridge</span>
-                            <div className="cash-mini">
-                              <div>
-                                Laba<strong>+120</strong>
-                              </div>
-                              <div>
-                                Piutang<strong>−90</strong>
-                              </div>
-                              <div>
-                                Stok<strong>−40</strong>
-                              </div>
-                              <div>
-                                Kas<strong>−10</strong>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="preview-block" id="demoDynamicBlock">
-                            {demoMode === "eksplorasi" ? (
-                              <>
-                                <span className="tiny-label">Mode Eksplorasi</span>
-                                <div
-                                  style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "1fr auto",
-                                    gap: "8px",
-                                    alignItems: "center",
-                                    marginTop: "7px",
-                                  }}
-                                >
-                                  <div>
-                                    <small style={{ fontSize: "0.5rem" }}>
-                                      Penjualan kredit
-                                    </small>
-                                    <div
-                                      style={{
-                                        height: "5px",
-                                        borderRadius: "99px",
-                                        background: "var(--kapuk)",
-                                        marginTop: "5px",
-                                        overflow: "hidden",
-                                      }}
-                                    >
-                                      <i
-                                        style={{
-                                          display: "block",
-                                          width: "72%",
-                                          height: "100%",
-                                          background: "var(--delima)",
-                                        }}
-                                      ></i>
-                                    </div>
-                                  </div>
-                                  <strong style={{ fontSize: "0.68rem" }}>
-                                    +100
-                                  </strong>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <span className="tiny-label">Mode Baca</span>
-                                <p
-                                  style={{
-                                    fontSize: "0.6rem",
-                                    lineHeight: 1.45,
-                                    margin: "6px 0 0",
-                                  }}
-                                >
-                                  Penjelasan naratif menunjukkan mengapa pertumbuhan
-                                  laba belum tentu meningkatkan kas.
-                                </p>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </article>
-                    </div>
-                    <aside className="builder-panel right">
-                      <h3>Inspector</h3>
-                      <div className="inspector-tabs">
-                        <button className="active" type="button">
-                          Content
-                        </button>
-                        <button type="button">Design</button>
-                        <button type="button">Data</button>
-                      </div>
-                      <div className="field">
-                        <label>Dataset</label>
-                        <div className="fake-input">cash-flow-demo-v1</div>
-                      </div>
-                      <div className="field">
-                        <label>Variant</label>
-                        <div className="fake-input">Waterfall bridge</div>
-                      </div>
-                      <div className="field">
-                        <label>Visibility</label>
-                        <div className="fake-input">
-                          Baca · Eksplorasi · Presentasi
-                        </div>
-                      </div>
-                      <div className="field">
-                        <label>Data status</label>
-                        <div className="fake-input">Data simulasi</div>
-                      </div>
-                    </aside>
-                  </div>
-                </div>
-                <div className="builder-caption">
-                  <h2>Ide yang tercecer mulai menemukan bentuk.</h2>
-                  <p>
-                    Menulis seperti catatan. Menampilkan seperti presentasi.
-                    Menjelajah seperti laboratorium.
-                  </p>
-                </div>
-              </div>
             </div>
 
             <div className="scroll-hint">
