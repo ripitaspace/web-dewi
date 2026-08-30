@@ -43,9 +43,15 @@ export function RipitaClient() {
                 RIPITA mengubah pengalaman kerja, proses bisnis, dan cara berpikir menjadi alat, produk, transaksi, dan ekosistem yang dapat digunakan serta dikembangkan.
               </p>
             </div>
-            <div className="art-placeholder art-lg art-dark" style={{ marginInline: "auto" }}>
+            <div className="art-placeholder art-lg art-dark" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+              <img
+                src="/images/artworks/octopus-system-gouache.png"
+                alt="RIPITA Ecosystem Artwork"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
               <strong>?</strong>
-              <span style={{ color: "rgba(243,231,211,.72)" }}>RIPITA hero artwork · 1000 × 1000 px</span>
+              <span style={{ color: "rgba(243,231,211,.72)" }}>RIPITA Ecosystem</span>
             </div>
           </div>
         </section>
@@ -165,9 +171,15 @@ export function RipitaClient() {
               </div>
             </div>
 
-            <div className="art-placeholder art-lg art-dark" style={{ marginInline: "auto" }}>
+            <div className="art-placeholder art-lg art-dark" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+              <img
+                src="/images/artworks/archive-stamp-gouache.png"
+                alt="Ecosystem Manifesto"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
               <strong>?</strong>
-              <span style={{ color: "rgba(243,231,211,.75)" }}>Ecosystem Manifesto · 1000 × 1000 px</span>
+              <span style={{ color: "rgba(243,231,211,.75)" }}>Ecosystem Manifesto</span>
             </div>
           </div>
         </section>
@@ -182,9 +194,15 @@ export function RipitaClient() {
       >
         {modalPreview && (
           <div>
-            <div className="art-placeholder art-md" style={{ margin: "10px auto 30px" }}>
+            <div className="art-placeholder art-md" style={{ margin: "10px auto 30px", overflow: "hidden", padding: 0 }}>
+              <img
+                src="/images/artworks/ledger-fragment-gouache.png"
+                alt="Ecosystem preview"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
               <strong>?</strong>
-              <span>Ecosystem preview · 1200 × 800 px</span>
+              <span>Ecosystem preview</span>
             </div>
             <p className="lead">{modalPreview.node.purpose}</p>
             <div className="route-line"></div>

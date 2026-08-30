@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getBlogPosts } from "@/modules/cms";
 import { PemikiranClient } from "@/components/pages/pemikiran-client";
 
 export const metadata: Metadata = {
@@ -6,6 +7,9 @@ export const metadata: Metadata = {
   description: "Arsip pemikiran, esai, framework, diagram, dan catatan lapangan dari PUSPITA.",
 };
 
-export default function PemikiranPage() {
-  return <PemikiranClient />;
+export const revalidate = 60;
+
+export default async function PemikiranPage() {
+  const posts = await getBlogPosts({ type: "pemikiran" });
+  return <PemikiranClient posts={posts} />;
 }

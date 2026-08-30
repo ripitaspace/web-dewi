@@ -1,49 +1,56 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { THOUGHTS, formatIdDate, type ThoughtItem } from "@/lib/site-data";
+import Link from "next/link";
+import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { ModalDialog } from "@/components/shared/modal-dialog";
 
-export function PemikiranClient() {
+interface PemikiranClientProps {
+  posts?: BlogPost[];
+}
+
+export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
-  const [format, setFormat] = useState("all");
   const [sort, setSort] = useState("newest");
-  const [selectedThought, setSelectedThought] = useState<ThoughtItem | null>(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   const categories = useMemo(() => {
-    return ["all", ...Array.from(new Set(THOUGHTS.map((t) => t.category)))];
-  }, []);
+    const cats = new Set<string>();
+    posts.forEach((p) => {
+      if (p.category) cats.add(p.category);
+      if (p.topics) p.topics.forEach((t) => cats.add(t));
+    });
+    return ["all", ...Array.from(cats)];
+  }, [posts]);
 
-  const formats = useMemo(() => {
-    return ["all", ...Array.from(new Set(THOUGHTS.map((t) => t.format)))];
-  }, []);
-
-  const filteredThoughts = useMemo(() => {
+  const filteredPosts = useMemo(() => {
     const term = search.trim().toLowerCase();
-    const result = THOUGHTS.filter((item) => {
-      const haystack = `${item.title} ${item.excerpt} ${item.category} ${item.format} ${item.tags.join(" ")}`.toLowerCase();
+    const result = posts.filter((item) => {
+      const topicsStr = (item.topics || []).join(" ");
+      const haystack = `${item.title} ${item.excerpt} ${item.category} ${item.type} ${topicsStr}`.toLowerCase();
       const matchesSearch = !term || haystack.includes(term);
-      const matchesCategory = category === "all" || item.category === category;
-      const matchesFormat = format === "all" || item.format === format;
-      return matchesSearch && matchesCategory && matchesFormat;
+      const matchesCategory =
+        category === "all" ||
+        item.category.toLowerCase() === category.toLowerCase() ||
+        (item.topics && item.topics.some((t) => t.toLowerCase() === category.toLowerCase()));
+      return matchesSearch && matchesCategory;
     });
 
     result.sort((a, b) => {
-      if (sort === "oldest") return a.date.localeCompare(b.date);
+      if (sort === "oldest") return (a.date || "").localeCompare(b.date || "");
       if (sort === "title") return a.title.localeCompare(b.title);
-      return b.date.localeCompare(a.date); // newest
+      return (b.date || "").localeCompare(a.date || ""); // newest
     });
 
     return result;
-  }, [search, category, format, sort]);
+  }, [posts, search, category, sort]);
 
   const handleResetFilters = () => {
     setSearch("");
     setCategory("all");
-    setFormat("all");
     setSort("newest");
   };
 
@@ -62,9 +69,13 @@ export function PemikiranClient() {
                 Perpustakaan yang memuat esai, catatan, framework, diagram, pertanyaan, eksperimen, dan refleksi kasus.
               </p>
             </div>
-            <div className="art-placeholder art-lg" style={{ marginInline: "auto" }}>
-              <strong>?</strong>
-              <span>Thinking artwork · 1000 × 1000 px</span>
+            <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+              <img
+                src="/images/artworks/coral-fish-gouache.png"
+                alt="Ikan Karang Nusantara"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+              <span>Ikan Karang Nusantara</span>
             </div>
           </div>
         </section>
@@ -100,22 +111,6 @@ export function PemikiranClient() {
               </select>
               <select
                 className="field-control"
-                id="thoughtFormat"
-                aria-label="Filter format"
-                value={format}
-                onChange={(e) => setFormat(e.target.value)}
-              >
-                <option value="all">Semua format</option>
-                {formats
-                  .filter((f) => f !== "all")
-                  .map((fmt) => (
-                    <option key={fmt} value={fmt}>
-                      {fmt}
-                    </option>
-                  ))}
-              </select>
-              <select
-                className="field-control"
                 id="thoughtSort"
                 aria-label="Urutkan pemikiran"
                 value={sort}
@@ -127,38 +122,58 @@ export function PemikiranClient() {
               </select>
             </div>
 
-            {filteredThoughts.length > 0 ? (
+            {filteredPosts.length > 0 ? (
               <div className="library-grid" id="thoughtLibrary">
-                {filteredThoughts.map((item) => (
-                  <article key={item.id} className="card card-pad card-hover library-card">
-                    <div className="art-placeholder art-xs" style={{ marginBottom: "18px" }}>
-                      <strong>?</strong>
-                      <span>{item.format}</span>
-                    </div>
-                    <div className="meta" style={{ display: "flex", gap: "8px", marginBottom: "12px", flexWrap: "wrap" }}>
-                      <span className="badge">{item.format}</span>
-                      <span className="badge">{item.category}</span>
-                    </div>
-                    <h3 style={{ fontSize: "1.35rem", lineHeight: 1.25, marginBottom: "12px" }}>
-                      {item.title}
-                    </h3>
-                    <p className="muted" style={{ fontSize: "0.95rem", flexGrow: 1 }}>
-                      {item.excerpt}
-                    </p>
-                    <div className="card-actions">
-                      <button
-                        className="btn btn-secondary btn-small"
-                        onClick={() => setSelectedThought(item)}
-                        type="button"
-                      >
-                        Baca Catatan
-                      </button>
-                    </div>
-                    <p className="muted" style={{ marginTop: "18px", fontSize: "0.78rem" }}>
-                      {formatIdDate(item.date)} · {item.readingTime} menit · {item.status}
-                    </p>
-                  </article>
-                ))}
+                {filteredPosts.map((item, idx) => {
+                  const topicsList = item.topics && item.topics.length > 0
+                    ? item.topics
+                    : [item.type || "PEMIKIRAN", item.category || "UMUM"];
+
+                  const itemArts = [
+                    "/images/artworks/system-beetle-gouache.png",
+                    "/images/artworks/coral-fish-gouache.png",
+                    "/images/artworks/javan-leopard-gouache.png",
+                  ];
+                  const artSrc = item.image && !item.image.includes("placeholder") ? item.image : itemArts[idx % itemArts.length];
+
+                  return (
+                    <article key={item.id || idx} className="card card-pad card-hover library-card">
+                      <div className="blog-card-avatar">
+                        <img
+                          src={artSrc}
+                          alt={item.title}
+                          onError={(e) => { e.currentTarget.style.display = "none"; }}
+                        />
+                        <strong>?</strong>
+                      </div>
+                      <div className="blog-topic-row">
+                        {topicsList.map((topic, tIdx) => (
+                          <span className="topic-pill" key={tIdx}>
+                            {topic.toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+                      <h3 style={{ fontSize: "1.45rem", lineHeight: 1.25, marginBottom: "12px" }}>
+                        {item.title}
+                      </h3>
+                      <p className="muted" style={{ fontSize: "0.95rem", flexGrow: 1 }}>
+                        {item.excerpt}
+                      </p>
+                      <div className="card-actions">
+                        <button
+                          className="btn btn-secondary btn-small"
+                          onClick={() => setSelectedPost(item)}
+                          type="button"
+                        >
+                          Baca Catatan
+                        </button>
+                      </div>
+                      <p className="muted" style={{ marginTop: "18px", fontSize: "0.78rem" }}>
+                        {item.date} · Oleh {item.author || "Rio Carisandy"}
+                      </p>
+                    </article>
+                  );
+                })}
               </div>
             ) : (
               <div className="empty-state" id="thoughtEmpty">
@@ -179,31 +194,41 @@ export function PemikiranClient() {
         </section>
       </main>
 
-      {/* Modal Dialog for Selected Thought */}
+      {/* Modal Dialog for Selected Post */}
       <ModalDialog
-        isOpen={!!selectedThought}
-        onClose={() => setSelectedThought(null)}
-        kicker={selectedThought ? `${selectedThought.format} · ${selectedThought.category}` : "Detail"}
-        title={selectedThought?.title || ""}
+        isOpen={!!selectedPost}
+        onClose={() => setSelectedPost(null)}
+        kicker={selectedPost ? `${(selectedPost.topics || [selectedPost.type]).join(" · ").toUpperCase()}` : "Detail"}
+        title={selectedPost?.title || ""}
       >
-        {selectedThought && (
+        {selectedPost && (
           <div>
-            <div className="art-placeholder art-md" style={{ margin: "10px auto 30px" }}>
+            <div className="art-placeholder art-md" style={{ margin: "10px auto 30px", overflow: "hidden", padding: 0 }}>
+              <img
+                src={selectedPost.image && !selectedPost.image.includes("placeholder") ? selectedPost.image : "/images/artworks/coral-fish-gouache.png"}
+                alt="Article artwork"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
               <strong>?</strong>
-              <span>Article artwork · 1200 × 800 px</span>
+              <span>{selectedPost.title}</span>
             </div>
-            <p className="lead">{selectedThought.excerpt}</p>
+            <p className="lead">{selectedPost.excerpt}</p>
             <div className="route-line"></div>
-            <h3 style={{ marginTop: "24px" }}>Gagasan Utama</h3>
-            <p className="muted">
-              Pertumbuhan dan kompleksitas bisnis kerap menuntut transparansi alur transaksi dan integrasi sistem yang kokoh. Pemikiran ini menjembatani realitas operasional di lapangan dengan arsitektur data yang dapat direplikasi.
-            </p>
-            <h3 style={{ marginTop: "20px" }}>Pertanyaan Lanjutan</h3>
-            <p className="muted">
-              Apa bukti yang diperlukan? Siapa yang mengalami masalah ini? Produk atau modul mana di ekosistem RIPITA yang dapat mengotomatisasi solusi ini?
-            </p>
+            {selectedPost.content ? (
+              <div style={{ marginTop: "24px", lineHeight: 1.8 }}>
+                <p>{selectedPost.content}</p>
+              </div>
+            ) : (
+              <div style={{ marginTop: "24px" }}>
+                <h3 style={{ marginTop: "20px" }}>Gagasan & Esensi</h3>
+                <p className="muted">
+                  {selectedPost.excerpt}
+                </p>
+              </div>
+            )}
             <div style={{ marginTop: "28px", paddingTop: "16px", borderTop: "1px solid var(--line)", fontSize: "0.85rem" }}>
-              <strong>{formatIdDate(selectedThought.date)}</strong> · {selectedThought.readingTime} menit membaca · Status: <span className="status active">{selectedThought.status}</span>
+              <strong>{selectedPost.date}</strong> · Penulis: <span>{selectedPost.author || "Rio Carisandy"}</span>
             </div>
           </div>
         )}

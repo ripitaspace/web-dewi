@@ -3,13 +3,26 @@ import { cmsCache } from "../core/cache";
 import { refreshBlogPostsCache } from "../services/blog.service";
 import { refreshProductsCache } from "../services/product.service";
 
-export async function handleGetCacheStatus() {
+export async function handleGetCacheStatus(request?: Request) {
   try {
-    const caches = await cmsCache.listKeys();
-    return NextResponse.json({ success: true, caches });
+    console.log("[CMS Cache] Refreshing all caches from Notion...");
+    const posts = await refreshBlogPostsCache();
+    const products = await refreshProductsCache();
+
+    return NextResponse.json({
+      success: true,
+      message: "Cache renewed successfully and saved to database",
+      counts: {
+        blog_posts: posts.length,
+        products: products.length,
+      },
+      blog_posts: posts,
+      products: products,
+    });
   } catch (error: any) {
+    console.error("[CMS Cache] Error in handleGetCacheStatus:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to fetch cache metadata" },
+      { success: false, error: error.message || "Failed to renew cache" },
       { status: 500 }
     );
   }

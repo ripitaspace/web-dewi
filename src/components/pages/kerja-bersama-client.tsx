@@ -97,9 +97,15 @@ export function KerjaBersamaClient() {
                 Pilih jenis kebutuhan, waktu yang sesuai, lalu ceritakan persoalan yang ingin dibahas.
               </p>
             </div>
-            <div className="art-placeholder art-lg" style={{ marginInline: "auto" }}>
+            <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+              <img
+                src="/images/artworks/trigona-bee-gouache.png"
+                alt="Lebah Trigona Kolaborasi"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
               <strong>?</strong>
-              <span>Collaboration artwork · 1000 × 1000 px</span>
+              <span>Trigona · Kerja Bersama</span>
             </div>
           </div>
         </section>

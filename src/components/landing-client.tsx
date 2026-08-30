@@ -172,9 +172,12 @@ const HERO_OBJECTS = [
     scrollR: -10,
     info: "Artwork Kumbang",
     children: (
-      <div className="art-placeholder idle-c">
-        <strong>?</strong>
-        <small>Kumbang · 1:1</small>
+      <div className="art-transparent idle-c" style={{ width: "clamp(120px, 12vw, 175px)", filter: "drop-shadow(0 12px 24px rgba(30,27,24,0.18))" }}>
+        <img
+          src="/images/artworks/system-beetle-gouache.png"
+          alt="Kumbang Sistem Nusantara"
+        />
+        <small className="art-label-chip">Kumbang</small>
       </div>
     ),
   },
@@ -187,9 +190,12 @@ const HERO_OBJECTS = [
     scrollR: 10,
     info: "Artwork Gurita",
     children: (
-      <div className="art-placeholder idle-b">
-        <strong>?</strong>
-        <small>Gurita · 1:1</small>
+      <div className="art-transparent idle-b" style={{ width: "clamp(120px, 12vw, 175px)", filter: "drop-shadow(0 12px 24px rgba(30,27,24,0.18))" }}>
+        <img
+          src="/images/artworks/octopus-system-gouache.png"
+          alt="Gurita Sistem Nusantara"
+        />
+        <small className="art-label-chip">Gurita</small>
       </div>
     ),
   },
@@ -353,6 +359,28 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
 
   return (
     <div className={`landing-root ${isReady ? "is-ready" : ""}`}>
+      {/* Fixed Parallax Background Layer (W3Schools Parallax style) */}
+      <div className="fixed-parallax-bg" aria-hidden="true">
+        <div className="hero-grid"></div>
+        <div className="paper-noise"></div>
+        <svg
+          className="route-layer"
+          viewBox="0 0 1400 800"
+          preserveAspectRatio="none"
+        >
+          <path
+            className="route-main"
+            d="M60 185 C250 50 370 280 555 155 S900 100 1110 255 S1270 520 1360 390"
+          />
+          <path d="M150 630 C310 500 430 690 610 530 S960 530 1250 690" />
+          <path d="M315 95 C420 270 300 410 480 680" />
+          <circle cx="60" cy="185" r="6" fill="#9E1B3F" />
+          <circle cx="555" cy="155" r="5" fill="#F47B20" />
+          <circle cx="1110" cy="255" r="5" fill="#2FA7A0" />
+          <circle cx="1360" cy="390" r="6" fill="#245B87" />
+        </svg>
+      </div>
+
       <header className={`site-nav ${isNavCompact ? "compact" : ""}`} id="siteNav">
         <a className="brand" href="#top" aria-label="PUSPITA × RIPITA">
           <span className="brand-mark">P</span>
@@ -387,27 +415,6 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
           ref={heroScrollRef}
         >
           <div className="hero-sticky" id="heroSticky">
-            <div className="hero-grid" aria-hidden="true"></div>
-            <div className="paper-noise" aria-hidden="true"></div>
-
-            <svg
-              className="route-layer"
-              viewBox="0 0 1400 800"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <path
-                className="route-main"
-                d="M60 185 C250 50 370 280 555 155 S900 100 1110 255 S1270 520 1360 390"
-              />
-              <path d="M150 630 C310 500 430 690 610 530 S960 530 1250 690" />
-              <path d="M315 95 C420 270 300 410 480 680" />
-              <circle cx="60" cy="185" r="6" fill="#9E1B3F" />
-              <circle cx="555" cy="155" r="5" fill="#F47B20" />
-              <circle cx="1110" cy="255" r="5" fill="#2FA7A0" />
-              <circle cx="1360" cy="390" r="6" fill="#245B87" />
-            </svg>
-
             <div className="hero-stage" id="heroStage" ref={heroStageRef}>
               <div className="headline-scene">
                 <span className="archive-label">Arsip 001 · Puspita × Ripita</span>
@@ -523,24 +530,45 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
               </div>
 
               <div className="blog-grid">
-                {blogPosts.map((post, idx) => (
-                  <article className="blog-card" key={post.id || idx}>
-                    <div className="blog-card-meta">
-                      <span className="blog-badge">{post.category || "Arsip"}</span>
-                      <time className="blog-date">{post.date}</time>
-                    </div>
-                    <h3 className="blog-title">
-                      <a href={`/blog/${post.slug || post.id}`}>{post.title}</a>
-                    </h3>
-                    <p className="blog-excerpt">{post.excerpt}</p>
-                    <div className="blog-card-foot">
-                      <span className="blog-author">Oleh {post.author || "Admin"}</span>
-                      <a className="blog-link" href={`/blog/${post.slug || post.id}`}>
-                        Baca artikel <span>→</span>
-                      </a>
-                    </div>
-                  </article>
-                ))}
+                {blogPosts.map((post, idx) => {
+                  const topicsList = post.topics && post.topics.length > 0
+                    ? post.topics
+                    : [post.type || "PEMIKIRAN", post.category || "UMUM"];
+
+                  return (
+                    <article className="blog-card" key={post.id || idx}>
+                      <div className="blog-card-avatar">
+                        {post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") ? (
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            onError={(e) => { e.currentTarget.style.display = "none"; }}
+                          />
+                        ) : null}
+                        <strong>?</strong>
+                      </div>
+
+                      <div className="blog-topic-row">
+                        {topicsList.map((topic, tIdx) => (
+                          <span className="topic-pill" key={tIdx}>
+                            {topic.toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+
+                      <h3 className="blog-title">
+                        <a href={`/blog/${post.slug || post.id}`}>{post.title}</a>
+                      </h3>
+                      <p className="blog-excerpt">{post.excerpt}</p>
+                      <div className="blog-card-foot">
+                        <span className="blog-date">{post.date}</span>
+                        <a className="blog-link" href={`/blog/${post.slug || post.id}`}>
+                          Baca artikel <span>→</span>
+                        </a>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </div>
           </section>

@@ -22,6 +22,21 @@ export function getText(property: PropertyValue | undefined): string {
   return "";
 }
 
+export function getMultiSelect(property: PropertyValue | undefined): string[] {
+  if (!property) return [];
+  if (property.type === "multi_select") {
+    return property.multi_select.map((s) => s.name.trim()).filter(Boolean);
+  }
+  if (property.type === "select" && property.select?.name) {
+    return [property.select.name.trim()];
+  }
+  if (property.type === "rich_text") {
+    const text = property.rich_text.map((t) => t.plain_text).join("");
+    return text.split(/[,;\n]+/).map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+}
+
 export function getNumber(property: PropertyValue | undefined): number {
   if (!property || property.type !== "number") return 0;
   return property.number || 0;
