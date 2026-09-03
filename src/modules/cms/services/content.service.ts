@@ -6,14 +6,14 @@ import { getText } from "../core/utils";
 import { LandingContent } from "../types";
 
 export const DEFAULT_LANDING_CONTENT: LandingContent = {
-  heroTitle: "Solusi Material Konstruksi & Beton Pracetak Terpercaya",
-  heroSubtitle: "Menyediakan produk beton precast, readymix, dan perlengkapan konstruksi berkualitas tinggi berstandar SNI untuk berbagai skala proyek di seluruh Indonesia.",
-  nomorHP: "+62 812-3456-7890",
-  email: "info@abdikinasih.com",
-  alamat: "Jl. Raya Industri No. 123, Kawasan Industri, Indonesia",
-  linkedin: "https://linkedin.com",
-  facebook: "https://facebook.com",
-  instagram: "https://instagram.com",
+  heroTitle: "",
+  heroSubtitle: "",
+  nomorHP: "",
+  email: "",
+  alamat: "",
+  linkedin: "",
+  facebook: "",
+  instagram: "",
 };
 
 let cachedLandingContent: LandingContent | null = null;

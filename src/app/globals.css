@@ -1472,9 +1472,11 @@ body.is-ready .spice,
 }
 
 .blog-card-avatar img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 
 .blog-topic-row {
@@ -2743,6 +2745,172 @@ body.modal-open {
   min-height: 360px;
   display: flex;
   flex-direction: column;
+}
+
+/* Modern Editorial Blog Card (Pemikiran) */
+.modern-blog-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.modern-blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.modern-card-cover-link {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.modern-card-cover {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.modern-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s ease;
+  display: block;
+}
+
+.modern-blog-card:hover .modern-card-cover img {
+  transform: scale(1.04);
+}
+
+.modern-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.modern-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.modern-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.modern-card-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 0 0 10px;
+  color: #111827;
+}
+
+.modern-card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.modern-card-title a:hover {
+  color: var(--delima, #8b1d24);
+}
+
+.modern-card-excerpt {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #6b7280;
+  margin: 0 0 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.modern-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.modern-author-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #4b5563;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.modern-author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modern-author-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modern-author-name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.modern-author-date {
+  font-size: 0.76rem;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+/* Notion-Style Inline Code */
+.notion-inline-code,
+code.notion-inline-code {
+  color: #eb5757;
+  background: rgba(135, 131, 120, 0.15);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.88em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: -0.01em;
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 1.4;
+  margin: 1px 0;
 }
 
 .empty-state {

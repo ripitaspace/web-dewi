@@ -120,3 +120,45 @@ export function parseTitle(titleStr: string): { main: string; highlight: string 
   }
   return { main: titleStr, highlight: "" };
 }
+
+export function richTextToHtml(richTextList: any[] | undefined): string {
+  if (!richTextList || !Array.isArray(richTextList)) return "";
+  return richTextList
+    .map((item) => {
+      let content = item.text?.content || item.plain_text || "";
+      if (!content) return "";
+
+      // Escape basic HTML entities to avoid injection
+      content = content
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      const ann = item.annotations || {};
+      if (ann.code) {
+        content = `<code class="notion-inline-code">${content}</code>`;
+      }
+      if (ann.bold) {
+        content = `<strong>${content}</strong>`;
+      }
+      if (ann.italic) {
+        content = `<em>${content}</em>`;
+      }
+      if (ann.strikethrough) {
+        content = `<del>${content}</del>`;
+      }
+      if (ann.underline) {
+        content = `<u>${content}</u>`;
+      }
+      if (item.href) {
+        content = `<a href="${item.href}" target="_blank" rel="noopener noreferrer">${content}</a>`;
+      }
+
+      // Also support literal backticks if someone wrote `code` inside plain text
+      content = content.replace(/`([^`]+)`/g, '<code class="notion-inline-code">$1</code>');
+
+      return content;
+    })
+    .join("");
+}
+
