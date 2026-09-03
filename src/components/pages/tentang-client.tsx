@@ -78,21 +78,23 @@ export function TentangClient({ data, notionId }: TentangClientProps) {
                   <article className="chapter-panel active" key={currentChapter.id}>
                     <span className="eyebrow text-delima">{currentChapter.number}</span>
                     <h2>{currentChapter.title}</h2>
-                    {currentChapter.lead && (
+                    {(!currentChapter.blocks || currentChapter.blocks.length === 0) && currentChapter.lead && (
                       <p className="lead" dangerouslySetInnerHTML={{ __html: currentChapter.lead }} />
                     )}
                     {currentChapter.quote && (
                       <div className="quote-block">
-                        <p className="hand-note">“{currentChapter.quote.replace(/^["“]|["”]$/g, "")}”</p>
+                        <p
+                          className="hand-note"
+                          dangerouslySetInnerHTML={{
+                            __html: `“${currentChapter.quote.replace(/^["“]|["”]$/g, "")}”`,
+                          }}
+                        />
                       </div>
                     )}
                     {currentChapter.blocks && currentChapter.blocks.length > 0 ? (
                       <div className="chapter-body" style={{ lineHeight: 1.8, marginTop: "20px" }}>
                         {currentChapter.blocks.map((block, bIdx) => {
-                          // Prevent duplicate render if lead or quote is already shown above
-                          if (block.type === "paragraph" && block.text === currentChapter.lead) {
-                            return null;
-                          }
+                          // Prevent duplicate render if first quote is already shown in the top quote box
                           if (block.type === "quote" && block.text === currentChapter.quote) {
                             return null;
                           }
@@ -152,6 +154,48 @@ export function TentangClient({ data, notionId }: TentangClientProps) {
                                 style={{ marginLeft: "20px", marginBottom: "6px" }}
                                 className="muted"
                                 dangerouslySetInnerHTML={{ __html: block.text }}
+                              />
+                            );
+                          }
+
+                          if (block.type === "numbered_list_item") {
+                            return (
+                              <li
+                                key={bIdx}
+                                style={{ marginLeft: "24px", marginBottom: "6px" }}
+                                className="muted"
+                                dangerouslySetInnerHTML={{ __html: block.text }}
+                              />
+                            );
+                          }
+
+                          if (block.type === "callout") {
+                            return (
+                              <div
+                                key={bIdx}
+                                style={{
+                                  padding: "16px 20px",
+                                  borderRadius: "12px",
+                                  background: "rgba(216, 195, 157, 0.2)",
+                                  border: "1px solid var(--line)",
+                                  margin: "18px 0",
+                                }}
+                                dangerouslySetInnerHTML={{ __html: block.text }}
+                              />
+                            );
+                          }
+
+                          if (block.type === "toggle") {
+                            return (
+                              <p
+                                key={bIdx}
+                                style={{
+                                  fontWeight: 700,
+                                  marginTop: "20px",
+                                  marginBottom: "8px",
+                                  color: "var(--foreground)",
+                                }}
+                                dangerouslySetInnerHTML={{ __html: `▶ ${block.text}` }}
                               />
                             );
                           }

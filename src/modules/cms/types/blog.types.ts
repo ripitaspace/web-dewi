@@ -14,7 +14,15 @@ export interface BlogPost {
 }
 
 export interface TentangBlock {
-  type: "paragraph" | "heading_2" | "heading_3" | "quote" | "bulleted_list_item";
+  type:
+    | "paragraph"
+    | "heading_2"
+    | "heading_3"
+    | "quote"
+    | "bulleted_list_item"
+    | "numbered_list_item"
+    | "toggle"
+    | "callout";
   text: string;
 }
 

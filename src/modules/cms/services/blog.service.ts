@@ -92,12 +92,18 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
     const mainPage = tentangPages[0] as PageObjectResponse;
     const mappedHeader = mapNotionPageToBlogPost(mainPage);
 
-    const blocksResponse = await notion.blocks.children.list({
-      block_id: mainPage.id,
-      page_size: 100,
-    });
+    const rawBlocks: any[] = [];
+    let cursor: string | undefined = undefined;
+    do {
+      const blocksResponse: any = await notion.blocks.children.list({
+        block_id: mainPage.id,
+        page_size: 100,
+        start_cursor: cursor,
+      });
+      rawBlocks.push(...(blocksResponse.results || []));
+      cursor = blocksResponse.has_more ? (blocksResponse.next_cursor as string) : undefined;
+    } while (cursor);
 
-    const rawBlocks = (blocksResponse.results || []) as any[];
     const hasH1 = rawBlocks.some(
       (b) => b.type === "heading_1" && b.heading_1?.rich_text?.map((t: any) => t.plain_text).join("").trim()
     );
@@ -106,6 +112,85 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
     const chapters: TentangChapter[] = [];
     let currentChapter: TentangChapter | null = null;
     let chapterIndex = 1;
+
+    const appendBlock = async (block: any, chapter: TentangChapter) => {
+      if (block.type === "heading_1") {
+        const text = richTextToHtml(block.heading_1?.rich_text);
+        if (text) {
+          chapter.blocks?.push({ type: "heading_2", text });
+          chapter.content += (chapter.content ? "\n\n" : "") + text;
+        }
+      } else if (block.type === "heading_2") {
+        const text = richTextToHtml(block.heading_2?.rich_text);
+        if (text) {
+          chapter.blocks?.push({ type: "heading_2", text });
+          chapter.content += (chapter.content ? "\n\n" : "") + text;
+        }
+      } else if (block.type === "heading_3") {
+        const text = richTextToHtml(block.heading_3?.rich_text);
+        if (text) {
+          chapter.blocks?.push({ type: "heading_3", text });
+          chapter.content += (chapter.content ? "\n\n" : "") + text;
+        }
+      } else if (block.type === "paragraph") {
+        const pText = richTextToHtml(block.paragraph?.rich_text);
+        if (pText) {
+          if (!chapter.lead) {
+            chapter.lead = pText;
+          }
+          chapter.blocks?.push({ type: "paragraph", text: pText });
+          chapter.content += (chapter.content ? "\n\n" : "") + pText;
+        }
+      } else if (block.type === "quote") {
+        const qText = richTextToHtml(block.quote?.rich_text);
+        if (qText) {
+          if (!chapter.quote) {
+            chapter.quote = qText;
+          }
+          chapter.blocks?.push({ type: "quote", text: qText });
+          chapter.content += (chapter.content ? "\n\n" : "") + `"${qText}"`;
+        }
+      } else if (block.type === "bulleted_list_item") {
+        const itemText = richTextToHtml(block.bulleted_list_item?.rich_text);
+        if (itemText) {
+          chapter.blocks?.push({ type: "bulleted_list_item", text: itemText });
+          chapter.content += (chapter.content ? "\n" : "") + `• ${itemText}`;
+        }
+      } else if (block.type === "numbered_list_item") {
+        const itemText = richTextToHtml(block.numbered_list_item?.rich_text);
+        if (itemText) {
+          chapter.blocks?.push({ type: "numbered_list_item", text: itemText });
+          chapter.content += (chapter.content ? "\n" : "") + itemText;
+        }
+      } else if (block.type === "callout") {
+        const cText = richTextToHtml(block.callout?.rich_text);
+        const icon = block.callout?.icon?.emoji || "💡";
+        if (cText) {
+          chapter.blocks?.push({ type: "callout", text: `${icon} ${cText}` });
+          chapter.content += (chapter.content ? "\n\n" : "") + `${icon} ${cText}`;
+        }
+      } else if (block.type === "toggle") {
+        const tText = richTextToHtml(block.toggle?.rich_text);
+        if (tText) {
+          chapter.blocks?.push({ type: "toggle", text: tText });
+          chapter.content += (chapter.content ? "\n\n" : "") + tText;
+        }
+      }
+
+      if (block.has_children) {
+        try {
+          const childRes = await notion.blocks.children.list({
+            block_id: block.id,
+            page_size: 100,
+          });
+          for (const child of childRes.results as any[]) {
+            await appendBlock(child, chapter);
+          }
+        } catch (err) {
+          console.warn(`[CMS Blog] Failed to fetch children for block ${block.id}:`, err);
+        }
+      }
+    };
 
     for (const block of rawBlocks) {
       if (block.type === chapterDelimiterType) {
@@ -137,49 +222,7 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
           };
         }
 
-        if (block.type === "heading_1") {
-          const text = richTextToHtml(block.heading_1?.rich_text);
-          if (text) {
-            currentChapter.blocks?.push({ type: "heading_2", text });
-            currentChapter.content += (currentChapter.content ? "\n\n" : "") + text;
-          }
-        } else if (block.type === "heading_2") {
-          const text = richTextToHtml(block.heading_2?.rich_text);
-          if (text) {
-            currentChapter.blocks?.push({ type: "heading_2", text });
-            currentChapter.content += (currentChapter.content ? "\n\n" : "") + text;
-          }
-        } else if (block.type === "heading_3") {
-          const text = richTextToHtml(block.heading_3?.rich_text);
-          if (text) {
-            currentChapter.blocks?.push({ type: "heading_3", text });
-            currentChapter.content += (currentChapter.content ? "\n\n" : "") + text;
-          }
-        } else if (block.type === "paragraph") {
-          const pText = richTextToHtml(block.paragraph?.rich_text);
-          if (pText) {
-            if (!currentChapter.lead) {
-              currentChapter.lead = pText;
-            }
-            currentChapter.blocks?.push({ type: "paragraph", text: pText });
-            currentChapter.content += (currentChapter.content ? "\n\n" : "") + pText;
-          }
-        } else if (block.type === "quote") {
-          const qText = richTextToHtml(block.quote?.rich_text);
-          if (qText) {
-            if (!currentChapter.quote) {
-              currentChapter.quote = qText;
-            }
-            currentChapter.blocks?.push({ type: "quote", text: qText });
-            currentChapter.content += (currentChapter.content ? "\n\n" : "") + `"${qText}"`;
-          }
-        } else if (block.type === "bulleted_list_item") {
-          const itemText = richTextToHtml(block.bulleted_list_item?.rich_text);
-          if (itemText) {
-            currentChapter.blocks?.push({ type: "bulleted_list_item", text: itemText });
-            currentChapter.content += (currentChapter.content ? "\n" : "") + `• ${itemText}`;
-          }
-        }
+        await appendBlock(block, currentChapter);
       }
     }
 
@@ -188,7 +231,7 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
     }
 
     const data: TentangPageData = {
-      version: 2,
+      version: 3,
       pageId: mainPage.id,
       title: mappedHeader.title || "",
       lead: mappedHeader.excerpt || "",
@@ -207,7 +250,7 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
 export const getTentangData = cache(async (): Promise<TentangPageData> => {
   try {
     const cached = await cmsCache.get<TentangPageData>("tentang_data");
-    if (cached && cached.chapters && cached.chapters.length > 0 && cached.pageId && cached.version === 2) {
+    if (cached && cached.chapters && cached.chapters.length > 0 && cached.pageId && cached.version === 3) {
       return cached;
     }
     return await refreshTentangDataCache();
