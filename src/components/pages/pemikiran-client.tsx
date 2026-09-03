@@ -5,7 +5,6 @@ import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
-import { ModalDialog } from "@/components/shared/modal-dialog";
 
 interface PemikiranClientProps {
   posts?: BlogPost[];
@@ -15,7 +14,7 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("newest");
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -127,50 +126,76 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
                 {filteredPosts.map((item, idx) => {
                   const topicsList = item.topics && item.topics.length > 0
                     ? item.topics
-                    : [item.type || "PEMIKIRAN", item.category || "UMUM"];
+                    : [item.category || item.type || "PEMIKIRAN"];
+
+                  const primaryTopic = topicsList[0] || "PEMIKIRAN";
+                  const themeColors = [
+                    { bg: "#38bdf8", text: "#ffffff" }, // cyan
+                    { bg: "#6366f1", text: "#ffffff" }, // indigo
+                    { bg: "#ec4899", text: "#ffffff" }, // pink
+                    { bg: "#10b981", text: "#ffffff" }, // emerald
+                    { bg: "#f59e0b", text: "#ffffff" }, // amber
+                  ];
+                  const topicKey = primaryTopic.toLowerCase();
+                  let theme = themeColors[idx % themeColors.length];
+                  if (topicKey.includes("tech") || topicKey.includes("tekno")) theme = { bg: "#38bdf8", text: "#ffffff" };
+                  else if (topicKey.includes("pop") || topicKey.includes("bisnis") || topicKey.includes("system")) theme = { bg: "#6366f1", text: "#ffffff" };
+                  else if (topicKey.includes("desain") || topicKey.includes("design") || topicKey.includes("karya")) theme = { bg: "#ec4899", text: "#ffffff" };
+                  else if (topicKey.includes("uang") || topicKey.includes("account")) theme = { bg: "#10b981", text: "#ffffff" };
 
                   const itemArts = [
                     "/images/artworks/system-beetle-gouache.png",
                     "/images/artworks/coral-fish-gouache.png",
                     "/images/artworks/javan-leopard-gouache.png",
                   ];
-                  const artSrc = item.image && !item.image.includes("placeholder") ? item.image : itemArts[idx % itemArts.length];
+                  const artSrc = item.image && !item.image.includes("placeholder") && !item.image.startsWith("data:image/svg+xml") ? item.image : itemArts[idx % itemArts.length];
 
                   return (
-                    <article key={item.id || idx} className="card card-pad card-hover library-card">
-                      <div className="blog-card-avatar">
-                        <img
-                          src={artSrc}
-                          alt={item.title}
-                          onError={(e) => { e.currentTarget.style.display = "none"; }}
-                        />
-                        <strong>?</strong>
-                      </div>
-                      <div className="blog-topic-row">
-                        {topicsList.map((topic, tIdx) => (
-                          <span className="topic-pill" key={tIdx}>
-                            {topic.toUpperCase()}
+                    <article key={item.id || idx} className="modern-blog-card">
+                      <Link
+                        href={`/blog/${item.slug || item.id}`}
+                        className="modern-card-cover-link"
+                        aria-label={item.title}
+                      >
+                        <div className="modern-card-cover">
+                          <img
+                            src={artSrc}
+                            alt={item.title}
+                            onError={(e) => { e.currentTarget.style.display = "none"; }}
+                          />
+                        </div>
+                      </Link>
+
+                      <div className="modern-card-body">
+                        <div className="modern-card-badges">
+                          <span
+                            className="modern-badge"
+                            style={{ backgroundColor: theme.bg, color: theme.text }}
+                          >
+                            {primaryTopic.toUpperCase()}
                           </span>
-                        ))}
+                        </div>
+
+                        <h3 className="modern-card-title">
+                          <Link href={`/blog/${item.slug || item.id}`}>
+                            {item.title}
+                          </Link>
+                        </h3>
+
+                        <p className="modern-card-excerpt">
+                          {item.excerpt}
+                        </p>
+
+                        <div className="modern-card-footer">
+                          <div className="modern-author-avatar">
+                            <span>{(item.author || "D").charAt(0).toUpperCase()}</span>
+                          </div>
+                          <div className="modern-author-info">
+                            <strong className="modern-author-name">{item.author || "Dewi"}</strong>
+                            <time className="modern-author-date">{item.date}</time>
+                          </div>
+                        </div>
                       </div>
-                      <h3 style={{ fontSize: "1.45rem", lineHeight: 1.25, marginBottom: "12px" }}>
-                        {item.title}
-                      </h3>
-                      <p className="muted" style={{ fontSize: "0.95rem", flexGrow: 1 }}>
-                        {item.excerpt}
-                      </p>
-                      <div className="card-actions">
-                        <button
-                          className="btn btn-secondary btn-small"
-                          onClick={() => setSelectedPost(item)}
-                          type="button"
-                        >
-                          Baca Catatan
-                        </button>
-                      </div>
-                      <p className="muted" style={{ marginTop: "18px", fontSize: "0.78rem" }}>
-                        {item.date} · Oleh {item.author || "Rio Carisandy"}
-                      </p>
                     </article>
                   );
                 })}
@@ -193,46 +218,6 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
           </div>
         </section>
       </main>
-
-      {/* Modal Dialog for Selected Post */}
-      <ModalDialog
-        isOpen={!!selectedPost}
-        onClose={() => setSelectedPost(null)}
-        kicker={selectedPost ? `${(selectedPost.topics || [selectedPost.type]).join(" · ").toUpperCase()}` : "Detail"}
-        title={selectedPost?.title || ""}
-      >
-        {selectedPost && (
-          <div>
-            <div className="art-placeholder art-md" style={{ margin: "10px auto 30px", overflow: "hidden", padding: 0 }}>
-              <img
-                src={selectedPost.image && !selectedPost.image.includes("placeholder") ? selectedPost.image : "/images/artworks/coral-fish-gouache.png"}
-                alt="Article artwork"
-                onError={(e) => { e.currentTarget.style.display = "none"; }}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-              <strong>?</strong>
-              <span>{selectedPost.title}</span>
-            </div>
-            <p className="lead">{selectedPost.excerpt}</p>
-            <div className="route-line"></div>
-            {selectedPost.content ? (
-              <div style={{ marginTop: "24px", lineHeight: 1.8 }}>
-                <p>{selectedPost.content}</p>
-              </div>
-            ) : (
-              <div style={{ marginTop: "24px" }}>
-                <h3 style={{ marginTop: "20px" }}>Gagasan & Esensi</h3>
-                <p className="muted">
-                  {selectedPost.excerpt}
-                </p>
-              </div>
-            )}
-            <div style={{ marginTop: "28px", paddingTop: "16px", borderTop: "1px solid var(--line)", fontSize: "0.85rem" }}>
-              <strong>{selectedPost.date}</strong> · Penulis: <span>{selectedPost.author || "Rio Carisandy"}</span>
-            </div>
-          </div>
-        )}
-      </ModalDialog>
 
       <SiteFooter />
     </>

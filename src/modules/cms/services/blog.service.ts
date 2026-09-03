@@ -3,64 +3,10 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { notion, notionX } from "../core/client";
 import { CMS_CONFIG } from "../core/config";
 import { CMS_CONSTANTS } from "../core/constants";
-import { formatDate, getCoverUrl, getFileUrl, getMultiSelect, getText } from "../core/utils";
+import { formatDate, getCoverUrl, getFileUrl, getMultiSelect, getText, richTextToHtml } from "../core/utils";
 import { cmsCache } from "../core/cache";
-import { BlogPost, fallbackTentangData, TentangChapter, TentangPageData, TypeBlog } from "../types";
+import { BlogPost, emptyTentangData, TentangChapter, TentangPageData, TypeBlog } from "../types";
 
-export const fallbackBlogPosts: BlogPost[] = [
-  {
-    id: "1",
-    slug: "mengapa-bisnis-tumbuh-sistem-rapuh",
-    title: "Mengapa bisnis bisa tumbuh tetapi sistemnya semakin rapuh?",
-    excerpt: "Pertumbuhan volume tanpa standarisasi arsitektur kerja hanya akan melipatgandakan friksi dan biaya tak terlihat.",
-    content: "Ketika transaksi meningkat drastis, ketergantungan pada koordinasi manual seringkali menjadi hambatan utama...",
-    date: "28 Agustus 2026",
-    author: "Rio Carisandy",
-    category: "Bisnis & Sistem",
-    type: "pemikiran",
-    topics: ["ESSAY", "BUSINESS SYSTEMS"],
-    image: "/images/artworks/system-beetle-gouache.png",
-  },
-  {
-    id: "2",
-    slug: "laba-dan-kas-menceritakan-hal-berbeda",
-    title: "Laba dan kas sedang menceritakan dua hal yang berbeda",
-    excerpt: "Laporan laba rugi adalah opini akuntansi, sedangkan arus kas adalah realitas likuiditas operasional.",
-    content: "Banyak perusahaan mencatat keuntungan di atas kertas namun mengalami krisis modal kerja karena siklus piutang...",
-    date: "20 Agustus 2026",
-    author: "Rio Carisandy",
-    category: "Keuangan & Akuntansi",
-    type: "pemikiran",
-    topics: ["FRAMEWORK", "ACCOUNTING"],
-    image: "/images/artworks/coral-fish-gouache.png",
-  },
-  {
-    id: "3",
-    slug: "arsitektur-logistik-kepulauan",
-    title: "Membangun Sistem Logistik yang Menghubungkan 17.000 Pulau",
-    excerpt: "Studi kasus perancangan routing digital dan integrasi transaksi pelabuhan nasional.",
-    content: "Kompleksitas distribusi kepulauan membutuhkan pemodelan node dan transit hub yang adaptif terhadap cuaca dan jadwal kapal...",
-    date: "14 Agustus 2026",
-    author: "Rio Carisandy",
-    category: "Studi Kasus",
-    type: "karya",
-    topics: ["CASE STUDY", "SUPPLY CHAIN"],
-    image: "/images/artworks/sea-turtle-gouache.png",
-  },
-  {
-    id: "4",
-    slug: "modul-revaluasi-keuangan-mandiri",
-    title: "Toolkit Keuangan Mini & Diagnosis Unit Ekonomi",
-    excerpt: "Template interaktif untuk menguji margin kontribusi, titik impas, dan proyeksi arus kas bisnis bertumbuh.",
-    content: "Alat bantu terstruktur untuk pemilik bisnis dan manajer operasional dalam mengambil keputusan alokasi modal...",
-    date: "05 Agustus 2026",
-    author: "Rio Carisandy",
-    category: "Digital Product",
-    type: "belajar",
-    topics: ["TEMPLATE", "FINANCIAL MODEL"],
-    image: "/images/artworks/kecombrang-gouache.png",
-  },
-];
 
 function getProp(props: Record<string, any>, candidateNames: string[]) {
   if (!props) return undefined;
@@ -112,7 +58,7 @@ export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
     excerpt: getText(excerptProp) || "",
     content: "",
     date: formatDate(getText(dateProp) || page.created_time),
-    author: getText(authorProp) || "Rio Carisandy",
+    author: getText(authorProp) || "Author",
     category: getText(categoryProp) || "Umum",
     type,
     topics,
@@ -121,7 +67,7 @@ export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
 };
 
 export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
-  if (!CMS_CONFIG.BLOG_DATABASE_ID) return fallbackTentangData;
+  if (!CMS_CONFIG.BLOG_DATABASE_ID) return emptyTentangData;
 
   try {
     const response = await notion.dataSources.query({
@@ -140,7 +86,7 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
     });
 
     if (tentangPages.length === 0) {
-      return fallbackTentangData;
+      return emptyTentangData;
     }
 
     const mainPage = tentangPages[0] as PageObjectResponse;
@@ -151,14 +97,20 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
       page_size: 100,
     });
 
+    const rawBlocks = (blocksResponse.results || []) as any[];
+    const hasH1 = rawBlocks.some(
+      (b) => b.type === "heading_1" && b.heading_1?.rich_text?.map((t: any) => t.plain_text).join("").trim()
+    );
+    const chapterDelimiterType = hasH1 ? "heading_1" : "heading_2";
+
     const chapters: TentangChapter[] = [];
     let currentChapter: TentangChapter | null = null;
     let chapterIndex = 1;
 
-    for (const block of blocksResponse.results as any[]) {
-      if (block.type === "heading_1") {
-        const h1Text = block.heading_1.rich_text.map((t: any) => t.plain_text).join("").trim();
-        if (h1Text) {
+    for (const block of rawBlocks) {
+      if (block.type === chapterDelimiterType) {
+        const titleText = block[chapterDelimiterType]?.rich_text?.map((t: any) => t.plain_text).join("").trim();
+        if (titleText) {
           if (currentChapter) {
             chapters.push(currentChapter);
           }
@@ -166,30 +118,65 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
           currentChapter = {
             id: block.id || `chapter-${chapterIndex}`,
             number: numStr,
-            title: h1Text,
+            title: titleText,
             lead: "",
             content: "",
+            blocks: [],
           };
           chapterIndex++;
         }
-      } else if (currentChapter) {
-        if (block.type === "paragraph") {
-          const pText = block.paragraph.rich_text.map((t: any) => t.plain_text).join("").trim();
+      } else {
+        if (!currentChapter) {
+          currentChapter = {
+            id: `chapter-1`,
+            number: "Bab 01",
+            title: mappedHeader.title || "Tentang",
+            lead: "",
+            content: "",
+            blocks: [],
+          };
+        }
+
+        if (block.type === "heading_1") {
+          const text = richTextToHtml(block.heading_1?.rich_text);
+          if (text) {
+            currentChapter.blocks?.push({ type: "heading_2", text });
+            currentChapter.content += (currentChapter.content ? "\n\n" : "") + text;
+          }
+        } else if (block.type === "heading_2") {
+          const text = richTextToHtml(block.heading_2?.rich_text);
+          if (text) {
+            currentChapter.blocks?.push({ type: "heading_2", text });
+            currentChapter.content += (currentChapter.content ? "\n\n" : "") + text;
+          }
+        } else if (block.type === "heading_3") {
+          const text = richTextToHtml(block.heading_3?.rich_text);
+          if (text) {
+            currentChapter.blocks?.push({ type: "heading_3", text });
+            currentChapter.content += (currentChapter.content ? "\n\n" : "") + text;
+          }
+        } else if (block.type === "paragraph") {
+          const pText = richTextToHtml(block.paragraph?.rich_text);
           if (pText) {
             if (!currentChapter.lead) {
               currentChapter.lead = pText;
             }
+            currentChapter.blocks?.push({ type: "paragraph", text: pText });
             currentChapter.content += (currentChapter.content ? "\n\n" : "") + pText;
           }
         } else if (block.type === "quote") {
-          const qText = block.quote.rich_text.map((t: any) => t.plain_text).join("").trim();
+          const qText = richTextToHtml(block.quote?.rich_text);
           if (qText) {
-            currentChapter.quote = qText;
+            if (!currentChapter.quote) {
+              currentChapter.quote = qText;
+            }
+            currentChapter.blocks?.push({ type: "quote", text: qText });
             currentChapter.content += (currentChapter.content ? "\n\n" : "") + `"${qText}"`;
           }
         } else if (block.type === "bulleted_list_item") {
-          const itemText = block.bulleted_list_item.rich_text.map((t: any) => t.plain_text).join("").trim();
+          const itemText = richTextToHtml(block.bulleted_list_item?.rich_text);
           if (itemText) {
+            currentChapter.blocks?.push({ type: "bulleted_list_item", text: itemText });
             currentChapter.content += (currentChapter.content ? "\n" : "") + `• ${itemText}`;
           }
         }
@@ -201,35 +188,37 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
     }
 
     const data: TentangPageData = {
-      title: mappedHeader.title || fallbackTentangData.title,
-      lead: mappedHeader.excerpt || fallbackTentangData.lead,
-      image: mappedHeader.image && !mappedHeader.image.includes("placeholder") ? mappedHeader.image : fallbackTentangData.image,
-      chapters: chapters.length > 0 ? chapters : fallbackTentangData.chapters,
+      version: 2,
+      pageId: mainPage.id,
+      title: mappedHeader.title || "",
+      lead: mappedHeader.excerpt || "",
+      image: mappedHeader.image && !mappedHeader.image.includes("placeholder") ? mappedHeader.image : "",
+      chapters,
     };
 
     await cmsCache.set("tentang_data", data);
     return data;
   } catch (error) {
     console.error("[CMS Blog] Error refreshing tentang data cache:", error);
-    return fallbackTentangData;
+    return emptyTentangData;
   }
 };
 
 export const getTentangData = cache(async (): Promise<TentangPageData> => {
   try {
     const cached = await cmsCache.get<TentangPageData>("tentang_data");
-    if (cached && cached.chapters && cached.chapters.length > 0) {
+    if (cached && cached.chapters && cached.chapters.length > 0 && cached.pageId && cached.version === 2) {
       return cached;
     }
     return await refreshTentangDataCache();
   } catch (error) {
     console.error("[CMS Blog] Error getting tentang data:", error);
-    return fallbackTentangData;
+    return emptyTentangData;
   }
 });
 
 export const refreshBlogPostsCache = async (): Promise<BlogPost[]> => {
-  if (!CMS_CONFIG.BLOG_DATABASE_ID) return fallbackBlogPosts;
+  if (!CMS_CONFIG.BLOG_DATABASE_ID) return [];
 
   try {
     const response = await notion.dataSources.query({
@@ -255,10 +244,10 @@ export const refreshBlogPostsCache = async (): Promise<BlogPost[]> => {
     await cmsCache.set("blog_posts", posts);
     // Also refresh tentang data cache in background
     await refreshTentangDataCache();
-    return posts.length > 0 ? posts : fallbackBlogPosts;
+    return posts;
   } catch (error) {
     console.error("[CMS Blog] Error refreshing blog posts cache:", error);
-    return fallbackBlogPosts;
+    return [];
   }
 };
 
@@ -266,7 +255,7 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
   let posts: BlogPost[] = [];
 
   if (!CMS_CONFIG.BLOG_DATABASE_ID) {
-    posts = fallbackBlogPosts;
+    posts = [];
   } else {
     try {
       const cached = await cmsCache.get<BlogPost[]>("blog_posts");
@@ -281,7 +270,7 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
       }
     } catch (error) {
       console.error("[CMS Blog] Error fetching blog posts:", error);
-      posts = fallbackBlogPosts;
+      posts = [];
     }
   }
 

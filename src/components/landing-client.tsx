@@ -538,7 +538,7 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
                   return (
                     <article className="blog-card" key={post.id || idx}>
                       <div className="blog-card-avatar">
-                        {post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") ? (
+                        {post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") && !post.image.startsWith("data:image/svg+xml") ? (
                           <img
                             src={post.image}
                             alt={post.title}

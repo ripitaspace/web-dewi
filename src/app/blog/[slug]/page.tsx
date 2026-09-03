@@ -122,6 +122,41 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
           </div>
 
+          {/* Dev Debug Button (DEV environment only) */}
+          {process.env.NODE_ENV === "development" && (
+            <div
+              style={{
+                marginTop: "32px",
+                marginBottom: "32px",
+                padding: "14px 18px",
+                borderRadius: "12px",
+                background: "rgba(0, 0, 0, 0.03)",
+                border: "1px dashed var(--line)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "16px",
+                flexWrap: "wrap",
+              }}
+            >
+              <div style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
+                <strong style={{ color: "var(--foreground)" }}>🛠️ DEV DEBUG</strong> · Notion Page ID:{" "}
+                <code style={{ fontSize: "0.8rem", background: "rgba(0,0,0,0.06)", padding: "2px 6px", borderRadius: "4px" }}>
+                  {post.id}
+                </code>
+              </div>
+              <a
+                href={`https://www.notion.so/${post.id.replace(/-/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary btn-small"
+                style={{ textDecoration: "none", fontSize: "0.82rem" }}
+              >
+                Buka di Notion ↗
+              </a>
+            </div>
+          )}
+
           {/* Article Footer */}
           <footer className="article-footer">
             <div className="article-footer-card">
