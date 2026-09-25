@@ -58,7 +58,7 @@ export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
     excerpt: getText(excerptProp) || "",
     content: "",
     date: formatDate(getText(dateProp) || page.created_time),
-    author: getText(authorProp) || "Author",
+    author: getText(authorProp) || "pus",
     category: getText(categoryProp) || "Umum",
     type,
     topics,
