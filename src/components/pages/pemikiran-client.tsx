@@ -189,7 +189,7 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
 
                         <div className="modern-card-footer">
                           <div className="modern-author-avatar">
-                            <span>{authorName.charAt(0).toUpperCase()}</span>
+                            <img src="/author-avatar.jpg" alt={authorName} />
                           </div>
                           <div className="modern-author-info">
                             <strong className="modern-author-name">{authorName}</strong>
