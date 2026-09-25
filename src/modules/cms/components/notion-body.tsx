@@ -1,16 +1,23 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { NotionRenderer } from "react-notion-x";
 import { Collection } from "react-notion-x/build/third-party/collection";
-import { Code } from "react-notion-x/build/third-party/code";
 import { Equation } from "react-notion-x/build/third-party/equation";
 import { proxyImageUrl } from "../core/utils";
 
 // Base styles for react-notion-x
 import "react-notion-x/src/styles.css";
+
+// Prism mutates code classes (notably Notion's "plain text") before hydration.
+// Mount only the code renderer on the client; keep the article server-rendered.
+const Code = dynamic(
+  () => import("react-notion-x/build/third-party/code").then((module) => module.Code),
+  { ssr: false, loading: () => <p role="status">Memuat blok kode…</p> }
+);
 
 export interface NotionBodyProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
