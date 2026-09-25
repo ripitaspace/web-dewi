@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
@@ -118,13 +119,12 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
                           {item.excerpt}
                         </p>
                         <div className="card-actions">
-                          <button
+                          <Link
+                            href={`/blog/${item.slug || item.id}`}
                             className="btn btn-primary btn-small"
-                            onClick={() => setSelectedProduct(item)}
-                            type="button"
                           >
-                            Lihat Detail
-                          </button>
+                            Buka Artikel
+                          </Link>
                         </div>
                       </article>
                     );
