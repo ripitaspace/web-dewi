@@ -60,6 +60,10 @@ export function NotionBody({
           padding: 0;
           width: 100%;
         }
+        /* Article metadata is already rendered by the article header. */
+        .notion-content-wrapper .notion-collection-page-properties {
+          display: none !important;
+        }
         .notion-content-wrapper .notion-collection {
           max-width: 100%;
           overflow-x: auto;
