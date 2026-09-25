@@ -88,7 +88,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             <div className="article-author-bar">
               <div className="author-avatar">
-                {post.author ? post.author.charAt(0).toUpperCase() : "A"}
+                <img src="/author-avatar.jpg" alt={post.author || "pus"} />
               </div>
               <div className="author-info">
                 <strong>{post.author || "Admin"}</strong>
