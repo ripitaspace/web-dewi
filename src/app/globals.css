@@ -1436,7 +1436,7 @@ body.is-ready .spice,
   background: rgba(251, 246, 237, 0.88);
   border: 1px solid var(--line);
   border-radius: 28px;
-  padding: 34px 28px;
+  padding: 0 0 28px;
   transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
   position: relative;
   box-shadow: 0 4px 20px rgba(75, 45, 28, 0.05);
@@ -1451,32 +1451,40 @@ body.is-ready .spice,
   background: rgba(255, 255, 255, 0.95);
 }
 
-.blog-card-avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(30, 27, 24, 0.2);
+.blog-card-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-bottom: 1px solid var(--line);
+  border-radius: 27px 27px 0 0;
   background: #ffffff;
   display: grid;
   place-items: center;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 2px 8px rgba(30, 27, 24, 0.06);
 }
 
-.blog-card-avatar strong {
+.blog-card-cover strong {
   font-family: var(--display);
-  font-size: 1.25rem;
+  font-size: 2rem;
   color: rgba(30, 27, 24, 0.35);
 }
 
-.blog-card-avatar img {
+.blog-card-cover img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
+}
+
+.blog-card > .blog-topic-row,
+.blog-card > .blog-title,
+.blog-card > .blog-excerpt,
+.blog-card > .blog-card-foot,
+.blog-card > .blog-card-meta {
+  margin-left: 28px;
+  margin-right: 28px;
 }
 
 .blog-topic-row {
@@ -3432,4 +3440,3 @@ code.notion-inline-code {
   .eco-node[data-eco="knowledge"] { left: 18%; bottom: 4%; }
   .eco-node[data-eco="projects"] { left: 2%; bottom: 29%; }
 }
-
