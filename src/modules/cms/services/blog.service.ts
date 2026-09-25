@@ -301,7 +301,10 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
     posts = [];
   } else {
     try {
-      const cached = await cmsCache.get<BlogPost[]>("blog_posts");
+      const cached = await cmsCache.get<BlogPost[]>(
+        "blog_posts",
+        CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS
+      );
       if (cached && cached.length > 0) {
         posts = cached.map((p) => ({
           ...p,
