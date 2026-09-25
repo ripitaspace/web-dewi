@@ -20,22 +20,42 @@ function getProp(props: Record<string, any>, candidateNames: string[]) {
   return undefined;
 }
 
+function normalizeBlogType(value: string): "pemikiran" | "karya" | "belajar" | "tentang" {
+  const raw = value.toLowerCase().trim();
+
+  if (raw.includes("tentang") || raw.includes("about")) return "tentang";
+  if (
+    raw.includes("karya") ||
+    raw.includes("work") ||
+    raw.includes("case") ||
+    raw.includes("project") ||
+    raw.includes("portfolio")
+  ) return "karya";
+  if (
+    raw.includes("belajar") ||
+    raw.includes("learn") ||
+    raw.includes("edukasi") ||
+    raw.includes("education") ||
+    raw.includes("materi") ||
+    raw.includes("tutorial") ||
+    raw.includes("course") ||
+    raw.includes("pelajaran")
+  ) return "belajar";
+
+  return "pemikiran";
+}
+
 export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
   const props = page.properties as Record<string, any>;
 
   const typeProp = getProp(props, ["Type", "Tipe", "Pilar", "Section"]);
-  const rawType = (getText(typeProp) || "pemikiran").toLowerCase().trim();
+  const rawType = (
+    getText(typeProp) ||
+    getText(getProp(props, ["Category", "Kategori"])) ||
+    "pemikiran"
+  ).toLowerCase().trim();
 
-  let type: "pemikiran" | "karya" | "belajar" | "tentang" | string = "pemikiran";
-  if (rawType.includes("tentang") || rawType.includes("about")) {
-    type = "tentang";
-  } else if (rawType.includes("karya") || rawType.includes("work") || rawType.includes("case")) {
-    type = "karya";
-  } else if (rawType.includes("belajar") || rawType.includes("learn") || rawType.includes("product")) {
-    type = "belajar";
-  } else {
-    type = "pemikiran";
-  }
+  const type = normalizeBlogType(rawType);
 
   const topicsProp = getProp(props, ["Topics", "Topic", "Topik", "Tags", "Tag", "Keywords"]);
   let topics = getMultiSelect(topicsProp);
@@ -305,7 +325,7 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
       if (cached && cached.length > 0) {
         posts = cached.map((p) => ({
           ...p,
-          type: p.type || "pemikiran",
+          type: normalizeBlogType(p.type || "pemikiran"),
           topics: Array.isArray(p.topics) ? p.topics : [p.category || "UMUM"].filter(Boolean),
         }));
       } else {
