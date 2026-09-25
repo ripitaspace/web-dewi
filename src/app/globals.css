@@ -1453,7 +1453,7 @@ body.is-ready .spice,
 
 .blog-card-cover {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1983 / 793;
   border-bottom: 1px solid var(--line);
   border-radius: 27px 27px 0 0;
   background: #ffffff;
