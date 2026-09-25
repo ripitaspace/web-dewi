@@ -70,8 +70,14 @@ export function NotionBody({
         .notion-content-wrapper .notion-code {
           border: 1px solid var(--line);
           border-radius: 14px;
+          max-height: 320px;
           margin: 1.25rem 0;
           overflow-x: auto;
+          overflow-y: auto;
+          padding: 1.25rem 3.5rem 1.25rem 1.25rem;
+        }
+        .notion-content-wrapper .notion-code code {
+          white-space: pre;
         }
         .notion-content-wrapper .notion-equation {
           overflow-x: auto;
@@ -91,6 +97,11 @@ export function NotionBody({
         }
         .notion-content-wrapper .notion-quote {
           border-left-color: var(--delima);
+        }
+        @media (max-width: 640px) {
+          .notion-content-wrapper .notion-code {
+            max-height: 220px;
+          }
         }
       `}</style>
     </div>
