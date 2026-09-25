@@ -21,7 +21,9 @@ export async function handleNotionImageProxy(request: NextRequest) {
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": contentType || "image/jpeg",
-        "Cache-Control": "public, max-age=3600, s-maxage=3600", // Cache for 1 hour
+        // Keep this shorter than Notion's signed URL lifetime. The CMS cache
+        // refreshes the source URL every 45 minutes.
+        "Cache-Control": "public, max-age=300, s-maxage=300", // Cache for 5 minutes
       },
     });
   } catch (error) {
