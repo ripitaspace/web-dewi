@@ -120,7 +120,7 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
                         </p>
                         <div className="card-actions">
                           <Link
-                            href={`/blog/${item.slug || item.id}`}
+                            href={`/blog/${encodeURIComponent(item.slug || item.id)}`}
                             className="btn btn-primary btn-small"
                           >
                             Buka Artikel
