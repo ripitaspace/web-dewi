@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coretax Invoice Scraper</title>
+  <style>html,body{width:100%;margin:0;border:0;overflow:hidden}#coretaxLegacy{display:block;width:100%;min-height:900px;margin:0;border:0}</style>
+</head>
+<body>
+  <iframe id="coretaxLegacy" src="/tools/coretax/RIPITA_Invoice_Scraper.html" title="RIPITA Invoice Scraper"></iframe>
+  <script>
+    (function () {
+      var frame = document.getElementById("coretaxLegacy");
+      frame.addEventListener("load", function () {
+        var doc = frame.contentDocument;
+        if (!doc || !doc.head) return;
+
+        function resizeWorkspace() {
+          var height = Math.max(900, doc.documentElement.scrollHeight, doc.body ? doc.body.scrollHeight : 0);
+          frame.style.height = height + "px";
+          if (window.frameElement) window.frameElement.style.height = height + "px";
+        }
+
+        var theme = doc.createElement("link");
+        theme.rel = "stylesheet";
+        theme.href = "/tools/coretax/puspita-theme.css";
+        theme.addEventListener("load", resizeWorkspace);
+        doc.head.appendChild(theme);
+
+        var ux = doc.createElement("script");
+        ux.src = "/tools/coretax/puspita-ux.js";
+        ux.async = false;
+        ux.addEventListener("load", resizeWorkspace);
+        doc.head.appendChild(ux);
+
+        if (window.ResizeObserver && doc.body) new ResizeObserver(resizeWorkspace).observe(doc.body);
+        if (window.MutationObserver && doc.body) new MutationObserver(resizeWorkspace).observe(doc.body, { childList: true, subtree: true, attributes: true });
+        frame.contentWindow.addEventListener("resize", resizeWorkspace);
+        resizeWorkspace();
+      });
+    }());
+  </script>
+</body>
+</html>

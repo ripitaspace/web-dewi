@@ -16,7 +16,7 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
   const [selectedWork, setSelectedWork] = useState<BlogPost | null>(null);
 
   const categories = useMemo(() => {
-    const cats = new Set<string>();
+    const cats = new Set<string>(["Pajak"]);
     posts.forEach((p) => {
       if (p.category) cats.add(p.category);
       if (p.topics) p.topics.forEach((t) => cats.add(t));
@@ -33,6 +33,9 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
     });
   }, [posts, activeCategory]);
 
+  const showCoretax = activeCategory === "Semua" || activeCategory === "Pajak";
+  const hasVisibleWorks = filteredWorks.length > 0 || showCoretax;
+
   return (
     <>
       <SiteHeader currentKey="karya" />
@@ -48,15 +51,15 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                 Setiap karya dibaca sebagai konteks, persoalan, temuan utama, logika sistem, bentuk yang dibuat, dan kemungkinan pengembangannya.
               </p>
             </div>
-            <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+            <div
+              className="art-placeholder art-lg"
+              style={{ marginInline: "auto", overflow: "hidden", padding: 0, background: "var(--gading)" }}
+            >
               <img
-                src="/images/artworks/sea-turtle-gouache.png"
-                alt="Penyu Laut Nusantara"
-                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                src="/images/artworks/djp-ripita-emblem.png"
+                alt="Emblem DJP dengan palet dan ornamen RIPITA"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
-              <strong>?</strong>
-              <span>Penyu Laut · Karya</span>
             </div>
           </div>
         </section>
@@ -77,8 +80,19 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
               ))}
             </div>
 
-            {filteredWorks.length > 0 ? (
+            {hasVisibleWorks ? (
               <div className="work-stack" id="workLibrary">
+                {showCoretax && (
+                  <Link href="/karya/pajak/coretax" className="tax-tool-card card card-hover">
+                    <div className="tax-tool-icon" aria-hidden="true">↗</div>
+                    <div>
+                      <span className="topic-pill">CORETAX · MINI TOOL</span>
+                      <h2>Invoice Scraper</h2>
+                      <p>Ubah batch Faktur Pajak PDF menjadi data barang yang dapat diperiksa, di-rename, lalu diekspor ke Excel atau ZIP.</p>
+                    </div>
+                    <span className="btn primary">Buka Invoice Scraper →</span>
+                  </Link>
+                )}
                 {filteredWorks.map((item, idx) => {
                   const topicsList = item.topics && item.topics.length > 0
                     ? item.topics
@@ -139,20 +153,6 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
               </div>
             )}
 
-            <div className="mini-tools-intro">
-              <div>
-                <span className="eyebrow text-rempah">Mini Tools</span>
-                <h2>Perangkat kecil untuk pekerjaan yang besar.</h2>
-                <p className="muted">Eksperimen yang lahir dari persoalan operasional nyata, lalu dibuat agar dapat langsung dicoba.</p>
-              </div>
-              <Link href="/karya/pajak" className="mini-tool-category card card-hover">
-                <span className="topic-pill">PAJAK</span>
-                <span className="mini-tool-glyph" aria-hidden="true">₊</span>
-                <h3>Coretax</h3>
-                <p>Ruang kerja untuk membaca, merapikan, dan mengekspor data faktur pajak.</p>
-                <span className="mini-tool-link">Lihat mini tools →</span>
-              </Link>
-            </div>
           </div>
         </section>
       </main>
