@@ -1,11 +1,11 @@
 "use client";
 
+
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
-import { ModalDialog } from "@/components/shared/modal-dialog";
 
 interface BelajarClientProps {
   posts?: BlogPost[];
@@ -13,7 +13,6 @@ interface BelajarClientProps {
 
 export function BelajarClient({ posts = [] }: BelajarClientProps) {
   const [selectedType, setSelectedType] = useState("Semua");
-  const [selectedProduct, setSelectedProduct] = useState<BlogPost | null>(null);
 
   const types = useMemo(() => {
     const set = new Set<string>();
@@ -42,10 +41,10 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
         <section className="page-hero">
           <div className="container page-hero-grid">
             <div>
-              <span className="eyebrow text-delima">Belajar & Digital Products</span>
+              <span className="eyebrow text-delima">Catatan Belajar</span>
               <h1 className="display-lg">Pengetahuan yang dapat langsung digunakan.</h1>
               <p className="lead muted">
-                Katalog ini adalah tampilan storefront PUSPITA. Checkout, pembayaran, file delivery, dan akun pembeli nantinya dijalankan oleh RIPITA Commerce.
+                Tempatku berbagi pengetahuan, tutorial, dan pengalaman belajar yang bisa kita praktikkan bersama.
               </p>
             </div>
             <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
@@ -83,52 +82,79 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
             <div>
               {filteredProducts.length > 0 ? (
                 <div className="store-grid" id="storeGrid">
-                  {filteredProducts.map((item, idx) => {
-                    const topicsList = item.topics && item.topics.length > 0
-                      ? item.topics
-                      : [item.type || "BELAJAR", item.category || "PRODUK"];
+                {filteredProducts.map((item, idx) => {
+                  const topicsList = item.topics && item.topics.length > 0
+                    ? item.topics
+                    : [item.category || item.type || "PEMIKIRAN"];
 
-                    const productArts = [
-                      "/images/artworks/kecombrang-gouache.png",
-                      "/images/artworks/system-beetle-gouache.png",
-                      "/images/artworks/coral-fish-gouache.png",
-                    ];
-                    const artSrc = item.image && !item.image.includes("placeholder") ? item.image : productArts[idx % productArts.length];
+                  const primaryTopic = topicsList[0] || "PEMIKIRAN";
+                  const themeColors = [
+                    { bg: "#38bdf8", text: "#ffffff" }, // cyan
+                    { bg: "#6366f1", text: "#ffffff" }, // indigo
+                    { bg: "#ec4899", text: "#ffffff" }, // pink
+                    { bg: "#10b981", text: "#ffffff" }, // emerald
+                    { bg: "#f59e0b", text: "#ffffff" }, // amber
+                  ];
+                  const topicKey = primaryTopic.toLowerCase();
+                  let theme = themeColors[idx % themeColors.length];
+                  if (topicKey.includes("tech") || topicKey.includes("tekno")) theme = { bg: "#38bdf8", text: "#ffffff" };
+                  else if (topicKey.includes("pop") || topicKey.includes("bisnis") || topicKey.includes("system")) theme = { bg: "#6366f1", text: "#ffffff" };
+                  else if (topicKey.includes("desain") || topicKey.includes("design") || topicKey.includes("karya")) theme = { bg: "#ec4899", text: "#ffffff" };
+                  else if (topicKey.includes("uang") || topicKey.includes("account")) theme = { bg: "#10b981", text: "#ffffff" };
 
-                    return (
-                      <article key={item.id || idx} className="card card-pad card-hover store-card">
-                        <div className="art-placeholder art-sm" style={{ overflow: "hidden", padding: 0 }}>
-                          <img
-                            src={artSrc}
-                            alt={item.title}
-                            onError={(e) => { e.currentTarget.style.display = "none"; }}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                          />
-                          <strong>?</strong>
-                          <span>{item.title}</span>
+                  const itemArts = [
+                    "/images/artworks/system-beetle-gouache.png",
+                    "/images/artworks/coral-fish-gouache.png",
+                    "/images/artworks/javan-leopard-gouache.png",
+                  ];
+                  const artSrc = item.image && !item.image.includes("placeholder") && !item.image.startsWith("data:image/svg+xml") ? item.image : itemArts[idx % itemArts.length];
+                  const authorName = item.author && item.author !== "Author" ? item.author : "pus";
+
+                  return (
+                    <article key={item.id || idx} className="modern-blog-card">
+                      <Link
+                        href={`/blog/${encodeURIComponent(item.slug || item.id)}`}
+                        className="modern-card-cover-link"
+                        aria-label={item.title}
+                      >
+                        <div className="modern-card-cover">
+                          <img src={artSrc} alt={item.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />
                         </div>
-                        <div className="blog-topic-row" style={{ marginTop: "12px", marginBottom: "8px" }}>
-                          {topicsList.map((topic, tIdx) => (
-                            <span className="topic-pill" key={tIdx}>
-                              {topic.toUpperCase()}
-                            </span>
-                          ))}
+                      </Link>
+
+                      <div className="modern-card-body">
+                        <div className="modern-card-badges">
+                          <span
+                            className="modern-badge"
+                            style={{ backgroundColor: theme.bg, color: theme.text }}
+                          >
+                            {primaryTopic.toUpperCase()}
+                          </span>
                         </div>
-                        <h3 style={{ fontSize: "1.45rem", margin: "8px 0 6px" }}>{item.title}</h3>
-                        <p className="muted" style={{ fontSize: "0.95rem", flexGrow: 1, marginBottom: "16px" }}>
+
+                        <h3 className="modern-card-title">
+                          <Link href={`/blog/${encodeURIComponent(item.slug || item.id)}`}>
+                            {item.title}
+                          </Link>
+                        </h3>
+
+                        <p className="modern-card-excerpt">
                           {item.excerpt}
                         </p>
-                        <div className="card-actions">
-                          <Link
-                            href={`/blog/${encodeURIComponent(item.slug || item.id)}`}
-                            className="btn btn-primary btn-small"
-                          >
-                            Buka Artikel
-                          </Link>
+
+                        <div className="modern-card-footer">
+                          <div className="modern-author-avatar">
+                            <img src="/author-avatar.jpg" alt={authorName} />
+                          </div>
+                          <div className="modern-author-info">
+                            <strong className="modern-author-name">{authorName}</strong>
+                            <time className="modern-author-date">{item.date}</time>
+                          </div>
                         </div>
-                      </article>
-                    );
-                  })}
+                      </div>
+                    </article>
+                  );
+                })}
                 </div>
               ) : (
                 <div className="empty-state" style={{ textAlign: "center", padding: "60px 20px" }}>
@@ -140,52 +166,6 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
           </div>
         </section>
       </main>
-
-      {/* Product Detail Modal */}
-      <ModalDialog
-        isOpen={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        kicker={selectedProduct ? `${(selectedProduct.topics || [selectedProduct.type]).join(" · ").toUpperCase()}` : "Detail"}
-        title={selectedProduct?.title || ""}
-      >
-        {selectedProduct && (
-          <div>
-            <div className="art-placeholder art-md" style={{ margin: "10px auto 30px", overflow: "hidden", padding: 0 }}>
-              <img
-                src={selectedProduct.image && !selectedProduct.image.includes("placeholder") ? selectedProduct.image : "/images/artworks/kecombrang-gouache.png"}
-                alt="Product cover"
-                onError={(e) => { e.currentTarget.style.display = "none"; }}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-              <strong>?</strong>
-              <span>{selectedProduct.title}</span>
-            </div>
-
-            <h3 style={{ fontSize: "1.2rem", color: "var(--delima)" }}>Deskripsi & Manfaat</h3>
-            <p className="lead">{selectedProduct.excerpt}</p>
-
-            {selectedProduct.content ? (
-              <div style={{ marginTop: "18px", lineHeight: 1.8 }}>
-                <h3 style={{ fontSize: "1.2rem", color: "var(--delima)" }}>Materi & Silabus</h3>
-                <p>{selectedProduct.content}</p>
-              </div>
-            ) : null}
-
-            <div className="button-row" style={{ marginTop: "24px" }}>
-              <button
-                className="btn btn-primary"
-                type="button"
-                onClick={() => alert(`Simulasi checkout untuk: ${selectedProduct.title}`)}
-              >
-                Lanjut ke RIPITA Checkout
-              </button>
-            </div>
-            <p className="muted" style={{ marginTop: "20px", fontSize: "0.82rem" }}>
-              * Prototype: checkout dan file delivery dikelola secara otomatis oleh RIPITA Commerce.
-            </p>
-          </div>
-        )}
-      </ModalDialog>
 
       <SiteFooter />
     </>

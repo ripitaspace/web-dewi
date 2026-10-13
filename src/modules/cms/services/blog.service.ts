@@ -339,7 +339,8 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
   const cacheKey = `post_${slug}`;
 
   try {
-    const cached = await cmsCache.get<BlogPost>(cacheKey);
+    // Detail metadata must refresh as often as the lists, including newly added covers.
+    const cached = await cmsCache.get<BlogPost>(cacheKey, CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS);
     if (cached) {
       return cached;
     }
