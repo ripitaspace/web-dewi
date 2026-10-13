@@ -537,7 +537,7 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
 
                   return (
                     <article className="blog-card" key={post.id || idx}>
-                      <div className="blog-card-avatar">
+                      <div className="blog-card-cover">
                         {post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") && !post.image.startsWith("data:image/svg+xml") ? (
                           <img
                             src={post.image}
@@ -545,7 +545,7 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
                             onError={(e) => { e.currentTarget.style.display = "none"; }}
                           />
                         ) : null}
-                        <strong>?</strong>
+                        {!post.image || post.image === "/images/placeholder.svg" || post.image.includes("placeholder") || post.image.startsWith("data:image/svg+xml") ? <strong>?</strong> : null}
                       </div>
 
                       <div className="blog-topic-row">

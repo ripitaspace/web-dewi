@@ -58,7 +58,7 @@ export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
     excerpt: getText(excerptProp) || "",
     content: "",
     date: formatDate(getText(dateProp) || page.created_time),
-    author: getText(authorProp) || "Author",
+    author: getText(authorProp) || "pus",
     category: getText(categoryProp) || "Umum",
     type,
     topics,
@@ -301,7 +301,10 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
     posts = [];
   } else {
     try {
-      const cached = await cmsCache.get<BlogPost[]>("blog_posts");
+      const cached = await cmsCache.get<BlogPost[]>(
+        "blog_posts",
+        CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS
+      );
       if (cached && cached.length > 0) {
         posts = cached.map((p) => ({
           ...p,
@@ -336,7 +339,8 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
   const cacheKey = `post_${slug}`;
 
   try {
-    const cached = await cmsCache.get<BlogPost>(cacheKey);
+    // Detail metadata must refresh as often as the lists, including newly added covers.
+    const cached = await cmsCache.get<BlogPost>(cacheKey, CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS);
     if (cached) {
       return cached;
     }

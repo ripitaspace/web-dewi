@@ -149,6 +149,7 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
                     "/images/artworks/javan-leopard-gouache.png",
                   ];
                   const artSrc = item.image && !item.image.includes("placeholder") && !item.image.startsWith("data:image/svg+xml") ? item.image : itemArts[idx % itemArts.length];
+                  const authorName = item.author && item.author !== "Author" ? item.author : "pus";
 
                   return (
                     <article key={item.id || idx} className="modern-blog-card">
@@ -188,10 +189,10 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
 
                         <div className="modern-card-footer">
                           <div className="modern-author-avatar">
-                            <span>{(item.author || "D").charAt(0).toUpperCase()}</span>
+                            <img src="/author-avatar.jpg" alt={authorName} />
                           </div>
                           <div className="modern-author-info">
-                            <strong className="modern-author-name">{item.author || "Dewi"}</strong>
+                            <strong className="modern-author-name">{authorName}</strong>
                             <time className="modern-author-date">{item.date}</time>
                           </div>
                         </div>
