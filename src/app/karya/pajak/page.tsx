@@ -24,7 +24,9 @@ export default function PajakPage() {
         <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container">
             <Link href="/karya/pajak/coretax" className="tax-tool-card card card-hover">
-              <div className="tax-tool-icon" aria-hidden="true">↗</div>
+              <div className="tax-tool-icon" aria-hidden="true">
+                <img src="/images/artworks/coretax-ripita-icon.png" alt="" />
+              </div>
               <div><span className="topic-pill">CORETAX · MINI TOOL</span><h2>Invoice Scraper</h2><p>Ubah batch Faktur Pajak PDF menjadi data barang yang bisa diperiksa dan diekspor ke Excel.</p></div>
               <span className="btn primary">Buka Coretax →</span>
             </Link>

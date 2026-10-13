@@ -84,7 +84,9 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
               <div className="work-stack" id="workLibrary">
                 {showCoretax && (
                   <Link href="/karya/pajak/coretax" className="tax-tool-card card card-hover">
-                    <div className="tax-tool-icon" aria-hidden="true">↗</div>
+                    <div className="tax-tool-icon" aria-hidden="true">
+                      <img src="/images/artworks/coretax-ripita-icon.png" alt="" />
+                    </div>
                     <div>
                       <span className="topic-pill">CORETAX · MINI TOOL</span>
                       <h2>Invoice Scraper</h2>
