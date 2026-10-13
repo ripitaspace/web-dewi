@@ -43,6 +43,11 @@ export default async function BlogIndexPage() {
           <div className="blog-grid" style={{ marginTop: "30px" }}>
             {posts.map((post) => (
               <article className="blog-card" key={post.id}>
+                {post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") && !post.image.startsWith("data:image/svg+xml") ? (
+                  <div className="blog-card-cover">
+                    <img src={post.image} alt={post.title} />
+                  </div>
+                ) : null}
                 <div className="blog-card-meta">
                   <span className="blog-badge">{post.category || "Arsip"}</span>
                   <time className="blog-date">{post.date}</time>

@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { cmsCache } from "../core/cache";
 import { refreshBlogPostsCache } from "../services/blog.service";
 import { refreshProductsCache } from "../services/product.service";
+
+function revalidateBlogLists() {
+  for (const path of ["/", "/blog", "/pemikiran", "/belajar", "/karya"]) {
+    revalidatePath(path);
+  }
+}
 
 export async function handleGetCacheStatus(request?: Request) {
   try {
     console.log("[CMS Cache] Refreshing all caches from Notion...");
     const posts = await refreshBlogPostsCache();
+    revalidateBlogLists();
     const products = await refreshProductsCache();
 
     return NextResponse.json({
@@ -36,6 +44,7 @@ export async function handlePostRenewCache(request: Request) {
     if (key === "all" || key === "blog_posts") {
       console.log("[CMS Cache] Refreshing blog posts cache...");
       const posts = await refreshBlogPostsCache();
+      revalidateBlogLists();
       results.blog_posts = { count: posts.length };
     }
 
