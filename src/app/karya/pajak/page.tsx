@@ -30,11 +30,6 @@ export default function PajakPage() {
               <div><span className="topic-pill">CORETAX · MINI TOOL</span><h2>Invoice Scraper</h2><p>Ubah batch Faktur Pajak PDF menjadi data barang yang bisa diperiksa dan diekspor ke Excel.</p></div>
               <span className="btn primary">Buka Coretax →</span>
             </Link>
-            <Link href="/karya/pajak/rename-coretax" className="tax-tool-card card card-hover">
-              <div className="tax-tool-icon" aria-hidden="true">Aa</div>
-              <div><span className="topic-pill">CORETAX · MINI TOOL</span><h2>Rename Coretax</h2><p>Siapkan nama file faktur Coretax secara massal agar arsip lebih rapi dan mudah dicari.</p></div>
-              <span className="btn primary">Buka Rename →</span>
-            </Link>
           </div>
         </section>
       </main>
