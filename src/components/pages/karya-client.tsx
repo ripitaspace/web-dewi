@@ -138,6 +138,21 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                 <p className="muted">Silakan pilih kategori lain.</p>
               </div>
             )}
+
+            <div className="mini-tools-intro">
+              <div>
+                <span className="eyebrow text-rempah">Mini Tools</span>
+                <h2>Perangkat kecil untuk pekerjaan yang besar.</h2>
+                <p className="muted">Eksperimen yang lahir dari persoalan operasional nyata, lalu dibuat agar dapat langsung dicoba.</p>
+              </div>
+              <Link href="/karya/pajak" className="mini-tool-category card card-hover">
+                <span className="topic-pill">PAJAK</span>
+                <span className="mini-tool-glyph" aria-hidden="true">₊</span>
+                <h3>Coretax</h3>
+                <p>Ruang kerja untuk membaca, merapikan, dan mengekspor data faktur pajak.</p>
+                <span className="mini-tool-link">Lihat mini tools →</span>
+              </Link>
+            </div>
           </div>
         </section>
       </main>
