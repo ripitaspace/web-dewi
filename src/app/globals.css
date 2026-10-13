@@ -3011,6 +3011,7 @@ code.notion-inline-code {
 .coretax-hero .lead { max-width: 730px; }
 .coretax-shell { max-width: 1100px; }
 .coretax-embed { display: block; width: 100%; height: min(1120px, calc(100vh - 185px)); min-height: 840px; border: 1px solid var(--line-strong); border-radius: 18px; background: #f3f6f8; box-shadow: var(--shadow-soft); }
+.rename-coretax-embed { height: min(1050px, calc(100vh - 185px)); min-height: 760px; }
 .rename-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 16px; margin-bottom: 16px; }
 .rename-controls, .rename-drop, .rename-table-card { padding: 26px; }
 .rename-controls h2, .rename-drop h2 { margin: 7px 0 21px; font-size: 1.55rem; }
@@ -3504,6 +3505,7 @@ code.notion-inline-code {
 @media (max-width: 620px) {
   :root { --nav-height: 70px; }
   .coretax-embed { height: 760px; min-height: 0; border-radius: 13px; }
+  .rename-coretax-embed { height: 790px; }
   .rename-grid { grid-template-columns: 1fr; }
   .rename-controls, .rename-drop, .rename-table-card { padding: 20px; }
   .rename-field-row { grid-template-columns: 1fr; }
