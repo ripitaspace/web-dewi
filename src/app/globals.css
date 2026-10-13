@@ -3003,7 +3003,8 @@ code.notion-inline-code {
 .tax-tool-card + .tax-tool-card { margin-top: 16px; }
 .tax-tool-card h2 { margin: 9px 0; font-size: clamp(1.8rem, 3vw, 2.8rem); }
 .tax-tool-card p { max-width: 680px; margin: 0; color: rgba(30, 27, 24, 0.68); line-height: 1.65; }
-.tax-tool-icon { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--rempah); color: var(--arang); font: 2.7rem var(--display); }
+.tax-tool-icon { display: grid; place-items: center; width: 72px; height: 72px; overflow: hidden; border-radius: 50%; background: var(--gading); }
+.tax-tool-icon img { width: 88%; height: 88%; object-fit: contain; }
 
 .coretax-page { background: linear-gradient(180deg, var(--gading) 0, var(--paper) 44%, var(--gading) 100%); }
 .coretax-hero { padding: clamp(55px, 7vw, 94px) 0 36px; }
