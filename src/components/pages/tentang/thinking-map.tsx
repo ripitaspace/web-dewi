@@ -5,7 +5,13 @@ import Link from "next/link";
 import styles from "./about.module.css";
 import { questionGroups } from "./content";
 
-const nodes = ["Manusia", "Keputusan", "Dokumen", "Informasi", "Konsekuensi"];
+const nodes = [
+  { name: "Manusia", role: "Memulai dari kebutuhan, konteks, dan orang yang akan menggunakan hasilnya.", next: "Informasi" },
+  { name: "Informasi", role: "Mengubah pengamatan menjadi fakta yang cukup jelas untuk dipertimbangkan.", next: "Keputusan" },
+  { name: "Keputusan", role: "Memilih arah dengan mempertimbangkan konteks, batasan, dan dampaknya.", next: "Dokumen" },
+  { name: "Dokumen", role: "Merekam keputusan supaya pekerjaan dapat dipahami dan diteruskan.", next: "Konsekuensi" },
+  { name: "Konsekuensi", role: "Melihat dampak keputusan pada manusia—lalu menjadi masukan untuk putaran berikutnya.", next: "Manusia" },
+];
 const scatterWords = "Ketika sesuatu terlihat berantakan, biasanya ada pola yang belum ditemukan.".split(" ");
 let scatterIndex = 0;
 const scatterTokens = scatterWords.map((word) => {
@@ -29,13 +35,26 @@ export function ThinkingMap() {
   const [selected, setSelected] = useState("Manusia");
   const [groupIndex, setGroupIndex] = useState(0);
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
+  const selectedNode = nodes.find((node) => node.name === selected) ?? nodes[0];
+  const selectedIndex = nodes.findIndex((node) => node.name === selected);
   return <>
     <div className={styles.thinkingIntro}>
       <div><p className={styles.eyebrow}>Bab 01 / The Thinking Map</p><h2 className={styles.scatterHeading} aria-label="Ketika sesuatu terlihat berantakan, biasanya ada pola yang belum ditemukan.">{scatterTokens.map((word, wordIndex) => <Fragment key={scatterWords[wordIndex]}><span className={`${styles.word} ${activeWordIndex === wordIndex ? styles.wordScattered : ""}`} onPointerEnter={() => setActiveWordIndex(wordIndex)} onPointerLeave={() => setActiveWordIndex(null)} onClick={() => setActiveWordIndex((active) => active === wordIndex ? null : wordIndex)}>{word.map(({ character, index, delay }) => <span key={`${character}-${index}`} className={styles.letter} style={scatterStyle(index, delay)}>{character}</span>)}</span>{wordIndex < scatterTokens.length - 1 ? " " : null}</Fragment>)}</h2><p className={styles.subhead}>Aku cenderung melihat hubungan.</p><p className={styles.copy}>Aku sering melihat pekerjaan bukan sebagai daftar tugas, melainkan hubungan antara manusia, keputusan, dokumen, informasi, dan konsekuensi.</p><p className={styles.copy}>Aku tidak hanya ingin memahami apa yang terjadi. Aku ingin memahami mengapa itu terjadi dan pola apa yang ada di baliknya.</p></div>
-      <div className={styles.map} aria-label="Peta hubungan cara berpikir">
-        <svg viewBox="0 0 400 400" aria-hidden="true"><path d="M95 97 282 82 327 224 202 326 75 261ZM95 97 327 224M282 82 75 261M95 97 202 326" /></svg>
-        {nodes.map((node) => <button key={node} type="button" className={`${styles.mapNode} ${styles[`node${node}`]} ${selected === node ? styles.selected : ""}`} onClick={() => setSelected(node)} onFocus={() => setSelected(node)}>{node}</button>)}
-        <p><b>{selected}</b> tidak berdiri sendiri. Pilih simpul untuk melihat hubungan.</p>
+      <div className={styles.map} aria-label="Alur hubungan cara berpikir">
+        <p className={styles.mapLabel}>Cara aku membaca sebuah pekerjaan</p>
+        <div className={styles.mapFlow} aria-label="Alur sebab dan akibat">
+          {nodes.map((node, index) => <Fragment key={node.name}>
+            <button type="button" aria-pressed={selected === node.name} className={`${styles.mapNode} ${selected === node.name ? styles.selected : ""}`} onClick={() => setSelected(node.name)} onFocus={() => setSelected(node.name)}>
+              <span>0{index + 1}</span>{node.name}
+            </button>
+            {index < nodes.length - 1 && <i className={`${styles.mapConnector} ${index === selectedIndex || index === selectedIndex - 1 ? styles.connectorActive : ""}`} aria-hidden="true">→</i>}
+          </Fragment>)}
+        </div>
+        <div className={styles.mapDetail} aria-live="polite">
+          <p><span>Langkah 0{selectedIndex + 1}</span><b>{selectedNode.name}</b></p>
+          <p>{selectedNode.role}</p>
+          <small>Berlanjut ke <strong>{selectedNode.next}</strong> <i aria-hidden="true">→</i></small>
+        </div>
       </div>
     </div>
     <div className={styles.questionBlock}>
