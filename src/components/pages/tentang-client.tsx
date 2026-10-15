@@ -43,12 +43,28 @@ export function TentangClient({ data, notionId }: TentangClientProps) {
                 </p>
               )}
             </div>
-            <div style={{ width: "min(320px, 100%)", marginInline: "auto" }}>
+            <div style={{ width: "min(320px, 100%)", marginInline: "auto", position: "relative" }}>
               <img
                 src={data?.image && !data.image.includes("placeholder") && !data.image.startsWith("data:image/svg+xml") ? data.image : "/images/artworks/puspita-kebaya-portrait.png"}
                 alt="Potret Puspita mengenakan kebaya"
                 onError={(e) => { e.currentTarget.style.display = "none"; }}
                 style={{ width: "100%", height: "auto", display: "block" }}
+              />
+              <img
+                src="/images/artworks/about-portrait-floral-overlay.png"
+                alt=""
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  zIndex: 1,
+                  width: "190%",
+                  maxWidth: "none",
+                  height: "auto",
+                  left: "-45%",
+                  bottom: "calc(-1 * clamp(40px, 6vw, 70px) - 49px)",
+                  transform: "scaleX(-1)",
+                  pointerEvents: "none",
+                }}
               />
             </div>
           </div>
