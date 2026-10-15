@@ -3723,6 +3723,19 @@ html[data-ripita-loader="complete"] .ripita-loader:not([data-demo="true"]),
   animation: ripita-extended-breath 3s ease-in-out infinite;
 }
 
+.ripita-loader[data-static="true"] .ripita-mark__layer,
+.ripita-loader[data-static="true"] .ripita-loader__mark {
+  opacity: 1 !important;
+  clip-path: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.ripita-loader[data-static="true"] .ripita-loader__label {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
 .ripita-loader.is-forced-reduced .ripita-mark__layer {
   opacity: 1 !important;
   clip-path: none !important;

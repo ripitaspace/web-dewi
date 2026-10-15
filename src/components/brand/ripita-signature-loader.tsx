@@ -66,13 +66,13 @@ function waitForCriticalAssets(simulatedLoadMs: number | undefined) {
 
 export function RipitaSignatureLoader({
   enabled = true,
-  sequenceDurationMs = 4200,
+  sequenceDurationMs = 900,
   backgroundColor = "#F3E7D3",
   logoSize = "clamp(180px, 24vw, 320px)",
   initialLoadOnly = true,
   extendedLoading = true,
   navbarTargetSelector = "[data-ripita-logo-target]",
-  minDisplayMs = 4200,
+  minDisplayMs = 900,
   maxFallbackMs = 6000,
   replayRoutes = EMPTY_ROUTES,
   showLoadingLabel = true,
@@ -186,7 +186,7 @@ export function RipitaSignatureLoader({
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     if (!demoMode) document.documentElement.dataset.ripitaLoader = "active";
-    setPhase(reducedMotion ? "holding" : "assembling");
+    setPhase("holding");
 
     const finish = () => {
       if (cycleRef.current !== cycle) return;
@@ -350,6 +350,7 @@ export function RipitaSignatureLoader({
             : ""
       }`}
       data-active={active ? "true" : "false"}
+      data-static="true"
       data-demo={demoMode ? "true" : "false"}
       style={style}
       role={phase === "hidden" ? undefined : "status"}
@@ -358,7 +359,7 @@ export function RipitaSignatureLoader({
       aria-hidden={phase === "hidden" ? true : undefined}
     >
       <div ref={flightRef} className="ripita-loader__flight">
-        <RipitaMark animated className="ripita-loader__mark" />
+        <RipitaMark className="ripita-loader__mark" />
         {showLoadingLabel ? (
           <span className="ripita-loader__label">Menyiapkan pengalaman…</span>
         ) : null}

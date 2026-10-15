@@ -59,7 +59,6 @@ export function getFileUrl(property: any): string {
     url = file.external.url;
   } else if (file.type === "file") {
     url = file.file.url;
-    return url;
   }
   return proxyImageUrl(url);
 }
