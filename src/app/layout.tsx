@@ -38,7 +38,7 @@ export default function RootLayout({
         <RipitaLoaderBootstrap html={loaderBootstrap} />
       </head>
       <body>
-        <RipitaSignatureLoader />
+        <RipitaSignatureLoader playOnRouteChange />
         <div data-ripita-page-content>{children}</div>
         <GoogleAnalytics />
         <VisitorStamp />

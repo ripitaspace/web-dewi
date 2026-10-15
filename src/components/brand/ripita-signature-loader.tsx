@@ -13,6 +13,7 @@ export interface RipitaLoaderConfig {
   backgroundColor: string;
   logoSize: string;
   initialLoadOnly: boolean;
+  playOnRouteChange: boolean;
   extendedLoading: boolean;
   navbarTargetSelector: string;
   minDisplayMs: number;
@@ -70,6 +71,7 @@ export function RipitaSignatureLoader({
   backgroundColor = "#F3E7D3",
   logoSize = "clamp(180px, 24vw, 320px)",
   initialLoadOnly = true,
+  playOnRouteChange = false,
   extendedLoading = true,
   navbarTargetSelector = "[data-ripita-logo-target]",
   minDisplayMs = 900,
@@ -135,7 +137,10 @@ export function RipitaSignatureLoader({
     if (firstPass) handledInitialRef.current = true;
     const requestedDemoRun = demoMode && runToken !== lastDemoRunRef.current;
     if (demoMode) lastDemoRunRef.current = runToken;
-    const requestedRouteReplay = !demoMode && routeChanged && matchesRoute(pathname, replayRoutes);
+    const requestedRouteReplay =
+      !demoMode &&
+      routeChanged &&
+      (playOnRouteChange || matchesRoute(pathname, replayRoutes));
 
     if (!enabled || (!demoMode && pathname === DEMO_ROUTE)) {
       completeWithoutAnimation();
@@ -312,6 +317,7 @@ export function RipitaSignatureLoader({
     navbarTargetSelector,
     onComplete,
     pathname,
+    playOnRouteChange,
     replayRoutes,
     runToken,
     sequenceDurationMs,
