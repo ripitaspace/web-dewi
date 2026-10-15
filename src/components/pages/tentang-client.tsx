@@ -43,15 +43,13 @@ export function TentangClient({ data, notionId }: TentangClientProps) {
                 </p>
               )}
             </div>
-            <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+            <div style={{ width: "min(320px, 100%)", marginInline: "auto" }}>
               <img
-                src={data?.image && !data.image.includes("placeholder") && !data.image.startsWith("data:image/svg+xml") ? data.image : "/images/artworks/javan-leopard-gouache.png"}
-                alt="Macan Tutul Jawa"
+                src={data?.image && !data.image.includes("placeholder") && !data.image.startsWith("data:image/svg+xml") ? data.image : "/images/artworks/puspita-kebaya-portrait.png"}
+                alt="Potret Puspita mengenakan kebaya"
                 onError={(e) => { e.currentTarget.style.display = "none"; }}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                style={{ width: "100%", height: "auto", display: "block" }}
               />
-              <strong>?</strong>
-              <span>Macan Tutul Jawa</span>
             </div>
           </div>
         </section>
