@@ -2,10 +2,8 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
 import { NotionRenderer } from "react-notion-x";
-import { Collection } from "react-notion-x/build/third-party/collection";
 import { Equation } from "react-notion-x/build/third-party/equation";
 import { proxyImageUrl } from "../core/utils";
 
@@ -45,12 +43,9 @@ export function NotionBody({
         darkMode={darkMode}
         mapPageUrl={mapPageUrl}
         mapImageUrl={(url) => (url ? proxyImageUrl(url) : "")}
-        forceCustomImages
         previewImages
         components={{
           nextLink: Link,
-          nextImage: Image,
-          Collection,
           Code,
           Equation,
         }}
