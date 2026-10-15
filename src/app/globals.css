@@ -3964,39 +3964,40 @@ code.notion-inline-code {
   background: #f3e7d3;
 }
 
-.route-loading__content {
-  width: min(100%, 480px);
-  display: grid;
-  gap: 10px;
-  color: #1e1b18;
+.route-loading__mark {
+  width: clamp(150px, 24vw, 260px);
+  height: auto;
+  filter: drop-shadow(0 24px 42px rgba(75, 45, 28, 0.11));
 }
 
-.route-loading__eyebrow {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+.route-loading__mark .ripita-mark__layer {
+  animation-duration: 2000ms;
+  animation-timing-function: cubic-bezier(.22, .78, .22, 1);
+  animation-iteration-count: infinite;
+  transform-box: fill-box;
 }
 
-.route-loading__title {
-  font-family: var(--font-display, serif);
-  font-size: clamp(1.4rem, 3vw, 2rem);
+.route-loading__mark .ripita-mark__spark {
+  transform-origin: center;
+  animation-name: route-loading-spark;
 }
 
-.route-loading__line {
-  width: 100%;
-  height: 2px;
-  margin-top: 10px;
-  overflow: hidden;
-  background: rgba(30, 27, 24, 0.14);
+.route-loading__mark .ripita-mark__figure {
+  transform-origin: bottom center;
+  animation-name: route-loading-figure;
+  animation-delay: 140ms;
 }
 
-.route-loading__line::after {
-  content: "";
-  display: block;
-  width: 35%;
-  height: 100%;
-  background: #bd4a2f;
-  animation: route-loading-sweep 1s ease-in-out infinite;
+.route-loading__mark .ripita-mark__wing {
+  transform-origin: 12% 8%;
+  animation-name: route-loading-wing;
+  animation-delay: 280ms;
+}
+
+.route-loading__mark .ripita-mark__structure {
+  transform-origin: center;
+  animation-name: route-loading-structure;
+  animation-delay: 420ms;
 }
 
 html[data-ripita-loader="pending"] [data-ripita-page-content],
@@ -4204,9 +4205,28 @@ html[data-ripita-loader="complete"] .ripita-loader:not([data-demo="true"]),
   to { visibility: hidden; pointer-events: none; }
 }
 
-@keyframes route-loading-sweep {
-  0% { transform: translateX(-120%); }
-  100% { transform: translateX(320%); }
+@keyframes route-loading-spark {
+  0%, 16% { opacity: 0; transform: translateY(-34px) scale(.35) rotate(-25deg); }
+  38%, 76% { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+  100% { opacity: 0; transform: translateY(-8px) scale(.85); }
+}
+
+@keyframes route-loading-figure {
+  0%, 16% { opacity: 0; clip-path: inset(100% 0 0 0); transform: translateY(70px) scale(.94); }
+  38%, 76% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0) scale(1); }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-18px) scale(.97); }
+}
+
+@keyframes route-loading-wing {
+  0%, 16% { opacity: 0; transform: translate(76px, 20px) rotate(-24deg) scale(.55, .42); }
+  38%, 76% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+  100% { opacity: 0; transform: translate(22px, -8px) rotate(8deg) scale(.85); }
+}
+
+@keyframes route-loading-structure {
+  0%, 16% { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateX(-90px); }
+  38%, 76% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(0); }
+  100% { opacity: 0; clip-path: inset(0 0 0 100%); transform: translateX(28px); }
 }
 
 /* Motion identity demo */
@@ -4386,8 +4406,10 @@ html[data-ripita-loader="complete"] .ripita-loader:not([data-demo="true"]),
     animation: none !important;
   }
 
-  .route-loading__line::after {
-    width: 100%;
+  .route-loading__mark .ripita-mark__layer {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
     animation: none;
   }
 }

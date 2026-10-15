@@ -356,7 +356,6 @@ export function RipitaSignatureLoader({
             : ""
       }`}
       data-active={active ? "true" : "false"}
-      data-static="true"
       data-demo={demoMode ? "true" : "false"}
       style={style}
       role={phase === "hidden" ? undefined : "status"}
