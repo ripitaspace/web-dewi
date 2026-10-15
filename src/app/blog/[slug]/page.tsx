@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
-import { getBlogPostBySlug, getBlogPosts, NotionBody } from "@/modules/cms";
+import { RipitaMark } from "@/components/brand/ripita-mark";
+import { getBlogPostBySlug, NotionBody } from "@/modules/cms";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 60; // ISR revalidate every 60s
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({
   params,
@@ -36,17 +37,6 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  try {
-    const posts = await getBlogPosts();
-    return posts.map((post) => ({
-      slug: post.slug || post.id,
-    }));
-  } catch {
-    return [];
-  }
-}
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
@@ -65,7 +55,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <span>Kembali ke Beranda</span>
           </Link>
           <Link href="/" className="brand-mini">
-            <Image className="brand-logo-mini" src="/images/brand/puspita-ripita-mark.png" alt="" width={1254} height={1254} />
+            <RipitaMark className="brand-logo-mini" data-ripita-logo-target />
             <strong>PUSPITA × RIPITA</strong>
           </Link>
         </div>

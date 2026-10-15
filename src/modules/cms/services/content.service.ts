@@ -16,16 +16,7 @@ export const DEFAULT_LANDING_CONTENT: LandingContent = {
   instagram: "",
 };
 
-let cachedLandingContent: LandingContent | null = null;
-let lastFetchedTime = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache in-memory
-
 export const getLandingContent = cache(async (): Promise<LandingContent> => {
-  const now = Date.now();
-  if (cachedLandingContent && now - lastFetchedTime < CACHE_TTL) {
-    return cachedLandingContent;
-  }
-
   if (!CMS_CONFIG.CONTENT_DATABASE_ID) {
     return DEFAULT_LANDING_CONTENT;
   }
@@ -56,8 +47,6 @@ export const getLandingContent = cache(async (): Promise<LandingContent> => {
       instagram: contentMap["Instagram"] || DEFAULT_LANDING_CONTENT.instagram,
     };
 
-    cachedLandingContent = content;
-    lastFetchedTime = now;
     return content;
   } catch (error) {
     console.error("[CMS Content] Error fetching landing page content from Notion:", error);

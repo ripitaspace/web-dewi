@@ -7,7 +7,8 @@ export const metadata: Metadata = {
   description: "Arsip pemikiran, esai, framework, diagram, dan catatan lapangan dari PUSPITA.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function PemikiranPage() {
   const posts = await getBlogPosts({ type: "pemikiran" });
