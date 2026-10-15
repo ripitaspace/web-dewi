@@ -2792,25 +2792,58 @@ body.modal-open {
 }
 
 /* Toolbar & Library (Pemikiran) */
-.toolbar {
+.thought-toolbar {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) repeat(3, auto);
-  gap: 12px;
-  padding: 14px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
   margin-bottom: 28px;
   border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(250, 244, 234, 0.85);
+  border-radius: 14px;
+  background: rgba(250, 244, 234, 0.66);
+}
+
+.thought-search {
+  position: relative;
+}
+
+.thought-toolbar-controls {
+  display: flex;
+  gap: 8px;
 }
 
 .field-control {
-  min-height: 46px;
+  min-height: 44px;
   width: 100%;
-  padding: 10px 14px;
-  border: 1px solid var(--line-strong);
-  border-radius: 11px;
-  background: var(--white);
+  padding: 10px 13px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
   color: var(--arang);
+  font: inherit;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.thought-search .field-control {
+  background: var(--white);
+  border-color: var(--line);
+}
+
+.thought-toolbar-controls .field-control {
+  width: auto;
+  min-width: 140px;
+  cursor: pointer;
+}
+
+.field-control:hover {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.field-control:focus {
+  border-color: var(--selat);
+  box-shadow: 0 0 0 3px rgba(36, 91, 135, 0.14);
+  outline: none;
 }
 
 .library-grid {
@@ -3069,7 +3102,7 @@ code.notion-inline-code {
 .mini-tools-stack { display: grid; gap: 14px; }
 .mini-tool-card { display: grid; grid-template-columns: 44px 64px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 24px 28px; }
 .mini-tool-card--available { text-decoration: none; }
-.mini-tool-card--maintenance { background: rgba(216, 195, 157, .18); }
+.mini-tool-card--maintenance { background: rgba(216, 195, 157, .18); color: inherit; text-decoration: none; }
 .mini-tool-index { color: rgba(30, 27, 24, .52); font-size: .76rem; font-weight: 900; letter-spacing: .1em; }
 .mini-tool-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 2rem/1 var(--display); }
 .mini-tool-icon img { width: 88%; height: 88%; object-fit: contain; }
@@ -3083,6 +3116,11 @@ code.notion-inline-code {
 .mini-tool-status--available { color: var(--sirih); background: rgba(73, 107, 69, .1); }
 .mini-tool-status--maintenance { color: #795b43; background: rgba(121, 91, 67, .08); }
 .mini-tool-card--available:focus-visible { outline: 3px solid var(--rempah); outline-offset: 4px; }
+.mini-tool-card--maintenance:focus-visible { outline: 3px solid var(--rempah); outline-offset: 4px; }
+.tool-placeholder { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 28px; align-items: start; max-width: 860px; margin: 0 auto; padding: clamp(28px, 5vw, 56px); }
+.tool-placeholder__icon { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; background: var(--delima); color: var(--gading); font: 2.5rem/1 var(--display); }
+.tool-placeholder h2 { margin: 12px 0; font-size: clamp(1.8rem, 4vw, 3rem); }
+.tool-placeholder p { max-width: 610px; margin: 0 0 24px; color: rgba(30, 27, 24, .7); line-height: 1.65; }
 
 .tool-category-hero { padding-bottom: clamp(48px, 7vw, 86px); }
 .breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 24px; color: rgba(30, 27, 24, 0.62); font-size: 0.78rem; font-weight: 800; }
@@ -3839,8 +3877,8 @@ code.notion-inline-code {
   .store-sidebar { position: static; }
   .store-filter { display: flex; overflow-x: auto; padding-bottom: 6px; }
   .store-filter button { flex: 0 0 auto; }
-  .toolbar { grid-template-columns: 1fr 1fr; }
-  .toolbar > :first-child { grid-column: 1 / -1; }
+  .thought-toolbar { grid-template-columns: 1fr; }
+  .thought-toolbar-controls { justify-content: flex-end; }
   .footer-grid { grid-template-columns: 1fr; }
 }
 
@@ -3858,6 +3896,7 @@ code.notion-inline-code {
   .mini-tool-icon { width: 52px; height: 52px; font-size: 1.75rem; }
   .mini-tool-status { grid-column: 2 / -1; justify-self: start; min-width: 0; }
   .mini-tools-notice { padding: 16px; }
+  .tool-placeholder { grid-template-columns: 1fr; gap: 18px; padding: 28px 22px; }
   .tax-tool-card { grid-template-columns: 60px 1fr; gap: 18px; padding: 22px; }
   .tax-tool-card .btn { grid-column: 1 / -1; justify-self: start; }
   .tax-tool-icon { width: 56px; height: 56px; font-size: 2rem; }
@@ -3869,8 +3908,9 @@ code.notion-inline-code {
   .work-card { grid-template-columns: 1fr; }
   .work-card .art-placeholder { margin-bottom: 20px; }
   .library-grid, .store-grid { grid-template-columns: 1fr; }
-  .toolbar { grid-template-columns: 1fr; }
-  .toolbar > :first-child { grid-column: auto; }
+  .thought-toolbar { padding: 8px; }
+  .thought-toolbar-controls { display: grid; grid-template-columns: 1fr 1fr; }
+  .thought-toolbar-controls .field-control { width: 100%; min-width: 0; }
   .form-grid { grid-template-columns: 1fr; }
   .form-field.full { grid-column: auto; }
   .date-grid { grid-template-columns: repeat(3, 1fr); }
