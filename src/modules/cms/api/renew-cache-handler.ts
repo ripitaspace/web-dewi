@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { cmsCache } from "../core/cache";
 import { refreshBlogPostsCache } from "../services/blog.service";
 import { refreshProductsCache } from "../services/product.service";
 
@@ -19,7 +18,7 @@ export async function handleGetCacheStatus(request?: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Cache renewed successfully and saved to database",
+      message: "Content revalidated from Notion",
       counts: {
         blog_posts: posts.length,
         products: products.length,

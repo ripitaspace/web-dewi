@@ -4,7 +4,6 @@ import { notion, notionX } from "../core/client";
 import { CMS_CONFIG } from "../core/config";
 import { CMS_CONSTANTS } from "../core/constants";
 import { formatDate, getCoverUrl, getFileUrl, getMultiSelect, getText, richTextToHtml } from "../core/utils";
-import { cmsCache } from "../core/cache";
 import { BlogPost, emptyTentangData, TentangChapter, TentangPageData, TypeBlog } from "../types";
 
 
@@ -239,7 +238,6 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
       chapters,
     };
 
-    await cmsCache.set("tentang_data", data);
     return data;
   } catch (error) {
     console.error("[CMS Blog] Error refreshing tentang data cache:", error);
@@ -249,10 +247,8 @@ export const refreshTentangDataCache = async (): Promise<TentangPageData> => {
 
 export const getTentangData = cache(async (): Promise<TentangPageData> => {
   try {
-    const cached = await cmsCache.get<TentangPageData>("tentang_data");
-    if (cached && cached.chapters && cached.chapters.length > 0 && cached.pageId && cached.version === 3) {
-      return cached;
-    }
+    // Notion is the source of truth. Do not reuse the SQLite cache here: it is
+    // local to one deployment instance and otherwise lets production lag behind.
     return await refreshTentangDataCache();
   } catch (error) {
     console.error("[CMS Blog] Error getting tentang data:", error);
@@ -284,8 +280,7 @@ export const refreshBlogPostsCache = async (): Promise<BlogPost[]> => {
       mapNotionPageToBlogPost(page as TypeBlog)
     );
 
-    await cmsCache.set("blog_posts", posts);
-    // Also refresh tentang data cache in background
+    // Keep the related Notion content fresh for the same request.
     await refreshTentangDataCache();
     return posts;
   } catch (error) {
@@ -301,19 +296,9 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
     posts = [];
   } else {
     try {
-      const cached = await cmsCache.get<BlogPost[]>(
-        "blog_posts",
-        CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS
-      );
-      if (cached && cached.length > 0) {
-        posts = cached.map((p) => ({
-          ...p,
-          type: p.type || "pemikiran",
-          topics: Array.isArray(p.topics) ? p.topics : [p.category || "UMUM"].filter(Boolean),
-        }));
-      } else {
-        posts = await refreshBlogPostsCache();
-      }
+      // Always query Notion for a request. Writing the cache in the refresh
+      // function is kept only for the manual /api/renew diagnostic endpoint.
+      posts = await refreshBlogPostsCache();
     } catch (error) {
       console.error("[CMS Blog] Error fetching blog posts:", error);
       posts = [];
@@ -336,15 +321,7 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
     return null;
   }
 
-  const cacheKey = `post_${slug}`;
-
   try {
-    // Detail metadata must refresh as often as the lists, including newly added covers.
-    const cached = await cmsCache.get<BlogPost>(cacheKey, CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS);
-    if (cached) {
-      return cached;
-    }
-
     let page: PageObjectResponse | null = null;
 
     const response = await notion.dataSources.query({
@@ -380,7 +357,6 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
       console.warn(`[CMS Blog] Could not fetch recordMap for page ${page.id}:`, recordErr);
     }
 
-    await cmsCache.set(cacheKey, blogPost);
     return blogPost;
   } catch (error) {
     console.error(`[CMS Blog] Error fetching blog post with slug ${slug}:`, error);

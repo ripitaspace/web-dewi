@@ -7,7 +7,8 @@ export const metadata: Metadata = {
   description: "Karya & studi kasus sistem dari PUSPITA: RIPITAX, Mangde Logistics, Vendor Management, dan lainnya.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function KaryaPage() {
   const posts = await getBlogPosts({ type: "karya" });
