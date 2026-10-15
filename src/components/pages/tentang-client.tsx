@@ -60,8 +60,8 @@ export function TentangClient({ data, notionId }: TentangClientProps) {
                   width: "190%",
                   maxWidth: "none",
                   height: "auto",
-                  left: "-45%",
-                  bottom: "calc(-1 * clamp(40px, 6vw, 70px) - 49px)",
+                  left: "-40%",
+                  bottom: "calc(-1 * clamp(40px, 6vw, 70px) - 32px)",
                   transform: "scaleX(-1)",
                   pointerEvents: "none",
                 }}
