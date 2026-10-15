@@ -81,76 +81,40 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
 
             <div>
               {filteredProducts.length > 0 ? (
-                <div className="store-grid" id="storeGrid">
+                <div className="blog-grid" id="storeGrid">
                 {filteredProducts.map((item, idx) => {
                   const topicsList = item.topics && item.topics.length > 0
                     ? item.topics
                     : [item.category || item.type || "PEMIKIRAN"];
 
-                  const primaryTopic = topicsList[0] || "PEMIKIRAN";
-                  const themeColors = [
-                    { bg: "#38bdf8", text: "#ffffff" }, // cyan
-                    { bg: "#6366f1", text: "#ffffff" }, // indigo
-                    { bg: "#ec4899", text: "#ffffff" }, // pink
-                    { bg: "#10b981", text: "#ffffff" }, // emerald
-                    { bg: "#f59e0b", text: "#ffffff" }, // amber
-                  ];
-                  const topicKey = primaryTopic.toLowerCase();
-                  let theme = themeColors[idx % themeColors.length];
-                  if (topicKey.includes("tech") || topicKey.includes("tekno")) theme = { bg: "#38bdf8", text: "#ffffff" };
-                  else if (topicKey.includes("pop") || topicKey.includes("bisnis") || topicKey.includes("system")) theme = { bg: "#6366f1", text: "#ffffff" };
-                  else if (topicKey.includes("desain") || topicKey.includes("design") || topicKey.includes("karya")) theme = { bg: "#ec4899", text: "#ffffff" };
-                  else if (topicKey.includes("uang") || topicKey.includes("account")) theme = { bg: "#10b981", text: "#ffffff" };
-
-                  const itemArts = [
-                    "/images/artworks/system-beetle-gouache.png",
-                    "/images/artworks/coral-fish-gouache.png",
-                    "/images/artworks/javan-leopard-gouache.png",
-                  ];
-                  const artSrc = item.image && !item.image.includes("placeholder") && !item.image.startsWith("data:image/svg+xml") ? item.image : itemArts[idx % itemArts.length];
                   const authorName = item.author && item.author !== "Author" ? item.author : "pus";
+                  const hasImage = item.image && !item.image.includes("placeholder") && !item.image.startsWith("data:image/svg+xml");
 
                   return (
-                    <article key={item.id || idx} className="modern-blog-card">
-                      <Link
-                        href={`/blog/${encodeURIComponent(item.slug || item.id)}`}
-                        className="modern-card-cover-link"
-                        aria-label={item.title}
-                      >
-                        <div className="modern-card-cover">
-                          <img src={artSrc} alt={item.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />
+                    <article key={item.id || idx} className="blog-card">
+                      <div className="blog-card-cover">
+                        {hasImage ? (
+                          <img src={item.image} alt={item.title} onError={(event) => { event.currentTarget.style.display = "none"; }} />
+                        ) : <strong>?</strong>}
+                      </div>
+                      <div className="blog-topic-row">
+                        {topicsList.map((topic) => (
+                          <span className="topic-pill" key={topic}>{topic.toUpperCase()}</span>
+                        ))}
+                      </div>
+                      <h3 className="blog-title">
+                        <Link href={`/blog/${encodeURIComponent(item.slug || item.id)}`}>{item.title}</Link>
+                      </h3>
+                      <p className="blog-excerpt">{item.excerpt}</p>
+                      <div className="blog-card-foot">
+                        <div className="blog-card-byline">
+                          <img className="blog-author-avatar" src="/author-avatar.jpg" alt="" />
+                          <span className="blog-author">{authorName}</span>
+                          <time className="blog-date">{item.date}</time>
                         </div>
-                      </Link>
-
-                      <div className="modern-card-body">
-                        <div className="modern-card-badges">
-                          <span
-                            className="modern-badge"
-                            style={{ backgroundColor: theme.bg, color: theme.text }}
-                          >
-                            {primaryTopic.toUpperCase()}
-                          </span>
-                        </div>
-
-                        <h3 className="modern-card-title">
-                          <Link href={`/blog/${encodeURIComponent(item.slug || item.id)}`}>
-                            {item.title}
-                          </Link>
-                        </h3>
-
-                        <p className="modern-card-excerpt">
-                          {item.excerpt}
-                        </p>
-
-                        <div className="modern-card-footer">
-                          <div className="modern-author-avatar">
-                            <img src="/author-avatar.jpg" alt={authorName} />
-                          </div>
-                          <div className="modern-author-info">
-                            <strong className="modern-author-name">{authorName}</strong>
-                            <time className="modern-author-date">{item.date}</time>
-                          </div>
-                        </div>
+                        <Link className="blog-link" href={`/blog/${encodeURIComponent(item.slug || item.id)}`}>
+                          Baca artikel <span>→</span>
+                        </Link>
                       </div>
                     </article>
                   );

@@ -43,29 +43,41 @@ export default async function BlogIndexPage() {
 
         {posts.length > 0 ? (
           <div className="blog-grid" style={{ marginTop: "30px" }}>
-            {posts.map((post) => (
-              <article className="blog-card" key={post.id}>
-                {post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") && !post.image.startsWith("data:image/svg+xml") ? (
+            {posts.map((post) => {
+              const topicsList = post.topics && post.topics.length > 0
+                ? post.topics
+                : [post.type || post.category || "ARSIP"];
+              const hasImage = post.image && post.image !== "/images/placeholder.svg" && !post.image.includes("placeholder") && !post.image.startsWith("data:image/svg+xml");
+
+              return (
+                <article className="blog-card" key={post.id}>
                   <div className="blog-card-cover">
+                    {hasImage ? (
                     <img src={post.image} alt={post.title} />
+                    ) : <strong>?</strong>}
                   </div>
-                ) : null}
-                <div className="blog-card-meta">
-                  <span className="blog-badge">{post.category || "Arsip"}</span>
-                  <time className="blog-date">{post.date}</time>
-                </div>
-                <h3 className="blog-title">
-                  <Link href={`/blog/${post.slug || post.id}`}>{post.title}</Link>
-                </h3>
-                <p className="blog-excerpt">{post.excerpt}</p>
-                <div className="blog-card-foot">
-                  <span className="blog-author">Oleh {post.author || "Admin"}</span>
-                  <Link className="blog-link" href={`/blog/${post.slug || post.id}`}>
-                    Baca artikel <span>→</span>
-                  </Link>
-                </div>
-              </article>
-            ))}
+                  <div className="blog-topic-row">
+                    {topicsList.map((topic) => (
+                      <span className="topic-pill" key={topic}>{topic.toUpperCase()}</span>
+                    ))}
+                  </div>
+                  <h3 className="blog-title">
+                    <Link href={`/blog/${post.slug || post.id}`}>{post.title}</Link>
+                  </h3>
+                  <p className="blog-excerpt">{post.excerpt}</p>
+                  <div className="blog-card-foot">
+                    <div className="blog-card-byline">
+                      <img className="blog-author-avatar" src="/author-avatar.jpg" alt="" />
+                      <span className="blog-author">{post.author || "pus"}</span>
+                      <time className="blog-date">{post.date}</time>
+                    </div>
+                    <Link className="blog-link" href={`/blog/${post.slug || post.id}`}>
+                      Baca artikel <span>→</span>
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
           <div style={{ textAlign: "center", padding: "80px 20px", background: "#fff", borderRadius: "20px", border: "1px solid var(--line)" }}>

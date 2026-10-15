@@ -1440,6 +1440,7 @@ body.is-ready .spice,
 .blog-card {
   display: flex;
   flex-direction: column;
+  align-self: stretch;
   background: rgba(251, 246, 237, 0.88);
   border: 1px solid var(--line);
   border-radius: 28px;
@@ -1466,7 +1467,7 @@ body.is-ready .spice,
   background: #ffffff;
   display: grid;
   place-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
   overflow: hidden;
   position: relative;
 }
@@ -1499,7 +1500,7 @@ body.is-ready .spice,
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .topic-pill {
@@ -1518,10 +1519,10 @@ body.is-ready .spice,
 
 .blog-title {
   font-family: var(--display);
-  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  font-size: clamp(1.2rem, 1.7vw, 1.42rem);
   font-weight: 800;
   line-height: 1.28;
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   color: var(--arang);
   letter-spacing: -0.01em;
 }
@@ -1539,8 +1540,11 @@ body.is-ready .spice,
   font-size: 0.88rem;
   line-height: 1.65;
   color: rgba(30, 27, 24, 0.72);
-  margin: 0 0 24px;
-  flex: 1;
+  margin: 0 0 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .blog-card-foot {
@@ -1553,9 +1557,35 @@ body.is-ready .spice,
   margin-top: auto;
 }
 
+.blog-card-byline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.blog-author-avatar {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.blog-card-byline .blog-date,
 .blog-author {
   color: rgba(30, 27, 24, 0.6);
   font-weight: 600;
+}
+
+.blog-author {
+  color: var(--delima);
+}
+
+.blog-card-byline .blog-date::after {
+  content: "·";
+  margin-left: 8px;
 }
 
 .blog-link {
@@ -1576,6 +1606,7 @@ body.is-ready .spice,
   .blog-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
 }
 
 @media (max-width: 640px) {
@@ -1584,6 +1615,20 @@ body.is-ready .spice,
   }
   .blog-head {
     margin-bottom: 32px;
+  }
+
+  .blog-card-foot {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .blog-card-byline {
+    flex-wrap: wrap;
+    gap: 2px 8px;
+  }
+
+  .blog-card-byline .blog-date::after {
+    display: none;
   }
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
+import { RipitaLoaderBootstrap } from "@/components/brand/ripita-loader-bootstrap";
 import { RipitaSignatureLoader } from "@/components/brand/ripita-signature-loader";
 import "./globals.css";
 
@@ -32,10 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" suppressHydrationWarning>
+      <head>
+        <RipitaLoaderBootstrap html={loaderBootstrap} />
+      </head>
       <body>
-        <Script id="ripita-loader-bootstrap" strategy="beforeInteractive">
-          {loaderBootstrap}
-        </Script>
         <RipitaSignatureLoader />
         <div data-ripita-page-content>{children}</div>
       </body>

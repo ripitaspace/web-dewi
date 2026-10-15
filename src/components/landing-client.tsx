@@ -577,7 +577,11 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
                       </h3>
                       <p className="blog-excerpt">{post.excerpt}</p>
                       <div className="blog-card-foot">
-                        <span className="blog-date">{post.date}</span>
+                        <div className="blog-card-byline">
+                          <img className="blog-author-avatar" src="/author-avatar.jpg" alt="" />
+                          <span className="blog-author">{post.author || "pus"}</span>
+                          <span className="blog-date">{post.date}</span>
+                        </div>
                         <a className="blog-link" href={`/blog/${post.slug || post.id}`}>
                           Baca artikel <span>→</span>
                         </a>
