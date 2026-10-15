@@ -15,7 +15,7 @@ type MiniToolStatus = "available" | "maintenance";
 
 interface MiniTool {
   number: string;
-  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials";
+  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials";
   title: string;
   description: string;
   icon: string;
@@ -23,7 +23,12 @@ interface MiniTool {
   href?: string;
 }
 
-const MINI_TOOL_CATEGORIES = ["Business Essentials", "Finance Essentials", "Tax Essentials"] as const;
+const MINI_TOOL_FILTERS = [
+  { value: "Business Essentials", label: "Business" },
+  { value: "Finance Essentials", label: "Finance" },
+  { value: "Tax Essentials", label: "Tax" },
+  { value: "Audit Essentials", label: "Audit" },
+] as const;
 
 const MINI_TOOLS: MiniTool[] = [
   { number: "09", category: "Tax Essentials", title: "Coretax Invoice Scraper & Renamer", description: "Ekstrak data dan rename faktur pajak.", icon: "▤", status: "available", href: "/karya/pajak/coretax" },
@@ -36,6 +41,10 @@ const MINI_TOOLS: MiniTool[] = [
   { number: "07", category: "Finance Essentials", title: "Kas & Pengeluaran Tracker", description: "Membuat rekap kas dan pengeluaran dari Excel.", icon: "⌁", status: "maintenance" },
   { number: "08", category: "Finance Essentials", title: "Laporan Keuangan Sederhana", description: "Membuat laba rugi dan neraca dari data terstruktur.", icon: "≋", status: "maintenance" },
   { number: "10", category: "Tax Essentials", title: "Kalkulator Pajak", description: "Menghitung PPN dan PPh dasar.", icon: "%", status: "maintenance" },
+  { number: "13", category: "Tax Essentials", title: "Extension Download Faktur Otomatis", description: "Membantu mengunduh Faktur Pajak secara otomatis dari Coretax.", icon: "↓", status: "maintenance" },
+  { number: "14", category: "Tax Essentials", title: "PPH 21 Calculator", description: "Menghitung estimasi PPh 21 karyawan berdasarkan penghasilan dan komponen pajak.", icon: "₨", status: "maintenance" },
+  { number: "11", category: "Audit Essentials", title: "Confirmation Generator", description: "Membuat surat konfirmasi audit bank, utang, dan piutang.", icon: "✓", status: "maintenance" },
+  { number: "12", category: "Audit Essentials", title: "Sampling Picker", description: "Memilih sampel audit dari data Excel atau CSV.", icon: "⊙", status: "maintenance" },
 ];
 
 export function KaryaClient({ posts = [] }: KaryaClientProps) {
@@ -43,7 +52,7 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
   const [selectedWork, setSelectedWork] = useState<BlogPost | null>(null);
 
   const categories = useMemo(() => {
-    const cats = new Set<string>(MINI_TOOL_CATEGORIES);
+    const cats = new Set<string>(MINI_TOOL_FILTERS.map((filter) => filter.value));
     posts.forEach((p) => {
       if (p.category) cats.add(p.category);
       if (p.topics) p.topics.forEach((t) => cats.add(t));
@@ -111,7 +120,7 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                   onClick={() => setActiveCategory(cat)}
                   type="button"
                 >
-                  {cat}
+                  {MINI_TOOL_FILTERS.find((filter) => filter.value === cat)?.label || cat}
                 </button>
               ))}
             </div>
