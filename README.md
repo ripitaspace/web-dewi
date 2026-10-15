@@ -20,6 +20,19 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Visitor analytics
+
+This website supports Google Analytics 4 (GA4). Create a **Web data stream** in
+[Google Analytics](https://analytics.google.com/), copy its Measurement ID
+(format: `G-XXXXXXXXXX`), then add it to the production environment as:
+
+```env
+NEXT_PUBLIC_GA_MEASUREMENT_ID="G-XXXXXXXXXX"
+```
+
+Redeploy after setting it. GA4 will then record page views across the site; use
+the **Reports** or **Realtime** section in Google Analytics to see visitors.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
