@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ROUTE_ORDER } from "@/lib/site-data";
@@ -28,7 +29,14 @@ export function SiteHeader({ currentKey }: SiteHeaderProps) {
   return (
     <header className={`site-nav ${isScrolled ? "compact" : ""}`} id="siteNav">
       <Link className="brand" href="/" aria-label="PUSPITA × RIPITA">
-        <span className="brand-mark">P</span>
+        <Image
+          className="brand-logo"
+          src="/images/brand/puspita-ripita-mark.png"
+          alt=""
+          width={1254}
+          height={1254}
+          priority
+        />
         <span className="brand-copy">
           <strong>PUSPITA × RIPITA</strong>
           <small>Rupa Indonesia · Akal Masa Depan</small>

@@ -136,6 +136,13 @@ svg {
   box-shadow: 0 8px 20px rgba(158, 27, 63, 0.18);
 }
 
+.brand-logo {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
 .brand-copy strong {
   display: block;
   font-family: var(--display);
@@ -1642,6 +1649,13 @@ body.is-ready .spice,
   font-family: var(--display);
   font-weight: 800;
   font-size: 1rem;
+}
+
+.brand-logo-mini {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
 }
 
 .blog-detail-container {
