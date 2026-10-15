@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { BlogPost } from "@/modules/cms";
 
@@ -383,7 +384,14 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
 
       <header className={`site-nav ${isNavCompact ? "compact" : ""}`} id="siteNav">
         <a className="brand" href="#top" aria-label="PUSPITA × RIPITA">
-          <span className="brand-mark">P</span>
+          <Image
+            className="brand-logo"
+            src="/images/brand/puspita-ripita-mark.png"
+            alt=""
+            width={1254}
+            height={1254}
+            priority
+          />
           <span className="brand-copy">
             <strong>PUSPITA × RIPITA</strong>
             <small>Rupa Indonesia · Akal Masa Depan</small>

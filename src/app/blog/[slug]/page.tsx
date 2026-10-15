@@ -65,7 +65,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <span>Kembali ke Beranda</span>
           </Link>
           <Link href="/" className="brand-mini">
-            <span className="brand-mark-mini">P</span>
+            <Image className="brand-logo-mini" src="/images/brand/puspita-ripita-mark.png" alt="" width={1254} height={1254} />
             <strong>PUSPITA × RIPITA</strong>
           </Link>
         </div>
