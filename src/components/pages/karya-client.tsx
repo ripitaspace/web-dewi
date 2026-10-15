@@ -37,9 +37,9 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
   }, [posts, activeCategory]);
 
   const filteredMiniTools = useMemo(() => (
-    activeCategory === "Semua"
-      ? MINI_TOOLS
-      : MINI_TOOLS.filter((tool) => tool.category === activeCategory)
+    MINI_TOOLS
+      .filter((tool) => activeCategory === "Semua" || tool.category === activeCategory)
+      .sort((a, b) => Number(b.status === "available") - Number(a.status === "available"))
   ), [activeCategory]);
 
   const hasVisibleWorks = filteredWorks.length > 0 || filteredMiniTools.length > 0;
