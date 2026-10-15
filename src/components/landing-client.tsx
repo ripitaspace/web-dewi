@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { RipitaMark } from "@/components/brand/ripita-mark";
+import { RIPITA_LOADER_COMPLETE_EVENT } from "@/components/brand/ripita-signature-loader";
 import type { BlogPost } from "@/modules/cms";
 
 const HERO_OBJECTS = [
@@ -177,6 +178,7 @@ const HERO_OBJECTS = [
         <img
           src="/images/artworks/system-beetle-gouache.png"
           alt="Kumbang Sistem Nusantara"
+          data-loader-critical
         />
         <small className="art-label-chip">Kumbang</small>
       </div>
@@ -195,6 +197,7 @@ const HERO_OBJECTS = [
         <img
           src="/images/artworks/octopus-system-gouache.png"
           alt="Gurita Sistem Nusantara"
+          data-loader-critical
         />
         <small className="art-label-chip">Gurita</small>
       </div>
@@ -251,9 +254,17 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
   };
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      startIntro();
-    }, 120);
+    let timer: number | undefined;
+    const queueIntro = () => {
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(startIntro, 120);
+    };
+    const loaderState = document.documentElement.dataset.ripitaLoader;
+    if (loaderState === "complete" || loaderState === "skip") {
+      queueIntro();
+    } else {
+      window.addEventListener(RIPITA_LOADER_COMPLETE_EVENT, queueIntro, { once: true });
+    }
 
     const updateScrollScene = () => {
       if (!heroScrollRef.current) return;
@@ -348,7 +359,8 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
     updateScrollScene();
 
     return () => {
-      window.clearTimeout(timer);
+      if (timer) window.clearTimeout(timer);
+      window.removeEventListener(RIPITA_LOADER_COMPLETE_EVENT, queueIntro);
       if (stage) {
         stage.removeEventListener("pointermove", handlePointerMove);
         stage.removeEventListener("pointerleave", handlePointerLeave);
@@ -384,13 +396,9 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
 
       <header className={`site-nav ${isNavCompact ? "compact" : ""}`} id="siteNav">
         <a className="brand" href="#top" aria-label="PUSPITA × RIPITA">
-          <Image
+          <RipitaMark
             className="brand-logo"
-            src="/images/brand/puspita-ripita-mark.png"
-            alt=""
-            width={1254}
-            height={1254}
-            priority
+            data-ripita-logo-target
           />
           <span className="brand-copy">
             <strong>PUSPITA × RIPITA</strong>
