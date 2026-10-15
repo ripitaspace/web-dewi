@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
+import { Pph21ReferenceDownload } from "@/components/tools/pph21-reference-download";
 import { MINI_TOOLS } from "@/lib/mini-tools";
 
 interface MiniToolPageProps {
@@ -51,6 +52,11 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
                 <span className="topic-pill">UNDER MAINTENANCE</span>
                 <h2>Ruang parser sedang disiapkan.</h2>
                 <p>Halaman kerja untuk {tool.title} akan tersedia di sini. Nantinya data tetap diproses langsung di perangkatmu, tanpa login atau penyimpanan transaksi.</p>
+                {slug === "pph-21-calculator" && (
+                  <div className="button-row" style={{ marginBottom: "12px" }}>
+                    <Pph21ReferenceDownload />
+                  </div>
+                )}
                 <Link href="/karya" className="btn primary">← Kembali ke Karya</Link>
               </div>
             </div>

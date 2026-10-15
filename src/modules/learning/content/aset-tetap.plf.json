@@ -1,0 +1,401 @@
+{
+  "kind": "plf.module",
+  "schemaVersion": "1.0.0",
+  "id": "aset-tetap-studio-plf",
+  "revision": 1,
+  "metadata": {
+    "title": "Aset Tetap: Dari Perolehan sampai Penyusutan",
+    "summary": "Satu perjalanan belajar aset tetap yang menampilkan semua 13 komponen PLF v1.0: membaca, diagram, video, audio, kuis, latihan numerik, pencatatan jurnal, studi kasus dan refleksi.",
+    "author": "PuspitaCore",
+    "subject": "Akuntansi Keuangan",
+    "language": "id",
+    "level": "beginner",
+    "estimatedMinutes": 35,
+    "tags": [
+      "aset-tetap",
+      "psak-216",
+      "showcase",
+      "mixed"
+    ]
+  },
+  "experience": {
+    "profile": "mixed",
+    "presentation": "guided",
+    "navigation": "flexible",
+    "allowResume": true
+  },
+  "competencies": [
+    {
+      "id": "pengakuan",
+      "title": "Mengidentifikasi karakteristik aset tetap"
+    },
+    {
+      "id": "perolehan",
+      "title": "Mengklasifikasikan dan menghitung biaya perolehan"
+    },
+    {
+      "id": "penyusutan",
+      "title": "Menghitung penyusutan metode garis lurus"
+    },
+    {
+      "id": "pencatatan",
+      "title": "Membuat jurnal penyusutan"
+    },
+    {
+      "id": "pertimbangan",
+      "title": "Mengevaluasi kesalahan perlakuan akuntansi"
+    }
+  ],
+  "assessment": {
+    "passingScore": 75,
+    "requireAllRequired": true,
+    "attemptPolicy": "best"
+  },
+  "pages": [
+    {
+      "id": "pahami-aset",
+      "title": "Kenali Aset Tetap",
+      "layout": "article",
+      "blocks": [
+        {
+          "id": "bacaan-konsep",
+          "type": "reading",
+          "required": true,
+          "title": "Baca · Dari benda menjadi aset",
+          "markdown": "# Aset tetap bukan sekadar barang mahal\nDalam **PSAK 216**, aset tetap adalah aset berwujud yang digunakan untuk operasi, penyediaan barang/jasa, disewakan, atau administrasi dan diharapkan dipakai **lebih dari satu periode**.\n\n## Cerita kita: PT Cakrawala Mesin\nPerusahaan membeli **mesin pemotong** pada 1 Januari 20X6. Rinciannya:\n- Harga mesin: **Rp120.000.000**\n- Pengangkutan ke pabrik: **Rp5.000.000**\n- Instalasi sebelum siap digunakan: **Rp3.000.000**\n- Pelatihan operator: **Rp2.000.000**\n- Pemeliharaan rutin tahunan: **Rp1.500.000**\n\nBiaya perolehan mesin: **Rp128.000.000** = harga mesin + pengangkutan + instalasi. Biaya pelatihan dan pemeliharaan rutin tidak termasuk biaya perolehan mesin dalam ilustrasi ini.\n\n**Asumsi studi kasus:** nilai residu Rp8.000.000, masa manfaat 5 tahun, metode garis lurus, dan mesin siap digunakan 1 Januari 20X6. Semua angka sengaja disederhanakan, tanpa isu PPN, provisi pembongkaran, atau penurunan nilai."
+        },
+        {
+          "id": "diagram-siklus",
+          "type": "image",
+          "required": false,
+          "title": "Lihat · Siklus hidup aset",
+          "src": "./media/siklus-aset.svg",
+          "alt": "Diagram empat tahapan: perolehan, siap digunakan, penyusutan, dan penghentian pengakuan aset tetap",
+          "caption": "Diagram konseptual siklus akuntansi aset tetap; pelatihan dan pemeliharaan rutin dibedakan dari biaya perolehan."
+        }
+      ]
+    },
+    {
+      "id": "amati-proses",
+      "title": "Amati & Dengarkan",
+      "layout": "article",
+      "blocks": [
+        {
+          "id": "video-perolehan",
+          "type": "video",
+          "required": false,
+          "title": "Tonton · Dari biaya ke depresiasi",
+          "src": "./media/aset-tetap-demo.mp4",
+          "provider": "html5",
+          "minCoverage": 0.8
+        },
+        {
+          "id": "audio-rangkuman",
+          "type": "audio",
+          "required": false,
+          "title": "Dengarkan · Rangkuman singkat",
+          "src": "./media/aset-tetap-ringkas.mp3",
+          "provider": "html5",
+          "minCoverage": 0.75
+        }
+      ]
+    },
+    {
+      "id": "uji-konsep",
+      "title": "Uji Konsep",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "soal-tunggal",
+          "type": "single_choice",
+          "required": true,
+          "title": "01 · Pilih satu jawaban",
+          "competencyIds": [
+            "perolehan"
+          ],
+          "prompt": "Biaya manakah yang ditambahkan ke biaya perolehan mesin sebelum siap digunakan?",
+          "options": [
+            {
+              "id": "opsi-instalasi",
+              "text": "Biaya instalasi mesin"
+            },
+            {
+              "id": "opsi-pelatihan",
+              "text": "Pelatihan operator sesudah mesin siap digunakan"
+            },
+            {
+              "id": "opsi-pemeliharaan",
+              "text": "Pemeliharaan rutin tahun berikutnya"
+            }
+          ],
+          "grading": {
+            "correctOptionId": "opsi-instalasi",
+            "points": 10,
+            "explanation": "Instalasi yang diperlukan agar mesin siap digunakan merupakan biaya yang dapat diatribusikan langsung."
+          }
+        },
+        {
+          "id": "soal-jamak",
+          "type": "multiple_choice",
+          "required": true,
+          "title": "02 · Pilih semua yang benar",
+          "competencyIds": [
+            "perolehan"
+          ],
+          "prompt": "Pilih SELURUH biaya yang termasuk biaya perolehan mesin pada kasus ini.",
+          "options": [
+            {
+              "id": "harga",
+              "text": "Harga pembelian Rp120 juta"
+            },
+            {
+              "id": "angkut",
+              "text": "Pengangkutan ke lokasi Rp5 juta"
+            },
+            {
+              "id": "install",
+              "text": "Instalasi sebelum digunakan Rp3 juta"
+            },
+            {
+              "id": "training",
+              "text": "Pelatihan operator Rp2 juta"
+            },
+            {
+              "id": "servis",
+              "text": "Pemeliharaan rutin Rp1,5 juta"
+            }
+          ],
+          "grading": {
+            "correctOptionIds": [
+              "harga",
+              "angkut",
+              "install"
+            ],
+            "points": 15,
+            "partialCredit": true,
+            "explanation": "Harga beli, pengangkutan, dan instalasi membentuk biaya perolehan Rp128 juta. Pelatihan dan pemeliharaan rutin bukan bagian dari biaya perolehan dalam kasus ini."
+          }
+        },
+        {
+          "id": "benar-salah",
+          "type": "true_false",
+          "required": true,
+          "title": "03 · Benar atau salah",
+          "competencyIds": [
+            "pengakuan"
+          ],
+          "prompt": "Karena pelatihan operator membantu penggunaan mesin, maka biaya pelatihan tersebut selalu harus dikapitalisasi ke aset tetap.",
+          "grading": {
+            "correct": false,
+            "points": 5,
+            "explanation": "Salah. Biaya pelatihan umumnya diakui sebagai beban, bukan biaya yang diperlukan untuk membawa aset ke lokasi dan kondisi siap digunakan."
+          }
+        }
+      ]
+    },
+    {
+      "id": "olah-angka",
+      "title": "Olah Angka & Urutan",
+      "layout": "split",
+      "blocks": [
+        {
+          "id": "hitung-penyusutan",
+          "type": "number_input",
+          "required": true,
+          "title": "04 · Hitung depresiasi",
+          "competencyIds": [
+            "penyusutan"
+          ],
+          "prompt": "Dengan biaya perolehan Rp128 juta, nilai residu Rp8 juta dan umur manfaat 5 tahun, berapa beban penyusutan garis lurus per tahun? Ketik angka rupiah tanpa simbol.",
+          "unit": "IDR",
+          "grading": {
+            "correctValue": 24000000,
+            "tolerance": 0,
+            "points": 15,
+            "explanation": "(Rp128.000.000 − Rp8.000.000) / 5 tahun = Rp24.000.000 per tahun."
+          }
+        },
+        {
+          "id": "pasangkan-biaya",
+          "type": "matching",
+          "required": true,
+          "title": "05 · Cocokkan kategorinya",
+          "competencyIds": [
+            "perolehan"
+          ],
+          "prompt": "Pasangkan setiap komponen dengan perlakuan yang paling tepat.",
+          "pairs": [
+            {
+              "id": "pasang-mesin",
+              "left": "Harga pembelian mesin",
+              "right": "Kapitalisasi: harga beli"
+            },
+            {
+              "id": "pasang-angkut",
+              "left": "Pengangkutan ke pabrik",
+              "right": "Kapitalisasi: transportasi"
+            },
+            {
+              "id": "pasang-latih",
+              "left": "Pelatihan operator",
+              "right": "Beban: pelatihan"
+            },
+            {
+              "id": "pasang-servis",
+              "left": "Perawatan rutin",
+              "right": "Beban: pemeliharaan"
+            }
+          ],
+          "grading": {
+            "points": 15,
+            "partialCredit": true
+          }
+        },
+        {
+          "id": "urut-tahapan",
+          "type": "ordering",
+          "required": true,
+          "title": "06 · Susun urutan",
+          "competencyIds": [
+            "penyusutan"
+          ],
+          "prompt": "Urutkan tahapan yang masuk akal ketika menghitung penyusutan tahun pertama.",
+          "items": [
+            {
+              "id": "tentukan-biaya",
+              "text": "Identifikasi biaya perolehan"
+            },
+            {
+              "id": "estimasi",
+              "text": "Tentukan nilai residu dan umur manfaat"
+            },
+            {
+              "id": "dasar",
+              "text": "Hitung jumlah tersusutkan"
+            },
+            {
+              "id": "beban",
+              "text": "Hitung beban penyusutan tahunan"
+            },
+            {
+              "id": "jurnal",
+              "text": "Catat jurnal penyusutan"
+            }
+          ],
+          "grading": {
+            "correctOrder": [
+              "tentukan-biaya",
+              "estimasi",
+              "dasar",
+              "beban",
+              "jurnal"
+            ],
+            "points": 10,
+            "partialCredit": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "praktik-profesional",
+      "title": "Praktik Profesional",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "jurnal-penyusutan",
+          "type": "journal_entry",
+          "required": true,
+          "title": "07 · Jurnal penyesuaian",
+          "competencyIds": [
+            "pencatatan"
+          ],
+          "prompt": "Pada 31 Desember 20X6, catat beban penyusutan mesin tahun pertama sebesar Rp24.000.000. Pilih akun dan tentukan posisi debit/kredit.",
+          "accounts": [
+            "beban-penyusutan",
+            "akumulasi-penyusutan",
+            "mesin",
+            "kas"
+          ],
+          "grading": {
+            "expectedLines": [
+              {
+                "accountId": "beban-penyusutan",
+                "debit": 24000000,
+                "credit": 0
+              },
+              {
+                "accountId": "akumulasi-penyusutan",
+                "debit": 0,
+                "credit": 24000000
+              }
+            ],
+            "points": 20,
+            "partialCredit": true
+          }
+        },
+        {
+          "id": "kasus-revisi",
+          "type": "case_decision",
+          "required": true,
+          "title": "08 · Ambil keputusan",
+          "competencyIds": [
+            "pertimbangan"
+          ],
+          "scenario": "# Temuan akhir tahun\nAkuntan PT Cakrawala Mesin ternyata memasukkan **pelatihan operator Rp2 juta** ke biaya perolehan mesin. Mesin dinyatakan siap digunakan sebelum pelatihan tersebut.\n\nPerusahaan menggunakan metode garis lurus dan belum menyusun jurnal penyesuaian akhir tahun. Kamu diminta menelaah perlakuan ini.",
+          "prompt": "Apa tindakan yang paling tepat berdasarkan asumsi kasus?",
+          "options": [
+            {
+              "id": "koreksi",
+              "text": "Keluarkan pelatihan dari aset, akui sebagai beban, dan hitung ulang depresiasi terkait"
+            },
+            {
+              "id": "biarkan",
+              "text": "Biarkan agar laba perusahaan terlihat lebih besar"
+            },
+            {
+              "id": "tunda",
+              "text": "Tunda koreksi sampai mesin dijual"
+            },
+            {
+              "id": "amortisasi",
+              "text": "Pindahkan biaya pelatihan menjadi aset takberwujud tanpa penilaian lebih lanjut"
+            }
+          ],
+          "grading": {
+            "optionScores": {
+              "koreksi": 1,
+              "biarkan": 0,
+              "tunda": 0,
+              "amortisasi": 0.1
+            },
+            "points": 10,
+            "explanation": "Dalam kasus ini, pelatihan dikeluarkan dari biaya perolehan dan diakui sebagai beban. Penyusutan perlu dihitung berdasarkan nilai aset yang benar. Dampak koreksi mengikuti fakta dan kebijakan akuntansi entitas."
+          }
+        }
+      ]
+    },
+    {
+      "id": "refleksi-report",
+      "title": "Refleksi & Laporan",
+      "layout": "article",
+      "blocks": [
+        {
+          "id": "refleksi-akhir",
+          "type": "reflection",
+          "required": true,
+          "title": "09 · Catatan profesional",
+          "competencyIds": [
+            "pertimbangan"
+          ],
+          "prompt": "Tulis memo singkat untuk supervisor: (1) biaya perolehan mesin, (2) penyusutan tahunan, dan (3) mengapa pelatihan tidak dikapitalisasi. Jawaban ini tidak dinilai otomatis.",
+          "rubric": [
+            "Menyebutkan biaya perolehan Rp128.000.000",
+            "Menyebutkan beban penyusutan Rp24.000.000 per tahun",
+            "Menjelaskan alasan pembebanan biaya pelatihan"
+          ],
+          "reviewMode": "manual"
+        }
+      ]
+    }
+  ]
+}

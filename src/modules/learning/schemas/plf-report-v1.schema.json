@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.puspitacore.com/schemas/plf-report-v1.schema.json",
+  "title": "PuspitaCore Session Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schemaVersion",
+    "sessionId",
+    "moduleId",
+    "moduleRevision",
+    "startedAt",
+    "endedAt",
+    "timezone",
+    "durationSeconds",
+    "activeSeconds",
+    "completion",
+    "assessment",
+    "activities"
+  ],
+  "properties": {
+    "kind": {
+      "const": "plf.sessionReport"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "moduleId": {
+      "$ref": "#/$defs/id"
+    },
+    "moduleRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "endedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "durationSeconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "activeSeconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requiredCompleted",
+        "requiredTotal",
+        "status"
+      ],
+      "properties": {
+        "requiredCompleted": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "requiredTotal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "incomplete"
+          ]
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score",
+        "maxScore",
+        "percentage",
+        "status"
+      ],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxScore": {
+          "type": "number",
+          "minimum": 0
+        },
+        "percentage": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "pending_manual",
+            "not_scored"
+          ]
+        }
+      }
+    },
+    "activities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "activityId",
+          "type",
+          "attempts",
+          "activeSeconds",
+          "completed"
+        ],
+        "properties": {
+          "activityId": {
+            "$ref": "#/$defs/id"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "activeSeconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0
+          },
+          "maxScore": {
+            "type": "number",
+            "minimum": 0
+          },
+          "answer": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "array",
+              "object",
+              "null"
+            ]
+          },
+          "videoMetrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "durationSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "playbackSeconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "uniqueCoverage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "seekCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "playedRanges": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "disclaimer": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,79}$"
+    }
+  }
+}

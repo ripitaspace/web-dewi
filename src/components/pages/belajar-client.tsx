@@ -6,12 +6,15 @@ import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
+import { ModuleCatalog } from "@/components/learning/module-catalog";
+import type { ModuleCard } from "@/modules/learning/types";
 
 interface BelajarClientProps {
   posts?: BlogPost[];
+  modules?: ModuleCard[];
 }
 
-export function BelajarClient({ posts = [] }: BelajarClientProps) {
+export function BelajarClient({ posts = [], modules = [] }: BelajarClientProps) {
   const [selectedType, setSelectedType] = useState("Semua");
 
   const types = useMemo(() => {
@@ -41,10 +44,10 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
         <section className="page-hero">
           <div className="container page-hero-grid">
             <div>
-              <span className="eyebrow text-delima">Catatan Belajar</span>
+              <span className="eyebrow text-delima">Ruang Belajar</span>
               <h1 className="display-lg">Pengetahuan yang dapat langsung digunakan.</h1>
               <p className="lead muted">
-                Tempatku berbagi pengetahuan, tutorial, dan pengalaman belajar yang bisa kita praktikkan bersama.
+                Jelajahi modul interaktif, coba latihan, dan temukan catatan belajar yang bisa kita praktikkan bersama.
               </p>
             </div>
             <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
@@ -60,7 +63,15 @@ export function BelajarClient({ posts = [] }: BelajarClientProps) {
           </div>
         </section>
 
-        {/* Store Catalog Section */}
+        <ModuleCatalog modules={modules} />
+
+        <div className="container" style={{ paddingBlock: "32px" }}>
+          <span className="eyebrow text-delima">BACA & JELAJAHI</span>
+          <h2>Catatan belajar.</h2>
+          <p className="muted">Tutorial, pengetahuan, dan pengalaman untuk menemani proses belajarmu.</p>
+        </div>
+
+        {/* Article catalog */}
         <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container store-layout">
             <aside className="card store-sidebar">

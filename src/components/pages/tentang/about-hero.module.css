@@ -1,0 +1,19 @@
+/* Word boxes preserve normal wrapping; only the letters inside them move. */
+.word { position: relative; display: inline-block; white-space: nowrap; }
+.mask { display: inline-block; vertical-align: bottom; perspective: 700px; }
+.letter { display: inline-block; transform-origin: 50% 75%; backface-visibility: hidden; }
+.strike { position: absolute; left: 0; top: 52%; width: 100%; height: .12em; overflow: visible; pointer-events: none; color: #c47b65; transform-origin: left center; }
+.strike path { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; }
+.fish { position: absolute; bottom: -.17em; left: 15%; width: .8em; height: .34em; pointer-events: none; opacity: 0; mix-blend-mode: multiply; }
+.fish img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 56%; clip-path: ellipse(49% 48% at 50% 50%); }
+.system { position: absolute; left: 5%; top: 100%; width: 88%; height: auto; aspect-ratio: 200 / 16; overflow: visible; pointer-events: none; }
+.system path { fill: none; stroke: var(--kunyit); stroke-width: 1.2; }
+.system circle { fill: var(--kunyit); stroke: var(--paper); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; }
+@media (min-width: 621px) and (max-width: 1023px) {
+  .fish { width: .6em; height: .26em; }
+  .system { width: 68%; }
+}
+@media (max-width: 620px), (prefers-reduced-motion: reduce) {
+  .fish, .system { display: none; }
+  .mask { perspective: none; }
+}
