@@ -7,8 +7,79 @@ datasource db {
   provider = "sqlite"
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  FAILED
+}
+
 model NotionCache {
   key       String   @id
   data      String
   updatedAt DateTime @updatedAt
+}
+
+model CalendarConnection {
+  id                    String           @id @default(cuid())
+  adminEmail            String           @unique
+  encryptedRefreshToken String
+  grantedScopes         String
+  watchChannelId        String?
+  watchResourceId       String?
+  encryptedWatchToken   String?
+  watchExpiresAt        DateTime?
+  syncToken             String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  settings              BookingSettings?
+}
+
+model BookingSettings {
+  id                     String             @id @default(cuid())
+  connectionId           String             @unique
+  availabilityCalendarId String
+  bookingCalendarId      String
+  busyCalendarIds        String             @default("[]")
+  ownerTimeZone          String             @default("Asia/Jakarta")
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  connection             CalendarConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+}
+
+model Booking {
+  id               String        @id @default(cuid())
+  serviceId        String
+  name             String
+  email            String
+  organization     String?
+  role             String?
+  message          String
+  startAt          DateTime
+  endAt            DateTime
+  blockedStartAt   DateTime
+  blockedEndAt     DateTime
+  status           BookingStatus @default(PENDING)
+  googleEventId    String?       @unique
+  meetUrl          String?
+  manageTokenHash  String        @unique
+  idempotencyKey   String        @unique
+  syncWarning      String?
+  pendingExpiresAt DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([status, startAt])
+  @@index([email, createdAt])
+}
+
+model BookingAttempt {
+  id        String   @id @default(cuid())
+  ipHash    String
+  emailHash String?
+  outcome   String
+  createdAt DateTime @default(now())
+
+  @@index([ipHash, createdAt])
+  @@index([emailHash, createdAt])
 }
