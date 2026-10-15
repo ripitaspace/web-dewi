@@ -12,6 +12,7 @@ const interactiveWords = new Set(["Bukan", "biografi.", "cerita", "berpikirku", 
 
 export function AboutHero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const heroArtRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const title = titleRef.current;
@@ -177,6 +178,45 @@ export function AboutHero() {
     }, title);
     return () => media.revert();
   }, []);
+
+  useLayoutEffect(() => {
+    const heroArt = heroArtRef.current;
+    if (!heroArt || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const layers = [
+      { element: heroArt.querySelector<HTMLElement>("[data-parallax-layer=portrait]"), x: 10, y: -28 },
+      { element: heroArt.querySelector<HTMLElement>("[data-parallax-layer=flora]"), x: -22, y: -72 },
+      { element: heroArt.querySelector<HTMLElement>("[data-parallax-layer=stamp]"), x: 28, y: -46 },
+    ];
+    let frame = 0;
+
+    const updateParallax = () => {
+      frame = 0;
+      const bounds = heroArt.getBoundingClientRect();
+      const distance = Math.max(window.innerHeight, bounds.height);
+      const progress = Math.max(-1, Math.min(1, (window.innerHeight / 2 - (bounds.top + bounds.height / 2)) / distance));
+      const intensity = window.innerWidth <= 620 ? 0.72 : 1;
+
+      layers.forEach(({ element, x, y }) => {
+        if (!element) return;
+        element.style.setProperty("--parallax-x", `${progress * x * intensity}px`);
+        element.style.setProperty("--parallax-y", `${progress * y * intensity}px`);
+      });
+    };
+    const requestUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateParallax);
+    };
+
+    updateParallax();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <section className={styles.hero} aria-labelledby="about-title">
       <div className={`container ${styles.heroGrid}`}>
@@ -234,10 +274,16 @@ export function AboutHero() {
             <Link className="btn btn-secondary" href="/karya">Jelajahi Karya <span aria-hidden="true">→</span></Link>
           </div>
         </div>
-        <div className={styles.heroArt}>
-          <img className={styles.portrait} src="/images/artworks/puspita-kebaya-portrait.png" alt="Potret Puspita mengenakan kebaya" />
-          <img className={styles.flora} src="/images/artworks/about-portrait-floral-overlay.png" alt="" aria-hidden="true" />
-          <img className={styles.stamp} src="/images/artworks/from-curiosity-to-systems-stamps.png" alt="Stempel From Curiosity to Systems" />
+        <div ref={heroArtRef} className={styles.heroArt}>
+          <div className={`${styles.artLayer} ${styles.portraitLayer}`} data-parallax-layer="portrait">
+            <img className={styles.portrait} src="/images/artworks/puspita-kebaya-portrait.png" alt="Potret Puspita mengenakan kebaya" />
+          </div>
+          <div className={`${styles.artLayer} ${styles.floraLayer}`} data-parallax-layer="flora">
+            <img className={styles.flora} src="/images/artworks/about-portrait-floral-overlay.png" alt="" aria-hidden="true" />
+          </div>
+          <div className={`${styles.artLayer} ${styles.stampLayer}`} data-parallax-layer="stamp">
+            <img className={styles.stamp} src="/images/artworks/from-curiosity-to-systems-stamps.png" alt="Stempel From Curiosity to Systems" />
+          </div>
         </div>
       </div>
       <div className={`container ${styles.heroRule}`} aria-hidden="true"><span>01</span><i /><span>make thinking visible</span></div>
