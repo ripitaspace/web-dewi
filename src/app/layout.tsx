@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { VisitorStamp } from "@/components/analytics/visitor-stamp";
 import { RipitaLoaderBootstrap } from "@/components/brand/ripita-loader-bootstrap";
 import { RipitaSignatureLoader } from "@/components/brand/ripita-signature-loader";
 import "./globals.css";
@@ -40,6 +41,7 @@ export default function RootLayout({
         <RipitaSignatureLoader />
         <div data-ripita-page-content>{children}</div>
         <GoogleAnalytics />
+        <VisitorStamp />
       </body>
     </html>
   );

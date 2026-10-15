@@ -3722,6 +3722,50 @@ code.notion-inline-code {
   font-size: 0.85rem;
 }
 
+/* Floating GA4 visitor stamp */
+.visitor-stamp {
+  position: fixed;
+  z-index: 1100;
+  top: calc(var(--nav-height) + 18px);
+  right: 18px;
+  width: 132px;
+  filter: drop-shadow(0 12px 20px rgba(4, 45, 74, 0.24));
+  pointer-events: none;
+  transform: rotate(-15deg);
+  animation: visitor-stamp-sway 4.8s ease-in-out infinite;
+}
+
+.visitor-stamp__art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.visitor-stamp__count {
+  position: absolute;
+  right: 14%;
+  top: 85%;
+  left: 14%;
+  display: grid;
+  justify-items: center;
+  color: #073d66;
+  font-family: var(--sans);
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 248, 225, 0.8);
+}
+
+.visitor-stamp__count strong {
+  font-size: clamp(0.9rem, 1.55vw, 1.24rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+@keyframes visitor-stamp-sway {
+  0%, 100% { transform: translateY(0) rotate(-15deg); }
+  50% { transform: translateY(-6px) rotate(-15deg); }
+}
+
 /* Modal Dialog */
 .modal-backdrop {
   position: fixed;
@@ -3802,6 +3846,7 @@ code.notion-inline-code {
 
 @media (max-width: 620px) {
   :root { --nav-height: 70px; }
+  .visitor-stamp { top: calc(var(--nav-height) + 10px); right: 10px; bottom: auto; left: auto; width: 92px; }
   .coretax-embed { height: 1200px; min-height: 900px; border-radius: 13px; }
   .rename-grid { grid-template-columns: 1fr; }
   .rename-controls, .rename-drop, .rename-table-card { padding: 20px; }

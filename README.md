@@ -33,6 +33,21 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID="G-XXXXXXXXXX"
 Redeploy after setting it. GA4 will then record page views across the site; use
 the **Reports** or **Realtime** section in Google Analytics to see visitors.
 
+### Floating visitor stamp
+
+The floating stamp displays GA4's **total users**. To enable its public number,
+create a Google Cloud service account, add its email as a **Viewer** for the GA4
+property, and set these private deployment environment variables:
+
+```env
+GOOGLE_ANALYTICS_PROPERTY_ID="123456789"
+GOOGLE_ANALYTICS_SERVICE_ACCOUNT_EMAIL="analytics-reader@project.iam.gserviceaccount.com"
+GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"
+```
+
+Without these three values, the stamp stays visible but displays `—` and does
+not expose any analytics credentials to visitors.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
