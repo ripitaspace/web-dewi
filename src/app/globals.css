@@ -2681,6 +2681,10 @@ body.modal-open {
   align-items: center;
 }
 
+.karya-page-hero { padding: clamp(32px, 4vw, 52px) 0 clamp(24px, 3vw, 40px); }
+.karya-page-hero .art-lg { --size: 250px; }
+.karya-work-stack { padding-top: clamp(28px, 3.5vw, 44px); }
+
 /* Chapter Layout (Tentang) */
 .chapter-layout {
   display: grid;
@@ -3011,12 +3015,12 @@ code.notion-inline-code {
 .mini-tool-link { margin-top: 10px; color: var(--delima); font-size: 0.85rem; font-weight: 800; }
 
 .mini-tools-catalog { display: grid; gap: 22px; margin-bottom: 28px; }
-.mini-tools-notice { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; padding: 17px 20px; border: 1px solid var(--line-strong); border-radius: 15px; background: rgba(243, 231, 211, .56); }
+.mini-tools-notice { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; padding: 17px 20px; border: 1px solid var(--delima); border-radius: 15px; background: var(--delima); }
 .mini-tools-notice--centered { width: min(920px, 100%); margin: 0 auto 28px; text-align: center; }
 .mini-tools-notice--centered .mini-tools-notice__icon { align-self: center; }
-.mini-tools-notice__icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 1.25rem/1 var(--display); }
-.mini-tools-notice p { max-width: 920px; margin: 0; color: rgba(30, 27, 24, .76); line-height: 1.6; }
-.mini-tools-notice strong { color: var(--delima); }
+.mini-tools-notice__icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: var(--delima); background: var(--gading); font: 1.25rem/1 var(--display); }
+.mini-tools-notice p { max-width: 920px; margin: 0; color: var(--gading); line-height: 1.6; }
+.mini-tools-notice strong { color: var(--gading); }
 .mini-tools-stack { display: grid; gap: 14px; }
 .mini-tool-card { display: grid; grid-template-columns: 44px 64px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 24px 28px; }
 .mini-tool-card--available { text-decoration: none; }

@@ -40,7 +40,7 @@ const MINI_TOOLS: MiniTool[] = [
   { number: "06", category: "Finance Essentials", title: "Bukti Kas & Bank Generator", description: "Membuat bukti kas/bank masuk dan keluar.", icon: "↔", status: "maintenance" },
   { number: "07", category: "Finance Essentials", title: "Kas & Pengeluaran Tracker", description: "Membuat rekap kas dan pengeluaran dari Excel.", icon: "⌁", status: "maintenance" },
   { number: "08", category: "Finance Essentials", title: "Laporan Keuangan Sederhana", description: "Membuat laba rugi dan neraca dari data terstruktur.", icon: "≋", status: "maintenance" },
-  { number: "10", category: "Tax Essentials", title: "Kalkulator Pajak", description: "Menghitung PPN dan PPh dasar.", icon: "%", status: "maintenance" },
+  { number: "10", category: "Tax Essentials", title: "PPN Calculator", description: "Menghitung PPN keluaran, masukan, dan nilai transaksi.", icon: "%", status: "maintenance" },
   { number: "13", category: "Tax Essentials", title: "Extension Download Faktur Otomatis", description: "Membantu mengunduh Faktur Pajak secara otomatis dari Coretax.", icon: "↓", status: "maintenance" },
   { number: "14", category: "Tax Essentials", title: "PPH 21 Calculator", description: "Menghitung estimasi PPh 21 karyawan berdasarkan penghasilan dan komponen pajak.", icon: "₨", status: "maintenance" },
   { number: "11", category: "Audit Essentials", title: "Confirmation Generator", description: "Membuat surat konfirmasi audit bank, utang, dan piutang.", icon: "✓", status: "maintenance" },
@@ -83,11 +83,11 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
 
       <main id="main-content" style={{ paddingTop: "var(--nav-height)" }}>
         {/* Page Hero */}
-        <section className="page-hero">
+        <section className="page-hero karya-page-hero">
           <div className="container page-hero-grid">
             <div>
               <span className="eyebrow text-rempah">Karya & Case Study</span>
-              <h1 className="display-lg">Karya menjelaskan pemikirannya. RIPITA menjalankan produknya.</h1>
+              <h1 className="display-lg">Karya dari pemikiran yang memuaskan dahaga</h1>
               <p className="lead muted">
                 Setiap karya dibaca sebagai konteks, persoalan, temuan utama, logika sistem, bentuk yang dibuat, dan kemungkinan pengembangannya.
               </p>
@@ -106,7 +106,7 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
         </section>
 
         {/* Work Stack Section */}
-        <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
+        <section className="section-tight karya-work-stack" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container">
             <div className="mini-tools-notice mini-tools-notice--centered">
               <span className="mini-tools-notice__icon" aria-hidden="true">⌁</span>
