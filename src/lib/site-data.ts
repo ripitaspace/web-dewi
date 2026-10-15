@@ -8,6 +8,7 @@ export interface ServiceItem {
   id: string;
   name: string;
   duration: string;
+  durationMinutes: number;
   price: string;
   description: string;
 }
@@ -42,6 +43,7 @@ export const SERVICES: ServiceItem[] = [
     id: "exploration",
     name: "Perkenalan & Eksplorasi",
     duration: "30 menit",
+    durationMinutes: 30,
     price: "Tanpa biaya",
     description: "Untuk saling mengenal konteks dan melihat apakah ada ruang kerja bersama.",
   },
@@ -49,6 +51,7 @@ export const SERVICES: ServiceItem[] = [
     id: "business-system",
     name: "Konsultasi Sistem Bisnis",
     duration: "60 menit",
+    durationMinutes: 60,
     price: "Harga menyusul",
     description: "Membahas proses, data, dokumen, peran, dan peluang perbaikan sistem.",
   },
@@ -56,6 +59,7 @@ export const SERVICES: ServiceItem[] = [
     id: "accounting",
     name: "Accounting & Finance Discussion",
     duration: "60 menit",
+    durationMinutes: 60,
     price: "Harga menyusul",
     description: "Membahas laporan, alur finance, kontrol, atau kebutuhan tools accounting.",
   },
@@ -63,6 +67,7 @@ export const SERVICES: ServiceItem[] = [
     id: "product",
     name: "Product & Technology Collaboration",
     duration: "45 menit",
+    durationMinutes: 45,
     price: "Diskusi awal",
     description: "Untuk ide produk, prototype, integration, atau partnership.",
   },
@@ -70,6 +75,7 @@ export const SERVICES: ServiceItem[] = [
     id: "speaking",
     name: "Speaking & Education",
     duration: "30 menit",
+    durationMinutes: 30,
     price: "Diskusi awal",
     description: "Untuk kelas, seminar, workshop, atau institutional collaboration.",
   },

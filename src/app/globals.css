@@ -2681,6 +2681,10 @@ body.modal-open {
   align-items: center;
 }
 
+.karya-page-hero { padding: clamp(32px, 4vw, 52px) 0 clamp(24px, 3vw, 40px); }
+.karya-page-hero .art-lg { --size: 250px; }
+.karya-work-stack { padding-top: clamp(28px, 3.5vw, 44px); }
+
 /* Chapter Layout (Tentang) */
 .chapter-layout {
   display: grid;
@@ -3010,6 +3014,31 @@ code.notion-inline-code {
 .mini-tool-glyph { grid-row: 1 / span 4; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--delima); color: var(--gading); font: 2.4rem var(--display); }
 .mini-tool-link { margin-top: 10px; color: var(--delima); font-size: 0.85rem; font-weight: 800; }
 
+.mini-tools-catalog { display: grid; gap: 22px; margin-bottom: 28px; }
+.mini-tools-notice { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; padding: 17px 20px; border: 1px solid var(--delima); border-radius: 15px; background: var(--delima); }
+.mini-tools-notice--centered { width: min(920px, 100%); margin: 0 auto 28px; text-align: center; }
+.mini-tools-notice--centered .mini-tools-notice__icon { align-self: center; }
+.mini-tools-notice__icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: var(--delima); background: var(--gading); font: 1.25rem/1 var(--display); }
+.mini-tools-notice p { max-width: 920px; margin: 0; color: var(--gading); line-height: 1.6; }
+.mini-tools-notice strong { color: var(--gading); }
+.mini-tools-stack { display: grid; gap: 14px; }
+.mini-tool-card { display: grid; grid-template-columns: 44px 64px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 24px 28px; }
+.mini-tool-card--available { text-decoration: none; }
+.mini-tool-card--maintenance { background: rgba(216, 195, 157, .18); }
+.mini-tool-index { color: rgba(30, 27, 24, .52); font-size: .76rem; font-weight: 900; letter-spacing: .1em; }
+.mini-tool-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 2rem/1 var(--display); }
+.mini-tool-icon img { width: 88%; height: 88%; object-fit: contain; }
+.mini-tool-card--available .mini-tool-icon { background: var(--gading); }
+.mini-tool-card--maintenance .mini-tool-icon { color: rgba(30, 27, 24, .64); background: rgba(30, 27, 24, .08); }
+.mini-tool-copy { min-width: 0; }
+.mini-tool-copy .topic-pill { margin-bottom: 9px; }
+.mini-tool-copy h3 { margin: 0 0 6px; font-size: clamp(1.35rem, 2.2vw, 1.85rem); }
+.mini-tool-copy p { margin: 0; color: rgba(30, 27, 24, .68); line-height: 1.55; }
+.mini-tool-status { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 152px; border: 1px solid currentColor; border-radius: 99px; padding: 9px 12px; font-size: .69rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.mini-tool-status--available { color: var(--sirih); background: rgba(73, 107, 69, .1); }
+.mini-tool-status--maintenance { color: #795b43; background: rgba(121, 91, 67, .08); }
+.mini-tool-card--available:focus-visible { outline: 3px solid var(--rempah); outline-offset: 4px; }
+
 .tool-category-hero { padding-bottom: clamp(48px, 7vw, 86px); }
 .breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 24px; color: rgba(30, 27, 24, 0.62); font-size: 0.78rem; font-weight: 800; }
 .breadcrumb a { color: var(--delima); }
@@ -3019,7 +3048,6 @@ code.notion-inline-code {
 .tax-tool-card p { max-width: 680px; margin: 0; color: rgba(30, 27, 24, 0.68); line-height: 1.65; }
 .tax-tool-icon { display: grid; place-items: center; width: 72px; height: 72px; overflow: hidden; border-radius: 50%; background: var(--gading); }
 .tax-tool-icon img { width: 88%; height: 88%; object-fit: contain; }
-
 .coretax-page { background: linear-gradient(180deg, var(--gading) 0, var(--paper) 44%, var(--gading) 100%); }
 .coretax-hero { padding: clamp(55px, 7vw, 94px) 0 36px; }
 .coretax-hero .container { width: min(calc(100% - 48px), 1080px); text-align: center; }
@@ -3287,6 +3315,212 @@ code.notion-inline-code {
   background: rgba(184, 204, 145, 0.32);
 }
 
+.booking-state,
+.booking-alert {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.booking-alert {
+  margin: 14px 0;
+}
+
+.booking-alert.error {
+  border-color: rgba(156, 27, 27, 0.35);
+  background: rgba(156, 27, 27, 0.07);
+  color: #7d1717;
+}
+
+.booking-alert.success {
+  border-color: rgba(73, 107, 69, 0.38);
+  background: rgba(184, 204, 145, 0.28);
+  color: var(--sirih);
+}
+
+.booking-local-note {
+  margin: 14px 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--sirih);
+  background: rgba(184, 204, 145, 0.2);
+  color: var(--selat);
+  font-size: 0.84rem;
+}
+
+.booking-date-nav,
+.booking-success-actions,
+.manage-booking-actions,
+.admin-calendar-actions,
+.admin-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.booking-date-nav {
+  margin: 12px 0 4px;
+}
+
+.booking-summary {
+  margin: 14px 0 18px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(36, 91, 135, 0.08);
+  color: var(--arang);
+  font-size: 0.9rem;
+}
+
+.booking-privacy {
+  max-width: 620px;
+  margin: 12px 0 18px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.booking-honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.booking-success {
+  padding: 42px 24px;
+  text-align: center;
+}
+
+.booking-success h3 {
+  margin-bottom: 8px;
+  color: var(--sirih);
+}
+
+.booking-success-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--sirih);
+  color: var(--gading);
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.booking-success-actions {
+  justify-content: center;
+  margin: 24px 0 16px;
+}
+
+.admin-calendar-page,
+.manage-booking-page {
+  min-height: 100vh;
+  padding: clamp(70px, 9vw, 120px) 0;
+  background: linear-gradient(180deg, var(--gading), var(--paper));
+}
+
+.admin-calendar-card,
+.manage-booking-card {
+  margin-top: 28px;
+}
+
+.admin-calendar-heading h2,
+.manage-booking-summary h2 {
+  margin: 8px 0 4px;
+}
+
+.admin-calendar-form {
+  display: grid;
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.admin-recommended-box {
+  padding: 18px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 13px;
+  background: rgba(184, 204, 145, 0.16);
+}
+
+.admin-recommended-box p {
+  margin: 6px 0 14px;
+}
+
+.admin-calendar-fieldset {
+  padding: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+}
+
+.admin-calendar-fieldset legend {
+  padding: 0 6px;
+  font-weight: 800;
+}
+
+.admin-calendar-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
+}
+
+.admin-calendar-list label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.admin-calendar-list input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--delima);
+}
+
+.manage-booking-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: start;
+}
+
+.manage-booking-summary > :last-child {
+  display: grid;
+  gap: 5px;
+  text-align: right;
+}
+
+.manage-booking-card hr {
+  margin: 28px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.manage-date-grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 16px;
+  padding-bottom: 8px;
+}
+
+.manage-date-grid .date-btn {
+  flex: 0 0 110px;
+}
+
+.btn-danger {
+  border: 1px solid rgba(156, 27, 27, 0.45);
+  background: transparent;
+  color: #8a1818;
+}
+
+.btn-danger:hover {
+  background: rgba(156, 27, 27, 0.08);
+}
+
 /* Ecosystem Hub (RIPITA) */
 .ecosystem-shell {
   display: grid;
@@ -3530,6 +3764,10 @@ code.notion-inline-code {
   .rename-actions { justify-content: stretch; }
   .rename-actions .btn { width: 100%; }
   .mini-tools-intro { grid-template-columns: 1fr; margin-top: 44px; padding-top: 38px; }
+  .mini-tool-card { grid-template-columns: 36px 56px minmax(0, 1fr); gap: 13px; padding: 20px; }
+  .mini-tool-icon { width: 52px; height: 52px; font-size: 1.75rem; }
+  .mini-tool-status { grid-column: 2 / -1; justify-self: start; min-width: 0; }
+  .mini-tools-notice { padding: 16px; }
   .tax-tool-card { grid-template-columns: 60px 1fr; gap: 18px; padding: 22px; }
   .tax-tool-card .btn { grid-column: 1 / -1; justify-self: start; }
   .tax-tool-icon { width: 56px; height: 56px; font-size: 2rem; }
@@ -3547,6 +3785,13 @@ code.notion-inline-code {
   .form-field.full { grid-column: auto; }
   .date-grid { grid-template-columns: repeat(3, 1fr); }
   .time-grid { grid-template-columns: repeat(2, 1fr); }
+  .booking-panel { padding: 20px; }
+  .booking-date-nav .muted { width: 100%; order: -1; text-align: center; }
+  .admin-calendar-list { grid-template-columns: 1fr; }
+  .manage-booking-summary { grid-template-columns: 1fr; }
+  .manage-booking-summary > :last-child { text-align: left; }
+  .manage-booking-actions .btn,
+  .booking-success-actions .btn { width: 100%; }
   .ecosystem-map { min-height: 720px; }
   .eco-center { width: 140px; height: 140px; }
   .eco-node { width: 94px; height: 94px; font-size: 0.68rem; }

@@ -11,12 +11,48 @@ interface KaryaClientProps {
   posts?: BlogPost[];
 }
 
+type MiniToolStatus = "available" | "maintenance";
+
+interface MiniTool {
+  number: string;
+  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials";
+  title: string;
+  description: string;
+  icon: string;
+  status: MiniToolStatus;
+  href?: string;
+}
+
+const MINI_TOOL_FILTERS = [
+  { value: "Business Essentials", label: "Business" },
+  { value: "Finance Essentials", label: "Finance" },
+  { value: "Tax Essentials", label: "Tax" },
+  { value: "Audit Essentials", label: "Audit" },
+] as const;
+
+const MINI_TOOLS: MiniTool[] = [
+  { number: "09", category: "Tax Essentials", title: "Coretax Invoice Scraper & Renamer", description: "Ekstrak data dan rename faktur pajak.", icon: "▤", status: "available", href: "/karya/pajak/coretax" },
+  { number: "01", category: "Business Essentials", title: "Quotation Generator", description: "Membuat surat penawaran harga.", icon: "“", status: "maintenance" },
+  { number: "02", category: "Business Essentials", title: "Invoice Generator", description: "Membuat invoice atau tagihan pelanggan.", icon: "▤", status: "maintenance" },
+  { number: "03", category: "Business Essentials", title: "Kuitansi Generator", description: "Membuat bukti penerimaan pembayaran.", icon: "✓", status: "maintenance" },
+  { number: "04", category: "Business Essentials", title: "Purchase Order Generator", description: "Membuat surat pesanan pembelian.", icon: "↗", status: "maintenance" },
+  { number: "05", category: "Business Essentials", title: "Surat Jalan Generator", description: "Membuat dokumen pengiriman barang.", icon: "→", status: "maintenance" },
+  { number: "06", category: "Finance Essentials", title: "Bukti Kas & Bank Generator", description: "Membuat bukti kas/bank masuk dan keluar.", icon: "↔", status: "maintenance" },
+  { number: "07", category: "Finance Essentials", title: "Kas & Pengeluaran Tracker", description: "Membuat rekap kas dan pengeluaran dari Excel.", icon: "⌁", status: "maintenance" },
+  { number: "08", category: "Finance Essentials", title: "Laporan Keuangan Sederhana", description: "Membuat laba rugi dan neraca dari data terstruktur.", icon: "≋", status: "maintenance" },
+  { number: "10", category: "Tax Essentials", title: "PPN Calculator", description: "Menghitung PPN keluaran, masukan, dan nilai transaksi.", icon: "%", status: "maintenance" },
+  { number: "13", category: "Tax Essentials", title: "Extension Download Faktur Otomatis", description: "Membantu mengunduh Faktur Pajak secara otomatis dari Coretax.", icon: "↓", status: "maintenance" },
+  { number: "14", category: "Tax Essentials", title: "PPH 21 Calculator", description: "Menghitung estimasi PPh 21 karyawan berdasarkan penghasilan dan komponen pajak.", icon: "₨", status: "maintenance" },
+  { number: "11", category: "Audit Essentials", title: "Confirmation Generator", description: "Membuat surat konfirmasi audit bank, utang, dan piutang.", icon: "✓", status: "maintenance" },
+  { number: "12", category: "Audit Essentials", title: "Sampling Picker", description: "Memilih sampel audit dari data Excel atau CSV.", icon: "⊙", status: "maintenance" },
+];
+
 export function KaryaClient({ posts = [] }: KaryaClientProps) {
   const [activeCategory, setActiveCategory] = useState("Semua");
   const [selectedWork, setSelectedWork] = useState<BlogPost | null>(null);
 
   const categories = useMemo(() => {
-    const cats = new Set<string>(["Pajak"]);
+    const cats = new Set<string>(MINI_TOOL_FILTERS.map((filter) => filter.value));
     posts.forEach((p) => {
       if (p.category) cats.add(p.category);
       if (p.topics) p.topics.forEach((t) => cats.add(t));
@@ -33,8 +69,13 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
     });
   }, [posts, activeCategory]);
 
-  const showCoretax = activeCategory === "Semua" || activeCategory === "Pajak";
-  const hasVisibleWorks = filteredWorks.length > 0 || showCoretax;
+  const filteredMiniTools = useMemo(() => (
+    activeCategory === "Semua"
+      ? MINI_TOOLS
+      : MINI_TOOLS.filter((tool) => tool.category === activeCategory)
+  ), [activeCategory]);
+
+  const hasVisibleWorks = filteredWorks.length > 0 || filteredMiniTools.length > 0;
 
   return (
     <>
@@ -42,11 +83,11 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
 
       <main id="main-content" style={{ paddingTop: "var(--nav-height)" }}>
         {/* Page Hero */}
-        <section className="page-hero">
+        <section className="page-hero karya-page-hero">
           <div className="container page-hero-grid">
             <div>
               <span className="eyebrow text-rempah">Karya & Case Study</span>
-              <h1 className="display-lg">Karya menjelaskan pemikirannya. RIPITA menjalankan produknya.</h1>
+              <h1 className="display-lg">Karya dari pemikiran yang memuaskan dahaga</h1>
               <p className="lead muted">
                 Setiap karya dibaca sebagai konteks, persoalan, temuan utama, logika sistem, bentuk yang dibuat, dan kemungkinan pengembangannya.
               </p>
@@ -65,8 +106,12 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
         </section>
 
         {/* Work Stack Section */}
-        <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
+        <section className="section-tight karya-work-stack" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container">
+            <div className="mini-tools-notice mini-tools-notice--centered">
+              <span className="mini-tools-notice__icon" aria-hidden="true">⌁</span>
+              <p><strong>Diproses di perangkatmu.</strong> Seluruh mini tools dirancang 100% offline, tanpa login, database pengguna, atau penyimpanan transaksi. Isi data secara manual atau unggah Excel/CSV, proses di browser, lalu unduh hasilnya.</p>
+            </div>
             <div className="tabs" id="workTabs">
               {categories.map((cat) => (
                 <button
@@ -75,25 +120,45 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                   onClick={() => setActiveCategory(cat)}
                   type="button"
                 >
-                  {cat}
+                  {MINI_TOOL_FILTERS.find((filter) => filter.value === cat)?.label || cat}
                 </button>
               ))}
             </div>
 
             {hasVisibleWorks ? (
               <div className="work-stack" id="workLibrary">
-                {showCoretax && (
-                  <Link href="/karya/pajak/coretax" className="tax-tool-card card card-hover">
-                    <div className="tax-tool-icon" aria-hidden="true">
-                      <img src="/images/artworks/coretax-ripita-icon.png" alt="" />
+                {filteredMiniTools.length > 0 && (
+                  <section className="mini-tools-catalog" aria-label="Katalog mini tools RIPITA">
+                    <div className="mini-tools-stack">
+                      {filteredMiniTools.map((tool) => {
+                        const content = <>
+                          <div className="mini-tool-index" aria-label={`Tool ${tool.number}`}>{tool.number}</div>
+                          <div className="mini-tool-icon" aria-hidden="true">
+                            {tool.href ? <img src="/images/artworks/coretax-ripita-icon.png" alt="" /> : tool.icon}
+                          </div>
+                          <div className="mini-tool-copy">
+                            <span className="topic-pill">{tool.category}</span>
+                            <h3>{tool.title}</h3>
+                            <p>{tool.description}</p>
+                          </div>
+                          <span className={`mini-tool-status mini-tool-status--${tool.status}`}>
+                            <span aria-hidden="true">{tool.status === "available" ? "●" : "◌"}</span>
+                            {tool.status === "available" ? "Available" : "Under Maintenance"}
+                          </span>
+                        </>;
+
+                        return tool.href ? (
+                          <Link key={tool.number} href={tool.href} className="mini-tool-card mini-tool-card--available card card-hover" aria-label={`Buka ${tool.title}`}>
+                            {content}
+                          </Link>
+                        ) : (
+                          <article key={tool.number} className="mini-tool-card mini-tool-card--maintenance card" aria-label={`${tool.title}: sedang dalam pengembangan`}>
+                            {content}
+                          </article>
+                        );
+                      })}
                     </div>
-                    <div>
-                      <span className="topic-pill">CORETAX · MINI TOOL</span>
-                      <h2>Invoice Scraper</h2>
-                      <p>Ubah batch Faktur Pajak PDF menjadi data barang yang dapat diperiksa, di-rename, lalu diekspor ke Excel atau ZIP.</p>
-                    </div>
-                    <span className="btn primary">Buka Invoice Scraper →</span>
-                  </Link>
+                  </section>
                 )}
                 {filteredWorks.map((item, idx) => {
                   const topicsList = item.topics && item.topics.length > 0
