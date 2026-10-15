@@ -2,7 +2,7 @@ export type MiniToolStatus = "available" | "maintenance";
 
 export interface MiniTool {
   number: string;
-  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials";
+  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials" | "Document Essentials";
   title: string;
   description: string;
   icon: string;
@@ -15,6 +15,7 @@ export const MINI_TOOL_FILTERS = [
   { value: "Finance Essentials", label: "Finance" },
   { value: "Tax Essentials", label: "Tax" },
   { value: "Audit Essentials", label: "Audit" },
+  { value: "Document Essentials", label: "Document" },
 ] as const;
 
 export const MINI_TOOLS: MiniTool[] = [
@@ -32,4 +33,7 @@ export const MINI_TOOLS: MiniTool[] = [
   { number: "14", category: "Tax Essentials", title: "PPH 21 Calculator", description: "Menghitung estimasi PPh 21 karyawan berdasarkan penghasilan dan komponen pajak.", icon: "₨", status: "maintenance", href: "/karya/tools/pph-21-calculator" },
   { number: "11", category: "Audit Essentials", title: "Confirmation Generator", description: "Membuat surat konfirmasi audit bank, utang, dan piutang.", icon: "✓", status: "maintenance", href: "/karya/tools/confirmation-generator" },
   { number: "12", category: "Audit Essentials", title: "Sampling Picker", description: "Memilih sampel audit dari data Excel atau CSV.", icon: "⊙", status: "maintenance", href: "/karya/tools/sampling-picker" },
+  { number: "15", category: "Document Essentials", title: "Compress Data", description: "Mengecilkan ukuran file data agar lebih ringkas untuk disimpan atau dibagikan.", icon: "⇣", status: "maintenance", href: "/karya/tools/compress-data" },
+  { number: "16", category: "Document Essentials", title: "Compile Dokumen", description: "Menggabungkan beberapa dokumen menjadi satu file yang rapi.", icon: "▣", status: "maintenance", href: "/karya/tools/compile-dokumen" },
+  { number: "17", category: "Document Essentials", title: "Digital Signing", description: "Membubuhkan tanda tangan digital pada dokumen secara praktis.", icon: "✦", status: "maintenance", href: "/karya/tools/digital-signing" },
 ];
