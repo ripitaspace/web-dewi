@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { RipitaMark } from "@/components/brand/ripita-mark";
 import { getBlogPosts } from "@/modules/cms";
+import { SystemState } from "@/components/system-state/system-state";
 
 export const metadata: Metadata = {
   title: "Arsip Catatan & Tulisan — PUSPITA × RIPITA",
@@ -80,14 +81,9 @@ export default async function BlogIndexPage() {
             })}
           </div>
         ) : (
-          <div style={{ textAlign: "center", padding: "80px 20px", background: "#fff", borderRadius: "20px", border: "1px solid var(--line)" }}>
-            <p style={{ fontSize: "1.1rem", color: "rgba(30, 27, 24, 0.6)" }}>
-              Belum ada artikel yang dipublikasikan.
-            </p>
-            <Link href="/" className="btn primary" style={{ marginTop: "20px" }}>
-              Kembali ke Beranda
-            </Link>
-          </div>
+          <SystemState type="empty" size="section" title="Belum ada artikel."
+            description="Catatan baru sedang dirangkai. Kembali lagi nanti untuk membaca cerita berikutnya."
+            primaryAction={{ label: "Kembali ke Beranda", href: "/" }} />
         )}
       </main>
     </div>

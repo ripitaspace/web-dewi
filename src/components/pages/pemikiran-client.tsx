@@ -1,5 +1,6 @@
 "use client";
 
+import { SystemState } from "@/components/system-state/system-state";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
@@ -169,19 +170,11 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
                 })}
               </div>
             ) : (
-              <div className="empty-state" id="thoughtEmpty">
-                <h3>Tidak ada catatan yang cocok.</h3>
-                <p className="muted">Coba ubah kata pencarian atau reset filter.</p>
-                <button
-                  className="btn btn-secondary"
-                  id="resetThoughts"
-                  onClick={handleResetFilters}
-                  type="button"
-                  style={{ marginTop: "16px" }}
-                >
-                  Reset Filter
-                </button>
-              </div>
+              <SystemState type="empty" size="section"
+                title={posts.length === 0 ? "Belum ada artikel." : "Belum ada hasil pencarian."}
+                description={posts.length === 0 ? undefined : "Belum ada catatan yang cocok. Coba kata pencarian lain atau reset filter."}
+                primaryAction={search || category !== "all" ? { label: "Reset Filter", onClick: handleResetFilters } : null}
+              />
             )}
           </div>
         </section>

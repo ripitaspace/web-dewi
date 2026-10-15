@@ -1,5 +1,6 @@
 "use client";
 
+import { SystemState } from "@/components/system-state/system-state";
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
@@ -176,10 +177,9 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                 })}
               </div>
             ) : (
-              <div className="empty-state" style={{ textAlign: "center", padding: "60px 20px" }}>
-                <h3>Belum ada karya untuk kategori ini.</h3>
-                <p className="muted">Silakan pilih kategori lain.</p>
-              </div>
+              <SystemState type="empty" size="section" title="Belum ada karya untuk kategori ini."
+                description="Setiap karya dimulai dari ide kecil. Sambil menunggu, jelajahi kategori lainnya."
+                primaryAction={{ label: "Lihat Semua Karya", onClick: () => setActiveCategory("Semua") }} />
             )}
 
           </div>

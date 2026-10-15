@@ -277,7 +277,7 @@ export const getTentangData = cache(async (): Promise<TentangPageData> => {
 });
 
 export const refreshBlogPostsCache = async (): Promise<BlogPost[]> => {
-  if (!CMS_CONFIG.BLOG_DATABASE_ID) return [];
+  if (!CMS_CONFIG.BLOG_DATABASE_ID) throw new Error("CMS blog is not configured");
 
   try {
     const response = await notion.dataSources.query({
@@ -305,7 +305,7 @@ export const refreshBlogPostsCache = async (): Promise<BlogPost[]> => {
     return posts;
   } catch (error) {
     console.error("[CMS Blog] Error refreshing blog posts cache:", error);
-    return [];
+    throw new Error("Artikel belum dapat dimuat", { cause: error });
   }
 };
 
@@ -313,7 +313,7 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
   let posts: BlogPost[] = [];
 
   if (!CMS_CONFIG.BLOG_DATABASE_ID) {
-    posts = [];
+    throw new Error("CMS blog is not configured");
   } else {
     try {
       // Always query Notion for a request. Writing the cache in the refresh
@@ -321,7 +321,7 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
       posts = await refreshBlogPostsCache();
     } catch (error) {
       console.error("[CMS Blog] Error fetching blog posts:", error);
-      posts = [];
+      throw new Error("Artikel belum dapat dimuat", { cause: error });
     }
   }
 
@@ -338,7 +338,7 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
 
 export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | null> => {
   if (!CMS_CONFIG.BLOG_DATABASE_ID) {
-    return null;
+    throw new Error("CMS blog is not configured");
   }
 
   try {
@@ -356,11 +356,12 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
 
     if (response.results.length > 0) {
       page = response.results[0] as PageObjectResponse;
-    } else {
+    } else if (/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(slug)) {
       try {
         page = (await notion.pages.retrieve({ page_id: slug })) as PageObjectResponse;
-      } catch {
-        page = null;
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "code" in error && error.code === "object_not_found") page = null;
+        else throw error;
       }
     }
 
@@ -375,11 +376,12 @@ export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | 
       blogPost.recordMap = recordMap;
     } catch (recordErr) {
       console.warn(`[CMS Blog] Could not fetch recordMap for page ${page.id}:`, recordErr);
+      throw new Error("Isi artikel belum dapat dimuat", { cause: recordErr });
     }
 
     return blogPost;
   } catch (error) {
     console.error(`[CMS Blog] Error fetching blog post with slug ${slug}:`, error);
-    return null;
+    throw new Error("Artikel belum dapat dimuat", { cause: error });
   }
 });

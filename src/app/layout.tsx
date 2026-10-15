@@ -1,21 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { VisitorStamp } from "@/components/analytics/visitor-stamp";
-import { RipitaLoaderBootstrap } from "@/components/brand/ripita-loader-bootstrap";
-import { RipitaSignatureLoader } from "@/components/brand/ripita-signature-loader";
+import { ConnectionNotice } from "@/components/system-state/connection-notice";
 import "./globals.css";
-
-const loaderBootstrap = `
-  (() => {
-    try {
-      const isDemo = window.location.pathname === "/karya/ripita-motion";
-      const hasSeenLoader = window.sessionStorage.getItem("ripita:signature-seen:v1") === "1";
-      document.documentElement.dataset.ripitaLoader = isDemo || hasSeenLoader ? "skip" : "pending";
-    } catch {
-      document.documentElement.dataset.ripitaLoader = "pending";
-    }
-  })();
-`;
 
 export const metadata: Metadata = {
   title: "PUSPITA × RIPITA — Kinetic Hero Prototype",
@@ -33,12 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" suppressHydrationWarning>
-      <head>
-        <RipitaLoaderBootstrap html={loaderBootstrap} />
-      </head>
+    <html lang="id" data-ripita-loader="skip">
       <body>
-        <RipitaSignatureLoader playOnRouteChange />
+        <ConnectionNotice />
         <div data-ripita-page-content>{children}</div>
         <GoogleAnalytics />
         <VisitorStamp />
