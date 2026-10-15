@@ -1,7 +1,8 @@
 import { getBlogPosts } from "@/modules/cms";
 import { LandingClient } from "@/components/landing-client";
 
-export const revalidate = 60; // ISR revalidate every 60s
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
   const posts = await getBlogPosts();

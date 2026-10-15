@@ -7,7 +7,8 @@ export const metadata: Metadata = {
   description: "Bukan biografi. Ini cerita tentang bagaimana cara berpikirku terbentuk: dari angka menuju sistem.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function TentangPage() {
   const tentangData = await getTentangData();

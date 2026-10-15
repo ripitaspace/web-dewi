@@ -7,7 +7,8 @@ export const metadata: Metadata = {
   description: "Pengetahuan, template, playbook, dan produk digital yang dapat langsung digunakan.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function BelajarPage() {
   const posts = await getBlogPosts({ type: "belajar" });

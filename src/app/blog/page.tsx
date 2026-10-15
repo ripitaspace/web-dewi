@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
+import { RipitaMark } from "@/components/brand/ripita-mark";
 import { getBlogPosts } from "@/modules/cms";
 
 export const metadata: Metadata = {
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description: "Kumpulan tulisan, ide, dan catatan editorial dari PUSPITA × RIPITA.",
 };
 
-export const revalidate = 60; // ISR revalidate every 60s
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function BlogIndexPage() {
   const posts = await getBlogPosts();
@@ -23,7 +24,7 @@ export default async function BlogIndexPage() {
             <span>Kembali ke Beranda</span>
           </Link>
           <Link href="/" className="brand-mini">
-            <Image className="brand-logo-mini" src="/images/brand/puspita-ripita-mark.png" alt="" width={1254} height={1254} />
+            <RipitaMark className="brand-logo-mini" data-ripita-logo-target />
             <strong>PUSPITA × RIPITA</strong>
           </Link>
         </div>

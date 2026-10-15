@@ -4,7 +4,6 @@ import { notion } from "../core/client";
 import { CMS_CONFIG } from "../core/config";
 import { CMS_CONSTANTS } from "../core/constants";
 import { getCoverUrl, getFileUrl, getNumber, getText } from "../core/utils";
-import { cmsCache } from "../core/cache";
 import { Product } from "../types";
 
 
@@ -86,7 +85,6 @@ export const refreshProductsCache = async (): Promise<Product[]> => {
       mapNotionPageToProduct(page as PageObjectResponse)
     );
 
-    await cmsCache.set("products", productsList);
     return productsList;
   } catch (error) {
     console.error("[CMS Product] Error refreshing products cache:", error);
@@ -98,13 +96,9 @@ export const getProducts = cache(async (): Promise<Product[]> => {
   if (!CMS_CONFIG.PRODUCT_DATABASE_ID) return [];
 
   try {
-    const cached = await cmsCache.get<Product[]>("products");
-    if (cached && cached.length > 0) {
-      return cached;
-    }
-
-    const fetched = await refreshProductsCache();
-    return fetched;
+    // A SQLite cache is instance-local in production, so fetch the source of
+    // truth on every request instead of returning a stale deployment cache.
+    return await refreshProductsCache();
   } catch (error) {
     console.error("[CMS Product] Error fetching products:", error);
     return [];
@@ -116,14 +110,7 @@ export const getProductBySlug = cache(async (slug: string): Promise<Product | nu
     return null;
   }
 
-  const cacheKey = `product_${slug}`;
-
   try {
-    const cached = await cmsCache.get<Product>(cacheKey);
-    if (cached) {
-      return cached;
-    }
-
     const response = await notion.dataSources.query({
       data_source_id: CMS_CONFIG.PRODUCT_DATABASE_ID,
       filter: {
@@ -140,7 +127,6 @@ export const getProductBySlug = cache(async (slug: string): Promise<Product | nu
     }
 
     const product = mapNotionPageToProduct(page);
-    await cmsCache.set(cacheKey, product);
     return product;
   } catch (error) {
     console.error(`[CMS Product] Error fetching product with slug ${slug}:`, error);
