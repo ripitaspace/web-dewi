@@ -1,0 +1,14 @@
+Mode: built-in image_gen; transparent_background: true
+
+Use case: illustration-story
+Asset type: standalone decorative peacock feather ornament PNG for the Puspita Indonesian editorial website; transparent background.
+Primary request: One elegant peacock tail feather, a complete slender curved feather with a beautiful eye motif near the top and a fine graceful tapering stem. This is a feather ornament only, no bird.
+Style/medium: refined hand-painted gouache botanical/natural history illustration, delicate organic feather barbs, subtle opaque paint texture within the feather, matching an existing green peacock gouache artwork.
+Color palette: muted emerald and deep teal barbs, indigo and turquoise eye, ochre gold halo, subtle warm bronze accents.
+Composition/framing: tall portrait composition, gentle flowing diagonal curve, full feather from tip to stem visible, generous transparent margins, eye motif clear and legible for website decoration.
+Constraints: genuinely transparent alpha background including gaps among barbs; isolated single feather; no paper backdrop, no circle or frame, no shadow, no text, no watermark, no checkerboard baked into image; no additional objects.
+
+Refinement prompt:
+Use case: background-extraction
+Input image: edit target, the single peacock feather ornament just generated.
+Remove the entire blurred green and gold glow, haze, shadow and background surrounding the feather. Keep only the actual fine painted feather barbs, solid eye motif and thin stem. Outside those actual feather structures, make alpha completely zero, including the spaces between the lower barbs. Preserve the feather's exact curve, composition, colors and detail. Clean transparent PNG cutout, no ambient glow, no colored fog, no shadow, no backdrop, no checkerboard. Entire feather visible, same portrait canvas.

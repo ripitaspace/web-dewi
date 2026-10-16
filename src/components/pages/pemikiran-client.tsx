@@ -1,7 +1,7 @@
 "use client";
 
 import { SystemState } from "@/components/system-state/system-state";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
@@ -10,6 +10,17 @@ import { SiteFooter } from "@/components/navigation/site-footer";
 interface PemikiranClientProps {
   posts?: BlogPost[];
 }
+
+const featherLayers = [
+  { id: "sharp-one", className: "peacock-feather--sharp-one" },
+  { id: "sharp-two", className: "peacock-feather--sharp-two" },
+  { id: "sharp-three", className: "peacock-feather--sharp-three" },
+  { id: "sharp-four", className: "peacock-feather--sharp-four" },
+  { id: "blur-one", className: "peacock-feather--blur-one", blurred: true },
+  { id: "blur-two", className: "peacock-feather--blur-two", blurred: true },
+  { id: "blur-three", className: "peacock-feather--blur-three", blurred: true },
+  { id: "blur-four", className: "peacock-feather--blur-four", blurred: true },
+];
 
 export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
   const [search, setSearch] = useState("");
@@ -58,10 +69,22 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
     <>
       <SiteHeader currentKey="pemikiran" />
 
-      <main id="main-content" style={{ paddingTop: "var(--nav-height)" }}>
+      <div className="fixed-parallax-bg pemikiran-feather-fixed-bg" aria-hidden="true">
+        {featherLayers.map((feather) => (
+          <img
+            key={feather.id}
+            className={`peacock-feather ${feather.className}${feather.blurred ? " peacock-feather--blurred" : ""}`}
+            src="/images/artworks/peacock-feather-ornament.png"
+            alt=""
+          />
+        ))}
+      </div>
+
+      <div className="pemikiran-page-content">
+        <main id="main-content" style={{ paddingTop: "var(--nav-height)" }}>
         {/* Page Hero */}
         <section className="page-hero">
-          <div className="container page-hero-grid">
+          <div className="container page-hero-grid pemikiran-hero-grid">
             <div>
               <span className="eyebrow text-selat">Arsip Pemikiran</span>
               <h1 className="display-lg">Hal-hal yang kupahami, pertanyakan, dan masih kuji.</h1>
@@ -69,7 +92,7 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
                 Perpustakaan yang memuat esai, catatan, framework, diagram, pertanyaan, eksperimen, dan refleksi kasus.
               </p>
             </div>
-            <div style={{ width: "min(320px, 100%)", aspectRatio: "1", marginInline: "auto" }}>
+            <div style={{ width: "min(640px, 100%)", aspectRatio: "1", marginInline: "auto" }}>
               <img
                 src="/images/artworks/javan-peacock-gouache-transparent.png"
                 alt="Merak Hijau Nusantara"
@@ -80,7 +103,7 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
         </section>
 
         {/* Library Grid & Toolbar */}
-        <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
+        <section className="section-tight">
           <div className="container">
             <div className="thought-toolbar" aria-label="Cari dan filter pemikiran">
               <div className="thought-search">
@@ -177,9 +200,10 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
             )}
           </div>
         </section>
-      </main>
+        </main>
 
-      <SiteFooter />
+        <SiteFooter />
+      </div>
     </>
   );
 }
