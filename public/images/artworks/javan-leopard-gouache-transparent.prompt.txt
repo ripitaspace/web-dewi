@@ -1,0 +1,7 @@
+Mode: built-in image_gen; transparent_background: true
+
+Use case: background-extraction
+Asset type: transparent artwork for a website hero.
+Input images: Image 1 is the edit target.
+Primary request: Remove the entire cream paper background, faint paper texture, wash marks, speckles, and ground shadow from this Javan leopard gouache illustration.
+Constraints: Preserve the leopard exactly: its pose, anatomy, colouring, spots, painted gouache texture and all edges, including tail, whiskers, paws and ears. Make all area outside the leopard truly transparent with clean alpha, including beneath the paws. No beige residue, halo, paper, floor line, shadow, text or watermark.

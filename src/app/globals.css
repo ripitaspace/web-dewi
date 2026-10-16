@@ -812,11 +812,20 @@ body.is-ready .motion-inner,
 
 .obj-art-b {
   right: 4%;
-  top: 57%;
+  top: calc(57% - 25px);
   --delay: 1.1s;
   --from-x: 180px;
   --from-r: 18deg;
   --duration: 0.95s;
+}
+
+.obj-art-c {
+  left: 27%;
+  top: 67%;
+  --delay: 1.24s;
+  --from-y: 150px;
+  --from-r: -14deg;
+  --duration: 1s;
 }
 
 .spice {
@@ -2021,8 +2030,13 @@ body.is-ready .spice,
   }
   .obj-art-b {
     right: 1%;
-    top: 61%;
+    top: calc(61% - 25px);
     transform: scale(0.65);
+  }
+  .obj-art-c {
+    left: 16%;
+    top: 70%;
+    transform: scale(0.68);
   }
   .hero-copy {
     bottom: 4%;
@@ -2141,8 +2155,13 @@ body.is-ready .spice,
   }
   .obj-art-b {
     right: -9%;
-    top: 61%;
+    top: calc(61% - 25px);
     transform: scale(0.5);
+  }
+  .obj-art-c {
+    left: -3%;
+    top: 68%;
+    transform: scale(0.52);
   }
   .hero-copy {
     bottom: 3%;

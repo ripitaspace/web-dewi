@@ -180,7 +180,6 @@ const HERO_OBJECTS = [
           alt="Kumbang Sistem Nusantara"
           data-loader-critical
         />
-        <small className="art-label-chip">Kumbang</small>
       </div>
     ),
   },
@@ -199,7 +198,24 @@ const HERO_OBJECTS = [
           alt="Gurita Sistem Nusantara"
           data-loader-critical
         />
-        <small className="art-label-chip">Gurita</small>
+      </div>
+    ),
+  },
+  {
+    key: "art-c",
+    className: "floating-object obj-art-c",
+    depth: 0.9,
+    scrollX: -240,
+    scrollY: -20,
+    scrollR: -10,
+    info: "Artwork Macan Tutul",
+    children: (
+      <div className="art-transparent idle-c" style={{ width: "clamp(135px, 13vw, 190px)", filter: "drop-shadow(0 12px 24px rgba(30,27,24,0.18))" }}>
+        <img
+          src="/images/artworks/javan-leopard-gouache-transparent.png"
+          alt="Macan Tutul Jawa Nusantara"
+          data-loader-critical
+        />
       </div>
     ),
   },
