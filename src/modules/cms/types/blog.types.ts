@@ -5,6 +5,7 @@ export interface BlogPost {
   excerpt: string;
   content: string; // Raw block content for react-notion-x fallback
   date: string;
+  dateISO?: string | null;
   author: string;
   category: string;
   type: "pemikiran" | "karya" | "belajar" | "tentang" | string;

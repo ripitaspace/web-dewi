@@ -6,6 +6,7 @@ import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
+import { filterThoughts, getThoughtTopics, type ThoughtSort } from "./pemikiran-filters";
 
 interface PemikiranClientProps {
   posts?: BlogPost[];
@@ -24,44 +25,18 @@ const featherLayers = [
 
 export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
-  const [sort, setSort] = useState("newest");
-
-
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    posts.forEach((p) => {
-      if (p.category) cats.add(p.category);
-      if (p.topics) p.topics.forEach((t) => cats.add(t));
-    });
-    return ["all", ...Array.from(cats)];
-  }, [posts]);
-
-  const filteredPosts = useMemo(() => {
-    const term = search.trim().toLowerCase();
-    const result = posts.filter((item) => {
-      const topicsStr = (item.topics || []).join(" ");
-      const haystack = `${item.title} ${item.excerpt} ${item.category} ${item.type} ${topicsStr}`.toLowerCase();
-      const matchesSearch = !term || haystack.includes(term);
-      const matchesCategory =
-        category === "all" ||
-        item.category.toLowerCase() === category.toLowerCase() ||
-        (item.topics && item.topics.some((t) => t.toLowerCase() === category.toLowerCase()));
-      return matchesSearch && matchesCategory;
-    });
-
-    result.sort((a, b) => {
-      if (sort === "oldest") return (a.date || "").localeCompare(b.date || "");
-      if (sort === "title") return a.title.localeCompare(b.title);
-      return (b.date || "").localeCompare(a.date || ""); // newest
-    });
-
-    return result;
-  }, [posts, search, category, sort]);
+  const [topic, setTopic] = useState("");
+  const [sort, setSort] = useState<ThoughtSort>("newest");
+  const topics = useMemo(() => getThoughtTopics(posts), [posts]);
+  const filteredPosts = useMemo(
+    () => filterThoughts(posts, search, topic, sort),
+    [posts, search, topic, sort]
+  );
+  const hasActiveFilters = search !== "" || topic !== "" || sort !== "newest";
 
   const handleResetFilters = () => {
     setSearch("");
-    setCategory("all");
+    setTopic("");
     setSort("newest");
   };
 
@@ -105,46 +80,56 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
         {/* Library Grid & Toolbar */}
         <section className="section-tight">
           <div className="container">
-            <div className="thought-toolbar" aria-label="Cari dan filter pemikiran">
-              <div className="thought-search">
+            <div className="thought-toolbar" role="search" aria-label="Cari dan filter pemikiran">
+              <div className="thought-search thought-field">
+                <label htmlFor="thoughtSearch">Cari pemikiran</label>
                 <input
                   className="field-control"
                   id="thoughtSearch"
                   type="search"
-                  placeholder="Cari judul, gagasan, atau tag…"
-                  aria-label="Cari pemikiran"
+                  placeholder="Cari judul, gagasan, atau topik…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
               <div className="thought-toolbar-controls">
-                <select
-                  className="field-control"
-                  id="thoughtCategory"
-                  aria-label="Filter kategori"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value="all">Semua kategori</option>
-                  {categories
-                    .filter((c) => c !== "all")
-                    .map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
+                <div className="thought-field">
+                  <label htmlFor="thoughtTopic">Topik</label>
+                  <select
+                    className="field-control"
+                    id="thoughtTopic"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                  >
+                    <option value="">Semua topik</option>
+                    {topics.map(({ value, label }) => (
+                      <option key={value} value={value}>{label}</option>
                     ))}
-                </select>
-                <select
-                  className="field-control"
-                  id="thoughtSort"
-                  aria-label="Urutkan pemikiran"
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
-                >
-                  <option value="newest">Terbaru</option>
-                  <option value="oldest">Terlama</option>
-                  <option value="title">Judul A–Z</option>
-                </select>
+                  </select>
+                </div>
+                <div className="thought-field">
+                  <label htmlFor="thoughtSort">Urutkan</label>
+                  <select
+                    className="field-control"
+                    id="thoughtSort"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as ThoughtSort)}
+                  >
+                    <option value="newest">Terbaru</option>
+                    <option value="oldest">Terlama</option>
+                    <option value="title">Judul A–Z</option>
+                  </select>
+                </div>
+              </div>
+              <div className="thought-results">
+                <p role="status" aria-live="polite" aria-atomic="true">
+                  Menampilkan {filteredPosts.length} dari {posts.length} artikel
+                </p>
+                {hasActiveFilters && (
+                  <button type="button" className="thought-reset" onClick={handleResetFilters}>
+                    Reset Filter
+                  </button>
+                )}
               </div>
             </div>
 
@@ -181,7 +166,7 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
                         <div className="blog-card-byline">
                           <img className="blog-author-avatar" src="/author-avatar.jpg" alt="" />
                           <span className="blog-author">{authorName}</span>
-                          <time className="blog-date">{item.date}</time>
+                          <time className="blog-date" dateTime={item.dateISO || undefined}>{item.date}</time>
                         </div>
                         <Link className="blog-link" href={`/blog/${item.slug || item.id}`}>
                           Baca artikel <span>→</span>
@@ -195,7 +180,6 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
               <SystemState type="empty" size="section"
                 title={posts.length === 0 ? "Belum ada artikel." : "Belum ada hasil pencarian."}
                 description={posts.length === 0 ? undefined : "Belum ada catatan yang cocok. Coba kata pencarian lain atau reset filter."}
-                primaryAction={search || category !== "all" ? { label: "Reset Filter", onClick: handleResetFilters } : null}
               />
             )}
           </div>

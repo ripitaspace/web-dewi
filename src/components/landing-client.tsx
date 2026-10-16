@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SiteFooter } from "@/components/navigation/site-footer";
 import { useEffect, useRef, useState } from "react";
 import { RipitaMark } from "@/components/brand/ripita-mark";
 import { RIPITA_LOADER_COMPLETE_EVENT } from "@/components/brand/ripita-signature-loader";
@@ -646,6 +647,8 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
           </button>
         </div>
       </main>
+
+      <SiteFooter />
 
       <aside
         className={`info-panel ${isInfoOpen ? "open" : ""}`}

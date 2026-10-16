@@ -1,58 +1,51 @@
 import Link from "next/link";
-import { ROUTE_ORDER } from "@/lib/site-data";
+import { FOOTER_CONTENT } from "@/lib/footer-content";
+import { SurpriseLink } from "./footer-interactions";
+import styles from "./site-footer.module.css";
 
 export function SiteFooter() {
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="footer-grid">
-          <div>
-            <div className="brand" style={{ marginBottom: "16px" }}>
-              <strong>PUSPITA</strong>
-              <span>RUPA INDONESIA · AKAL MASA DEPAN</span>
-            </div>
-            <p className="muted" style={{ maxWidth: "340px" }}>
-              Personal ecosystem yang mengeksplorasi perjumpaan antara akuntansi, teknologi, seni rupa, dan desain sistem.
-            </p>
-          </div>
+    <footer className={styles.footer} aria-label="PuspitaCore — lanjutkan rasa penasaran">
+      <div className={`container ${styles.inner}`}>
+        <div className={styles.masthead}>
+          <Link href="/" className={styles.wordmark} aria-label="PuspitaCore — Beranda">PUSPITA<span>CORE</span><span className={styles.star} aria-hidden="true">✳</span></Link>
+          <SurpriseLink />
+        </div>
 
-          <div>
-            <h4 style={{ fontFamily: "var(--sans)", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }}>
-              Peta Navigasi
-            </h4>
-            <div className="footer-nav">
-              {ROUTE_ORDER.map((item) => (
-                <Link key={item.key} href={item.path} style={{ color: "rgba(30, 27, 24, 0.75)" }}>
-                  {item.num} · {item.label}
-                </Link>
+        <div className={styles.grid}>
+          <div className={styles.story}>
+            <h2 className={styles.headline} lang="en">From curiosity<br />to <em>systems.</em></h2>
+            <p className={styles.description}>{FOOTER_CONTENT.description}</p>
+          </div>
+          <div className={styles.linksAndContact}>
+            <nav className={styles.navigation} aria-label="Navigasi footer">
+              {FOOTER_CONTENT.navigation.map((group) => (
+                <div key={group.title} className={styles.linkGroup}>
+                  <h3>{group.title}</h3>
+                  <ul>
+                    {group.links.map((link) => <li key={link.href}><Link href={link.href}>{link.label}</Link></li>)}
+                  </ul>
+                </div>
               ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 style={{ fontFamily: "var(--sans)", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }}>
-              Ekosistem Terkait
-            </h4>
-            <div className="footer-nav">
-              <Link href="/ripita" style={{ color: "rgba(30, 27, 24, 0.75)" }}>
-                RIPITA Core & Hub
-              </Link>
-              <Link href="/karya" style={{ color: "rgba(30, 27, 24, 0.75)" }}>
-                RIPITAX & Logistics
-              </Link>
-              <Link href="/belajar" style={{ color: "rgba(30, 27, 24, 0.75)" }}>
-                Storefront & Toolkits
-              </Link>
-              <Link href="/kerja-bersama" style={{ color: "rgba(30, 27, 24, 0.75)" }}>
-                Jadwal Konsultasi & Kerja Bersama
-              </Link>
+            </nav>
+            <div className={styles.contact}>
+              <h3>{FOOTER_CONTENT.contact.title}</h3>
+              <p>{FOOTER_CONTENT.contact.description}</p>
+              <a
+                href={FOOTER_CONTENT.contact.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Mari ngobrol melalui WhatsApp (buka tab baru)"
+              >
+                {FOOTER_CONTENT.contact.label} <span aria-hidden="true">↗</span>
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <span className="muted">© {new Date().getFullYear()} PUSPITA × RIPITA. Hak cipta dilindungi.</span>
-          <span className="hand-note text-delima">Rasa menjadi rupa. Ide menjadi sistem.</span>
+        <div className={styles.bottom}>
+          <p className={styles.signature}>{FOOTER_CONTENT.signature}</p>
+          <p className={styles.copyright}>© {new Date().getFullYear()} PUSPITA × RIPITA<br /><span>Rupa Indonesia · Akal Masa Depan</span></p>
         </div>
       </div>
     </footer>

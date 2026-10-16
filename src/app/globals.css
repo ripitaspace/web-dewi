@@ -2863,9 +2863,9 @@ body.modal-open {
 .thought-toolbar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
-  padding: 8px;
+  gap: 16px;
+  align-items: end;
+  padding: 16px;
   margin-bottom: 28px;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -2877,8 +2877,60 @@ body.modal-open {
 }
 
 .thought-toolbar-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 160px);
+  gap: 12px;
+}
+
+.thought-field {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.thought-field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.thought-results {
+  grid-column: 1 / -1;
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  min-height: 44px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.thought-results p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--kayu);
+}
+
+.thought-reset {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--white);
+  color: var(--selat);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.thought-reset:hover {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.thought-reset:focus-visible {
+  outline: 2px solid var(--selat);
+  outline-offset: 3px;
 }
 
 .field-control {
@@ -2893,14 +2945,14 @@ body.modal-open {
   transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
 }
 
-.thought-search .field-control {
+.thought-toolbar .field-control {
   background: var(--white);
   border-color: var(--line);
 }
 
 .thought-toolbar-controls .field-control {
-  width: auto;
-  min-width: 140px;
+  width: 100%;
+  min-width: 0;
   cursor: pointer;
 }
 
@@ -3799,35 +3851,6 @@ code.notion-inline-code {
   font-size: 1.25rem;
 }
 
-/* Shared Footer */
-.footer {
-  padding: 62px 0 28px;
-  border-top: 1px solid var(--line);
-  background: rgba(216, 195, 157, 0.25);
-  margin-top: 60px;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr;
-  gap: 40px;
-}
-
-.footer-nav {
-  display: grid;
-  gap: 10px;
-}
-
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-  font-size: 0.85rem;
-}
-
 /* Floating Umami visitor stamp */
 .visitor-stamp {
   position: fixed;
@@ -3946,8 +3969,7 @@ code.notion-inline-code {
   .store-filter { display: flex; overflow-x: auto; padding-bottom: 6px; }
   .store-filter button { flex: 0 0 auto; }
   .thought-toolbar { grid-template-columns: 1fr; }
-  .thought-toolbar-controls { justify-content: flex-end; }
-  .footer-grid { grid-template-columns: 1fr; }
+  .thought-toolbar-controls { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 620px) {
@@ -3976,8 +3998,8 @@ code.notion-inline-code {
   .work-card { grid-template-columns: 1fr; }
   .work-card .art-placeholder { margin-bottom: 20px; }
   .library-grid, .store-grid { grid-template-columns: 1fr; }
-  .thought-toolbar { padding: 8px; }
-  .thought-toolbar-controls { display: grid; grid-template-columns: 1fr 1fr; }
+  .thought-toolbar { padding: 12px; }
+  .thought-toolbar-controls { grid-template-columns: minmax(0, 1fr); }
   .thought-toolbar-controls .field-control { width: 100%; min-width: 0; }
   .form-grid { grid-template-columns: 1fr; }
   .form-field.full { grid-column: auto; }

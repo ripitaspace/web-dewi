@@ -69,6 +69,10 @@ export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
   const authorProp = getProp(props, ["Author", "Penulis"]);
   const categoryProp = getProp(props, ["Category", "Kategori"]);
   const coverProp = getProp(props, ["Cover Image", "Cover", "Image", "Gambar"]);
+  const dateSource = [getText(dateProp), page.created_time].find(
+    (value) => /^\d{4}-\d{2}-\d{2}/.test(value) && Number.isFinite(Date.parse(value))
+  );
+  const dateISO = dateSource ? new Date(dateSource).toISOString() : null;
 
   return {
     id: page.id,
@@ -76,7 +80,8 @@ export const mapNotionPageToBlogPost = (page: PageObjectResponse): BlogPost => {
     title: getText(titleProp) || "Tanpa Judul",
     excerpt: getText(excerptProp) || "",
     content: "",
-    date: formatDate(getText(dateProp) || page.created_time),
+    date: formatDate(dateSource || ""),
+    dateISO,
     author: getText(authorProp) || "pus",
     category: getText(categoryProp) || "Umum",
     type,
