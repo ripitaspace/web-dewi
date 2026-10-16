@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { UmamiAnalytics } from "@/components/analytics/umami-analytics";
 import { VisitorStamp } from "@/components/analytics/visitor-stamp";
 import { ConnectionNotice } from "@/components/system-state/connection-notice";
 import "./globals.css";
@@ -25,6 +26,7 @@ export default function RootLayout({
         <ConnectionNotice />
         <div data-ripita-page-content>{children}</div>
         <GoogleAnalytics />
+        <UmamiAnalytics />
         <VisitorStamp />
       </body>
     </html>

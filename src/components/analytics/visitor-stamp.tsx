@@ -34,7 +34,7 @@ export function VisitorStamp() {
   }, []);
 
   const countLabel = visitorCount === null ? "—" : visitorFormatter.format(visitorCount);
-  const statusLabel = isLoading ? "Memuat data pengunjung" : visitorCount === null ? "Analytics belum aktif" : `Total pengunjung: ${countLabel}`;
+  const statusLabel = isLoading ? "Memuat data pengunjung" : visitorCount === null ? "Umami belum dikonfigurasi" : `Total pengunjung sejak awal: ${countLabel}`;
 
   return (
     <aside className="visitor-stamp" aria-live="polite" aria-label={`Web Analytics: ${statusLabel}`}>

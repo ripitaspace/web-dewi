@@ -249,15 +249,6 @@ export function AboutHero() {
                               <img src="/images/artworks/coral-fish-gouache.png" alt="" width="1024" height="1024" />
                             </span>
                           )}
-                          {word === "terbentuk." && (
-                            <svg className={kinetic.system} data-system viewBox="0 0 200 16" preserveAspectRatio="xMidYMid meet" focusable="false">
-                              <path d="M5 11 L65 4" pathLength="1" strokeDasharray="1" />
-                              <path d="M65 4 L130 12" pathLength="1" strokeDasharray="1" />
-                              <path d="M130 12 L195 5" pathLength="1" strokeDasharray="1" />
-                              <circle cx="5" cy="11" r="3.5" /><circle cx="65" cy="4" r="3.5" />
-                              <circle cx="130" cy="12" r="3.5" /><circle cx="195" cy="5" r="3.5" />
-                            </svg>
-                          )}
                         </span>
                       </Fragment>
                     ))}

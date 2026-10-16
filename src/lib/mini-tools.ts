@@ -34,6 +34,6 @@ export const MINI_TOOLS: MiniTool[] = [
   { number: "11", category: "Audit Essentials", title: "Confirmation Generator", description: "Membuat surat konfirmasi audit bank, utang, dan piutang.", icon: "✓", status: "maintenance", href: "/karya/tools/confirmation-generator" },
   { number: "12", category: "Audit Essentials", title: "Sampling Picker", description: "Memilih sampel audit dari data Excel atau CSV.", icon: "⊙", status: "maintenance", href: "/karya/tools/sampling-picker" },
   { number: "15", category: "Document Essentials", title: "Compress Data", description: "Mengecilkan ukuran file data agar lebih ringkas untuk disimpan atau dibagikan.", icon: "⇣", status: "maintenance", href: "/karya/tools/compress-data" },
-  { number: "16", category: "Document Essentials", title: "Compile Dokumen", description: "Menggabungkan beberapa dokumen menjadi satu file yang rapi.", icon: "▣", status: "maintenance", href: "/karya/tools/compile-dokumen" },
+  { number: "16", category: "Document Essentials", title: "Compile Dokumen", description: "Menggabungkan PDF dan gambar menjadi satu file yang rapi.", icon: "▣", status: "available", href: "/karya/tools/compile-dokumen" },
   { number: "17", category: "Document Essentials", title: "Digital Signing", description: "Membubuhkan tanda tangan digital pada dokumen secara praktis.", icon: "✦", status: "maintenance", href: "/karya/tools/digital-signing" },
 ];

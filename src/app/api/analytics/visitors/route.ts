@@ -1,81 +1,53 @@
-import { createSign } from "node:crypto";
-
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-const GA4_REPORT_URL = "https://analyticsdata.googleapis.com/v1beta/properties";
+const UMAMI_API_ENDPOINT = "https://api.umami.is/v1";
+const DEFAULT_WEBSITE_ID = "f6ba3346-085a-4deb-b34b-0ee40de870b8";
 
-function encodeBase64Url(value: string) {
-  return Buffer.from(value).toString("base64url");
+type UmamiStatsResponse = {
+  visitors?: { value?: number } | number;
+};
+
+function getVisitorCount(stats: UmamiStatsResponse): number | null {
+  const value = typeof stats.visitors === "number" ? stats.visitors : stats.visitors?.value;
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
-function createServiceAccountJwt(email: string, privateKey: string) {
-  const now = Math.floor(Date.now() / 1000);
-  const unsignedToken = [
-    encodeBase64Url(JSON.stringify({ alg: "RS256", typ: "JWT" })),
-    encodeBase64Url(JSON.stringify({
-      iss: email,
-      scope: "https://www.googleapis.com/auth/analytics.readonly",
-      aud: GOOGLE_TOKEN_URL,
-      iat: now,
-      exp: now + 3600,
-    })),
-  ].join(".");
-
-  const signer = createSign("RSA-SHA256");
-  signer.update(unsignedToken);
-  signer.end();
-  return `${unsignedToken}.${signer.sign(privateKey).toString("base64url")}`;
-}
-
-async function getAccessToken(email: string, privateKey: string) {
-  const assertion = createServiceAccountJwt(email, privateKey.replace(/\\n/g, "\n"));
-  const response = await fetch(GOOGLE_TOKEN_URL, {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion,
-    }),
-    cache: "no-store",
-  });
-
-  if (!response.ok) throw new Error("Google OAuth token request failed");
-  const data = (await response.json()) as { access_token?: string };
-  if (!data.access_token) throw new Error("Google OAuth returned no access token");
-  return data.access_token;
-}
-
+/**
+ * Returns Umami's unique-visitor total from the earliest available tracking data
+ * through the current request time. The Umami API key never reaches the browser.
+ */
 export async function GET() {
-  const propertyId = process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
-  const serviceAccountEmail = process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_EMAIL;
-  const serviceAccountPrivateKey = process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_PRIVATE_KEY;
+  const apiKey = process.env.UMAMI_API_KEY;
+  const websiteId = process.env.UMAMI_WEBSITE_ID || DEFAULT_WEBSITE_ID;
+  const apiEndpoint = (process.env.UMAMI_API_ENDPOINT || UMAMI_API_ENDPOINT).replace(/\/$/, "");
 
-  if (!propertyId || !serviceAccountEmail || !serviceAccountPrivateKey) {
+  if (!apiKey) {
     return Response.json({ visitorCount: null }, { headers: { "cache-control": "public, s-maxage=300" } });
   }
 
-  try {
-    const accessToken = await getAccessToken(serviceAccountEmail, serviceAccountPrivateKey);
-    const reportResponse = await fetch(`${GA4_REPORT_URL}/${encodeURIComponent(propertyId)}:runReport`, {
-      method: "POST",
-      headers: { authorization: `Bearer ${accessToken}`, "content-type": "application/json" },
-      body: JSON.stringify({
-        dateRanges: [{ startDate: "2020-01-01", endDate: "today" }],
-        metrics: [{ name: "totalUsers" }],
-      }),
-      cache: "no-store",
-    });
+  const params = new URLSearchParams({
+    startAt: "0",
+    endAt: String(Date.now()),
+  });
 
-    if (!reportResponse.ok) throw new Error("Google Analytics report request failed");
-    const report = (await reportResponse.json()) as {
-      rows?: Array<{ metricValues?: Array<{ value?: string }> }>;
-    };
-    const visitorCount = Number(report.rows?.[0]?.metricValues?.[0]?.value);
+  try {
+    const response = await fetch(
+      `${apiEndpoint}/websites/${encodeURIComponent(websiteId)}/stats?${params}`,
+      {
+        headers: {
+          accept: "application/json",
+          authorization: `Bearer ${apiKey}`,
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) throw new Error("Umami analytics request failed");
+    const visitorCount = getVisitorCount((await response.json()) as UmamiStatsResponse);
 
     return Response.json(
-      { visitorCount: Number.isFinite(visitorCount) ? visitorCount : null },
+      { visitorCount },
       { headers: { "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400" } }
     );
   } catch {

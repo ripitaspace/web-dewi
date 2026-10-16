@@ -3760,7 +3760,7 @@ code.notion-inline-code {
   font-size: 0.85rem;
 }
 
-/* Floating GA4 visitor stamp */
+/* Floating Umami visitor stamp */
 .visitor-stamp {
   position: fixed;
   z-index: 1100;

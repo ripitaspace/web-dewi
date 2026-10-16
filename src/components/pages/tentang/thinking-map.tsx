@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import styles from "./about.module.css";
@@ -22,6 +22,8 @@ const scatterTokens = scatterWords.map((word) => {
 });
 const relationshipText = "Aku cenderung melihat hubungan.";
 const questionParticles = Array.from({ length: 22 }, (_, index) => index);
+const AUTO_ADVANCE_MS = 4_000;
+const MANUAL_PAUSE_MS = 6_000;
 
 function scatterStyle(index: number, delay: number): CSSProperties {
   const angle = ((index * 137.5) - 90) * (Math.PI / 180);
@@ -53,11 +55,81 @@ function particleStyle(index: number): CSSProperties {
 
 export function ThinkingMap() {
   const [selected, setSelected] = useState("Manusia");
+  const [mapVisible, setMapVisible] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [manualPauseUntil, setManualPauseUntil] = useState(0);
+  const [autoCycle, setAutoCycle] = useState(0);
+  const [selectionSource, setSelectionSource] = useState<"initial" | "manual" | "auto">("initial");
   const [groupIndex, setGroupIndex] = useState(0);
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
   const [questionParticlesActive, setQuestionParticlesActive] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const selectedRef = useRef(nodes[0].name);
+  const manualPauseUntilRef = useRef(0);
+  const autoTimerRef = useRef<number | null>(null);
   const relationshipRef = useRef<HTMLSpanElement>(null);
   const questionHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateReducedMotion = () => setReducedMotion(media.matches);
+    updateReducedMotion();
+    media.addEventListener("change", updateReducedMotion);
+    return () => media.removeEventListener("change", updateReducedMotion);
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(([entry]) => setMapVisible(entry.isIntersecting), { threshold: .15 });
+    observer.observe(map);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (autoTimerRef.current !== null) {
+      window.clearTimeout(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+    if (!mapVisible || reducedMotion) return;
+
+    const remainingManualPause = Math.max(0, manualPauseUntil - Date.now());
+    const timer = window.setTimeout(() => {
+      if (autoTimerRef.current !== timer || Date.now() < manualPauseUntilRef.current) return;
+
+      autoTimerRef.current = null;
+      const currentIndex = nodes.findIndex((node) => node.name === selectedRef.current);
+      const nextNode = nodes[(currentIndex + 1 + nodes.length) % nodes.length].name;
+      selectedRef.current = nextNode;
+      setSelected(nextNode);
+      setSelectionSource("auto");
+      manualPauseUntilRef.current = 0;
+      setManualPauseUntil(0);
+      setAutoCycle((cycle) => cycle + 1);
+    }, remainingManualPause || AUTO_ADVANCE_MS);
+    autoTimerRef.current = timer;
+
+    return () => {
+      window.clearTimeout(timer);
+      if (autoTimerRef.current === timer) autoTimerRef.current = null;
+    };
+  }, [autoCycle, manualPauseUntil, mapVisible, reducedMotion]);
+
+  const selectNodeManually = (name: string) => {
+    if (selectedRef.current === name && Date.now() < manualPauseUntilRef.current) return;
+
+    const pauseUntil = Date.now() + MANUAL_PAUSE_MS;
+    if (autoTimerRef.current !== null) {
+      window.clearTimeout(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+    selectedRef.current = name;
+    setSelected(name);
+    setSelectionSource("manual");
+    manualPauseUntilRef.current = pauseUntil;
+    setManualPauseUntil(pauseUntil);
+  };
 
   useLayoutEffect(() => {
     const relationship = relationshipRef.current;
@@ -130,23 +202,28 @@ export function ThinkingMap() {
   return <>
     <div className={styles.thinkingIntro}>
       <div><p className={styles.eyebrow}>Bab 01 / The Thinking Map</p><h2 className={styles.scatterHeading} aria-label="Ketika sesuatu terlihat berantakan, biasanya ada pola yang belum ditemukan.">{scatterTokens.map((word, wordIndex) => <Fragment key={scatterWords[wordIndex]}><span className={`${styles.word} ${activeWordIndex === wordIndex ? styles.wordScattered : ""}`} onPointerEnter={() => setActiveWordIndex(wordIndex)} onPointerLeave={() => setActiveWordIndex(null)} onClick={() => setActiveWordIndex((active) => active === wordIndex ? null : wordIndex)}>{word.map(({ character, index, delay }) => <span key={`${character}-${index}`} className={styles.letter} style={scatterStyle(index, delay)}>{character}</span>)}</span>{wordIndex < scatterTokens.length - 1 ? " " : null}</Fragment>)}</h2><p className={styles.subhead} aria-label={relationshipText}><span className={styles.relationship} ref={relationshipRef} aria-hidden="true">{Array.from(relationshipText).map((character, index) => <span className={styles.relationshipLetter} data-relationship-char data-space={character === " " || undefined} key={`${character}-${index}`}>{character === " " ? "\u00a0" : character}</span>)}<span className={styles.relationshipLine} data-relationship-line /></span></p><p className={styles.copy}>Aku sering melihat pekerjaan bukan sebagai daftar tugas, melainkan hubungan antara manusia, keputusan, dokumen, informasi, dan konsekuensi.</p><p className={styles.copy}>Aku tidak hanya ingin memahami apa yang terjadi. Aku ingin memahami mengapa itu terjadi dan pola apa yang ada di baliknya.</p></div>
-      <div className={styles.map} aria-label="Alur hubungan cara berpikir">
+      <div className={styles.map} aria-label="Alur hubungan cara berpikir" ref={mapRef}>
         <p className={styles.mapLabel}>Cara aku membaca sebuah pekerjaan</p>
         <div className={styles.mapFlow} aria-label="Alur sebab dan akibat">
           {nodes.map((node, index) => <Fragment key={node.name}>
-            <button type="button" aria-pressed={selected === node.name} className={`${styles.mapNode} ${selected === node.name ? styles.selected : ""}`} onClick={() => setSelected(node.name)} onFocus={() => setSelected(node.name)}>
+            <button type="button" aria-pressed={selected === node.name} className={`${styles.mapNode} ${selected === node.name ? styles.selected : ""}`} onClick={() => selectNodeManually(node.name)} onFocus={() => selectNodeManually(node.name)}>
               <span>0{index + 1}</span>{node.name}
             </button>
             {index < nodes.length - 1 && <i className={`${styles.mapConnector} ${index === selectedIndex || index === selectedIndex - 1 ? styles.connectorActive : ""}`} aria-hidden="true">→</i>}
           </Fragment>)}
         </div>
-        <div className={styles.mapDetail} aria-live="polite">
+        <div className={styles.mapDetail} aria-live={selectionSource === "manual" ? "polite" : "off"}>
           <p><span>Langkah 0{selectedIndex + 1}</span><b>{selectedNode.name}</b></p>
           <p>{selectedNode.role}</p>
           <small>Berlanjut ke <strong>{selectedNode.next}</strong> <i aria-hidden="true">→</i></small>
         </div>
       </div>
     </div>
+    <svg className={`${styles.questionSystem} ${questionParticlesActive ? styles.questionSystemActive : ""}`} viewBox="0 0 200 16" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+      <path d="M5 11 L65 4" pathLength="1" /><path d="M65 4 L130 12" pathLength="1" /><path d="M130 12 L195 5" pathLength="1" />
+      <circle cx="5" cy="11" r="3.5" /><circle cx="65" cy="4" r="3.5" />
+      <circle cx="130" cy="12" r="3.5" /><circle cx="195" cy="5" r="3.5" />
+    </svg>
     <div className={styles.questionBlock}>
       <span className={`${styles.questionParticles} ${questionParticlesActive ? styles.questionParticlesActive : ""}`} aria-hidden="true">{questionParticles.map((particle) => <i key={particle} style={particleStyle(particle)} />)}</span>
       <div><p className={styles.eyebrow}>Pertanyaan yang selalu muncul</p><h3 ref={questionHeadingRef}>Rasa ingin tahu adalah titik awalnya.</h3></div>
