@@ -1,0 +1,7 @@
+Mode: built-in image_gen; transparent_background: true
+
+Use case: background-extraction
+Asset type: transparent peacock illustration for an Indonesian editorial website hero.
+Primary request: Remove all cream paper background from this peacock artwork and make it truly transparent.
+Input images: Image 1 is the edit target.
+Constraints: Preserve the exact peacock, full feather fan, colors, gouache paint texture within the bird, shape, pose and composition. Preserve fine feather tips and legs with clean alpha edges. All space outside the peacock and between the legs must have alpha transparency. No circle, no frame, no shadow, no backdrop, no checkerboard pixels, no text. Keep the entire bird visible on a square canvas.

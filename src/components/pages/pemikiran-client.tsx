@@ -69,13 +69,12 @@ export function PemikiranClient({ posts = [] }: PemikiranClientProps) {
                 Perpustakaan yang memuat esai, catatan, framework, diagram, pertanyaan, eksperimen, dan refleksi kasus.
               </p>
             </div>
-            <div className="art-placeholder art-lg" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
+            <div style={{ width: "min(320px, 100%)", aspectRatio: "1", marginInline: "auto" }}>
               <img
-                src="/images/artworks/coral-fish-gouache.png"
-                alt="Ikan Karang Nusantara"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                src="/images/artworks/javan-peacock-gouache-transparent.png"
+                alt="Merak Hijau Nusantara"
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
               />
-              <span>Ikan Karang Nusantara</span>
             </div>
           </div>
         </section>

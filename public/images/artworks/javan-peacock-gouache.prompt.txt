@@ -1,0 +1,10 @@
+Mode: built-in image_gen
+
+Use case: illustration-story
+Asset type: square hero artwork for the Pemikiran page of an Indonesian editorial website.
+Primary request: A single elegant Javan green peacock (merak hijau) with an open fan of patterned tail feathers, standing in a gentle three-quarter pose.
+Scene/backdrop: warm ivory textured artist paper, isolated subject, no scenery.
+Style/medium: hand-painted gouache natural-history illustration, rich opaque brushwork, softly irregular edges, subtle paper grain; sophisticated Nusantara fauna artwork.
+Color palette: deep teal, indigo blue, muted emerald, ochre and restrained terracotta accents, matching a warm cream editorial website.
+Composition/framing: square canvas, entire peacock and full feather fan visible, centered with generous clear margins, legible at 320px, calm balanced silhouette.
+Constraints: one bird only; no text, labels, border, logo or watermark; no fish; no photorealism or 3D.
