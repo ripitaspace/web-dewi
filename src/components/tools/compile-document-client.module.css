@@ -1,28 +1,23 @@
 .workspace { display: grid; gap: 24px; }
-.intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(330px, .72fr); gap: 38px; align-items: end; padding: clamp(26px, 5vw, 48px); border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(120deg, rgba(216, 195, 157, .24), rgba(255, 253, 247, .75)); }
-.intro h2, .panelHeading h2 { margin: 10px 0; }
-.intro h2 { max-width: 560px; font-size: clamp(2rem, 4vw, 3.4rem); }
-.intro p { max-width: 600px; margin: 0; color: rgba(30, 27, 24, .7); line-height: 1.7; }
-.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: var(--line); }
-.summary div { min-width: 0; padding: 18px 14px; background: var(--gading); }
-.summary dt { font-size: .61rem; font-weight: 900; letter-spacing: .09em; color: rgba(30, 27, 24, .55); }
-.summary dd { margin: 8px 0 0; font: 1.5rem var(--display); white-space: nowrap; }
-.summary small { font: .8rem var(--body); }
-.grid { display: grid; grid-template-columns: minmax(0, 1.28fr) minmax(320px, .72fr); gap: 24px; align-items: start; }
-.controls, .sidebar { display: grid; gap: 24px; }
-.panel { padding: clamp(20px, 3.2vw, 31px); }
-.panelHeading { margin-bottom: 18px; }
-.panelHeading > span { display: block; color: var(--rempah); font-size: .69rem; font-weight: 900; letter-spacing: .12em; }
-.panelHeading h2 { font-size: clamp(1.45rem, 2.5vw, 2rem); }
-.dropzone { display: grid; place-items: center; gap: 8px; min-height: 228px; padding: 28px; text-align: center; border: 1.5px dashed rgba(143, 37, 65, .42); border-radius: 16px; background: rgba(216, 195, 157, .13); transition: background .2s ease, border-color .2s ease; }
+.grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(350px, .88fr); gap: 22px; align-items: start; }
+.controls, .sidebar { display: grid; gap: 18px; }
+.panel, .previewWorkspace { padding: clamp(20px, 3vw, 30px); }
+.queueHeader { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-bottom: 20px; }
+.queueHeader h2 { margin: 0; font-size: clamp(1.5rem, 2.7vw, 2rem); }
+.queueHeader p { margin: 5px 0 0; color: rgba(30, 27, 24, .64); font-size: .82rem; line-height: 1.5; }
+.summary { display: grid; grid-template-columns: repeat(4, auto); gap: 1px; flex: 0 0 auto; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: var(--line); }
+.summary div { min-width: 62px; padding: 10px 11px; background: var(--gading); text-align: center; }
+.summary dt { color: rgba(30, 27, 24, .52); font-size: .56rem; font-weight: 900; letter-spacing: .08em; }
+.summary dd { margin: 5px 0 0; font: 1.05rem var(--display); white-space: nowrap; }
+.dropzone { display: grid; place-items: center; gap: 7px; min-height: 208px; padding: 24px; text-align: center; border: 1.5px dashed rgba(143, 37, 65, .42); border-radius: 15px; background: rgba(216, 195, 157, .13); transition: background .2s ease, border-color .2s ease; }
 .dropzone:hover { border-color: var(--delima); background: rgba(143, 37, 65, .055); }
 .dropzone input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-.dropzone strong { font-size: 1.05rem; }
-.dropzone > span:not(.uploadIcon) { color: rgba(30, 27, 24, .62); font-size: .88rem; }
-.uploadIcon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 2rem/1 var(--display); }
-.dropzone .btn { margin-top: 7px; }
-.fileList { display: grid; gap: 8px; margin-top: 14px; }
-.emptyQueue { margin: 0; padding: 18px 0 4px; text-align: center; color: rgba(30, 27, 24, .57); font-size: .9rem; }
+.dropzone strong { font-size: 1rem; }
+.dropzone > span:not(.uploadIcon) { color: rgba(30, 27, 24, .62); font-size: .82rem; }
+.uploadIcon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 1.85rem/1 var(--display); }
+.dropzone .btn { margin-top: 5px; }
+.fileList { display: grid; gap: 8px; margin-top: 13px; }
+.emptyQueue { margin: 0; padding: 16px 0 3px; text-align: center; color: rgba(30, 27, 24, .57); font-size: .86rem; }
 .fileRow { display: grid; grid-template-columns: 26px 42px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 253, 247, .6); }
 .fileIndex { color: rgba(30, 27, 24, .48); font-size: .66rem; font-weight: 900; }
 .previewSelect { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; color: var(--gading); background: var(--delima); font-size: .58rem; font-weight: 900; cursor: pointer; }
@@ -34,28 +29,53 @@
 .rowActions button:hover:not(:disabled) { color: var(--delima); background: rgba(143, 37, 65, .08); }
 .rowActions button:disabled { opacity: .25; cursor: not-allowed; }
 .clearButton { margin-top: 12px; padding: 0; border: 0; color: var(--delima); background: transparent; font-size: .77rem; font-weight: 800; text-decoration: underline; cursor: pointer; }
-.helpText { margin: -2px 0 21px; color: rgba(30, 27, 24, .66); font-size: .88rem; line-height: 1.6; }
-.rangeLabel { display: flex; justify-content: space-between; font-size: .86rem; font-weight: 800; }
-.rangeLabel strong { color: var(--delima); }
-.range { width: 100%; margin: 14px 0; accent-color: var(--delima); }
-.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
-.presets button { padding: 8px 5px; border: 1px solid var(--line); border-radius: 9px; color: rgba(30, 27, 24, .74); background: transparent; font: inherit; font-size: .71rem; font-weight: 800; cursor: pointer; }
+.controlPanel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(175px, .85fr); gap: 19px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+.qualityControl { padding-right: 19px; border-right: 1px solid var(--line); }
+.controlTitle { display: flex; justify-content: space-between; gap: 10px; font-size: .83rem; font-weight: 800; }
+.controlTitle strong { color: var(--delima); }
+.range { width: 100%; margin: 12px 0; accent-color: var(--delima); }
+.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.presets button { padding: 7px 4px; border: 1px solid var(--line); border-radius: 8px; color: rgba(30, 27, 24, .74); background: transparent; font: inherit; font-size: .67rem; font-weight: 800; cursor: pointer; }
 .presets button:hover, .presets .selectedPreset { border-color: var(--delima); color: var(--gading); background: var(--delima); }
-.previewPanel { min-height: 470px; }
-.previewArea { display: grid; place-items: center; min-height: 333px; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: rgba(216, 195, 157, .18); }
-.previewArea iframe, .previewArea img { display: block; width: 100%; height: 333px; border: 0; object-fit: contain; }
-.previewArea > div { max-width: 220px; padding: 25px; color: rgba(30, 27, 24, .58); text-align: center; }
-.previewArea > div span { display: inline-grid; place-items: center; width: 46px; height: 46px; margin-bottom: 4px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 1.5rem var(--display); }
-.previewArea > div p { margin: 8px 0 0; font-size: .86rem; line-height: 1.55; }
-.previewCaption { overflow: hidden; margin: 12px 0 0; color: rgba(30, 27, 24, .58); font-size: .76rem; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
-.exportPanel { display: grid; }
-.outputLabel { margin-bottom: 7px; font-size: .76rem; font-weight: 800; }
-.exportPanel input { width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: rgba(255, 253, 247, .7); font: inherit; font-size: .9rem; }
-.exportPanel > .btn { width: 100%; justify-content: center; }
-.status { margin-top: 18px; }
-.status > div { display: flex; justify-content: space-between; gap: 12px; color: rgba(30, 27, 24, .67); font-size: .76rem; line-height: 1.45; }
+.exportControl { display: grid; align-content: start; }
+.outputLabel { margin-bottom: 6px; font-size: .72rem; font-weight: 800; }
+.exportControl input { width: 100%; margin-bottom: 10px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: rgba(255, 253, 247, .7); font: inherit; font-size: .82rem; }
+.exportControl .btn { width: 100%; justify-content: center; padding: 10px 12px; font-size: .78rem; }
+.status { grid-column: 1 / -1; margin-top: -3px; }
+.status > div { display: flex; justify-content: space-between; gap: 12px; color: rgba(30, 27, 24, .67); font-size: .73rem; line-height: 1.45; }
 .status > div b { color: var(--delima); }
-.status > i { display: block; height: 5px; margin-top: 8px; overflow: hidden; border-radius: 99px; background: rgba(30, 27, 24, .1); }
+.status > i { display: block; height: 4px; margin-top: 7px; overflow: hidden; border-radius: 99px; background: rgba(30, 27, 24, .1); }
 .status > i em { display: block; height: 100%; border-radius: inherit; background: var(--delima); transition: width .2s ease; }
-@media (max-width: 850px) { .intro, .grid { grid-template-columns: 1fr; } .intro { gap: 24px; } .sidebar { grid-template-columns: minmax(0, 1.2fr) minmax(270px, .8fr); } .previewPanel { min-height: 0; } }
-@media (max-width: 620px) { .intro { padding: 25px 20px; } .summary { grid-template-columns: repeat(3, 1fr); } .summary div { padding: 13px 9px; } .summary dd { font-size: 1.24rem; } .sidebar { grid-template-columns: 1fr; } .panel { padding: 20px; } .fileRow { grid-template-columns: 22px 36px minmax(0, 1fr); } .rowActions { grid-column: 2 / -1; justify-content: flex-end; margin-top: -6px; } .previewArea, .previewArea iframe, .previewArea img { min-height: 270px; height: 270px; } }
+.previewWorkspace { min-height: 420px; }
+.previewLayout { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 12px; min-width: 0; }
+.thumbnailList { display: grid; align-content: start; gap: 8px; max-height: 360px; padding: 1px 3px 1px 1px; overflow-y: auto; scrollbar-width: thin; }
+.thumbnail { position: relative; display: grid; width: 100%; min-height: 94px; padding: 3px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: rgba(255, 253, 247, .72); cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease; }
+.thumbnail:hover, .activeThumbnail { border-color: var(--delima); box-shadow: 0 0 0 2px rgba(143, 37, 65, .12); }
+.thumbnail img { display: block; width: 100%; height: 100%; min-height: 86px; object-fit: contain; background: #fffdf7; }
+.thumbnail b { position: absolute; right: 4px; bottom: 4px; min-width: 17px; padding: 2px 4px; border-radius: 4px; color: var(--gading); background: var(--delima); font-size: .59rem; line-height: 1; }
+.thumbnailFallback { display: grid; min-height: 86px; place-items: center; color: var(--delima); background: rgba(143, 37, 65, .08); font-size: .62rem; font-weight: 900; }
+.previewArea { display: grid; place-items: center; min-height: 360px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: rgba(216, 195, 157, .18); }
+.previewArea img { display: block; width: 100%; height: 360px; border: 0; object-fit: contain; }
+.previewArea > div { max-width: 210px; padding: 25px; color: rgba(30, 27, 24, .58); text-align: center; }
+.previewArea > div span { display: inline-grid; place-items: center; width: 43px; height: 43px; margin-bottom: 4px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 1.4rem var(--display); }
+.previewArea > div p { margin: 8px 0 0; font-size: .84rem; line-height: 1.55; }
+.previewCaption { overflow: hidden; margin: 10px 0 0; color: rgba(30, 27, 24, .58); font-size: .74rem; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.guide { display: grid; grid-template-columns: minmax(230px, .65fr) minmax(0, 1fr) minmax(250px, .75fr); gap: 28px; padding: clamp(22px, 3vw, 32px); }
+.eyebrow { margin: 0 0 8px; color: var(--delima); font-size: .62rem; font-weight: 900; letter-spacing: .12em; }
+.guideIntro h2 { margin: 0; font-size: clamp(1.35rem, 2vw, 1.75rem); }
+.guideIntro > p:last-child { margin: 9px 0 0; color: rgba(30, 27, 24, .65); font-size: .84rem; line-height: 1.55; }
+.guideSteps { display: grid; gap: 11px; margin: 0; padding: 0; list-style: none; counter-reset: guide-step; }
+.guideSteps li { position: relative; min-height: 36px; padding-left: 40px; counter-increment: guide-step; }
+.guideSteps li::before { content: counter(guide-step); position: absolute; left: 0; top: 1px; display: grid; width: 27px; height: 27px; place-items: center; border-radius: 50%; color: var(--gading); background: var(--delima); font: .86rem var(--display); }
+.guideSteps strong, .guideSteps span { display: block; }
+.guideSteps strong { font-size: .81rem; }
+.guideSteps span { margin-top: 2px; color: rgba(30, 27, 24, .62); font-size: .75rem; line-height: 1.45; }
+.guideNotes { display: grid; align-content: start; gap: 13px; }
+.guideNotes > div { padding-left: 13px; border-left: 2px solid rgba(143, 37, 65, .35); }
+.guideNotes h3 { margin: 0; font-size: .78rem; }
+.guideNotes p { margin: 4px 0 0; color: rgba(30, 27, 24, .64); font-size: .74rem; line-height: 1.5; }
+.guideNotes a { color: var(--delima); font-size: .78rem; font-weight: 800; line-height: 1.45; text-decoration: none; }
+.guideNotes a:hover { text-decoration: underline; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .previewWorkspace { min-height: 0; } }
+@media (max-width: 1080px) { .guide { grid-template-columns: minmax(220px, .7fr) 1fr; } .guideNotes { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; } .guideNotes a { grid-column: 1 / -1; } }
+@media (max-width: 620px) { .panel, .previewWorkspace, .guide { padding: 19px; } .queueHeader { display: grid; gap: 15px; } .summary { width: 100%; grid-template-columns: repeat(4, 1fr); } .summary div { min-width: 0; padding: 9px 4px; } .summary dd { font-size: .9rem; } .controlPanel { grid-template-columns: 1fr; gap: 18px; } .qualityControl { padding: 0 0 18px; border-right: 0; border-bottom: 1px solid var(--line); } .fileRow { grid-template-columns: 22px 36px minmax(0, 1fr); } .rowActions { grid-column: 2 / -1; justify-content: flex-end; margin-top: -6px; } .previewLayout { grid-template-columns: 61px minmax(0, 1fr); gap: 9px; } .thumbnail { min-height: 76px; } .thumbnail img, .thumbnailFallback { min-height: 68px; } .thumbnailList { max-height: 290px; } .previewArea, .previewArea img { min-height: 290px; height: 290px; } .guide { grid-template-columns: 1fr; gap: 23px; } .guideNotes { grid-column: auto; grid-template-columns: 1fr; } .guideNotes a { grid-column: auto; } }
