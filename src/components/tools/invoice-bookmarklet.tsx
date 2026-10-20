@@ -20,7 +20,7 @@ export function InvoiceBookmarklet({ laptopKentang = false, kind = "invoice" }: 
   const bookmarkletLinkRef = useRef<HTMLAnchorElement>(null);
   const closeGuideButtonRef = useRef<HTMLButtonElement>(null);
   const isWithholdingSlip = kind === "withholding-slip";
-  const bookmarkletName = isWithholdingSlip ? "Download Bukti Potong" : laptopKentang ? "🥔 Faktur Kentang" : "Download Faktur";
+  const bookmarkletName = isWithholdingSlip ? "Bupot Kentang" : laptopKentang ? "🥔 Faktur Kentang" : "Download Faktur";
   const recordLabel = isWithholdingSlip ? "Nomor Pemotongan" : "Nomor Faktur Pajak";
   const recordPlural = isWithholdingSlip ? "bukti potong" : "faktur";
   const source = createInvoiceBookmarkletSource(kind);
