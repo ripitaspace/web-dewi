@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getBlogPostBySlug } from "@/modules/cms";
 import { INVOICE_EXTENSION_STORES } from "@/lib/invoice-extension";
+import type { CoretaxBookmarkletKind } from "@/lib/invoice-bookmarklet";
 import styles from "./invoice-extension-info.module.css";
 import { InvoiceBookmarklet } from "./invoice-bookmarklet";
 
@@ -18,7 +19,57 @@ const steps = [
   { title: "Mulai Download", description: "Tekan Mulai Download, lalu ikuti progres dan periksa ringkasan hasilnya." },
 ];
 
-export async function InvoiceExtensionInfo() {
+interface InvoiceExtensionInfoProps {
+  laptopKentang?: boolean;
+  kind?: CoretaxBookmarkletKind;
+}
+
+export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invoice" }: InvoiceExtensionInfoProps) {
+  if (kind === "withholding-slip") {
+    return (
+      <div className={styles.content}>
+        <div className={styles.overview}>
+          <section aria-labelledby="withholding-overview">
+            <span className={styles.status}>Bookmarklet siap pakai · Browser desktop</span>
+            <h2 id="withholding-overview" className={styles.title}>Download Bukti Potong Coretax Lebih Praktis</h2>
+            <p className={styles.intro}>Unduh PDF bukti potong secara berurutan dari tabel Coretax yang sedang kamu buka. Proses berjalan langsung di browsermu tanpa login tambahan atau penyimpanan data oleh RIPITA.</p>
+            <div className={styles.scope}>
+              <span aria-hidden="true">↓</span>
+              <p><strong>Satu halaman, satu antrean.</strong><br />Bookmarklet memproses bukti potong yang terlihat pada halaman tabel aktif. Untuk halaman berikutnya, kamu berpindah sendiri di Coretax.</p>
+            </div>
+          </section>
+
+          <aside className={styles.install} aria-labelledby="withholding-install">
+            <span className="eyebrow">CARA KERJA</span>
+            <h2 id="withholding-install">Simpan sekali, pakai saat perlu.</h2>
+            <p>Bookmarklet mengenali setiap baris melalui Nomor Pemotongan dan memicu tombol PDF yang siap digunakan satu per satu, dengan jeda 2 detik.</p>
+            <p className={styles.installNote}>Setelah proses selesai, tetap periksa daftar Download browser. RIPITA hanya memicu tombol unduh dan tidak dapat menjamin file tersimpan oleh browser.</p>
+          </aside>
+        </div>
+
+        <div className={styles.bookmarkletLayout}>
+          <InvoiceBookmarklet kind="withholding-slip" />
+        </div>
+
+        <section className={styles.section} aria-labelledby="withholding-guide">
+          <span className="eyebrow text-delima">PANDUAN PENGGUNAAN</span>
+          <h2 id="withholding-guide">Empat langkah untuk mulai</h2>
+          <ol className={styles.steps}>
+            <li><h3>Simpan bookmarklet</h3><p>Seret tombol atau salin kode bookmarklet ke Bookmark Bar browser desktop.</p></li>
+            <li><h3>Buka tabel Bukti Potong</h3><p>Login ke Coretax dan tampilkan daftar bukti potong yang ingin diunduh.</p></li>
+            <li><h3>Pastikan tabel siap</h3><p>Pastikan Nomor Pemotongan dan tombol PDF terlihat pada setiap baris yang ingin diproses.</p></li>
+            <li><h3>Jalankan dan periksa hasil</h3><p>Klik bookmarklet, ikuti progresnya, lalu cek daftar Download browser sebelum menjalankannya lagi.</p></li>
+          </ol>
+        </section>
+
+        <div className={styles.footer}>
+          <p>Bookmarklet tidak berpindah halaman atau memproses dokumen yang tidak terlihat. Jika browser meminta izin untuk beberapa unduhan, tinjau dan setujui sesuai kebutuhanmu.</p>
+          <Link href="/karya" className="btn">← Kembali ke Karya</Link>
+        </div>
+      </div>
+    );
+  }
+
   const articleSlug = "download-faktur-pajak-otomatis";
   const article = await getBlogPostBySlug(articleSlug).catch(() => null);
   const articleImage = article?.image && !article.image.includes("data:image/svg")
@@ -43,7 +94,7 @@ export async function InvoiceExtensionInfo() {
           <h2 id="extension-overview" className={styles.title}>Download Faktur Coretax Lebih Praktis</h2>
           <p className={styles.intro}>
             Unduh faktur Pajak Keluaran dan Pajak Masukan dari halaman Coretax yang sedang kamu buka.
-            Extension dirancang untuk menjalankan download secara berurutan dan menampilkan progresnya.
+            {laptopKentang ? " 🥔 Dirancang tetap ringan untuk laptop kentang, dengan download berurutan dan progres yang mudah diikuti." : " Extension dirancang untuk menjalankan download secara berurutan dan menampilkan progresnya."}
           </p>
           <div className={styles.scope}>
             <span aria-hidden="true">↓</span>
@@ -69,8 +120,8 @@ export async function InvoiceExtensionInfo() {
                     <span className="sr-only"> (membuka store di tab baru)</span>
                   </a>
                 ) : (
-                  <button className={`btn ${styles.storeButton}`} type="button" disabled aria-describedby="extension-store-status" aria-label={`Segera tersedia di store — ${store.name}`}>
-                    Segera tersedia di store
+                  <button className={`btn ${styles.storeButton}`} type="button" disabled aria-describedby="extension-store-status" aria-label={laptopKentang ? `Segera tersedia untuk laptop kentang — ${store.name}` : `Segera tersedia di store — ${store.name}`}>
+                    {laptopKentang ? "Segera tersedia untuk laptop kentang" : "Segera tersedia di store"}
                   </button>
                 )}
               </div>
@@ -81,7 +132,7 @@ export async function InvoiceExtensionInfo() {
       </div>
 
       <div className={styles.bookmarkletLayout}>
-        <InvoiceBookmarklet />
+        <InvoiceBookmarklet laptopKentang={laptopKentang} />
         <aside aria-label="Artikel terkait">
           <article className={`blog-card ${styles.articleCard}`}>
             <div className="blog-card-cover">

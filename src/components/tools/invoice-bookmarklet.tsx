@@ -1,14 +1,32 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { INVOICE_BOOKMARKLET_URL } from "@/lib/invoice-bookmarklet";
+import {
+  createInvoiceBookmarkletSource,
+  createInvoiceBookmarkletUrl,
+  type CoretaxBookmarkletKind,
+  LAPTOP_KENTANG_DELAY_SECONDS,
+} from "@/lib/invoice-bookmarklet";
 import styles from "./invoice-extension-info.module.css";
 
-export function InvoiceBookmarklet() {
+interface InvoiceBookmarkletProps {
+  laptopKentang?: boolean;
+  kind?: CoretaxBookmarkletKind;
+}
+
+export function InvoiceBookmarklet({ laptopKentang = false, kind = "invoice" }: InvoiceBookmarkletProps) {
   const [notice, setNotice] = useState("");
   const [isDragGuideOpen, setIsDragGuideOpen] = useState(false);
   const bookmarkletLinkRef = useRef<HTMLAnchorElement>(null);
   const closeGuideButtonRef = useRef<HTMLButtonElement>(null);
+  const isWithholdingSlip = kind === "withholding-slip";
+  const bookmarkletName = isWithholdingSlip ? "Download Bukti Potong" : laptopKentang ? "🥔 Faktur Kentang" : "Download Faktur";
+  const recordLabel = isWithholdingSlip ? "Nomor Pemotongan" : "Nomor Faktur Pajak";
+  const recordPlural = isWithholdingSlip ? "bukti potong" : "faktur";
+  const source = createInvoiceBookmarkletSource(kind);
+  const bookmarkletUrl = createInvoiceBookmarkletUrl(kind);
+  const readableCodeSummary = `JavaScript terbaca · jeda ${LAPTOP_KENTANG_DELAY_SECONDS} detik`;
+  const oneLineCodeSummary = `Kode bookmarklet satu baris · jeda ${LAPTOP_KENTANG_DELAY_SECONDS} detik`;
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -36,54 +54,60 @@ export function InvoiceBookmarklet() {
     bookmarkletLinkRef.current?.focus();
   }
 
-  async function copyCode() {
+  async function copyBookmarklet() {
     try {
-      await navigator.clipboard.writeText(INVOICE_BOOKMARKLET_URL);
-      setNotice("Kode disalin. Buat bookmark baru, lalu tempel kode ke kolom URL/alamat bookmark.");
+      await navigator.clipboard.writeText(bookmarkletUrl);
+      setNotice(`Bookmarklet dengan jeda ${LAPTOP_KENTANG_DELAY_SECONDS} detik sudah disalin. Buat bookmark baru, lalu tempel kode ke kolom URL/alamat bookmark.`);
     } catch {
-      setNotice("Browser tidak mengizinkan penyalinan otomatis. Buka Kode bookmarklet di bawah, lalu salin kodenya secara manual.");
+      setNotice("Browser tidak mengizinkan penyalinan otomatis. Buka Kode bookmarklet satu baris di bawah, lalu salin kodenya secara manual.");
     }
   }
 
   return (
     <section className={styles.bookmarklet} aria-labelledby="bookmarklet-title">
       <span className="eyebrow text-delima">ALTERNATIF BOOKMARKLET</span>
-      <h2 id="bookmarklet-title">Simpan di bookmark, jalankan di Coretax.</h2>
-      <p>Sambil menunggu extension, kamu bisa menyimpan script sebagai bookmarklet. Bookmarklet mengklik tombol download yang aktif pada halaman saat ini secara berurutan.</p>
+      <h2 id="bookmarklet-title">Simpan di bookmark, jalankan di Coretax{laptopKentang ? " 🥔" : "."}</h2>
+      <p>{laptopKentang ? `Versi ringan untuk laptop kentang: jeda antar klik sudah diatur lebih aman, ${LAPTOP_KENTANG_DELAY_SECONDS} detik. Setiap faktur diperiksa ulang berdasarkan Nomor Faktur Pajak sebelum tombol download dipicu.` : `Simpan script ini sebagai bookmarklet. Setiap ${recordPlural} diperiksa ulang berdasarkan ${recordLabel} sebelum tombol download dipicu.`}</p>
+
       <div className="button-row">
         <a
           className="btn primary"
           href="#bookmarklet-guide"
           ref={(link) => {
             bookmarkletLinkRef.current = link;
-            // React blocks javascript: href props. This is an intentional, local,
-            // static bookmarklet URL used as the browser's drag-to-bookmark target.
-            if (link) link.setAttribute("href", INVOICE_BOOKMARKLET_URL);
+            // React blocks javascript: href props. This is a local bookmarklet URL
+            // intended as the browser's drag-to-bookmark target.
+            if (link) link.setAttribute("href", bookmarkletUrl);
           }}
           draggable
-          title="Download Faktur"
+          title={bookmarkletName}
           onClick={(event) => {
             event.preventDefault();
-            setNotice("Seret tombol ini ke Bookmark Bar. Setelah tersimpan, buka tabel faktur di Coretax lalu klik bookmark tersebut.");
+            setNotice(`Seret tombol ini ke Bookmark Bar. Bookmarklet akan memakai jeda ${LAPTOP_KENTANG_DELAY_SECONDS} detik saat dijalankan.`);
             setIsDragGuideOpen(true);
           }}
           aria-describedby="bookmarklet-guide"
-        >Download Faktur</a>
-        <button type="button" className="btn" onClick={copyCode}>Salin kode bookmarklet</button>
+        >{bookmarkletName}</a>
+        <button type="button" className="btn" onClick={copyBookmarklet}>Salin bookmarklet</button>
       </div>
-      <p>Seret tombol <strong>Download Faktur</strong> ke Bookmark Bar untuk menyimpannya.</p>
+      <p>Seret tombol <strong>{bookmarkletName}</strong> ke Bookmark Bar untuk menyimpannya.</p>
       <p className={styles.notice} role="status">{notice}</p>
       <ol id="bookmarklet-guide" className={styles.bookmarkletGuide}>
         <li>Tampilkan Bookmark Bar dengan <strong>Ctrl+Shift+B</strong> (Windows) atau <strong>⌘+Shift+B</strong> (Mac).</li>
-        <li>Seret tombol di atas ke Bookmark Bar. Alternatifnya, salin kode lalu buat bookmark bernama <strong>Download Faktur</strong> dan tempel kode ke kolom URL.</li>
-        <li>Login ke Coretax, buka tabel Pajak Keluaran atau Pajak Masukan, dan pastikan faktur siap diunduh.</li>
-        <li>Klik bookmark yang disimpan. Tunggu antrean klik selesai, lalu periksa hasilnya di daftar Download browser.</li>
+        <li>Seret tombol di atas ke Bookmark Bar. Alternatifnya, salin kode lalu buat bookmark bernama <strong>{bookmarkletName}</strong> dan tempel kode ke kolom URL.</li>
+        <li>{isWithholdingSlip ? "Login ke Coretax, buka tabel Bukti Potong, dan pastikan dokumen yang tampil siap diunduh." : "Login ke Coretax, buka tabel Pajak Keluaran atau Pajak Masukan, dan pastikan faktur siap diunduh."}</li>
+        <li>Klik bookmark yang disimpan. Periksa ringkasan hasil dan daftar Download browser sebelum menjalankannya lagi.</li>
       </ol>
-      <p className={styles.guideNote}>Browser memerlukan tindakanmu untuk menyimpan bookmark. Script ini belum diuji langsung pada kedua menu Coretax, tidak berpindah halaman, dan tidak memastikan file berhasil tersimpan. Jika browser meminta izin download beberapa file, tinjau permintaan tersebut. Jangan jalankan ulang sebelum memeriksa hasil download agar tidak terjadi duplikat.</p>
+      <p className={styles.guideNote}>Bookmarklet hanya memicu klik pada tombol download yang terlihat untuk {recordPlural} di halaman tabel aktif. Tombol yang gagal dipicu tidak diulang otomatis. Periksa daftar Download browser untuk memastikan file berhasil tersimpan dan mencegah dokumen ganda.</p>
       <details className={styles.codeDetails}>
-        <summary>Kode bookmarklet</summary>
+        <summary>{readableCodeSummary}</summary>
+        <label htmlFor="bookmarklet-readable-code">Gunakan versi ini untuk audit atau perawatan</label>
+        <textarea id="bookmarklet-readable-code" readOnly value={source} rows={20} onFocus={(event) => event.currentTarget.select()} spellCheck={false} />
+      </details>
+      <details className={styles.codeDetails}>
+        <summary>{oneLineCodeSummary}</summary>
         <label htmlFor="bookmarklet-code">Salin seluruh kode ini ke kolom URL bookmark</label>
-        <textarea id="bookmarklet-code" readOnly value={INVOICE_BOOKMARKLET_URL} rows={4} onFocus={(event) => event.currentTarget.select()} spellCheck={false} />
+        <textarea id="bookmarklet-code" readOnly value={bookmarkletUrl} rows={4} onFocus={(event) => event.currentTarget.select()} spellCheck={false} />
       </details>
       {isDragGuideOpen && (
         <div className={styles.dragGuide} role="dialog" aria-modal="true" aria-labelledby="drag-guide-title">
@@ -97,8 +121,8 @@ export function InvoiceBookmarklet() {
           <div className={styles.dragGuideCard}>
             <span className="eyebrow text-delima">SIMPAN BOOKMARKLET</span>
             <h3 id="drag-guide-title">Seret tombol ke Bookmark Bar.</h3>
-            <p>Drag <strong>Download Faktur</strong> ke bar bookmark di atas browser, mengikuti arah panah ini.</p>
-            <button ref={closeGuideButtonRef} className="btn" type="button" onClick={closeDragGuide}>Mengerti</button>
+            <p>Drag <strong>{bookmarkletName}</strong> ke bar bookmark di atas browser. Jeda yang disimpan: {LAPTOP_KENTANG_DELAY_SECONDS} detik.</p>
+            <button ref={closeGuideButtonRef} className="btn" type="button" onClick={closeDragGuide}>{laptopKentang ? "Mengerti, Kentang" : "Mengerti"}</button>
             <p className={styles.dragGuideShortcut}>Tekan <strong>Escape</strong> untuk menutup.</p>
           </div>
         </div>

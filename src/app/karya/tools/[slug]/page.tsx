@@ -48,7 +48,7 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
 
         <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container">
-            {slug === "extension-download-faktur-otomatis" ? <InvoiceExtensionInfo /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : (
+            {slug === "extension-download-faktur-otomatis" || slug === "download-faktur-laptop-kentang" || slug === "download-bukti-potong-otomatis" ? <InvoiceExtensionInfo laptopKentang={slug === "download-faktur-laptop-kentang"} kind={slug === "download-bukti-potong-otomatis" ? "withholding-slip" : "invoice"} /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : (
             <div className="tool-placeholder card">
               <span className="tool-placeholder__icon" aria-hidden="true">{tool.icon}</span>
               <div>
