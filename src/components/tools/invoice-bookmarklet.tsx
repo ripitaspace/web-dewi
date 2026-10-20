@@ -66,7 +66,7 @@ export function InvoiceBookmarklet({ laptopKentang = false, kind = "invoice" }: 
   return (
     <section className={styles.bookmarklet} aria-labelledby="bookmarklet-title">
       <span className="eyebrow text-delima">ALTERNATIF BOOKMARKLET</span>
-      <h2 id="bookmarklet-title">Simpan di bookmark, jalankan di Coretax{laptopKentang ? " 🥔" : "."}</h2>
+      <h2 id="bookmarklet-title">{isWithholdingSlip ? "Bupot Kentang" : <>Simpan di bookmark, jalankan di Coretax{laptopKentang ? " 🥔" : "."}</>}</h2>
       <p>{laptopKentang ? `Versi ringan untuk laptop kentang: jeda antar klik sudah diatur lebih aman, ${LAPTOP_KENTANG_DELAY_SECONDS} detik. Setiap faktur diperiksa ulang berdasarkan Nomor Faktur Pajak sebelum tombol download dipicu.` : `Simpan script ini sebagai bookmarklet. Setiap ${recordPlural} diperiksa ulang berdasarkan ${recordLabel} sebelum tombol download dipicu.`}</p>
 
       <div className="button-row">
