@@ -101,7 +101,7 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                         const content = <>
                           <div className="mini-tool-index" aria-label={`Tool ${tool.number}`}>{tool.number}</div>
                           <div className="mini-tool-icon" aria-hidden="true">
-                            {tool.status === "available" ? <img src="/images/artworks/coretax-ripita-icon.png" alt="" /> : tool.icon}
+                            {tool.iconSrc ? <img src={tool.iconSrc} alt="" /> : tool.status === "available" ? <img src="/images/artworks/coretax-ripita-icon.png" alt="" /> : tool.icon}
                           </div>
                           <div className="mini-tool-copy">
                             <span className="topic-pill">{tool.category}</span>
