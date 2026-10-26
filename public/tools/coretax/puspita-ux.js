@@ -380,7 +380,12 @@
       var pending = [];
       for (var index = 0; index < block.length; index += 1) {
         var line = block[index];
-        var price = line.match(/(?:Rp\s*)?([\d.,]+)\s*[x×]\s*([\d.,]+)\s+(.+)$/i);
+        // Some PDF generators keep the item number, code, unit, and gross amount
+        // in one text line. Others move the number, code, and gross amount to the
+        // following line. Keep both layouts separate so an amount is never treated
+        // as part of the unit.
+        var inlineColumns = line.match(/^(\d+)\s+(\d{6})\s+(?:Rp\s*)?([\d.,]+)\s*[x×]\s*([\d.,]+)\s+(.+?)\s+([\d.,]+)$/i);
+        var price = inlineColumns || line.match(/(?:Rp\s*)?([\d.,]+)\s*[x×]\s*([\d.,]+)\s+(.+)$/i);
         if (!price) {
           if (!isItemTableNoise(line) && !/^\d+\s+\d{6}\b/.test(line)) pending.push(line);
           continue;
@@ -390,16 +395,22 @@
         var columns = row.match(/^(\d+)\s+(\d{6})\s+([\d.,]+)/);
         var discount = (tail.join(" ").match(/Potongan Harga\s*=\s*Rp\s*([\d.,]+)/i) || [])[1];
         var ppnbm = tail.join(" ").match(/PPnBM\s*\(([\d.,]+)%\)\s*=\s*Rp\s*([\d.,]+)/i);
-        var unit = cleanUnit(price[3]);
+        var rawUnit = inlineColumns ? inlineColumns[5] : price[3];
+        var itemNumber = inlineColumns ? Number(inlineColumns[1]) : columns ? Number(columns[1]) : items.length + 1;
+        var itemCode = inlineColumns ? String(inlineColumns[2]) : columns ? String(columns[2]) : "";
+        var unitPrice = inlineColumns ? parseCurrency(inlineColumns[3]) : parseCurrency(price[1]);
+        var qty = inlineColumns ? parseQuantity(inlineColumns[4]) : parseQuantity(price[2]);
+        var gross = inlineColumns ? parseCurrency(inlineColumns[6]) : columns ? parseCurrency(columns[3]) : null;
+        var unit = cleanUnit(rawUnit);
         items.push({
-          no: columns ? Number(columns[1]) : items.length + 1,
-          code: columns ? String(columns[2]) : "",
+          no: itemNumber,
+          code: itemCode,
           name: pending.filter(function (candidate) { return !isItemTableNoise(candidate); }).join(" ").trim(),
-          unitPrice: parseCurrency(price[1]),
-          qty: parseQuantity(price[2]),
+          unitPrice: unitPrice,
+          qty: qty,
           unit: unit,
-          rawUnit: String(price[3]).trim(),
-          gross: columns ? parseCurrency(columns[3]) : null,
+          rawUnit: String(rawUnit).trim(),
+          gross: gross,
           discount: parseCurrency(discount) || 0,
           ppnbmRate: ppnbm ? parseQuantity(ppnbm[1]) : null,
           ppnbm: ppnbm ? parseCurrency(ppnbm[2]) : null,
