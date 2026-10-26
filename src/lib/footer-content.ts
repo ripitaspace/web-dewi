@@ -2,6 +2,15 @@
 export const FOOTER_CONTENT = {
   description: "Tempat aku menyimpan apa yang kupelajari, mempertanyakan hal-hal yang terasa aneh, dan membangun sesuatu dari sana.",
   signature: "Dibuat dengan rasa penasaran, kopi, dan jumlah tab browser yang tidak masuk akal.",
+  socials: [
+    { platform: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/puspita-dewi-rahmawati-ripita/" },
+    { platform: "instagram", label: "Instagram", href: "https://www.instagram.com/puspitara27/" },
+    { platform: "threads", label: "Threads", href: "https://www.threads.com/@puspitara27" },
+    { platform: "facebook", label: "Facebook", href: "https://www.facebook.com/puspita.dewir/" },
+    { platform: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@pitaaa696?_r=1&_t=ZS-9AsbYSoBqSq" },
+    { platform: "youtube", label: "YouTube", href: "https://www.youtube.com/@PuspitaDewiRahmawati" },
+    { platform: "x", label: "X", href: "https://x.com/pustara_27?s=11" },
+  ],
   navigation: [
     { title: "Jelajahi", links: [
       { label: "Pemikiran", href: "/pemikiran" },
