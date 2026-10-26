@@ -125,3 +125,61 @@ export interface ModuleCard {
   pages: number;
   activities: number;
 }
+
+export type PublicationStatus = "draft" | "published" | "archived";
+export type LearningLevel = "beginner" | "intermediate" | "advanced";
+
+/** A top-level field of study shown in the public learning catalog. */
+export interface LearningDomain {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  order: number;
+  status: "draft" | "published";
+}
+
+/** Topics and subtopics share one recursive record; nesting is defined by parentId. */
+export interface LearningTopic {
+  id: string;
+  domainId: string;
+  parentId: string | null;
+  slug: string;
+  title: string;
+  description?: string;
+  order: number;
+  status: "draft" | "published";
+}
+
+export interface LearningUnit {
+  id: string;
+  title: string;
+  description?: string;
+  learningObjectives: string[];
+  content: Block[];
+  reportEnabled: boolean;
+}
+
+/** Optional groups let future modules present chapters without requiring them. */
+export type LearningNode =
+  | { id: string; type: "group"; title: string; children: LearningNode[] }
+  | { id: string; type: "unit"; unit: LearningUnit };
+
+/** Catalog metadata deliberately stays separate from the interactive PLF payload. */
+export interface LearningModuleRegistration {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  primaryTopicId: string;
+  relatedTopicIds?: string[];
+  version: string;
+  level: LearningLevel;
+  status: PublicationStatus;
+  estimatedMinutes?: number;
+  tags?: string[];
+  publishedAt?: string;
+  learningUnitCount?: number;
+  activityCount?: number;
+}

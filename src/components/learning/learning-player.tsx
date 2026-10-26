@@ -9,11 +9,13 @@ import {
   createSession,
   evaluate,
   formatDuration,
+  restoreSession,
   storageKey,
   summarize,
 } from "@/modules/learning/engine";
 import { Activity, initialAnswer } from "./activity";
 import { LearningReport } from "./report";
+import { LearningOfflineCache } from "./offline-cache";
 import styles from "./learning.module.css";
 
 export function LearningPlayer({
@@ -45,19 +47,18 @@ export function LearningPlayer({
   );
 
   useEffect(() => {
-    // Learning activity is intentionally kept in memory only. Remove a
-    // previous version's browser cache so it cannot be resumed accidentally.
+    // A revision-specific key prevents old answers being applied to changed material.
     try {
-      localStorage.removeItem(key);
+      const restored = restoreSession(localStorage.getItem(key), module);
+      const next = restored || createSession(module);
+      current.current = next;
+      lastInteraction.current = Date.now();
     } catch {
-      // Storage access is optional because this session never depends on it.
-    }
-    const timer = window.setTimeout(() => {
       const next = createSession(module);
       current.current = next;
-      setSession(next);
       lastInteraction.current = Date.now();
-    }, 0);
+    }
+    const start = window.setTimeout(() => setSession(current.current), 0);
     const interaction = () => {
       lastInteraction.current = Date.now();
     };
@@ -92,7 +93,7 @@ export function LearningPlayer({
       });
     }, 1000);
     return () => {
-      window.clearTimeout(timer);
+      window.clearTimeout(start);
       window.clearInterval(tick);
       current.current = null;
       document.removeEventListener("visibilitychange", onVisibility);
@@ -100,6 +101,24 @@ export function LearningPlayer({
         window.removeEventListener(event, interaction);
     };
   }, [module, key, change]);
+
+  useEffect(() => {
+    if (!session) return;
+    const save = () => {
+      if (!current.current) return;
+      try {
+        localStorage.setItem(key, JSON.stringify(current.current));
+      } catch {
+        // Browser storage can be unavailable; the live learning session still works.
+      }
+    };
+    const timer = window.setTimeout(save, 400);
+    window.addEventListener("pagehide", save);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("pagehide", save);
+    };
+  }, [key, session]);
 
   const pageIndex = session?.pageIndex ?? 0;
   const ready = !!session;
@@ -180,6 +199,7 @@ export function LearningPlayer({
   const blocks = blocksOf(module);
   return (
     <div className={styles.room}>
+      <LearningOfflineCache />
       <a href="#learning-main" className={styles.skipLink}>
         Langsung ke materi
       </a>
@@ -252,8 +272,8 @@ export function LearningPlayer({
         <div className={styles.sidebarFoot}>
           <strong>Belajar dengan ritmemu.</strong>
           <p>
-            Tanpa login. Progres hanya berlaku selama halaman ini dibuka dan
-            akan direset saat disegarkan.
+            Tanpa login. Progres tersimpan hanya di perangkat ini dan dipisah
+            saat materi diperbarui.
           </p>
         </div>
       </aside>
@@ -278,7 +298,7 @@ export function LearningPlayer({
             <small className={styles.saveStatus}>
               {!session
                 ? "Menyiapkan sesi…"
-                : "Sesi sementara · reset saat refresh"}
+                : "Tersimpan di perangkat ini"}
             </small>
             <button
               type="button"

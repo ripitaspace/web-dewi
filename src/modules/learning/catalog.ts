@@ -1,5 +1,6 @@
 import asetTetap from "./content/aset-tetap.plf.json";
-import type { LearningModule, ModuleCard } from "./types";
+import { getPublishedModuleCards } from "./registry";
+import type { LearningModule, LearningNode, ModuleCard } from "./types";
 
 const modules: Record<string, LearningModule> = {
   "aset-tetap": asetTetap as LearningModule,
@@ -9,25 +10,23 @@ export function getLearningModule(slug: string) {
   return Object.hasOwn(modules, slug) ? modules[slug] : undefined;
 }
 
-export const learningCatalog: ModuleCard[] = Object.entries(modules).map(
-  ([slug, module]) => ({
-    slug,
-    id: module.id,
-    revision: module.revision,
-    title: module.metadata.title,
-    summary:
-      "Kenali biaya perolehan, hitung penyusutan, dan coba pencatatan jurnal lewat satu kasus yang saling terhubung.",
-    subject: module.metadata.subject,
-    minutes: module.metadata.estimatedMinutes,
-    level:
-      module.metadata.level === "beginner" ? "Pemula" : module.metadata.level,
-    pages: module.pages.length,
-    activities: module.pages.reduce(
-      (total, page) => total + page.blocks.length,
-      0,
-    ),
-  }),
-);
+/** Metadata is safe for catalog pages; PLF content remains imported only by module routes. */
+export const learningCatalog: ModuleCard[] = getPublishedModuleCards();
+
+/** Compatibility adapter for the future node renderer. Existing pages remain untouched. */
+export function legacyModuleNodes(module: LearningModule): LearningNode[] {
+  return module.pages.map((page) => ({
+    id: `unit-${page.id}`,
+    type: "unit" as const,
+    unit: {
+      id: page.id,
+      title: page.title,
+      learningObjectives: [],
+      content: page.blocks,
+      reportEnabled: true,
+    },
+  }));
+}
 
 export function mediaSource(slug: string, source = "") {
   // Published modules use their own local assets; no arbitrary imported markup or URLs.
