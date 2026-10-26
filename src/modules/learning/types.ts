@@ -11,7 +11,23 @@ export type BlockType =
   | "ordering"
   | "journal_entry"
   | "case_decision"
-  | "reflection";
+  | "reflection"
+  | "markdown"
+  | "glossary"
+  | "worked_example"
+  | "callout"
+  | "comparison_table"
+  | "deep_dive"
+  | "reference";
+
+export type LearningRole =
+  | "discover"
+  | "understand"
+  | "observe"
+  | "guided_practice"
+  | "independent_practice"
+  | "reflect"
+  | "deep_dive";
 
 export interface JournalLine {
   accountId: string;
@@ -40,6 +56,7 @@ export interface Grading {
   correctOrder?: string[];
   expectedLines?: JournalLine[];
   optionScores?: Record<string, number>;
+  feedbackByOption?: Record<string, string>;
 }
 export interface Block {
   id: string;
@@ -61,6 +78,18 @@ export interface Block {
   accounts?: string[];
   rubric?: string[];
   grading?: Grading;
+  role?: LearningRole;
+  content?: string;
+  hints?: string[];
+  remediation?: { onIncorrect: { targetBlockId: string } };
+  glossaryItems?: { term: string; definition: string }[];
+  steps?: { title: string; explanation: string }[];
+  variant?: "tip" | "warning" | "note";
+  columns?: string[];
+  rows?: (string | number)[][];
+  referenceIds?: string[];
+  optional?: boolean;
+  reviewMode?: "manual" | "self";
 }
 export interface LearningModule {
   kind: string;
@@ -84,6 +113,48 @@ export interface LearningModule {
     attemptPolicy: string;
   };
   pages: { id: string; title: string; blocks: Block[] }[];
+  prerequisites?: { moduleIds: string[]; competencyIds: string[]; notes?: string };
+  learningPolicy?: {
+    allowRetry: boolean;
+    feedbackTiming: "after_submit";
+    hintMode: "guided_only" | "always" | "off";
+    timerMode: "advisory";
+    allowSkip: boolean;
+    remediationEnabled: boolean;
+    solutionsAfterAttempt: boolean;
+  };
+  reportPolicy?: {
+    scope: "module" | "learning_unit";
+    formats: ("json" | "print")[];
+    downloadOnCompletion: boolean;
+    dataLocation: "client_only";
+  };
+  references?: { id: string; title: string; type: string; url: string | null; edition?: string | null }[];
+  outline?: { type: "section"; id: string; title: string; children: { type: "unit"; unitId: string }[] }[];
+  learningUnits?: SelfLearningUnit[];
+}
+
+export interface Worksheet {
+  id: string;
+  title: string;
+  mode: "guided" | "independent";
+  difficulty: "easy" | "medium" | "hard";
+  complexityWeight: number;
+  targetMinutes: { min: number; max: number };
+  scoreWeight: number;
+  blockIds: string[];
+}
+
+export interface SelfLearningUnit {
+  id: string;
+  title: string;
+  learningObjectives: string[];
+  competencyIds: string[];
+  prerequisiteUnitIds: string[];
+  pageIds: string[];
+  worksheets: Worksheet[];
+  masteryCriteria: { minimumScore: number; requiredWorksheetIds: string[] };
+  report: { enabled: boolean };
 }
 export interface Attempt {
   at: string;
@@ -169,6 +240,8 @@ export type LearningNode =
 /** Catalog metadata deliberately stays separate from the interactive PLF payload. */
 export interface LearningModuleRegistration {
   id: string;
+  /** Stable, learner-facing identifier, for example MOD-AKT-001. */
+  publicCode: string;
   slug: string;
   title: string;
   description: string;

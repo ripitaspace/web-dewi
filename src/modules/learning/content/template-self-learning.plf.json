@@ -1,0 +1,77 @@
+{
+  "kind": "plf.module",
+  "schemaVersion": "1.1.0",
+  "id": "template-self-learning-plf",
+  "revision": 1,
+  "metadata": {
+    "title": "Template Self-Learning: Jurnal dan Aset",
+    "summary": "Template pembelajaran mandiri dengan materi, worksheet, remediasi, dan laporan.",
+    "author": "PuspitaCore",
+    "subject": "Akuntansi",
+    "language": "id",
+    "level": "beginner",
+    "estimatedMinutes": 65,
+    "tags": ["template", "self-learning", "akuntansi"]
+  },
+  "experience": { "profile": "mixed", "presentation": "guided", "navigation": "flexible", "allowResume": false },
+  "prerequisites": { "moduleIds": [], "competencyIds": [], "notes": "Tidak membutuhkan pengalaman akuntansi sebelumnya." },
+  "competencies": [
+    { "id": "komp-jurnal", "title": "Mengidentifikasi akun dan arah pencatatan" },
+    { "id": "komp-aset", "title": "Menghitung dan mencatat biaya perolehan aset" }
+  ],
+  "learningPolicy": { "allowRetry": true, "feedbackTiming": "after_submit", "hintMode": "guided_only", "timerMode": "advisory", "allowSkip": true, "remediationEnabled": true, "solutionsAfterAttempt": true },
+  "assessment": { "passingScore": 75, "requireAllRequired": true, "attemptPolicy": "best" },
+  "reportPolicy": { "scope": "learning_unit", "formats": ["json", "print"], "downloadOnCompletion": false, "dataLocation": "client_only" },
+  "references": [
+    { "id": "ref-template", "title": "Referensi materi", "type": "placeholder", "url": null, "edition": null }
+  ],
+  "outline": [
+    { "type": "section", "id": "bab-pengenalan", "title": "Bab 1 — Dari transaksi ke jurnal", "children": [{ "type": "unit", "unitId": "unit-jurnal" }, { "type": "unit", "unitId": "unit-aset" }] }
+  ],
+  "learningUnits": [
+    {
+      "id": "unit-jurnal", "title": "Memahami jurnal transaksi kredit", "learningObjectives": ["Mengenali akun", "Menentukan debit dan kredit"], "competencyIds": ["komp-jurnal"], "prerequisiteUnitIds": [], "pageIds": ["halaman-jurnal"],
+      "worksheets": [
+        { "id": "ws-jurnal-terpandu", "title": "Pengenalan transaksi", "mode": "guided", "difficulty": "easy", "complexityWeight": 1, "targetMinutes": { "min": 5, "max": 10 }, "scoreWeight": 1, "blockIds": ["pilihan-tunggal", "benar-salah"] },
+        { "id": "ws-jurnal-mandiri", "title": "Penerapan jurnal", "mode": "independent", "difficulty": "medium", "complexityWeight": 2, "targetMinutes": { "min": 8, "max": 15 }, "scoreWeight": 2, "blockIds": ["pilihan-jamak", "mencocokkan", "urut-jurnal"] }
+      ],
+      "masteryCriteria": { "minimumScore": 75, "requiredWorksheetIds": ["ws-jurnal-mandiri"] }, "report": { "enabled": true }
+    },
+    {
+      "id": "unit-aset", "title": "Menghitung dan mencatat perolehan mesin", "learningObjectives": ["Menghitung biaya perolehan", "Menyusun jurnal aset"], "competencyIds": ["komp-aset"], "prerequisiteUnitIds": ["unit-jurnal"], "pageIds": ["halaman-aset"],
+      "worksheets": [
+        { "id": "ws-aset-terpandu", "title": "Menghitung biaya perolehan", "mode": "guided", "difficulty": "medium", "complexityWeight": 2, "targetMinutes": { "min": 6, "max": 12 }, "scoreWeight": 1, "blockIds": ["angka-aset"] },
+        { "id": "ws-aset-mandiri", "title": "Praktik jurnal dan keputusan", "mode": "independent", "difficulty": "hard", "complexityWeight": 4, "targetMinutes": { "min": 15, "max": 25 }, "scoreWeight": 3, "blockIds": ["jurnal-aset", "kasus-aset"] }
+      ],
+      "masteryCriteria": { "minimumScore": 75, "requiredWorksheetIds": ["ws-aset-mandiri"] }, "report": { "enabled": true }
+    }
+  ],
+  "pages": [
+    {
+      "id": "halaman-jurnal", "title": "Memahami transaksi kredit", "layout": "article", "blocks": [
+        { "id": "pemantik-jurnal", "type": "markdown", "role": "discover", "required": true, "content": "# Transaksi kredit\n\nPerusahaan membeli perlengkapan Rp2.000.000 tetapi belum membayarnya. Apa yang berubah?" },
+        { "id": "glosarium-jurnal", "type": "glossary", "role": "understand", "required": false, "title": "Istilah penting", "glossaryItems": [{ "term": "Perlengkapan", "definition": "Barang penunjang kegiatan usaha." }, { "term": "Utang Usaha", "definition": "Kewajiban kepada pemasok." }] },
+        { "id": "contoh-jurnal", "type": "worked_example", "role": "observe", "required": false, "title": "Menyusun jurnal", "steps": [{ "title": "Identifikasi", "explanation": "Perlengkapan dan utang bertambah." }, { "title": "Catat", "explanation": "Debit Perlengkapan; Kredit Utang Usaha." }] },
+        { "id": "catatan-kredit", "type": "callout", "role": "understand", "required": false, "variant": "tip", "title": "Perhatikan kata kredit", "content": "Kredit pada pembelian berarti pembayaran belum dilakukan; bukan selalu sisi kredit jurnal." },
+        { "id": "pilihan-tunggal", "type": "single_choice", "role": "guided_practice", "required": true, "title": "Pembelian kredit", "competencyIds": ["komp-jurnal"], "prompt": "Akun apa yang dikredit saat membeli perlengkapan secara kredit?", "options": [{ "id": "kas", "text": "Kas" }, { "id": "utang", "text": "Utang Usaha" }], "hints": ["Belum ada uang yang dibayarkan.", "Pembelian kredit menimbulkan kewajiban."], "remediation": { "onIncorrect": { "targetBlockId": "contoh-jurnal" } }, "grading": { "correctOptionId": "utang", "points": 10, "explanation": "Utang Usaha bertambah di sisi kredit.", "feedbackByOption": { "kas": "Kas belum keluar.", "utang": "Tepat." } } },
+        { "id": "benar-salah", "type": "true_false", "role": "guided_practice", "required": true, "title": "Kas berkurang?", "competencyIds": ["komp-jurnal"], "prompt": "Pembelian secara kredit langsung menurunkan kas.", "grading": { "correct": false, "points": 5, "explanation": "Kas belum berkurang karena belum ada pembayaran." } },
+        { "id": "pilihan-jamak", "type": "multiple_choice", "role": "independent_practice", "required": true, "title": "Dampak transaksi", "competencyIds": ["komp-jurnal"], "prompt": "Pilih seluruh dampak pembelian perlengkapan secara kredit.", "options": [{ "id": "perlengkapan", "text": "Perlengkapan bertambah" }, { "id": "utang-bertambah", "text": "Utang Usaha bertambah" }, { "id": "kas-berkurang", "text": "Kas langsung berkurang" }], "grading": { "correctOptionIds": ["perlengkapan", "utang-bertambah"], "points": 10, "partialCredit": true, "explanation": "Perlengkapan dan utang bertambah; kas belum berubah." } },
+        { "id": "mencocokkan", "type": "matching", "role": "independent_practice", "required": true, "title": "Kelompok akun", "competencyIds": ["komp-jurnal"], "prompt": "Pasangkan akun dengan kelompoknya.", "pairs": [{ "id": "aset", "left": "Perlengkapan", "right": "Aset" }, { "id": "liabilitas", "left": "Utang Usaha", "right": "Liabilitas" }], "grading": { "points": 10, "partialCredit": true } },
+        { "id": "urut-jurnal", "type": "ordering", "role": "independent_practice", "required": true, "title": "Urutan jurnal", "competencyIds": ["komp-jurnal"], "prompt": "Susun langkah pencatatan.", "items": [{ "id": "fakta", "text": "Baca fakta transaksi" }, { "id": "akun", "text": "Identifikasi akun" }, { "id": "sisi", "text": "Tentukan debit dan kredit" }], "grading": { "correctOrder": ["fakta", "akun", "sisi"], "points": 10, "partialCredit": true } },
+        { "id": "refleksi-jurnal", "type": "reflection", "role": "reflect", "required": true, "reviewMode": "self", "title": "Evaluasi diri", "competencyIds": ["komp-jurnal"], "prompt": "Jelaskan mengapa Utang Usaha dikredit.", "rubric": ["Membedakan kredit dan tunai", "Menjelaskan kenaikan kewajiban"] }
+      ]
+    },
+    {
+      "id": "halaman-aset", "title": "Biaya perolehan aset tetap", "layout": "article", "blocks": [
+        { "id": "materi-aset", "type": "markdown", "role": "understand", "required": true, "content": "# Biaya perolehan\n\nHarga beli dan biaya langsung agar aset siap digunakan dapat termasuk biaya perolehan." },
+        { "id": "tabel-aset", "type": "comparison_table", "role": "understand", "required": false, "title": "Komponen biaya", "columns": ["Komponen", "Nilai (IDR)"], "rows": [["Harga mesin", 100000000], ["Pengangkutan", 5000000], ["Instalasi", 3000000], ["Total", 108000000]] },
+        { "id": "pendalaman-aset", "type": "deep_dive", "role": "deep_dive", "required": false, "title": "Kapan biaya tidak dikapitalisasi?", "content": "Pelatihan operator dan pemeliharaan setelah aset siap digunakan perlu dinilai secara terpisah." },
+        { "id": "referensi-aset", "type": "reference", "role": "understand", "required": false, "title": "Sumber", "referenceIds": ["ref-template"] },
+        { "id": "angka-aset", "type": "number_input", "role": "guided_practice", "required": true, "title": "Hitung biaya perolehan", "competencyIds": ["komp-aset"], "prompt": "Mesin Rp100 juta, pengangkutan Rp5 juta, instalasi Rp3 juta. Berapa biaya perolehan?", "unit": "IDR", "hints": ["Jumlahkan seluruh biaya yang membuat aset siap digunakan."], "grading": { "correctValue": 108000000, "tolerance": 0, "points": 10, "explanation": "Rp100 juta + Rp5 juta + Rp3 juta = Rp108 juta." } },
+        { "id": "jurnal-aset", "type": "journal_entry", "role": "independent_practice", "required": true, "title": "Jurnal pembelian mesin", "competencyIds": ["komp-aset"], "prompt": "Seluruh biaya dibayar tunai. Susun jurnalnya.", "accounts": ["mesin", "kas"], "grading": { "expectedLines": [{ "accountId": "mesin", "debit": 108000000, "credit": 0 }, { "accountId": "kas", "debit": 0, "credit": 108000000 }], "points": 20, "partialCredit": true } },
+        { "id": "kasus-aset", "type": "case_decision", "role": "independent_practice", "required": true, "title": "Keputusan biaya pelatihan", "competencyIds": ["komp-aset"], "scenario": "Pelatihan operator dilakukan setelah mesin siap digunakan.", "prompt": "Apa tindakan paling tepat?", "options": [{ "id": "pisahkan", "text": "Pisahkan biaya pelatihan dari biaya perolehan." }, { "id": "kapitalisasi", "text": "Kapitalisasi seluruh biaya pelatihan." }], "grading": { "optionScores": { "pisahkan": 1, "kapitalisasi": 0 }, "points": 10, "explanation": "Pelatihan umumnya bukan biaya langsung untuk membuat aset siap digunakan." } },
+        { "id": "refleksi-aset", "type": "reflection", "role": "reflect", "required": true, "reviewMode": "self", "title": "Refleksi biaya", "competencyIds": ["komp-aset"], "prompt": "Biaya mana yang paling membuatmu ragu untuk dikapitalisasi?", "rubric": ["Menyebutkan fakta", "Menjelaskan pertimbangan"] }
+      ]
+    }
+  ]
+}

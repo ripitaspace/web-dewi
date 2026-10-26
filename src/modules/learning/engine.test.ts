@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import moduleSchema from "./schemas/plf-module-v1.schema.json";
+import selfLearningSchema from "./schemas/plf-module-v1.1.schema.json";
 import reportSchema from "./schemas/plf-report-v1.schema.json";
 import { getLearningModule, learningCatalog, mediaSource } from "./catalog";
 import {
@@ -16,10 +17,13 @@ import {
   restoreSession,
   storageKey,
   summarize,
+  unitResult,
+  validateSelfLearningModule,
 } from "./engine";
 import type { Answer, BlockType } from "./types";
 
 const lesson = getLearningModule("aset-tetap")!;
+const selfLearning = getLearningModule("template-self-learning")!;
 const blocks = blocksOf(lesson);
 const block = (type: BlockType) => blocks.find((b) => b.type === type)!;
 const answers: Partial<Record<BlockType, Answer>> = {
@@ -69,9 +73,10 @@ function completedSession() {
 
 describe("published PLF content", () => {
   it("matches the supplied module schema and ships all referenced assets", () => {
-    const validate = ajv.compile(moduleSchema);
+    const validate = ajv.compile(lesson.schemaVersion === "1.1.0" ? selfLearningSchema : moduleSchema);
     expect(validate(lesson), JSON.stringify(validate.errors)).toBe(true);
-    expect(new Set(blocks.map((b) => b.type)).size).toBe(13);
+    expect(validateSelfLearningModule(lesson)).toEqual([]);
+    expect(new Set(blocks.map((b) => b.type)).size).toBe(20);
     const ids = [...lesson.pages.map((p) => p.id), ...blocks.map((b) => b.id)];
     expect(new Set(ids).size).toBe(ids.length);
     for (const b of blocks) {
@@ -91,6 +96,32 @@ describe("published PLF content", () => {
     expect(mediaSource("aset-tetap", "javascript:alert(1)")).toBe("");
     expect(mediaSource("aset-tetap", "./media/../../private")).toBe("");
     expect(learningCatalog[0].activities).toBe(13);
+  });
+});
+
+describe("PLF self-learning v1.1", () => {
+  it("validates the draft template and its unit relationships", () => {
+    const validate = ajv.compile(selfLearningSchema);
+    expect(validate(selfLearning), JSON.stringify(validate.errors)).toBe(true);
+    expect(validateSelfLearningModule(selfLearning)).toEqual([]);
+  });
+
+  it("calculates weighted worksheet mastery and accepts open navigation", () => {
+    const session = createSession(selfLearning);
+    const firstUnit = selfLearning.learningUnits![0]!;
+    expect(unitResult(selfLearning, session, firstUnit).mastered).toBe(false);
+    expect(selfLearning.learningPolicy?.allowSkip).toBe(true);
+  });
+
+  it("rejects broken worksheet and remediation relationships", () => {
+    const broken = structuredClone(selfLearning);
+    broken.learningUnits![0]!.worksheets[0]!.blockIds.push("missing-block");
+    const choice = broken.pages[0]!.blocks.find((entry) => entry.id === "pilihan-tunggal")!;
+    choice.remediation = { onIncorrect: { targetBlockId: "missing-material" } };
+    expect(validateSelfLearningModule(broken)).toEqual(expect.arrayContaining([
+      "worksheet ws-jurnal-terpandu has unknown block",
+      "block pilihan-tunggal has unknown remediation target",
+    ]));
   });
 });
 
@@ -253,7 +284,7 @@ describe("progress and reporting", () => {
         validateReport(report),
         JSON.stringify(validateReport.errors),
       ).toBe(true);
-      expect(report.activities).toHaveLength(13);
+      expect(report.activities).toHaveLength(blocks.length);
     }
     const report = makeReport(lesson, completedSession(), "Asia/Jakarta");
     expect(report.assessment.status).toBe("pending_manual");

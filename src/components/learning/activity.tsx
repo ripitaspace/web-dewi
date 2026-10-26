@@ -36,6 +36,13 @@ export const activityLabels: Record<BlockType, string> = {
   journal_entry: "Praktik jurnal",
   case_decision: "Studi kasus",
   reflection: "Refleksi",
+  markdown: "Materi",
+  glossary: "Glosarium",
+  worked_example: "Contoh dikerjakan",
+  callout: "Catatan penting",
+  comparison_table: "Tabel perbandingan",
+  deep_dive: "Pendalaman",
+  reference: "Referensi",
 };
 const icons: Record<BlockType, string> = {
   reading: "▤",
@@ -51,6 +58,23 @@ const icons: Record<BlockType, string> = {
   journal_entry: "Rp",
   case_decision: "◇",
   reflection: "✎",
+  markdown: "▤",
+  glossary: "⌘",
+  worked_example: "✓",
+  callout: "!",
+  comparison_table: "▦",
+  deep_dive: "◌",
+  reference: "↗",
+};
+
+const roleLabels: Record<string, string> = {
+  discover: "Pemantik",
+  understand: "Pahami",
+  observe: "Amati contoh",
+  guided_practice: "Latihan terpandu",
+  independent_practice: "Latihan mandiri",
+  reflect: "Refleksi",
+  deep_dive: "Pendalaman",
 };
 
 function inline(text: string) {
@@ -214,6 +238,9 @@ export function Activity({
   onComplete,
   onGrade,
   onMedia,
+  onRemediate,
+  allowRetry = true,
+  references = [],
 }: {
   block: Block;
   answer: Answer;
@@ -225,6 +252,9 @@ export function Activity({
   onComplete: () => void;
   onGrade: () => string | null;
   onMedia: (value: MediaRecord) => void;
+  onRemediate?: (blockId: string) => void;
+  allowRetry?: boolean;
+  references?: { id: string; title: string; type: string; url: string | null; edition?: string | null }[];
 }) {
   const [error, setError] = useState("");
   const last = attempts.at(-1);
@@ -271,6 +301,7 @@ export function Activity({
         </span>
         <div>
           <span className={styles.eyebrow}>{activityLabels[block.type]}</span>
+          {block.role && <small className={styles.roleLabel}>{roleLabels[block.role]}</small>}
           <h3 id={titleId}>{block.title}</h3>
         </div>
         <span className={styles.activityStatus}>
@@ -285,6 +316,28 @@ export function Activity({
         )}
         {block.prompt && <p className={styles.prompt}>{block.prompt}</p>}
         {block.type === "reading" && <Reading text={block.markdown} />}
+        {block.type === "markdown" && <Reading text={block.content} />}
+        {block.type === "glossary" && (
+          <dl className={styles.glossary}>
+            {block.glossaryItems?.map((item) => <div key={item.term}><dt>{item.term}</dt><dd>{item.definition}</dd></div>)}
+          </dl>
+        )}
+        {block.type === "worked_example" && (
+          <ol className={styles.workedSteps}>
+            {block.steps?.map((step) => <li key={step.title}><strong>{step.title}</strong><p>{step.explanation}</p></li>)}
+          </ol>
+        )}
+        {block.type === "callout" && <aside className={`${styles.callout} ${styles[`callout${block.variant || "note"}`]}`}><strong>{block.title}</strong><Reading text={block.content} /></aside>}
+        {block.type === "comparison_table" && (
+          <div className={styles.tableWrap}><table><thead><tr>{block.columns?.map((column) => <th key={column}>{column}</th>)}</tr></thead><tbody>{block.rows?.map((row, index) => <tr key={index}>{row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}</tr>)}</tbody></table></div>
+        )}
+        {block.type === "deep_dive" && <details className={styles.deepDive}><summary>{block.title || "Pelajari lebih lanjut"}</summary><Reading text={block.content} /></details>}
+        {block.type === "reference" && (
+          <div className={styles.references}>{block.referenceIds?.map((id) => {
+            const reference = references.find((entry) => entry.id === id);
+            return reference ? <div key={id}><strong>{reference.title}</strong><small>{reference.type}{reference.edition ? ` · ${reference.edition}` : ""}</small>{reference.url && <a href={reference.url} target="_blank" rel="noreferrer">Buka sumber ↗</a>}</div> : null;
+          })}</div>
+        )}
         {block.type === "image" && (
           <figure className={styles.figure}>
             {/* Diagram from the module's bundled assets, rendered at its native aspect ratio. */}
@@ -510,14 +563,15 @@ export function Activity({
               <strong>Panduan refleksi</strong>
               <ul>{block.rubric?.map((item) => <li key={item}>{item}</li>)}</ul>
               <p className={styles.note}>
-                Refleksi tidak dinilai otomatis. Jawaban akan disertakan dalam
-                laporan untuk ditinjau pembimbing.
+                {block.reviewMode === "self"
+                  ? "Refleksi ini untuk evaluasi diri dan akan disertakan dalam laporan pribadi."
+                  : "Refleksi tidak dinilai otomatis. Jawaban akan disertakan dalam laporan untuk ditinjau pembimbing."}
               </p>
             </div>
           </>
         )}
         <div className={styles.activityActions}>
-          {(["reading", "image"] as string[]).includes(block.type) && (
+          {(["reading", "image", "markdown", "glossary", "worked_example", "callout", "comparison_table", "deep_dive", "reference"] as string[]).includes(block.type) && (
             <button
               type="button"
               className={styles.primaryButton}
@@ -526,7 +580,7 @@ export function Activity({
             >
               {completed
                 ? "✓ Sudah selesai"
-                : block.type === "reading"
+                : ["reading", "markdown"].includes(block.type)
                   ? "Tandai sudah dibaca"
                   : "Tandai sudah dipahami"}
             </button>
@@ -538,13 +592,17 @@ export function Activity({
                 className={styles.primaryButton}
                 aria-describedby={error || last ? feedbackId : undefined}
                 onClick={() => setError(onGrade() || "")}
+                disabled={!allowRetry && !!last}
               >
-                {last ? "Periksa lagi" : "Periksa jawaban"} →
+                {!allowRetry && last ? "Jawaban sudah diperiksa" : last ? "Periksa lagi" : "Periksa jawaban"} →
               </button>
               <small>
                 Maks. {block.grading.points} poin · {attempts.length} percobaan
               </small>
             </>
+          )}
+          {block.hints?.length && block.role === "guided_practice" && (
+            <details className={styles.hints}><summary>Lihat petunjuk</summary><ol>{block.hints.map((hint) => <li key={hint}>{hint}</li>)}</ol></details>
           )}
           {block.type === "reflection" && (
             <button
@@ -576,6 +634,9 @@ export function Activity({
                 · {formatNumber(last.earned)} / {last.max} poin
               </strong>
               <p>{last.feedback}</p>
+              {last.earned < last.max && block.remediation && onRemediate && (
+                <button type="button" className={styles.quietButton} onClick={() => onRemediate(block.remediation!.onIncorrect.targetBlockId)}>Pelajari ulang materinya</button>
+              )}
             </div>
           )}
         </div>

@@ -43,17 +43,33 @@ export const learningTopics: LearningTopic[] = [
 
 export const learningModuleRegistry: LearningModuleRegistration[] = [
   {
+    id: "template-self-learning",
+    publicCode: "MOD-AKT-002",
+    slug: "template-self-learning",
+    title: "Template Self-Learning: Jurnal dan Aset",
+    description: "Template draft untuk pengalaman self-learning bertahap.",
+    primaryTopicId: "accounting-basic",
+    version: "1.1.0",
+    level: "beginner",
+    status: "draft",
+    estimatedMinutes: 65,
+    tags: ["template", "self-learning"],
+    learningUnitCount: 2,
+    activityCount: 16,
+  },
+  {
     id: "aset-tetap",
+    publicCode: "MOD-AKT-001",
     slug: "aset-tetap",
     title: "Aset Tetap: Dari Perolehan sampai Penyusutan",
     description: "Kenali biaya perolehan, hitung penyusutan, dan coba pencatatan jurnal lewat satu kasus yang saling terhubung.",
     primaryTopicId: "accounting-fixed-assets",
-    version: "1.0.0",
+    version: "1.1.0",
     level: "beginner",
     status: "published",
     estimatedMinutes: 45,
     tags: ["aset tetap", "penyusutan", "jurnal"],
-    learningUnitCount: 6,
+    learningUnitCount: 3,
     activityCount: 13,
   },
 ];
@@ -81,6 +97,7 @@ export function topicPath(topic: LearningTopic): string[] {
 
 export function getPublishedDomains() { return learningDomains.filter((domain) => domain.status === "published").sort(byOrder); }
 export function getDomain(slug: string) { return getPublishedDomains().find((domain) => domain.slug === slug); }
+export function getModuleRegistration(slug: string) { return learningModuleRegistry.find((module) => module.slug === slug); }
 export function getChildTopics(domainId: string, parentId: string | null) { return learningTopics.filter((topic) => topic.domainId === domainId && topic.parentId === parentId && topic.status === "published").sort(byOrder); }
 export function getDescendantTopicIds(topicId: string): string[] {
   const found = new Set<string>([topicId]);
@@ -129,14 +146,20 @@ export function breadcrumbs(domain: LearningDomain, topic?: LearningTopic): Cata
     items.push({ label: entry.title, href: `/belajar/${domain.slug}/${topicPath(entry).join("/")}` });
   return items;
 }
-export function validateLearningRegistry() {
+export function validateLearningRegistry(
+  modules: LearningModuleRegistration[] = learningModuleRegistry,
+) {
   const fail = (message: string): never => { throw new Error(`Learning registry: ${message}`); };
   const unique = (values: string[], label: string) => { if (new Set(values).size !== values.length) fail(`duplicate ${label}`); };
-  unique(learningDomains.map((entry) => entry.id), "domain ID"); unique(learningDomains.map((entry) => entry.slug), "domain slug"); unique(learningTopics.map((entry) => entry.id), "topic ID"); unique(learningModuleRegistry.map((entry) => entry.id), "module ID"); unique(learningModuleRegistry.map((entry) => entry.slug), "module slug");
+  unique(learningDomains.map((entry) => entry.id), "domain ID"); unique(learningDomains.map((entry) => entry.slug), "domain slug"); unique(learningTopics.map((entry) => entry.id), "topic ID"); unique(modules.map((entry) => entry.id), "module ID"); unique(modules.map((entry) => entry.slug), "module slug"); unique(modules.map((entry) => entry.publicCode), "module public code");
   for (const domain of learningDomains) if (domain.slug === "modul") fail("domain slug 'modul' is reserved");
   for (const topic of learningTopics) { if (!domainById(topic.domainId)) fail(`topic ${topic.id} has unknown domain`); if (topic.parentId) { const parent = learningTopics.find((entry) => entry.id === topic.parentId); if (!parent || parent.domainId !== topic.domainId) fail(`topic ${topic.id} has invalid parent`); } if (!topicPath(topic).length) fail(`topic ${topic.id} has circular parent reference`); }
   const siblingKeys = learningTopics.map((topic) => `${topic.domainId}:${topic.parentId || "root"}:${topic.slug}`); unique(siblingKeys, "topic slug in the same parent");
-  for (const entry of learningModuleRegistry) { if (!learningTopics.some((topic) => topic.id === entry.primaryTopicId)) fail(`module ${entry.id} has unknown primary topic`); for (const id of entry.relatedTopicIds || []) if (!learningTopics.some((topic) => topic.id === id)) fail(`module ${entry.id} has unknown related topic`); }
+  for (const entry of modules) {
+    if (!/^MOD-[A-Z]{3}-\d{3}$/.test(entry.publicCode)) fail(`module ${entry.id} has invalid public code`);
+    if (!learningTopics.some((topic) => topic.id === entry.primaryTopicId)) fail(`module ${entry.id} has unknown primary topic`);
+    for (const id of entry.relatedTopicIds || []) if (!learningTopics.some((topic) => topic.id === id)) fail(`module ${entry.id} has unknown related topic`);
+  }
 }
 
 validateLearningRegistry();

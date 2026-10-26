@@ -8,20 +8,27 @@ import {
   formatNumber,
   makeReport,
   summarize,
+  unitResult,
 } from "@/modules/learning/engine";
 import { activityLabels } from "./activity";
 import styles from "./learning.module.css";
+
+function ReportActionIcon({ name }: { name: "back" | "download" | "print" }) {
+  if (name === "back")
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6" /></svg>;
+  if (name === "download")
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" /></svg>;
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5V9h14v8h-2m-10-3h10v7H7z" /></svg>;
+}
 
 export function LearningReport({
   module,
   session,
   onBack,
-  onReset,
 }: {
   module: LearningModule;
   session: Session;
   onBack: () => void;
-  onReset: () => void;
 }) {
   const result = summarize(module, session),
     blocks = blocksOf(module);
@@ -60,20 +67,19 @@ export function LearningReport({
         {result.pendingManual && <p>Refleksi menunggu peninjauan manual.</p>}
       </header>
       <div className={styles.reportActions}>
-        <button className={styles.secondaryButton} onClick={onBack}>
-          ← Kembali ke materi
+        <button type="button" className={`${styles.iconButton} ${styles.secondaryButton}`} onClick={onBack} aria-label="Kembali ke materi" data-tooltip="Kembali ke materi">
+          <ReportActionIcon name="back" />
         </button>
-        <button className={styles.primaryButton} onClick={download}>
-          Unduh JSON report
+        <button type="button" className={`${styles.iconButton} ${styles.primaryButton}`} onClick={download} aria-label="Unduh JSON report" data-tooltip="Unduh JSON report">
+          <ReportActionIcon name="download" />
         </button>
-        <button
-          className={styles.secondaryButton}
+        <button type="button"
+          className={`${styles.iconButton} ${styles.secondaryButton}`}
           onClick={() => window.print()}
+          aria-label="Cetak atau simpan PDF"
+          data-tooltip="Cetak / simpan PDF"
         >
-          Cetak / simpan PDF
-        </button>
-        <button className={styles.quietButton} onClick={onReset}>
-          Mulai sesi baru
+          <ReportActionIcon name="print" />
         </button>
       </div>
       <div className={styles.reportStats}>
@@ -106,11 +112,11 @@ export function LearningReport({
             <dd>{new Date(session.startedAt).toLocaleString("id-ID")}</dd>
           </div>
           <div>
-            <dt>Status sesi</dt>
+            <dt>Selesai</dt>
             <dd>
               {session.endedAt
-                ? `Diselesaikan ${new Date(session.endedAt).toLocaleString("id-ID")}`
-                : "Masih berlangsung"}
+                ? new Date(session.endedAt).toLocaleString("id-ID")
+                : "Belum selesai"}
             </dd>
           </div>
           <div>
@@ -201,6 +207,21 @@ export function LearningReport({
           );
         })}
       </section>
+      {module.learningUnits?.length ? (
+        <section className={styles.reportSection}>
+          <h2>Ringkasan unit & worksheet</h2>
+          {module.learningUnits.map((unit) => {
+            const unitSummary = unitResult(module, session, unit);
+            return (
+              <div className={styles.competency} key={unit.id}>
+                <div><span>{unit.title}</span><strong>{unitSummary.percentage}%</strong></div>
+                <progress max={100} value={unitSummary.percentage} aria-label={`Penguasaan ${unit.title}`} />
+                {unit.worksheets.map((worksheet, index) => <p className={styles.note} key={worksheet.id}>{worksheet.title} · {unitSummary.worksheets[index]!.completed}/{unitSummary.worksheets[index]!.total} aktivitas · {unitSummary.worksheets[index]!.percentage}%</p>)}
+              </div>
+            );
+          })}
+        </section>
+      ) : null}
       <section className={styles.reportSection}>
         <h2>Catatan pemutaran media</h2>
         {blocks

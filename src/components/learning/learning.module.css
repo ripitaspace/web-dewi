@@ -308,6 +308,15 @@
   color: #e2c794;
   font-size: 9px;
 }
+.moduleCode {
+  display: block;
+  margin-top: 5px;
+  color: #e8dcc4;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
 .heroTags {
   display: flex;
   align-items: center;
@@ -419,6 +428,22 @@
   font-size: 9px;
   color: #856547;
 }
+.roleLabel { display: block; margin-top: 3px; color: #746958; font-size: 10px; }
+.glossary, .workedSteps { display: grid; gap: 12px; margin: 0; }
+.glossary > div { padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.glossary dt { font-weight: 800; }
+.glossary dd { margin: 4px 0 0; color: #6c685e; }
+.workedSteps li { padding-left: 4px; }
+.workedSteps p { margin: 4px 0 0; color: #6c685e; }
+.callout { padding: 16px; border-left: 3px solid var(--emas); background: #fff8e8; border-radius: 0 8px 8px 0; }
+.calloutwarning { border-left-color: var(--delima); background: #fff0ed; }
+.deepDive { padding: 12px 0; }
+.deepDive summary { cursor: pointer; font-weight: 800; }
+.references { display: grid; gap: 10px; }
+.references > div { display: grid; gap: 2px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.references small { color: #6c685e; }
+.hints { margin-top: 12px; color: #5c604c; }
+.hints summary { cursor: pointer; font-weight: 700; }
 .activityStatus {
   margin-left: auto;
   flex-shrink: 0;
@@ -737,6 +762,9 @@
   border-top: 1px solid var(--line);
   font-size: 11px;
 }
+.worksheet { display: grid; gap: 4px; margin-top: 14px; font-size: 11px; }
+.worksheet small { color: #6c685e; }
+.worksheet progress { height: 4px; }
 .competencyList {
   padding: 0;
   margin: 0;
@@ -767,6 +795,47 @@
   flex-wrap: wrap;
   gap: 10px;
   margin: 24px 0;
+}
+.iconButton {
+  position: relative;
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+}
+.iconButton svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.iconButton::after {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  width: max-content;
+  max-width: min(220px, calc(100vw - 32px));
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: var(--arang);
+  color: var(--paper);
+  content: attr(data-tooltip);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+.iconButton:hover::after,
+.iconButton:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 .reportStats {
   display: grid;

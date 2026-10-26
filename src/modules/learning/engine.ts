@@ -5,12 +5,16 @@ import type {
   LearningModule,
   MediaRecord,
   Session,
+  SelfLearningUnit,
+  Worksheet,
 } from "./types";
 
 export const storageKey = (module: { id: string; revision: number }) =>
   `puspita:learning:${module.id}@${module.revision}`;
 export const blocksOf = (module: LearningModule) =>
   module.pages.flatMap((page) => page.blocks);
+export const unitForPage = (module: LearningModule, pageId: string) =>
+  module.learningUnits?.find((unit) => unit.pageIds.includes(pageId));
 export const formatNumber = (n: number) =>
   new Intl.NumberFormat("id-ID", { maximumFractionDigits: 2 }).format(n);
 export const formatDuration = (seconds: number) =>
@@ -179,6 +183,8 @@ export function evaluate(
         block.type === "single_choice"
           ? Number(answer.selected === g.correctOptionId)
           : g.optionScores?.[answer.selected!] || 0;
+      if (block.type === "single_choice" && answer.selected)
+        feedback = g.feedbackByOption?.[answer.selected] || feedback;
       break;
     case "multiple_choice": {
       const selected = [...new Set(answer.selections || [])];
@@ -346,9 +352,66 @@ export function summarize(module: LearningModule, session: Session) {
       (!module.assessment.requireAllRequired ||
         requiredCompleted === required.length),
     pendingManual: blocks.some(
-      (b) => b.type === "reflection" && session.completed[b.id],
+      (b) => b.type === "reflection" && b.reviewMode !== "self" && session.completed[b.id],
     ),
   };
+}
+
+export function worksheetResult(
+  module: LearningModule,
+  session: Session,
+  worksheet: Worksheet,
+) {
+  const blocks = blocksOf(module).filter((block) => worksheet.blockIds.includes(block.id));
+  const max = blocks.reduce((sum, block) => sum + (block.grading?.points || 0), 0);
+  const score = blocks.reduce((sum, block) => sum + (bestAttempt(module, session, block.id)?.earned || 0), 0);
+  const completed = blocks.filter((block) => session.completed[block.id]).length;
+  return { score, max, percentage: max ? Math.round((score / max) * 100) : 0, completed, total: blocks.length };
+}
+
+export function unitResult(module: LearningModule, session: Session, unit: SelfLearningUnit) {
+  const worksheets = unit.worksheets.map((worksheet) => worksheetResult(module, session, worksheet));
+  const weighted = unit.worksheets.reduce((sum, worksheet, index) => sum + worksheets[index]!.percentage * worksheet.scoreWeight, 0);
+  const weights = unit.worksheets.reduce((sum, worksheet) => sum + worksheet.scoreWeight, 0);
+  const percentage = weights ? Math.round(weighted / weights) : 0;
+  const required = new Set(unit.masteryCriteria.requiredWorksheetIds);
+  const requiredDone = unit.worksheets.filter((worksheet, index) => !required.has(worksheet.id) || worksheets[index]!.completed === worksheets[index]!.total).length === unit.worksheets.length;
+  return { percentage, mastered: percentage >= unit.masteryCriteria.minimumScore && requiredDone, worksheets };
+}
+
+export function unmetPrerequisites(module: LearningModule, session: Session, unit?: SelfLearningUnit) {
+  if (!unit) return [];
+  return unit.prerequisiteUnitIds.filter((id) => {
+    const prerequisite = module.learningUnits?.find((candidate) => candidate.id === id);
+    return prerequisite && !unitResult(module, session, prerequisite).mastered;
+  });
+}
+
+/** Returns authoring errors for PLF 1.1 self-learning modules without affecting v1.0 modules. */
+export function validateSelfLearningModule(module: LearningModule) {
+  if (module.schemaVersion !== "1.1.0") return [];
+  const errors: string[] = [];
+  const unique = (values: string[], label: string) => {
+    if (new Set(values).size !== values.length) errors.push(`duplicate ${label}`);
+  };
+  const pages = new Set(module.pages.map((page) => page.id));
+  const blockIds = blocksOf(module).map((block) => block.id);
+  const units = module.learningUnits || [];
+  const references = new Set((module.references || []).map((reference) => reference.id));
+  unique(blockIds, "block ID");
+  unique(units.map((unit) => unit.id), "unit ID");
+  for (const unit of units) {
+    if (unit.pageIds.some((id) => !pages.has(id))) errors.push(`unit ${unit.id} has unknown page`);
+    if (unit.prerequisiteUnitIds.some((id) => !units.some((candidate) => candidate.id === id))) errors.push(`unit ${unit.id} has unknown prerequisite`);
+    unique(unit.worksheets.map((worksheet) => worksheet.id), `worksheet ID in ${unit.id}`);
+    for (const worksheet of unit.worksheets)
+      if (worksheet.blockIds.some((id) => !blockIds.includes(id))) errors.push(`worksheet ${worksheet.id} has unknown block`);
+  }
+  for (const block of blocksOf(module)) {
+    if (block.referenceIds?.some((id) => !references.has(id))) errors.push(`block ${block.id} has unknown reference`);
+    if (block.remediation && !blockIds.includes(block.remediation.onIncorrect.targetBlockId)) errors.push(`block ${block.id} has unknown remediation target`);
+  }
+  return errors;
 }
 
 export function mergeRanges(
@@ -448,6 +511,17 @@ export function makeReport(
           : {}),
       };
     }),
+    learningUnits: module.learningUnits?.map((unit) => ({
+      unitId: unit.id,
+      title: unit.title,
+      mastery: unitResult(module, session, unit).percentage,
+      mastered: unitResult(module, session, unit).mastered,
+      worksheets: unit.worksheets.map((worksheet) => ({
+        worksheetId: worksheet.id,
+        title: worksheet.title,
+        ...worksheetResult(module, session, worksheet),
+      })),
+    })),
     disclaimer:
       "Laporan belajar mandiri dari browser peserta, tidak dikirim otomatis. Waktu, jawaban, dan pemutaran media belum diverifikasi server; bukan sertifikat profesi.",
   };

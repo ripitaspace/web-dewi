@@ -211,6 +211,37 @@
         }
       }
     },
+    "learningUnits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["unitId", "title", "mastery", "mastered", "worksheets"],
+        "properties": {
+          "unitId": { "$ref": "#/$defs/id" },
+          "title": { "type": "string" },
+          "mastery": { "type": "number", "minimum": 0, "maximum": 100 },
+          "mastered": { "type": "boolean" },
+          "worksheets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["worksheetId", "title", "score", "max", "percentage", "completed", "total"],
+              "properties": {
+                "worksheetId": { "$ref": "#/$defs/id" },
+                "title": { "type": "string" },
+                "score": { "type": "number", "minimum": 0 },
+                "max": { "type": "number", "minimum": 0 },
+                "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+                "completed": { "type": "integer", "minimum": 0 },
+                "total": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    },
     "disclaimer": {
       "type": "string"
     }

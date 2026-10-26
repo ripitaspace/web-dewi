@@ -11,6 +11,10 @@ Add a published module by adding a `LearningModuleRegistration` with a stable `i
 
 The current PLF pages are adapted as `LearningUnit` nodes by `legacyModuleNodes`. A future micro module can expose one unit; a comprehensive module can nest units below `group` nodes. The existing player intentionally still renders PLF pages while the generic node renderer and per-unit report UI are designed and tested separately.
 
+## Self-learning modules
+
+PLF `1.1.0` adds draft self-learning modules with units, weighted worksheets, advisory prerequisites, hints, remediation links, references, and per-unit reporting. The draft at `content/template-self-learning.plf.json` is deliberately excluded from the public catalog but can be opened directly at `/belajar/modul/template-self-learning`. It uses client-only, in-memory sessions: refreshing starts again.
+
 ## Add or revise a module
 
 1. Add a reviewed PLF v1 JSON file under `content/` and register it in `catalog.ts`.
@@ -22,7 +26,7 @@ The current PLF pages are adapted as `LearningUnit` nodes by `legacyModuleNodes`
 
 `engine.ts` handles grading, best/first/latest attempt policies, completion, media ranges, session validation, and PLF report serialization. `learning-player.tsx` owns the in-memory session and lifecycle cleanup. Answers, including unsubmitted drafts, are kept only while the page remains open. Reloading creates a new session at the first chapter, with active time reset. Time is an estimate: visible, recently active learning pages or playing media count; background pages and reports do not. Playback coverage merges native `played` ranges, so seeking alone does not count as watching.
 
-The player saves its validated session in `localStorage` under a key containing the stable module ID and revision. It restores only an exact revision match, so changed material starts cleanly without touching another module. Starting a new session requires confirmation and replaces only that module's local session. Storage may be unavailable in private or restricted browsers; in that case the player remains usable for the current tab.
+The player does not save learner activity, answers, progress, or time to browser storage. It removes the legacy session cache for the module when the module opens. Starting a new session requires confirmation and clears only the current in-memory session.
 
 `public/learning-sw.js` is registered only after someone opens Belajar. It caches successful same-origin `/belajar`, `/learning/`, and Next static responses and falls back to those responses while offline. It does not cache API calls, send answers, track activity, or synchronize learner data. First-time visits still require a connection.
 

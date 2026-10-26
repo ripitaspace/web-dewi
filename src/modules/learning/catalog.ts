@@ -1,9 +1,11 @@
 import asetTetap from "./content/aset-tetap.plf.json";
+import selfLearningTemplate from "./content/template-self-learning.plf.json";
 import { getPublishedModuleCards } from "./registry";
 import type { LearningModule, LearningNode, ModuleCard } from "./types";
 
 const modules: Record<string, LearningModule> = {
   "aset-tetap": asetTetap as LearningModule,
+  "template-self-learning": selfLearningTemplate as LearningModule,
 };
 
 export function getLearningModule(slug: string) {

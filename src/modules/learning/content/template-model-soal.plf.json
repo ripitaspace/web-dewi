@@ -1,0 +1,190 @@
+{
+  "kind": "plf.module",
+  "schemaVersion": "1.0.0",
+  "id": "template-model-soal-plf",
+  "revision": 1,
+  "metadata": {
+    "title": "Template Model Soal",
+    "summary": "Contoh seluruh model soal untuk modul Puspita.",
+    "author": "PuspitaCore",
+    "subject": "Template",
+    "language": "id",
+    "level": "beginner",
+    "estimatedMinutes": 30,
+    "tags": ["template", "soal"]
+  },
+  "experience": {
+    "profile": "mixed",
+    "presentation": "guided",
+    "navigation": "flexible",
+    "allowResume": false
+  },
+  "competencies": [
+    {
+      "id": "kompetensi-utama",
+      "title": "Kompetensi yang diuji"
+    }
+  ],
+  "assessment": {
+    "passingScore": 75,
+    "requireAllRequired": true,
+    "attemptPolicy": "best"
+  },
+  "pages": [
+    {
+      "id": "template-soal",
+      "title": "Template soal",
+      "layout": "article",
+      "blocks": [
+        {
+          "id": "pilihan-tunggal",
+          "type": "single_choice",
+          "required": true,
+          "title": "Pilihan tunggal",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Tulis pertanyaan dengan satu jawaban yang benar.",
+          "options": [
+            { "id": "jawaban-benar", "text": "Jawaban benar" },
+            { "id": "jawaban-salah", "text": "Jawaban salah" }
+          ],
+          "grading": {
+            "correctOptionId": "jawaban-benar",
+            "points": 10,
+            "explanation": "Jelaskan alasan jawaban yang benar."
+          }
+        },
+        {
+          "id": "pilihan-jamak",
+          "type": "multiple_choice",
+          "required": true,
+          "title": "Pilihan jamak",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Tulis pertanyaan dengan lebih dari satu jawaban yang benar.",
+          "options": [
+            { "id": "benar-satu", "text": "Jawaban benar pertama" },
+            { "id": "benar-dua", "text": "Jawaban benar kedua" },
+            { "id": "salah", "text": "Jawaban salah" }
+          ],
+          "grading": {
+            "correctOptionIds": ["benar-satu", "benar-dua"],
+            "points": 10,
+            "partialCredit": true,
+            "explanation": "Jelaskan seluruh pilihan yang benar."
+          }
+        },
+        {
+          "id": "benar-salah",
+          "type": "true_false",
+          "required": true,
+          "title": "Benar atau salah",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Tulis sebuah pernyataan yang perlu dinilai benar atau salah.",
+          "grading": {
+            "correct": true,
+            "points": 5,
+            "explanation": "Jelaskan alasan pernyataan ini benar atau salah."
+          }
+        },
+        {
+          "id": "jawaban-angka",
+          "type": "number_input",
+          "required": true,
+          "title": "Jawaban angka",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Tulis soal perhitungan dan satuan yang digunakan.",
+          "unit": "IDR",
+          "grading": {
+            "correctValue": 1000000,
+            "tolerance": 0,
+            "points": 10,
+            "explanation": "Tuliskan langkah perhitungan jawaban."
+          }
+        },
+        {
+          "id": "mencocokkan-pasangan",
+          "type": "matching",
+          "required": true,
+          "title": "Cocokkan pasangan",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Pasangkan setiap istilah dengan jawaban yang tepat.",
+          "pairs": [
+            { "id": "pasangan-satu", "left": "Istilah pertama", "right": "Penjelasan pertama" },
+            { "id": "pasangan-dua", "left": "Istilah kedua", "right": "Penjelasan kedua" }
+          ],
+          "grading": {
+            "points": 10,
+            "partialCredit": true
+          }
+        },
+        {
+          "id": "menyusun-urutan",
+          "type": "ordering",
+          "required": true,
+          "title": "Susun urutan",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Susun langkah berikut dari awal sampai akhir.",
+          "items": [
+            { "id": "langkah-satu", "text": "Langkah pertama" },
+            { "id": "langkah-dua", "text": "Langkah kedua" },
+            { "id": "langkah-tiga", "text": "Langkah ketiga" }
+          ],
+          "grading": {
+            "correctOrder": ["langkah-satu", "langkah-dua", "langkah-tiga"],
+            "points": 10,
+            "partialCredit": true
+          }
+        },
+        {
+          "id": "jurnal",
+          "type": "journal_entry",
+          "required": true,
+          "title": "Praktik jurnal",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Tulis instruksi transaksi yang harus dicatat sebagai jurnal.",
+          "accounts": ["akun-debit", "akun-kredit"],
+          "grading": {
+            "expectedLines": [
+              { "accountId": "akun-debit", "debit": 1000000, "credit": 0 },
+              { "accountId": "akun-kredit", "debit": 0, "credit": 1000000 }
+            ],
+            "points": 20,
+            "partialCredit": true
+          }
+        },
+        {
+          "id": "studi-kasus",
+          "type": "case_decision",
+          "required": true,
+          "title": "Studi kasus",
+          "competencyIds": ["kompetensi-utama"],
+          "scenario": "# Judul kasus\n\nTulis konteks, fakta, dan batasan kasus di sini.",
+          "prompt": "Keputusan apa yang paling tepat?",
+          "options": [
+            { "id": "keputusan-terbaik", "text": "Keputusan yang paling tepat" },
+            { "id": "keputusan-lain", "text": "Keputusan lain" }
+          ],
+          "grading": {
+            "optionScores": {
+              "keputusan-terbaik": 1,
+              "keputusan-lain": 0
+            },
+            "points": 10,
+            "explanation": "Jelaskan alasan keputusan terbaik."
+          }
+        },
+        {
+          "id": "refleksi",
+          "type": "reflection",
+          "required": true,
+          "title": "Refleksi",
+          "competencyIds": ["kompetensi-utama"],
+          "prompt": "Tulis pertanyaan refleksi atau memo profesional.",
+          "rubric": [
+            "Poin yang diharapkan pertama",
+            "Poin yang diharapkan kedua"
+          ]
+        }
+      ]
+    }
+  ]
+}

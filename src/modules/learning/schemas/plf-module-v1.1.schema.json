@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.puspitacore.com/schemas/plf-module-v1.1.schema.json",
+  "title": "PuspitaCore Learning Format — Self-Learning Module v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "schemaVersion", "id", "revision", "metadata", "experience", "competencies", "learningPolicy", "assessment", "reportPolicy", "outline", "learningUnits", "pages"],
+  "properties": {
+    "kind": { "const": "plf.module" },
+    "schemaVersion": { "const": "1.1.0" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{2,79}$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "metadata": { "type": "object" },
+    "experience": { "type": "object" },
+    "prerequisites": { "type": "object" },
+    "competencies": { "type": "array", "minItems": 1 },
+    "learningPolicy": { "type": "object" },
+    "assessment": { "type": "object" },
+    "reportPolicy": { "type": "object" },
+    "assets": { "type": "array" },
+    "references": { "type": "array" },
+    "outline": { "type": "array", "minItems": 1 },
+    "learningUnits": { "type": "array", "minItems": 1 },
+    "pages": { "type": "array", "minItems": 1 }
+  }
+}

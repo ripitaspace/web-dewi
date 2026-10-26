@@ -9,21 +9,33 @@ import {
   createSession,
   evaluate,
   formatDuration,
-  restoreSession,
   storageKey,
   summarize,
+  unitForPage,
+  unitResult,
+  unmetPrerequisites,
 } from "@/modules/learning/engine";
 import { Activity, initialAnswer } from "./activity";
 import { LearningReport } from "./report";
 import { LearningOfflineCache } from "./offline-cache";
 import styles from "./learning.module.css";
 
+const formatSessionTime = (value: string | null) =>
+  value
+    ? new Intl.DateTimeFormat("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(new Date(value))
+    : "Belum selesai";
+
 export function LearningPlayer({
   module,
   slug,
+  publicCode,
 }: {
   module: LearningModule;
   slug: string;
+  publicCode: string;
 }) {
   const [session, setSession] = useState<Session | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
@@ -47,18 +59,19 @@ export function LearningPlayer({
   );
 
   useEffect(() => {
-    // A revision-specific key prevents old answers being applied to changed material.
+    // Learning activity is intentionally kept in memory only. Remove a
+    // previous version's browser cache so it cannot be resumed accidentally.
     try {
-      const restored = restoreSession(localStorage.getItem(key), module);
-      const next = restored || createSession(module);
-      current.current = next;
-      lastInteraction.current = Date.now();
+      localStorage.removeItem(key);
     } catch {
+      // Storage access is optional because this session never depends on it.
+    }
+    const start = window.setTimeout(() => {
       const next = createSession(module);
       current.current = next;
       lastInteraction.current = Date.now();
-    }
-    const start = window.setTimeout(() => setSession(current.current), 0);
+      setSession(next);
+    }, 0);
     const interaction = () => {
       lastInteraction.current = Date.now();
     };
@@ -101,24 +114,6 @@ export function LearningPlayer({
         window.removeEventListener(event, interaction);
     };
   }, [module, key, change]);
-
-  useEffect(() => {
-    if (!session) return;
-    const save = () => {
-      if (!current.current) return;
-      try {
-        localStorage.setItem(key, JSON.stringify(current.current));
-      } catch {
-        // Browser storage can be unavailable; the live learning session still works.
-      }
-    };
-    const timer = window.setTimeout(save, 400);
-    window.addEventListener("pagehide", save);
-    return () => {
-      window.clearTimeout(timer);
-      window.removeEventListener("pagehide", save);
-    };
-  }, [key, session]);
 
   const pageIndex = session?.pageIndex ?? 0;
   const ready = !!session;
@@ -169,19 +164,11 @@ export function LearningPlayer({
     setMenuOpen(false);
     focusContent("report-title");
   }
-  function resetSession() {
-    if (
-      !window.confirm(
-        "Mulai sesi baru? Progres dan jawaban pada sesi ini akan dihapus.",
-      )
-    )
-      return;
-    const next = createSession(module);
-    current.current = next;
-    setSession(next);
-    reportVisible.current = false;
-    setReportOpen(false);
-    focusContent("chapter-title");
+  function remediate(targetBlockId: string) {
+    const targetPage = module.pages.findIndex((candidate) => candidate.blocks.some((block) => block.id === targetBlockId));
+    if (targetPage < 0) return;
+    navigate(targetPage);
+    requestAnimationFrame(() => document.getElementById(`title-${targetBlockId}`)?.scrollIntoView({ behavior: "smooth", block: "center" }));
   }
   function toggleMenu(open: boolean) {
     setMenuOpen(open);
@@ -197,6 +184,12 @@ export function LearningPlayer({
   const result = session ? summarize(module, session) : null;
   const page = module.pages[pageIndex];
   const blocks = blocksOf(module);
+  const optionalLearningBlocks = blocks.filter((block) =>
+    ["markdown", "glossary", "worked_example", "callout", "comparison_table", "deep_dive", "reference"].includes(block.type),
+  );
+  const coreActivityCount = blocks.length - optionalLearningBlocks.length;
+  const currentUnit = session ? unitForPage(module, page.id) : undefined;
+  const prerequisites = session ? unmetPrerequisites(module, session, currentUnit) : [];
   return (
     <div className={styles.room}>
       <LearningOfflineCache />
@@ -272,8 +265,8 @@ export function LearningPlayer({
         <div className={styles.sidebarFoot}>
           <strong>Belajar dengan ritmemu.</strong>
           <p>
-            Tanpa login. Progres tersimpan hanya di perangkat ini dan dipisah
-            saat materi diperbarui.
+            Tanpa login. Progres hanya berlaku selama halaman ini dibuka dan
+            akan direset saat disegarkan.
           </p>
         </div>
       </aside>
@@ -298,7 +291,7 @@ export function LearningPlayer({
             <small className={styles.saveStatus}>
               {!session
                 ? "Menyiapkan sesi…"
-                : "Tersimpan di perangkat ini"}
+                : "Sesi sementara · reset saat refresh"}
             </small>
             <button
               type="button"
@@ -321,16 +314,23 @@ export function LearningPlayer({
                 module={module}
                 session={session}
                 onBack={() => navigate(pageIndex)}
-                onReset={resetSession}
               />
             ) : (
               <>
+                {currentUnit && prerequisites.length > 0 && (
+                  <p className={styles.notice} role="status">
+                    Unit ini tetap dapat dipelajari. Sebaiknya tuntaskan prasyarat: {prerequisites.map((id) => module.learningUnits?.find((unit) => unit.id === id)?.title || id).join(", ")}.
+                  </p>
+                )}
                 <header className={styles.hero}>
                   <div className={styles.heroOrnament} aria-hidden="true">
                     ✳
                   </div>
                   <span className={styles.eyebrow}>
-                    Puspita · Belajar sambil mencoba
+                    Modul interaktif
+                  </span>
+                  <span className={styles.moduleCode}>
+                    ID Modul · {publicCode}
                   </span>
                   <div className={styles.heroTags}>
                     <span className={styles.pill}>PEMULA</span>
@@ -354,7 +354,8 @@ export function LearningPlayer({
                   <div className={styles.heroFoot}>
                     <span>AKUNTANSI DALAM PRAKTIK</span>
                     <span>
-                      {module.pages.length} BAB · {blocks.length} AKTIVITAS
+                      {module.pages.length} BAB · {coreActivityCount} AKTIVITAS INTI
+                      {optionalLearningBlocks.length ? ` · ${optionalLearningBlocks.length} MATERI TAMBAHAN` : ""}
                     </span>
                   </div>
                 </header>
@@ -377,7 +378,9 @@ export function LearningPlayer({
                 </div>
                 <div className={styles.mobileSummary}>
                   Progres {result?.completion}% · Skor {result?.percentage}/100
-                  · Waktu aktif {formatDuration(session.activeSeconds)}
+                  · Mulai {formatSessionTime(session.startedAt)} · Selesai{" "}
+                  {formatSessionTime(session.endedAt)} · Waktu aktif{" "}
+                  {formatDuration(session.activeSeconds)}
                 </div>
                 <div className={styles.activities}>
                   {page.blocks.map((block) => (
@@ -437,6 +440,9 @@ export function LearningPlayer({
                             next.completed[block.id] = true;
                         })
                       }
+                      onRemediate={module.learningPolicy?.remediationEnabled ? remediate : undefined}
+                      allowRetry={module.learningPolicy?.allowRetry !== false}
+                      references={module.references}
                     />
                   ))}
                 </div>
@@ -498,12 +504,37 @@ export function LearningPlayer({
                     <dt>Waktu aktif</dt>
                     <dd>{formatDuration(session.activeSeconds)}</dd>
                   </div>
+                  <div>
+                    <dt>Mulai</dt>
+                    <dd>{formatSessionTime(session.startedAt)}</dd>
+                  </div>
+                  <div>
+                    <dt>Selesai</dt>
+                    <dd>{formatSessionTime(session.endedAt)}</dd>
+                  </div>
                 </dl>
                 <p className={styles.note}>
                   Skor berasal dari latihan. Bacaan, media, dan refleksi
                   tercatat terpisah.
                 </p>
               </section>
+              {session && module.learningUnits?.map((unit) => {
+                const unitSummary = unitResult(module, session, unit);
+                return (
+                  <section className={styles.railCard} key={unit.id}>
+                    <span className={styles.eyebrow}>Unit belajar</span>
+                    <h2>{unit.title}</h2>
+                    <p className={styles.note}>{unitSummary.percentage}% · {unitSummary.mastered ? "Tuntas" : "Dalam proses"}</p>
+                    {unit.worksheets.map((worksheet, index) => (
+                      <div className={styles.worksheet} key={worksheet.id}>
+                        <strong>{worksheet.title}</strong>
+                        <small>{worksheet.mode === "guided" ? "Terpandu" : "Mandiri"} · {worksheet.difficulty} · {worksheet.targetMinutes.min}–{worksheet.targetMinutes.max} menit</small>
+                        <progress max={100} value={unitSummary.worksheets[index]!.percentage} aria-label={`Progres ${worksheet.title}`} />
+                      </div>
+                    ))}
+                  </section>
+                );
+              })}
               <section className={styles.railCard}>
                 <span className={styles.eyebrow}>Tujuan belajar</span>
                 <h2>Yang akan kamu kuasai</h2>

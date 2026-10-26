@@ -1,6 +1,6 @@
 {
   "kind": "plf.module",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "id": "aset-tetap-studio-plf",
   "revision": 1,
   "metadata": {
@@ -10,7 +10,7 @@
     "subject": "Akuntansi Keuangan",
     "language": "id",
     "level": "beginner",
-    "estimatedMinutes": 35,
+    "estimatedMinutes": 45,
     "tags": [
       "aset-tetap",
       "psak-216",
@@ -22,7 +22,21 @@
     "profile": "mixed",
     "presentation": "guided",
     "navigation": "flexible",
-    "allowResume": true
+    "allowResume": false
+  },
+  "prerequisites": {
+    "moduleIds": [],
+    "competencyIds": [],
+    "notes": "Materi dapat dipelajari tanpa prasyarat formal."
+  },
+  "learningPolicy": {
+    "allowRetry": true,
+    "feedbackTiming": "after_submit",
+    "hintMode": "guided_only",
+    "timerMode": "advisory",
+    "allowSkip": true,
+    "remediationEnabled": true,
+    "solutionsAfterAttempt": true
   },
   "competencies": [
     {
@@ -51,12 +65,100 @@
     "requireAllRequired": true,
     "attemptPolicy": "best"
   },
+  "reportPolicy": {
+    "scope": "learning_unit",
+    "formats": ["json", "print"],
+    "downloadOnCompletion": false,
+    "dataLocation": "client_only"
+  },
+  "references": [
+    {
+      "id": "ref-psak-216",
+      "title": "PSAK 216 — Aset Tetap",
+      "type": "standar akuntansi",
+      "url": null,
+      "edition": "Verifikasi edisi yang berlaku sebelum penggunaan profesional"
+    }
+  ],
+  "outline": [
+    {
+      "type": "section",
+      "id": "siklus-aset",
+      "title": "Dari pengakuan sampai pencatatan",
+      "children": [
+        { "type": "unit", "unitId": "unit-dasar-aset" },
+        { "type": "unit", "unitId": "unit-pengukuran-aset" },
+        { "type": "unit", "unitId": "unit-praktik-aset" }
+      ]
+    }
+  ],
+  "learningUnits": [
+    {
+      "id": "unit-dasar-aset",
+      "title": "Dasar & pengakuan aset tetap",
+      "learningObjectives": ["Mengenali karakteristik aset tetap", "Membedakan biaya perolehan dan beban"],
+      "competencyIds": ["pengakuan", "perolehan"],
+      "prerequisiteUnitIds": [],
+      "pageIds": ["pahami-aset", "amati-proses", "uji-konsep"],
+      "worksheets": [
+        { "id": "ws-dasar-terpandu", "title": "Kenali biaya perolehan", "mode": "guided", "difficulty": "easy", "complexityWeight": 1, "targetMinutes": { "min": 8, "max": 12 }, "scoreWeight": 1, "blockIds": ["soal-tunggal", "benar-salah"] },
+        { "id": "ws-dasar-mandiri", "title": "Klasifikasi biaya", "mode": "independent", "difficulty": "medium", "complexityWeight": 2, "targetMinutes": { "min": 8, "max": 12 }, "scoreWeight": 2, "blockIds": ["soal-jamak"] }
+      ],
+      "masteryCriteria": { "minimumScore": 75, "requiredWorksheetIds": ["ws-dasar-mandiri"] },
+      "report": { "enabled": true }
+    },
+    {
+      "id": "unit-pengukuran-aset",
+      "title": "Pengukuran & penyusutan",
+      "learningObjectives": ["Menghitung penyusutan", "Menyusun urutan analisis"],
+      "competencyIds": ["perolehan", "penyusutan"],
+      "prerequisiteUnitIds": ["unit-dasar-aset"],
+      "pageIds": ["olah-angka"],
+      "worksheets": [
+        { "id": "ws-ukur-terpandu", "title": "Hitung penyusutan", "mode": "guided", "difficulty": "medium", "complexityWeight": 2, "targetMinutes": { "min": 8, "max": 15 }, "scoreWeight": 1, "blockIds": ["hitung-penyusutan", "pasangkan-biaya"] },
+        { "id": "ws-ukur-mandiri", "title": "Susun proses penyusutan", "mode": "independent", "difficulty": "medium", "complexityWeight": 2, "targetMinutes": { "min": 5, "max": 10 }, "scoreWeight": 2, "blockIds": ["urut-tahapan"] }
+      ],
+      "masteryCriteria": { "minimumScore": 75, "requiredWorksheetIds": ["ws-ukur-mandiri"] },
+      "report": { "enabled": true }
+    },
+    {
+      "id": "unit-praktik-aset",
+      "title": "Praktik jurnal & pertimbangan",
+      "learningObjectives": ["Membuat jurnal penyusutan", "Mengevaluasi perlakuan akuntansi"],
+      "competencyIds": ["pencatatan", "pertimbangan"],
+      "prerequisiteUnitIds": ["unit-pengukuran-aset"],
+      "pageIds": ["praktik-profesional", "refleksi-report"],
+      "worksheets": [
+        { "id": "ws-praktik-mandiri", "title": "Jurnal penyusutan", "mode": "independent", "difficulty": "hard", "complexityWeight": 3, "targetMinutes": { "min": 10, "max": 18 }, "scoreWeight": 2, "blockIds": ["jurnal-penyusutan", "kasus-revisi"] }
+      ],
+      "masteryCriteria": { "minimumScore": 75, "requiredWorksheetIds": ["ws-praktik-mandiri"] },
+      "report": { "enabled": true }
+    }
+  ],
   "pages": [
     {
       "id": "pahami-aset",
       "title": "Kenali Aset Tetap",
       "layout": "article",
       "blocks": [
+        {
+          "id": "panduan-pengakuan",
+          "type": "markdown",
+          "role": "discover",
+          "required": false,
+          "content": "# Cara memakai modul\n\nMulai dari konsep, coba latihan terpandu, lalu selesaikan praktik mandiri. Kamu bebas berpindah unit; peringatan prasyarat membantu menentukan urutan belajar."
+        },
+        {
+          "id": "glosarium-aset",
+          "type": "glossary",
+          "role": "understand",
+          "required": false,
+          "title": "Istilah kunci",
+          "glossaryItems": [
+            { "term": "Biaya perolehan", "definition": "Jumlah biaya yang memenuhi kriteria untuk membawa aset ke lokasi dan kondisi siap digunakan." },
+            { "term": "Nilai residu", "definition": "Perkiraan nilai aset pada akhir masa manfaatnya." }
+          ]
+        },
         {
           "id": "bacaan-konsep",
           "type": "reading",
@@ -80,6 +182,27 @@
       "title": "Amati & Dengarkan",
       "layout": "article",
       "blocks": [
+        {
+          "id": "contoh-biaya-perolehan",
+          "type": "worked_example",
+          "role": "observe",
+          "required": false,
+          "title": "Membaca biaya perolehan mesin",
+          "steps": [
+            { "title": "Mulai dari harga beli", "explanation": "Harga mesin Rp120.000.000." },
+            { "title": "Tambahkan biaya langsung", "explanation": "Pengangkutan Rp5.000.000 dan instalasi Rp3.000.000." },
+            { "title": "Pisahkan biaya setelah siap digunakan", "explanation": "Pelatihan dan pemeliharaan rutin tidak dimasukkan dalam ilustrasi ini." }
+          ]
+        },
+        {
+          "id": "catatan-pelatihan",
+          "type": "callout",
+          "role": "understand",
+          "required": false,
+          "variant": "tip",
+          "title": "Jangan menyamakan manfaat dengan kapitalisasi",
+          "content": "Suatu biaya dapat bermanfaat bagi operasi tetapi belum tentu merupakan biaya langsung untuk membuat aset siap digunakan. Nilai substansinya sebelum mencatatnya."
+        },
         {
           "id": "video-perolehan",
           "type": "video",
@@ -108,12 +231,15 @@
         {
           "id": "soal-tunggal",
           "type": "single_choice",
+          "role": "guided_practice",
           "required": true,
           "title": "01 · Pilih satu jawaban",
           "competencyIds": [
             "perolehan"
           ],
           "prompt": "Biaya manakah yang ditambahkan ke biaya perolehan mesin sebelum siap digunakan?",
+          "hints": ["Cari biaya yang diperlukan sebelum mesin siap digunakan.", "Bandingkan instalasi dengan pelatihan operator."],
+          "remediation": { "onIncorrect": { "targetBlockId": "contoh-biaya-perolehan" } },
           "options": [
             {
               "id": "opsi-instalasi",
@@ -137,6 +263,7 @@
         {
           "id": "soal-jamak",
           "type": "multiple_choice",
+          "role": "independent_practice",
           "required": true,
           "title": "02 · Pilih semua yang benar",
           "competencyIds": [
@@ -179,6 +306,7 @@
         {
           "id": "benar-salah",
           "type": "true_false",
+          "role": "guided_practice",
           "required": true,
           "title": "03 · Benar atau salah",
           "competencyIds": [
@@ -199,8 +327,34 @@
       "layout": "split",
       "blocks": [
         {
+          "id": "tabel-penyusutan",
+          "type": "comparison_table",
+          "role": "understand",
+          "required": false,
+          "title": "Dasar perhitungan penyusutan",
+          "columns": ["Komponen", "Nilai"],
+          "rows": [["Biaya perolehan", "Rp128.000.000"], ["Nilai residu", "Rp8.000.000"], ["Jumlah tersusutkan", "Rp120.000.000"], ["Masa manfaat", "5 tahun"]]
+        },
+        {
+          "id": "pendalaman-penyusutan",
+          "type": "deep_dive",
+          "role": "deep_dive",
+          "required": false,
+          "title": "Mengapa aset mulai disusutkan saat siap digunakan?",
+          "content": "Penyusutan mengalokasikan jumlah tersusutkan selama aset tersedia untuk digunakan. Verifikasi detail kebijakan dan standar yang berlaku pada kasus nyata."
+        },
+        {
+          "id": "referensi-aset",
+          "type": "reference",
+          "role": "understand",
+          "required": false,
+          "title": "Sumber untuk pendalaman",
+          "referenceIds": ["ref-psak-216"]
+        },
+        {
           "id": "hitung-penyusutan",
           "type": "number_input",
+          "role": "guided_practice",
           "required": true,
           "title": "04 · Hitung depresiasi",
           "competencyIds": [
@@ -208,6 +362,8 @@
           ],
           "prompt": "Dengan biaya perolehan Rp128 juta, nilai residu Rp8 juta dan umur manfaat 5 tahun, berapa beban penyusutan garis lurus per tahun? Ketik angka rupiah tanpa simbol.",
           "unit": "IDR",
+          "hints": ["Kurangi biaya perolehan dengan nilai residu terlebih dahulu.", "Bagikan jumlah tersusutkan dengan masa manfaat."],
+          "remediation": { "onIncorrect": { "targetBlockId": "tabel-penyusutan" } },
           "grading": {
             "correctValue": 24000000,
             "tolerance": 0,
@@ -218,6 +374,7 @@
         {
           "id": "pasangkan-biaya",
           "type": "matching",
+          "role": "guided_practice",
           "required": true,
           "title": "05 · Cocokkan kategorinya",
           "competencyIds": [
@@ -254,6 +411,7 @@
         {
           "id": "urut-tahapan",
           "type": "ordering",
+          "role": "independent_practice",
           "required": true,
           "title": "06 · Susun urutan",
           "competencyIds": [
@@ -304,6 +462,7 @@
         {
           "id": "jurnal-penyusutan",
           "type": "journal_entry",
+          "role": "independent_practice",
           "required": true,
           "title": "07 · Jurnal penyesuaian",
           "competencyIds": [
@@ -336,6 +495,7 @@
         {
           "id": "kasus-revisi",
           "type": "case_decision",
+          "role": "independent_practice",
           "required": true,
           "title": "08 · Ambil keputusan",
           "competencyIds": [
@@ -343,6 +503,7 @@
           ],
           "scenario": "# Temuan akhir tahun\nAkuntan PT Cakrawala Mesin ternyata memasukkan **pelatihan operator Rp2 juta** ke biaya perolehan mesin. Mesin dinyatakan siap digunakan sebelum pelatihan tersebut.\n\nPerusahaan menggunakan metode garis lurus dan belum menyusun jurnal penyesuaian akhir tahun. Kamu diminta menelaah perlakuan ini.",
           "prompt": "Apa tindakan yang paling tepat berdasarkan asumsi kasus?",
+          "remediation": { "onIncorrect": { "targetBlockId": "catatan-pelatihan" } },
           "options": [
             {
               "id": "koreksi",
@@ -382,6 +543,7 @@
         {
           "id": "refleksi-akhir",
           "type": "reflection",
+          "role": "reflect",
           "required": true,
           "title": "09 · Catatan profesional",
           "competencyIds": [
