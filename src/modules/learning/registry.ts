@@ -42,6 +42,34 @@ export const learningTopics: LearningTopic[] = [
 ];
 
 export const learningModuleRegistry: LearningModuleRegistration[] = [
+  ...([
+    ["01", "dasar-audit", "Dasar Audit", "Mulai dari tujuan audit, informasi yang diperiksa, dan enam unsur dalam sebuah penugasan.", 18],
+    ["02", "bukti-kriteria-dan-independensi", "Bukti, Kriteria, dan Independensi", "Pilih bukti yang relevan serta pahami kompetensi dan independensi auditor.", 18],
+    ["03", "mengapa-audit-dibutuhkan", "Mengapa Audit Dibutuhkan", "Bedakan risiko informasi dari risiko usaha dan alasan audit dibutuhkan.", 17],
+    ["04", "risiko-informasi", "Sumber dan Pengurangan Risiko Informasi", "Kenali penyebab risiko informasi dan cara menguranginya.", 19],
+    ["05", "akuntansi-vs-audit", "Akuntansi vs Audit", "Bedakan pekerjaan menyusun informasi dan memeriksa bukti.", 17],
+    ["06", "prosedur-audit-dan-tanggung-jawab", "Prosedur Audit dan Tanggung Jawab", "Pilih prosedur audit yang sesuai dan pahami batas tanggung jawabnya.", 18],
+    ["07", "audit-review-dan-asurans", "Audit, Review, dan Asurans", "Bandingkan tujuan, prosedur, dan tingkat keyakinan penugasan.", 19],
+    ["08", "asurans-lain-dan-non-asurans", "Asurans Lain dan Non-Asurans", "Bedakan jasa asurans dari pembukuan dan konsultasi.", 17],
+    ["09", "audit-laporan-keuangan", "Audit Laporan Keuangan", "Pahami tujuan, kriteria, dan bukti audit laporan keuangan.", 18],
+    ["10", "audit-kepatuhan", "Audit Kepatuhan", "Uji pemenuhan kontrak atau aturan memakai kriteria yang jelas.", 17],
+    ["11", "audit-operasional", "Audit Operasional", "Nilai efisiensi dan efektivitas proses kerja.", 18],
+    ["12", "jenis-audit-dan-peran-auditor", "Jenis Audit dan Peran Auditor", "Satukan tiga jenis audit dan peran auditor lewat kasus penutup.", 20],
+  ] as const satisfies readonly [string, string, string, string, number][]).map(([number, slug, title, description, estimatedMinutes]) => ({
+    id: `audit-mikro-${number}`,
+    publicCode: `MOD-AUD-${number.padStart(3, "0")}`,
+    slug,
+    title: `${number} · ${title}`,
+    description,
+    primaryTopicId: "audit-intro",
+    version: "1.0.0",
+    level: "beginner" as const,
+    status: "published" as const,
+    estimatedMinutes,
+    tags: ["audit", "pengantar audit", "micro-learning"],
+    learningUnitCount: 3,
+    activityCount: 4,
+  })),
   {
     id: "template-self-learning",
     publicCode: "MOD-AKT-002",

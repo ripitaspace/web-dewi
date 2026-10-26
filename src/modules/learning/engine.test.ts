@@ -7,6 +7,7 @@ import moduleSchema from "./schemas/plf-module-v1.schema.json";
 import selfLearningSchema from "./schemas/plf-module-v1.1.schema.json";
 import reportSchema from "./schemas/plf-report-v1.schema.json";
 import { getLearningModule, learningCatalog, mediaSource } from "./catalog";
+import { auditMicroModules } from "./content/audit-micro-modules";
 import {
   bestAttempt,
   blocksOf,
@@ -95,7 +96,7 @@ describe("published PLF content", () => {
     expect(getLearningModule("__proto__")).toBeUndefined();
     expect(mediaSource("aset-tetap", "javascript:alert(1)")).toBe("");
     expect(mediaSource("aset-tetap", "./media/../../private")).toBe("");
-    expect(learningCatalog[0].activities).toBe(13);
+    expect(learningCatalog.find((module) => module.slug === "aset-tetap")?.activities).toBe(13);
   });
 });
 
@@ -122,6 +123,22 @@ describe("PLF self-learning v1.1", () => {
       "worksheet ws-jurnal-terpandu has unknown block",
       "block pilihan-tunggal has unknown remediation target",
     ]));
+  });
+});
+
+describe("audit micro-learning series", () => {
+  it("keeps all 12 audit modules valid, short, and available through their public slugs", () => {
+    expect(auditMicroModules).toHaveLength(12);
+    for (const module of auditMicroModules) {
+      const validate = ajv.compile(selfLearningSchema);
+      expect(validate(module), JSON.stringify(validate.errors)).toBe(true);
+      expect(validateSelfLearningModule(module)).toEqual([]);
+      expect(module.metadata.estimatedMinutes).toBeLessThanOrEqual(20);
+      expect(module.pages).toHaveLength(3);
+      expect(module.learningUnits?.[0]?.worksheets).toHaveLength(2);
+    }
+    expect(getLearningModule("dasar-audit")?.metadata.estimatedMinutes).toBe(18);
+    expect(getLearningModule("jenis-audit-dan-peran-auditor")?.metadata.estimatedMinutes).toBe(20);
   });
 });
 

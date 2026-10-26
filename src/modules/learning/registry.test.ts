@@ -15,7 +15,12 @@ describe("learning catalog registry", () => {
     expect(() => validateLearningRegistry()).not.toThrow();
     expect(learningModuleRegistry.find((module) => module.id === "aset-tetap")?.publicCode).toBe("MOD-AKT-001");
     expect(getModulesForDomain("akuntansi")).toHaveLength(1);
-    expect(getModulesForDomain("audit")).toHaveLength(0);
+    const auditModules = getModulesForDomain("audit");
+    expect(auditModules).toHaveLength(12);
+    expect(auditModules.map((module) => module.publicCode)).toEqual(
+      Array.from({ length: 12 }, (_, index) => `MOD-AUD-${String(index + 1).padStart(3, "0")}`),
+    );
+    expect(auditModules.every((module) => (module.estimatedMinutes || 0) <= 20)).toBe(true);
   });
 
   it("requires every module to use a unique public code in the expected format", () => {
