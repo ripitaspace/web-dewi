@@ -1,43 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { storageKey } from "@/modules/learning/engine";
 import type { ModuleCard } from "@/modules/learning/types";
 import styles from "./learning.module.css";
 
 export function ModuleCatalog({ modules }: { modules: ModuleCard[] }) {
-  const [started, setStarted] = useState<string[]>([]);
-  useEffect(() => {
-    const refresh = () => {
-      setStarted(
-        modules
-          .filter((module) => {
-            try {
-              const saved = JSON.parse(
-                localStorage.getItem(storageKey(module)) || "null",
-              );
-              return (
-                saved?.moduleId === module.id &&
-                saved.revision === module.revision &&
-                saved.startedAt
-              );
-            } catch {
-              return false;
-            }
-          })
-          .map((module) => module.id),
-      );
-    };
-    const timer = window.setTimeout(refresh, 0);
-    window.addEventListener("pageshow", refresh);
-    window.addEventListener("storage", refresh);
-    return () => {
-      window.clearTimeout(timer);
-      window.removeEventListener("pageshow", refresh);
-      window.removeEventListener("storage", refresh);
-    };
-  }, [modules]);
   return (
     <section className={styles.catalogSection} aria-labelledby="modules-title">
       <div className="container">
@@ -86,10 +53,7 @@ export function ModuleCatalog({ modules }: { modules: ModuleCard[] }) {
                     className={styles.primaryButton}
                     href={`/belajar/modul/${module.slug}`}
                   >
-                    {started.includes(module.id)
-                      ? "Lanjutkan belajar"
-                      : "Mulai belajar"}{" "}
-                    →
+                    Mulai belajar →
                   </Link>
                   <small>Gratis · Tanpa login</small>
                 </div>

@@ -9,7 +9,6 @@ import {
   createSession,
   evaluate,
   formatDuration,
-  restoreSession,
   storageKey,
   summarize,
 } from "@/modules/learning/engine";
@@ -27,8 +26,6 @@ export function LearningPlayer({
   const [session, setSession] = useState<Session | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [storageFailed, setStorageFailed] = useState(false);
-  const [recovered, setRecovered] = useState(false);
   const current = useRef<Session | null>(null);
   const reportVisible = useRef(false);
   const visibleActivity = useRef<string | null>(null);
@@ -36,58 +33,37 @@ export function LearningPlayer({
   const lastInteraction = useRef(0);
   const key = storageKey(module);
 
-  const save = useCallback(
-    (next: Session) => {
-      try {
-        localStorage.setItem(key, JSON.stringify(next));
-        setStorageFailed(false);
-      } catch {
-        setStorageFailed(true);
-      }
-    },
-    [key],
-  );
   const change = useCallback(
-    (mutate: (next: Session) => void, persist = true) => {
+    (mutate: (next: Session) => void) => {
       if (!current.current) return;
       const next = structuredClone(current.current);
       mutate(next);
       current.current = next;
       setSession(next);
-      if (persist) save(next);
     },
-    [save],
+    [],
   );
 
   useEffect(() => {
+    // Learning activity is intentionally kept in memory only. Remove a
+    // previous version's browser cache so it cannot be resumed accidentally.
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // Storage access is optional because this session never depends on it.
+    }
     const timer = window.setTimeout(() => {
-      let restored: Session | null = null;
-      try {
-        const raw = localStorage.getItem(key);
-        restored = module.experience.allowResume
-          ? restoreSession(raw, module)
-          : null;
-        setRecovered(!!raw && !restored && module.experience.allowResume);
-      } catch {
-        setStorageFailed(true);
-      }
-      const next = restored || createSession(module);
+      const next = createSession(module);
       current.current = next;
       setSession(next);
-      save(next);
       lastInteraction.current = Date.now();
     }, 0);
-    const flush = () => {
-      if (current.current) save(current.current);
-    };
     const interaction = () => {
       lastInteraction.current = Date.now();
     };
     const onVisibility = () => {
       lastInteraction.current = document.hidden ? 0 : Date.now();
-      flush();
     };
-    window.addEventListener("pagehide", flush);
     document.addEventListener("visibilitychange", onVisibility);
     for (const event of ["pointerdown", "keydown", "scroll", "touchstart"])
       window.addEventListener(event, interaction, { passive: true });
@@ -118,14 +94,12 @@ export function LearningPlayer({
     return () => {
       window.clearTimeout(timer);
       window.clearInterval(tick);
-      flush();
       current.current = null;
-      window.removeEventListener("pagehide", flush);
       document.removeEventListener("visibilitychange", onVisibility);
       for (const event of ["pointerdown", "keydown", "scroll", "touchstart"])
         window.removeEventListener(event, interaction);
     };
-  }, [module, key, save, change]);
+  }, [module, key, change]);
 
   const pageIndex = session?.pageIndex ?? 0;
   const ready = !!session;
@@ -179,15 +153,13 @@ export function LearningPlayer({
   function resetSession() {
     if (
       !window.confirm(
-        "Mulai sesi baru? Progres dan jawaban sesi ini akan diganti. Unduh laporan dahulu jika ingin menyimpannya.",
+        "Mulai sesi baru? Progres dan jawaban pada sesi ini akan dihapus.",
       )
     )
       return;
     const next = createSession(module);
     current.current = next;
     setSession(next);
-    save(next);
-    setRecovered(false);
     reportVisible.current = false;
     setReportOpen(false);
     focusContent("chapter-title");
@@ -280,8 +252,8 @@ export function LearningPlayer({
         <div className={styles.sidebarFoot}>
           <strong>Belajar dengan ritmemu.</strong>
           <p>
-            Tanpa login. Progres tersimpan di browser ini, tidak tersinkron ke
-            perangkat lain.
+            Tanpa login. Progres hanya berlaku selama halaman ini dibuka dan
+            akan direset saat disegarkan.
           </p>
         </div>
       </aside>
@@ -306,9 +278,7 @@ export function LearningPlayer({
             <small className={styles.saveStatus}>
               {!session
                 ? "Menyiapkan sesi…"
-                : storageFailed
-                  ? "Progres belum tersimpan"
-                  : "✓ Tersimpan di browser"}
+                : "Sesi sementara · reset saat refresh"}
             </small>
             <button
               type="button"
@@ -322,18 +292,6 @@ export function LearningPlayer({
         </header>
         <main id="learning-main" className={styles.mainLayout} ref={mainRef}>
           <div className={styles.content}>
-            {storageFailed && (
-              <p role="alert" className={styles.error}>
-                Penyimpanan browser tidak tersedia. Kamu tetap bisa belajar,
-                tetapi progres dapat hilang saat halaman ditutup. Unduh laporan
-                untuk menyimpan hasil.
-              </p>
-            )}
-            {recovered && (
-              <p role="status" className={styles.notice}>
-                Progres lama tidak dapat dibaca. Sesi baru sudah disiapkan.
-              </p>
-            )}
             {!session ? (
               <div className={styles.loading} role="status">
                 Menyiapkan ruang belajarmu…
