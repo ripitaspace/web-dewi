@@ -193,7 +193,8 @@
         sellerCell.innerHTML = '<div class="queue-seller"><strong title="' + escapeHtml(sellerName) + '">' + escapeHtml(sellerName) + "</strong><small>" + escapeHtml(sellerIdentity) + "</small></div>";
       }
       var pageCell = row.children[3];
-      if (pageCell) pageCell.innerHTML = '<span class="queue-count" aria-label="' + (invoice.pages || 0) + ' halaman">' + (invoice.pages || 0) + "</span>";
+      var sourcePages = invoice.pageRange || invoice.pages || 0;
+      if (pageCell) pageCell.innerHTML = '<span class="queue-count" aria-label="halaman ' + sourcePages + '">' + sourcePages + "</span>";
       var itemCell = row.children[4];
       if (itemCell) itemCell.innerHTML = '<span class="queue-count" aria-label="' + invoice.items.length + ' barang">' + invoice.items.length + "</span>";
       var statusCell = row.children[5];
@@ -237,6 +238,306 @@
       button.title = invoices.length ? "Unduh hasil batch saat ini" : "Impor minimal satu faktur terlebih dahulu";
     });
   }
+  var ocrLibraryPromise;
+
+  function loadOcrLibrary() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (ocrLibraryPromise) return ocrLibraryPromise;
+    ocrLibraryPromise = new Promise(function (resolve, reject) {
+      var script = document.querySelector("script[data-ripita-ocr]");
+      var needsAppend = false;
+      if (!script) {
+        script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+        script.async = true;
+        script.dataset.ripitaOcr = "true";
+        needsAppend = true;
+      }
+      script.addEventListener("load", function () {
+        if (window.Tesseract) resolve(window.Tesseract);
+        else reject(new Error("Library OCR tidak tersedia"));
+      }, { once: true });
+      script.addEventListener("error", function () {
+        ocrLibraryPromise = null;
+        reject(new Error("OCR tidak dapat dimuat. Periksa koneksi internet lalu coba lagi."));
+      }, { once: true });
+      if (needsAppend) document.head.appendChild(script);
+    });
+    return ocrLibraryPromise;
+  }
+
+  function linesFromPdfContent(content) {
+    var rows = new Map();
+    content.items.forEach(function (part) {
+      var y = Math.round(part.transform[5] / 3) * 3;
+      if (!rows.has(y)) rows.set(y, []);
+      rows.get(y).push({ x: part.transform[4], text: part.str });
+    });
+    return Array.from(rows.entries()).sort(function (left, right) { return right[0] - left[0]; }).map(function (entry) {
+      return entry[1].sort(function (left, right) { return left.x - right.x; }).map(function (part) { return part.text; }).join(" ").replace(/\s+/g, " ").trim();
+    }).filter(Boolean).join("\n");
+  }
+
+  function renderPdfPage(page) {
+    var viewport = page.getViewport({ scale: 2 });
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d", { alpha: false });
+    canvas.width = Math.ceil(viewport.width);
+    canvas.height = Math.ceil(viewport.height);
+    return page.render({ canvasContext: context, viewport: viewport }).promise.then(function () {
+      return canvas.toDataURL("image/png");
+    }).finally(function () {
+      canvas.width = 0;
+      canvas.height = 0;
+    });
+  }
+
+  function findInvoiceNumber(text) {
+    var match = String(text || "").match(/(?:Kode\s+dan\s+)?Nomor\s+Seri\s+Faktur\s+Pajak\s*:?\s*([\d\s-]{12,})/i);
+    if (!match) return "";
+    var number = match[1].replace(/\D/g, "");
+    return number.length >= 12 ? number : "";
+  }
+
+  function sourcePageRange(pages) {
+    if (!pages.length) return "";
+    var first = pages[0].sourcePage;
+    var last = pages[pages.length - 1].sourcePage;
+    return first === last ? String(first) : first + "–" + last;
+  }
+
+  function groupInvoicePages(pages) {
+    var groups = [];
+    var current;
+    pages.forEach(function (page) {
+      var number = findInvoiceNumber(page.text);
+      if (number && (!current || (current.number && current.number !== number))) {
+        current = { number: number, pages: [] };
+        groups.push(current);
+      }
+      if (!current) {
+        current = { number: "", pages: [] };
+        groups.push(current);
+      }
+      if (number && !current.number) current.number = number;
+      current.pages.push(page);
+    });
+    return groups;
+  }
+
+  function parseCurrency(value) {
+    var text = String(value == null ? "" : value).replace(/[^\d,.-]/g, "");
+    if (!text) return null;
+    var comma = text.lastIndexOf(",");
+    var dot = text.lastIndexOf(".");
+    if (comma !== -1 && dot !== -1) text = comma > dot ? text.replace(/\./g, "").replace(",", ".") : text.replace(/,/g, "");
+    else if (comma !== -1) text = text.replace(/,/g, ".");
+    else text = text.replace(/\./g, "");
+    var parsed = Number(text);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+  }
+
+  function parseQuantity(value) {
+    var text = String(value == null ? "" : value).replace(/[^\d,.-]/g, "");
+    if (!text) return null;
+    var comma = text.lastIndexOf(",");
+    var dot = text.lastIndexOf(".");
+    if (comma !== -1 && dot !== -1) text = comma > dot ? text.replace(/\./g, "").replace(",", ".") : text.replace(/,/g, "");
+    else if (comma !== -1) text = text.replace(/,/g, ".");
+    var parsed = Number(text);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  }
+
+  function isLikelyUnit(value) {
+    var unit = String(value || "").trim();
+    if (!unit || unit.length > 24 || !/[A-Za-z]/.test(unit)) return false;
+    if (/\bRP\b|\d{3,}|(?:^|\s)\d+(?:[.,]\d+)?(?:\s|$)/i.test(unit)) return false;
+    return /^[A-Za-z0-9./ -]+$/.test(unit);
+  }
+
+  function cleanUnit(value) {
+    var unit = String(value || "").replace(/\s+/g, " ").trim();
+    return isLikelyUnit(unit) ? unit : "";
+  }
+
+  function isItemTableNoise(line) {
+    return /^(No\.?|Kode(?:\s+Barang)?|Nama Barang|Jasa Kena Pajak|Harga Jual|Penggantian|Uang Muka|Termin|Potongan Harga|PPnBM)/i.test(line);
+  }
+
+  function parseTableItems(pages) {
+    var items = [];
+    var foundTable = false;
+    pages.forEach(function (page) {
+      var lines = String(page.text || "").split("\n").map(function (line) { return line.trim(); }).filter(Boolean);
+      var start = lines.findIndex(function (line) { return /Nama Barang Kena Pajak\s*\/\s*Jasa Kena Pajak/i.test(line); });
+      if (start < 0) return;
+      foundTable = true;
+      var end = lines.findIndex(function (line, index) {
+        return index > start && /^Harga Jual\s*\/\s*Penggantian\s*\/\s*Uang Muka\s*\/\s*Termin/i.test(line);
+      });
+      if (end < 0) end = lines.length;
+      var block = lines.slice(start + 1, end);
+      var pending = [];
+      for (var index = 0; index < block.length; index += 1) {
+        var line = block[index];
+        var price = line.match(/(?:Rp\s*)?([\d.,]+)\s*[x×]\s*([\d.,]+)\s+(.+)$/i);
+        if (!price) {
+          if (!isItemTableNoise(line) && !/^\d+\s+\d{6}\b/.test(line)) pending.push(line);
+          continue;
+        }
+        var tail = block.slice(index + 1, index + 7);
+        var row = tail.find(function (candidate) { return /^\d+\s+\d{6}\s+/.test(candidate); }) || "";
+        var columns = row.match(/^(\d+)\s+(\d{6})\s+([\d.,]+)/);
+        var discount = (tail.join(" ").match(/Potongan Harga\s*=\s*Rp\s*([\d.,]+)/i) || [])[1];
+        var ppnbm = tail.join(" ").match(/PPnBM\s*\(([\d.,]+)%\)\s*=\s*Rp\s*([\d.,]+)/i);
+        var unit = cleanUnit(price[3]);
+        items.push({
+          no: columns ? Number(columns[1]) : items.length + 1,
+          code: columns ? String(columns[2]) : "",
+          name: pending.filter(function (candidate) { return !isItemTableNoise(candidate); }).join(" ").trim(),
+          unitPrice: parseCurrency(price[1]),
+          qty: parseQuantity(price[2]),
+          unit: unit,
+          rawUnit: String(price[3]).trim(),
+          gross: columns ? parseCurrency(columns[3]) : null,
+          discount: parseCurrency(discount) || 0,
+          ppnbmRate: ppnbm ? parseQuantity(ppnbm[1]) : null,
+          ppnbm: ppnbm ? parseCurrency(ppnbm[2]) : null,
+          page: page.sourcePage,
+          sourcePage: page.sourcePage
+        });
+        pending = [];
+      }
+    });
+    return { foundTable: foundTable, items: items };
+  }
+
+  function validateItem(item) {
+    var issues = [];
+    if (!String(item.name || "").replace(/\s+/g, " ").trim()) issues.push("nama barang tidak terbaca");
+    if (item.qty == null) issues.push("kuantitas bukan angka positif");
+    if (!isLikelyUnit(item.unit)) {
+      issues.push(item.rawUnit ? "satuan terlihat seperti angka atau nominal" : "satuan tidak terbaca");
+      item.unit = "";
+    }
+    if (item.unitPrice == null) issues.push("harga satuan bukan nominal");
+    if (item.gross != null && item.qty != null && item.unitPrice != null) {
+      var expectedGross = item.qty * item.unitPrice;
+      var tolerance = Math.max(1, expectedGross * 0.02);
+      if (Math.abs(item.gross - expectedGross) > tolerance) issues.push("harga × kuantitas tidak cocok dengan bruto");
+    }
+    item.validationMessage = issues.join("; ");
+    item.validationStatus = issues.length ? "REVIEW" : "OK";
+    return issues;
+  }
+
+  function validateInvoiceItems(invoice) {
+    var issues = [];
+    invoice.items.forEach(function (item) {
+      var rowIssues = validateItem(item);
+      if (rowIssues.length) issues.push("baris " + (item.no || "?") + ": " + rowIssues.join(", "));
+    });
+    if (invoice.grossTotal != null && invoice.items.length && invoice.items.every(function (item) { return item.gross != null; })) {
+      var totalGross = invoice.items.reduce(function (total, item) { return total + item.gross; }, 0);
+      if (Math.abs(totalGross - invoice.grossTotal) > Math.max(1, invoice.grossTotal * 0.02)) issues.push("total bruto item tidak cocok dengan total faktur");
+    }
+    return issues;
+  }
+
+  function exportValidationRows() {
+    return getInvoices().flatMap(function (invoice) {
+      var items = invoice.items && invoice.items.length ? invoice.items : [{}];
+      return items.map(function (item) {
+        return {
+          status: item.validationStatus || (invoice.status === "PARSED" ? "OK" : invoice.status || "REVIEW"),
+          message: item.validationMessage || invoice.message || "",
+          pageRange: item.page || invoice.pageRange || "",
+          source: invoice.source || "PDF"
+        };
+      });
+    });
+  }
+
+  async function extractInvoicesFromPdf(bytes, filename, path, reportProgress) {
+    var documentPdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(bytes) }).promise;
+    var pages = [];
+    var worker;
+    try {
+      for (var sourcePage = 1; sourcePage <= documentPdf.numPages; sourcePage += 1) {
+        var page = await documentPdf.getPage(sourcePage);
+        var content = await page.getTextContent();
+        var text = linesFromPdfContent(content);
+        var wasOcr = false;
+        var confidence = 100;
+        var ocrError = "";
+        if (text.replace(/\s/g, "").length < 24) {
+          wasOcr = true;
+          try {
+            if (!worker) {
+              var Tesseract = await loadOcrLibrary();
+              worker = await Tesseract.createWorker("eng", 1, {
+                logger: function (message) {
+                  if (!reportProgress || !message || !message.status) return;
+                  var percent = typeof message.progress === "number" ? " " + Math.round(message.progress * 100) + "%" : "";
+                  reportProgress("Menyiapkan OCR: " + message.status + percent);
+                }
+              });
+            }
+            if (reportProgress) reportProgress("Membaca halaman " + sourcePage + "/" + documentPdf.numPages + " dengan OCR…");
+            var result = await worker.recognize(await renderPdfPage(page));
+            text = String(result.data.text || "").trim();
+            confidence = Math.round(Number(result.data.confidence) || 0);
+          } catch (error) {
+            ocrError = error instanceof Error ? error.message : "OCR gagal membaca halaman";
+          }
+        }
+        pages.push({ text: text, sourcePage: sourcePage, ocr: wasOcr, confidence: confidence, ocrError: ocrError });
+      }
+    } finally {
+      if (worker) await worker.terminate();
+      await documentPdf.destroy();
+    }
+
+    return groupInvoicePages(pages).map(function (group, groupIndex) {
+      var invoice = window.parseInvoice(group.pages, filename, path);
+      var itemTable = parseTableItems(group.pages);
+      var ocrPages = group.pages.filter(function (page) { return page.ocr; });
+      var failedPages = group.pages.filter(function (page) { return page.ocrError; });
+      var averageConfidence = ocrPages.length ? Math.round(ocrPages.reduce(function (total, page) { return total + page.confidence; }, 0) / ocrPages.length) : null;
+      if (itemTable.items.length) invoice.items = itemTable.items;
+      invoice.number = invoice.number || group.number;
+      invoice.key = invoice.sellerNPWP && invoice.number ? invoice.sellerNPWP + "|" + invoice.number : "FILE|" + path + "|" + group.pages[0].sourcePage + "|" + groupIndex;
+      invoice.pages = group.pages.length;
+      invoice.pageRange = sourcePageRange(group.pages);
+      invoice.source = ocrPages.length ? (ocrPages.length === group.pages.length ? "OCR" : "PDF + OCR") : "PDF";
+      invoice.ocrConfidence = averageConfidence;
+      invoice.items.forEach(function (item) {
+        if (item.sourcePage) {
+          item.page = item.sourcePage;
+          return;
+        }
+        var parsedPage = Math.max(1, Number(item.page) || 1);
+        item.page = group.pages[Math.min(parsedPage - 1, group.pages.length - 1)].sourcePage;
+      });
+      var itemIssues = validateInvoiceItems(invoice);
+
+      if (!invoice.number) {
+        invoice.status = "ERROR";
+        invoice.message = invoice.source === "OCR" ? "Nomor faktur tidak terbaca dari PDF scan; periksa halaman " + invoice.pageRange : "Nomor faktur tidak ditemukan";
+      } else if (itemIssues.length) {
+        invoice.status = "REVIEW";
+        invoice.message = "Data barang perlu review: " + itemIssues.slice(0, 2).join("; ") + (itemIssues.length > 2 ? "; dan " + (itemIssues.length - 2) + " temuan lain" : "");
+      } else if (failedPages.length || (averageConfidence !== null && averageConfidence < 75)) {
+        invoice.status = "REVIEW";
+        invoice.message = failedPages.length ? "OCR gagal pada halaman " + failedPages.map(function (page) { return page.sourcePage; }).join(", ") + "; periksa manual" : "Keyakinan OCR " + averageConfidence + "% — periksa data sebelum ekspor";
+      } else if (ocrPages.length) {
+        if (invoice.status === "ERROR") invoice.status = invoice.items.length ? "PARSED" : "REVIEW";
+        invoice.message = "Dibaca dari PDF scan dengan OCR pada halaman " + invoice.pageRange + (averageConfidence !== null ? " (keyakinan " + averageConfidence + "%)" : "") + ".";
+      }
+      return invoice;
+    });
+  }
+
   function patchRuntime() {
     var originalRender = window.render;
     var originalReview = window.review;
@@ -268,7 +569,37 @@
     var originalExport = window.exportExcel;
     window.exportExcel = function () {
       if (!getInvoices().length) { showToast("Impor minimal satu faktur sebelum export.", "warning"); return; }
-      originalExport();
+      var workbookRows = exportValidationRows();
+      var originalJsonToSheet = window.XLSX && window.XLSX.utils.json_to_sheet;
+      var originalWriteFile = window.XLSX && window.XLSX.writeFile;
+      if (originalJsonToSheet) {
+        window.XLSX.utils.json_to_sheet = function (rows) {
+          rows.forEach(function (row, index) {
+            var validation = workbookRows[index] || {};
+            row["Status Validasi Baris"] = validation.status || "";
+            row["Alasan Validasi Baris"] = validation.message || "";
+            row["Halaman Sumber"] = validation.pageRange || "";
+            row["Sumber Pembacaan"] = validation.source || "";
+          });
+          return originalJsonToSheet.apply(this, arguments);
+        };
+      }
+      if (originalWriteFile) {
+        window.XLSX.writeFile = function (workbook, filename, options) {
+          return originalWriteFile.call(window.XLSX, workbook, filename, Object.assign({}, options || {}, {
+            bookType: "xlsx",
+            bookSST: true,
+            compression: true,
+            ignoreEC: false
+          }));
+        };
+      }
+      try {
+        originalExport();
+      } finally {
+        if (originalJsonToSheet) window.XLSX.utils.json_to_sheet = originalJsonToSheet;
+        if (originalWriteFile) window.XLSX.writeFile = originalWriteFile;
+      }
       showToast("File Excel sedang disiapkan untuk diunduh.", "success");
     };
     window.ingest = async function (files) {
@@ -317,26 +648,33 @@
         if (processing) processing.textContent = "Memproses " + (index + 1) + "/" + entries.length + ": " + item.name;
         if (progress) progress.value = ((index + 1) / entries.length) * 100;
         await new Promise(function (resolve) { window.setTimeout(resolve, 0); });
-        var invoice;
+        var parsedInvoices;
         try {
-          invoice = await extractPDF(await item.get(), item.name, item.path);
+          parsedInvoices = await extractInvoicesFromPdf(await item.get(), item.name, item.path, function (message) {
+            if (processing) processing.textContent = message;
+          });
         } catch (error) {
-          invoice = { key: "FILE|" + item.path + "|" + Date.now(), filename: item.name, path: item.path, number: "", seller: "", items: [], pages: 0, status: "ERROR", message: String(error), raw: "", imported: new Date().toISOString() };
+          parsedInvoices = [{ key: "FILE|" + item.path + "|" + Date.now(), filename: item.name, path: item.path, number: "", seller: "", items: [], pages: 0, pageRange: "", status: "ERROR", message: error instanceof Error ? error.message : "PDF tidak dapat dibaca", raw: "", imported: new Date().toISOString() }];
         }
-        var existing = invoices.find(function (candidate) { return candidate.key === invoice.key; });
-        if (existing) {
-          invoice.status = "DUPLICATE";
-          invoice.message = "Nomor faktur dan NPWP penjual sudah ada; file baru dilewati";
-          if (item.preview) URL.revokeObjectURL(item.preview);
-        } else {
+        var previewUrl = item.preview || await item.previewFromZip();
+        var accepted = false;
+        for (var parsedIndex = 0; parsedIndex < parsedInvoices.length; parsedIndex += 1) {
+          var invoice = parsedInvoices[parsedIndex];
+          var existing = invoices.find(function (candidate) { return candidate.key === invoice.key; });
+          if (existing) {
+            invoice.status = "DUPLICATE";
+            invoice.message = "Nomor faktur dan NPWP penjual sudah ada; file baru dilewati";
+            continue;
+          }
           var nextNumber = Math.max.apply(Math, [0].concat(invoices.map(function (candidate) { return Number((candidate.invoiceId || "").replace(/\D/g, "")) || 0; }))) + 1;
           invoice.invoiceId = "INV-" + String(nextNumber).padStart(6, "0");
           for (var itemIndex = 0; itemIndex < invoice.items.length; itemIndex += 1) invoice.items[itemIndex].productId = await getProduct(invoice, invoice.items[itemIndex]);
           invoices.push(invoice);
           await put("invoices", invoice);
-          var previewUrl = item.preview || await item.previewFromZip();
           urls.set(invoice.key, previewUrl);
+          accepted = true;
         }
+        if (!accepted) URL.revokeObjectURL(previewUrl);
         window.render();
       }
       if (processing) processing.textContent = "Selesai: " + entries.length + " PDF diproses. Klik Review untuk melihat PDF.";
@@ -522,7 +860,8 @@
     if (!item) return '<div class="queue-item queue-item-empty"><strong>Barang belum tersedia</strong><small>Data header atau error tetap dapat diunduh.</small></div>';
     var identity = [item.productId || "Product ID belum dibuat", item.code ? "Kode " + item.code : ""].filter(Boolean).join(" · ");
     var values = [item.qty != null ? "Qty " + format(item.qty) : "", item.unit || "", item.unitPrice != null ? "Rp " + format(item.unitPrice) : ""].filter(Boolean).join(" · ");
-    return '<div class="queue-item"><strong title="' + safe(item.name || "Nama barang belum terbaca") + '">' + safe(item.name || "Nama barang belum terbaca") + '</strong><small>' + safe(identity) + '</small><small>' + safe(values || "Lengkapi detail saat review") + "</small></div>";
+    var validation = item.validationMessage ? '<small class="queue-item-validation">' + safe(item.validationMessage) + "</small>" : "";
+    return '<div class="queue-item"><strong title="' + safe(item.name || "Nama barang belum terbaca") + '">' + safe(item.name || "Nama barang belum terbaca") + '</strong><small>' + safe(identity) + '</small><small>' + safe(values || "Lengkapi detail saat review") + "</small>" + validation + "</div>";
   }
   function flatRow(invoice, invoiceIndex, item) {
     var filename = invoice.filename || "Nama file tidak tersedia";
@@ -530,11 +869,12 @@
     var seller = invoice.seller || "Penjual belum terbaca";
     var sellerMeta = invoice.sellerNPWP ? "NPWP " + invoice.sellerNPWP : invoice.seller ? "Data penjual" : "Perlu review";
     var statusClass = invoice.status === "PARSED" ? "" : invoice.status === "ERROR" ? "error" : "warn";
+    var sourcePages = invoice.pageRange || invoice.pages || 0;
     return '<tr class="' + (invoice.status === "PARSED" ? "" : "needs-attention") + '">' +
       '<td><div class="queue-file"><strong title="' + safe(filename) + '">' + safe(filename) + '</strong>' + (folder ? '<small title="' + safe(invoice.path) + '">' + safe(folder) + "</small>" : "") + "</div></td>" +
       '<td><span class="invoice-number" title="' + safe(invoice.number || "Nomor belum terbaca") + '">' + safe(invoice.number || "Belum terbaca") + "</span></td>" +
       '<td><div class="queue-seller"><strong title="' + safe(seller) + '">' + safe(seller) + "</strong><small>" + safe(sellerMeta) + "</small></div></td>" +
-      '<td><span class="queue-count" aria-label="' + (invoice.pages || 0) + ' halaman">' + (invoice.pages || 0) + "</span></td>" +
+      '<td><span class="queue-count" aria-label="halaman ' + sourcePages + '">' + sourcePages + "</span></td>" +
       "<td>" + itemCell(item) + "</td>" +
       '<td><div class="queue-status"><span class="pill ' + statusClass + '">' + safe(labels[invoice.status] || invoice.status || "Belum diproses") + '</span><small>' + safe(invoice.message || "") + "</small></div></td>" +
       '<td><button class="secondary review-button" type="button" data-flat-review="' + invoiceIndex + '">' + glyph("review") + (invoice.status === "PARSED" ? "Lihat" : "Review") + "</button></td>" +

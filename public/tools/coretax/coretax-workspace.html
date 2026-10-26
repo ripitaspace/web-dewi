@@ -18,7 +18,6 @@
         function resizeWorkspace() {
           var height = Math.max(900, doc.documentElement.scrollHeight, doc.body ? doc.body.scrollHeight : 0);
           frame.style.height = height + "px";
-          if (window.frameElement) window.frameElement.style.height = height + "px";
         }
 
         var theme = doc.createElement("link");

@@ -39,4 +39,5 @@ export const MINI_TOOLS: MiniTool[] = [
   { number: "15", category: "Document Essentials", title: "Compress Data", description: "Mengecilkan ukuran file data agar lebih ringkas untuk disimpan atau dibagikan.", icon: "⇣", status: "maintenance", href: "/karya/tools/compress-data" },
   { number: "16", category: "Document Essentials", title: "Compile Dokumen", description: "Menggabungkan PDF dan gambar menjadi satu file yang rapi.", icon: "▣", status: "available", href: "/karya/tools/compile-dokumen" },
   { number: "17", category: "Document Essentials", title: "Digital Signing", description: "Membubuhkan tanda tangan digital pada dokumen secara praktis.", icon: "✦", status: "maintenance", href: "/karya/tools/digital-signing" },
+  { number: "21", category: "Document Essentials", title: "Makalah Generator", description: "Membantu menyusun makalah menjadi dokumen yang rapi dan terstruktur.", icon: "✎", status: "available", href: "/karya/tools/makalah-generator" },
 ];

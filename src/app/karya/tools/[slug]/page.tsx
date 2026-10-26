@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/navigation/site-header";
 import { Pph21ReferenceDownload } from "@/components/tools/pph21-reference-download";
 import { InvoiceExtensionInfo } from "@/components/tools/invoice-extension-info";
 import { CompileDocumentClient } from "@/components/tools/compile-document-client";
+import { MakalahGeneratorClient } from "@/components/tools/makalah-generator-client";
 import { MINI_TOOLS } from "@/lib/mini-tools";
 
 interface MiniToolPageProps {
@@ -48,7 +49,7 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
 
         <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container">
-            {slug === "extension-download-faktur-otomatis" || slug === "download-faktur-laptop-kentang" || slug === "download-bukti-potong-otomatis" ? <InvoiceExtensionInfo laptopKentang={slug === "download-faktur-laptop-kentang"} kind={slug === "download-bukti-potong-otomatis" ? "withholding-slip" : "invoice"} /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : (
+            {slug === "extension-download-faktur-otomatis" || slug === "download-faktur-laptop-kentang" || slug === "download-bukti-potong-otomatis" ? <InvoiceExtensionInfo laptopKentang={slug === "download-faktur-laptop-kentang"} kind={slug === "download-bukti-potong-otomatis" ? "withholding-slip" : "invoice"} /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : slug === "makalah-generator" ? <MakalahGeneratorClient /> : (
             <div className="tool-placeholder card">
               <span className="tool-placeholder__icon" aria-hidden="true">{tool.icon}</span>
               <div>
