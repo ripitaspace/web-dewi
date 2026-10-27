@@ -1,0 +1,63 @@
+.notice {
+  border-color: var(--delima);
+  background: rgba(243, 231, 211, .74);
+  color: var(--arang);
+}
+
+.calculator h2, .calculator h3 {
+  font-family: var(--display);
+  letter-spacing: -.035em;
+}
+
+.calculator h2 { line-height: 1.04; }
+
+.panel {
+  border-color: rgba(117, 81, 59, .2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .58);
+  box-shadow: 0 12px 28px rgba(117, 81, 59, .07);
+}
+
+.panel input, .panel select {
+  border-color: rgba(117, 81, 59, .26);
+  border-radius: 8px;
+  background: rgba(255, 253, 249, .9);
+  font-family: var(--sans);
+}
+
+.notice span {
+  background: var(--delima);
+  color: var(--gading);
+}
+
+.summary {
+  border-color: rgba(158, 27, 63, .32);
+  background: var(--delima);
+  color: var(--gading);
+  box-shadow: 0 16px 38px rgba(117, 81, 59, .22);
+}
+
+.summary > span { color: var(--kunyit); }
+.summary h2 { font-size: clamp(1.9rem, 3vw, 2.5rem); }
+.summary .total { color: var(--gading); }
+.summary .totalUsd, .summary .status, .summary .breakdown dt, .summary .progressLabel { color: rgba(243, 231, 211, .78); }
+.summary .message { border-color: var(--kunyit); background: rgba(255, 255, 255, .1); color: var(--gading); }
+.summary .breakdown { border-color: rgba(243, 231, 211, .22); }
+.summary .breakdown div { border-color: rgba(243, 231, 211, .16); }
+.summary .breakdown .emphasis { color: #fff1d4; }
+.summary .progress { background: rgba(243, 231, 211, .22); }
+.summary .progress i { background: var(--kunyit); }
+.summary .review { border-color: var(--kunyit); background: rgba(232, 185, 63, .15); color: #fff1d4; }
+.summary .errors { background: rgba(242, 185, 197, .2); color: #fff1f1; }
+
+.secondaryButton, .iconButton {
+  border-color: rgba(158, 27, 63, .42);
+  background: var(--gading);
+  color: var(--delima);
+}
+
+.pendingTotal {
+  max-width: 230px;
+  font-size: clamp(2.15rem, 3.4vw, 3.1rem) !important;
+  line-height: .98 !important;
+}

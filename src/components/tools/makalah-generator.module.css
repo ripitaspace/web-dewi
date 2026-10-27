@@ -29,5 +29,38 @@
 .paperContent h4 { margin: 11pt 0 6pt; font-size: 12pt; font-style: italic; font-weight: 700; }.paperContent h5 { margin: 10pt 0 6pt; font-size: 12pt; font-style: italic; font-weight: 400; }.tocLevelFour { padding-left: 26mm; font-size: 11pt !important; }.tocLevelFive { padding-left: 34mm; font-size: 11pt !important; }.qualityPanel { display: grid; gap: 8px; margin: 0 0 16px; border: 1px solid rgba(73, 107, 67, .28); border-radius: 15px; background: rgba(73, 107, 67, .07); padding: 14px; }.qualityPanel > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }.qualityPanel span { color: var(--green); font-size: .66rem; font-weight: 850; letter-spacing: .12em; }.qualityPanel strong { font-size: .86rem; }.qualityPanel p { margin: 0; color: var(--muted); font-size: .76rem; line-height: 1.45; }.qualityPanel ul { display: grid; gap: 5px; margin: 0; padding-left: 18px; color: #78551f; font-size: .75rem; line-height: 1.45; }.qualityGood { color: #375536 !important; }.paperContent h4, .paperContent h5 { break-after: avoid; page-break-after: avoid; }
 @media (max-width: 860px) { .topbar { align-items: flex-start; flex-direction: column; }.layout { grid-template-columns: 1fr; }.sidebar { position: relative; min-height: auto; }.sidebar nav { grid-template-columns: repeat(5, minmax(115px, 1fr)); overflow-x: auto; }.sidebarFoot { display: none; }.importGrid { grid-template-columns: 1fr; }.fieldGrid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .topbar, .workspace { padding: 18px; }.sidebar { padding: 16px 10px; }.fieldGrid { grid-template-columns: 1fr; }.logoUpload { align-items: flex-start; flex-direction: column; }.button { font-size: .75rem; }.paper { width: 100%; transform-origin: top center; }.paperContent { padding: 20mm 16mm; } }
+.paperContent { box-sizing: border-box; }
+.contentPage { height: 297mm; min-height: 297mm; overflow: hidden; }
+.contentPage .paperContent, .tocPage .paperContent { box-sizing: border-box; height: 297mm; min-height: 297mm; }
+.contentPage .pageNumber, .tocPage .pageNumber { display: grid; height: 7mm; place-items: center; z-index: 10; background: #fff; color: #171512; font-family: "Times New Roman", Times, serif; font-size: 11pt; line-height: 1; }
+.paginationUnit { display: flow-root; }
+.paperContent h1, .paperContent h2, .paperContent h3, .paperContent h4, .paperContent h5 { break-after: avoid-page; page-break-after: avoid; }
+.paperContent p, .paperContent ul, .paperContent figure, .bibliography > p { break-inside: avoid-page; page-break-inside: avoid; orphans: 3; widows: 3; }
+.bibliography > h1 { margin-bottom: 14pt; }
+.bibliography > p { margin: 0; padding-left: 1.27cm; text-align: left; text-indent: -1.27cm; line-height: 2; }
 @page { size: A4; margin: 0; }
 @media print { :global(html), :global(body) { width: 210mm; height: auto; margin: 0 !important; background: #fff !important; overflow: visible !important; }:global(body.makalah-printing > :not([data-ripita-page-content])) { display: none !important; }:global(body.makalah-printing #siteNav), :global(body.makalah-printing [data-ripita-page-content] > footer), :global(body.makalah-printing .page-hero) { display: none !important; }:global(body.makalah-printing #main-content) { padding: 0 !important; }:global(body.makalah-printing #main-content > .section-tight) { padding: 0 !important; border: 0 !important; }:global(body.makalah-printing #main-content > .section-tight > .container) { max-width: none !important; margin: 0 !important; padding: 0 !important; }.studio { background: #fff; border: 0; border-radius: 0; }.topbar, .sidebar, .previewActions { display: none !important; }.layout { display: block; min-height: 0; }.workspace { padding: 0; }.previewDocument { display: block; width: 210mm; margin: 0; padding: 0; }.paper { width: 210mm; min-height: 297mm; margin: 0; overflow: visible; break-after: page; page-break-after: always; box-shadow: none; }.paper:last-child { break-after: auto; page-break-after: auto; }.cover { display: grid; width: 210mm; max-width: none; height: 297mm; min-height: 297mm; margin: 0; padding: 26mm 30mm; transform: none; }.paperContent { padding: var(--paper-top) var(--paper-right) calc(var(--paper-bottom) + 10mm) var(--paper-left); } }
+/* Use identical physical geometry for measurement, preview, and print. */
+.previewScroll { max-width: 100%; overflow-x: auto; padding-bottom: 12px; }
+.previewDocument { display: flex; flex-direction: column; align-items: center; width: 210mm; min-width: 210mm; margin: 0 auto; }
+.previewDocument .paper { flex: none; width: 210mm; min-width: 210mm; max-width: none; height: 297mm; min-height: 297mm; overflow: visible; }
+.previewDocument .paperContent { box-sizing: border-box; width: 210mm; height: 297mm; min-height: 0; padding: var(--paper-top) var(--paper-right) calc(var(--paper-bottom) + 10mm) var(--paper-left); }
+.pageFlow { display: flow-root; height: 100%; overflow: visible; overflow-wrap: anywhere; }
+.pageFlow > * { max-width: 100%; }
+.pageFlow table { table-layout: fixed; }
+.pageFlow [data-continuation="true"] { text-indent: 0; }
+.pageFlow ul[data-continuation="true"] { list-style: none; }
+.paperContent .referenceEntry { margin: 0; padding-left: 1.27cm; text-align: left; text-indent: -1.27cm; line-height: 2; }
+.measurement { position: fixed; left: -10000px; top: 0; width: 210mm; visibility: hidden; pointer-events: none; }
+.tocEntry { display: flex; align-items: baseline; gap: 7pt; margin-bottom: 8pt; font-size: 12pt; text-align: left; }
+.tocEntry span { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+.tocEntry i { min-width: 10pt; flex: 1; border-bottom: 1px dotted #6f6a64; }
+.tocEntry b { flex: none; font-weight: normal; }
+.paginationError { color: #9b1e43; }
+@media print {
+  .measurement, .paginationError { display: none !important; }
+  .previewScroll { overflow: visible; padding: 0; }
+  .previewDocument { display: block; }
+  .previewDocument .paper { break-inside: avoid; page-break-inside: avoid; }
+  .pageFlow > * { break-inside: auto; break-after: auto; page-break-inside: auto; page-break-after: auto; }
+}

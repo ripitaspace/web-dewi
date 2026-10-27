@@ -2,7 +2,7 @@ export type MiniToolStatus = "available" | "maintenance";
 
 export interface MiniTool {
   number: string;
-  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials" | "Document Essentials";
+  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials" | "Document Essentials" | "Kalkulator";
   title: string;
   description: string;
   icon: string;
@@ -12,6 +12,7 @@ export interface MiniTool {
 }
 
 export const MINI_TOOL_FILTERS = [
+  { value: "Kalkulator", label: "Kalkulator" },
   { value: "Business Essentials", label: "Business" },
   { value: "Finance Essentials", label: "Finance" },
   { value: "Tax Essentials", label: "Tax" },
@@ -30,6 +31,7 @@ export const MINI_TOOLS: MiniTool[] = [
   { number: "07", category: "Finance Essentials", title: "Kas & Pengeluaran Tracker", description: "Membuat rekap kas dan pengeluaran dari Excel.", icon: "⌁", iconSrc: "/images/artworks/tool-cash-tracker.png", status: "maintenance", href: "/karya/tools/kas-pengeluaran-tracker" },
   { number: "08", category: "Finance Essentials", title: "Laporan Keuangan Sederhana", description: "Membuat laba rugi dan neraca dari data terstruktur.", icon: "≋", iconSrc: "/images/artworks/tool-financial-report.png", status: "maintenance", href: "/karya/tools/laporan-keuangan-sederhana" },
   { number: "10", category: "Tax Essentials", title: "PPN Calculator", description: "Menghitung PPN keluaran, masukan, dan nilai transaksi.", icon: "%", iconSrc: "/images/artworks/tool-ppn-calculator.png", status: "maintenance", href: "/karya/tools/ppn-calculator" },
+  { number: "22", category: "Kalkulator", title: "Bea Cukai Calculator", description: "Baru pulang dari luar negeri? Hitung perkiraan bea masuk dan pajak belanjaanmu sebelum tiba di Indonesia.", icon: "✈", iconSrc: "/images/artworks/tool-bea-cukai-calculator.png", status: "available", href: "/karya/tools/kalkulator-bea-cukai" },
   { number: "13", category: "Tax Essentials", title: "Extension Download Faktur Otomatis", description: "Membantu mengunduh Faktur Pajak secara otomatis dari Coretax.", icon: "↓", status: "available", href: "/karya/tools/extension-download-faktur-otomatis" },
   { number: "18", category: "Tax Essentials", title: "Download Faktur untuk Laptop Kentang", description: "Unduh Faktur Pajak dari Coretax dengan bookmarklet ringan untuk browser desktop.", icon: "↓", iconSrc: "/images/artworks/laptop-kentang-ripita-mark.png", status: "available", href: "/karya/tools/download-faktur-laptop-kentang" },
   { number: "19", category: "Tax Essentials", title: "Download Bukti Potong Otomatis", description: "Unduh PDF bukti potong Coretax secara berurutan dari tabel yang sedang dibuka.", icon: "↓", iconSrc: "/images/artworks/tool-download-bupot.png", status: "available", href: "/karya/tools/download-bukti-potong-otomatis" },
