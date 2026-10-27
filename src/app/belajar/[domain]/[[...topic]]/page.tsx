@@ -3,9 +3,12 @@ import { notFound, redirect } from "next/navigation";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { CatalogExplorer } from "@/components/learning/catalog-explorer";
+import { LearningPlayer } from "@/components/learning/learning-player";
+import { getLearningModule } from "@/modules/learning/catalog";
 import {
   breadcrumbs,
   getChildTopics,
+  getModuleRegistration,
   getModulesForDomain,
   getModulesForTopic,
   getPublishedDomains,
@@ -40,6 +43,12 @@ export default async function LearningCatalogRoute({ params }: Props) {
   const route = resolveCatalogRoute(domainSlug, segments);
   if (!route) notFound();
   const { domain, topic } = route;
+  if (domain.id === "audit" && topic?.id === "audit-sme") {
+    const module = getLearningModule("audit-sme");
+    const registration = getModuleRegistration("audit-sme");
+    if (!module || !registration) notFound();
+    return <LearningPlayer key={module.id} module={module} slug="audit-sme" publicCode={registration.publicCode} />;
+  }
   const children = getChildTopics(domain.id, topic?.id || null).map((entry) => ({ href: `/belajar/${domain.slug}/${topicPath(entry).join("/")}`, title: entry.title, description: entry.description, moduleCount: getModulesForTopic(entry.id, { descendants: true }).length }));
   const modules = (topic ? getModulesForTopic(topic.id) : getModulesForDomain(domain.id)).map(moduleCard);
   return <><SiteHeader currentKey="belajar" /><CatalogExplorer title={topic?.title || domain.title} description={topic?.description || domain.description} crumbs={breadcrumbs(domain, topic)} topics={children} modules={modules} /><SiteFooter /></>;

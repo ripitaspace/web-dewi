@@ -1,5 +1,6 @@
 import asetTetap from "./content/aset-tetap.plf.json";
 import { auditMicroModulesBySlug } from "./content/audit-micro-modules";
+import { auditSmeModule } from "./content/audit-sme.plf";
 import selfLearningTemplate from "./content/template-self-learning.plf.json";
 import { getPublishedModuleCards } from "./registry";
 import type { LearningModule, LearningNode, ModuleCard } from "./types";
@@ -8,6 +9,7 @@ const modules: Record<string, LearningModule> = {
   "aset-tetap": asetTetap as LearningModule,
   "template-self-learning": selfLearningTemplate as LearningModule,
   ...auditMicroModulesBySlug,
+  "audit-sme": auditSmeModule,
 };
 
 export function getLearningModule(slug: string) {
@@ -15,7 +17,10 @@ export function getLearningModule(slug: string) {
 }
 
 /** Metadata is safe for catalog pages; PLF content remains imported only by module routes. */
-export const learningCatalog: ModuleCard[] = getPublishedModuleCards();
+/** Only entries with an actual PLF payload may be prerendered as player routes. */
+export const learningCatalog: ModuleCard[] = getPublishedModuleCards().filter(
+  (module) => module.contentStatus === "available",
+);
 
 /** Compatibility adapter for the future node renderer. Existing pages remain untouched. */
 export function legacyModuleNodes(module: LearningModule): LearningNode[] {

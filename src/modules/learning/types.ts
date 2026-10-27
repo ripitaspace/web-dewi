@@ -18,7 +18,8 @@ export type BlockType =
   | "callout"
   | "comparison_table"
   | "deep_dive"
-  | "reference";
+  | "reference"
+  | "audit_workpaper";
 
 export type LearningRole =
   | "discover"
@@ -43,6 +44,7 @@ export interface Answer {
   order?: string[];
   lines?: JournalLine[];
   text?: string;
+  workpaper?: Record<string, string>;
 }
 export interface Grading {
   points: number;
@@ -90,6 +92,12 @@ export interface Block {
   referenceIds?: string[];
   optional?: boolean;
   reviewMode?: "manual" | "self";
+  workpaper?: {
+    artifactId: string;
+    caseId: "dephta" | "kumar";
+    fields: { id: string; label: string; placeholder?: string; required?: boolean }[];
+    carryForwardTo?: string[];
+  };
 }
 export interface LearningModule {
   kind: string;
@@ -130,6 +138,7 @@ export interface LearningModule {
     dataLocation: "client_only";
   };
   references?: { id: string; title: string; type: string; url: string | null; edition?: string | null }[];
+  assets?: { id: string; title: string; summary: string; pageIds: string[]; caseId?: "dephta" | "kumar" }[];
   outline?: { type: "section"; id: string; title: string; children: { type: "unit"; unitId: string }[] }[];
   learningUnits?: SelfLearningUnit[];
 }
@@ -195,10 +204,14 @@ export interface ModuleCard {
   level: string;
   pages: number;
   activities: number;
+  contentStatus: LearningContentStatus;
+  catalogKind: LearningCatalogKind;
 }
 
 export type PublicationStatus = "draft" | "published" | "archived";
 export type LearningLevel = "beginner" | "intermediate" | "advanced";
+export type LearningContentStatus = "available" | "pending";
+export type LearningCatalogKind = "module" | "chapter" | "supplementary";
 
 /** A top-level field of study shown in the public learning catalog. */
 export interface LearningDomain {
@@ -255,4 +268,8 @@ export interface LearningModuleRegistration {
   publishedAt?: string;
   learningUnitCount?: number;
   activityCount?: number;
+  /** Pending entries are visible in the catalog but cannot open a learning player. */
+  contentStatus?: LearningContentStatus;
+  /** Chapters and supplementary modules may share a topic without implying equal scope. */
+  catalogKind?: LearningCatalogKind;
 }

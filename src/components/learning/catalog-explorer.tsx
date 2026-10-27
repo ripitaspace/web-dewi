@@ -14,6 +14,29 @@ export interface CatalogLink {
 
 export interface DomainLink extends CatalogLink { icon?: string }
 
+function CatalogModuleCard({ module, index }: { module: ModuleCard; index: number }) {
+  const pending = module.contentStatus === "pending";
+  const chapterLabel = module.catalogKind === "chapter"
+    ? module.title.split(" · ")[0]?.toUpperCase()
+    : `${module.subject.toUpperCase()} / ${String(index + 1).padStart(2, "0")}`;
+  return (
+    <article className={`${styles.moduleCard} ${pending ? styles.pendingModule : ""}`}>
+      <div className={styles.moduleArt} aria-hidden="true"><span>✳</span><strong>{pending ? "SEGERA.\nHADIR." : <>BELAJAR.<br />COBA.<br /><em>PAHAMI.</em></>}</strong><small>{chapterLabel}</small></div>
+      <div className={styles.moduleContent}>
+        <span className={styles.cardEyebrow}>{pending ? "AUDIT MASTERCLASS" : module.catalogKind === "supplementary" ? "MATERI PENDUKUNG" : module.subject}</span>
+        <h3>{pending ? module.title : <Link href={`/belajar/modul/${module.slug}`}>{module.title}</Link>}</h3>
+        <p>{module.summary}</p>
+        <div className={styles.moduleMeta}>
+          {pending ? <><span>Content Pending</span><span>Belum ada unit belajar</span></> : <><span>{module.level}</span><span>{module.minutes} menit</span><span>{module.pages} unit · {module.activities} aktivitas</span></>}
+        </div>
+        <div className={styles.cardFoot}>
+          {pending ? <><span className={styles.pendingButton}>Content Pending</span><small>Materi sedang disiapkan</small></> : <><Link className={styles.primaryButton} href={`/belajar/modul/${module.slug}`}>Mulai belajar →</Link><small>Gratis · Tanpa login</small></>}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function DomainExplorer({ domains }: { domains: DomainLink[] }) {
   return (
     <section className={styles.domainSection} aria-labelledby="explore-domains-title">
@@ -53,13 +76,21 @@ export function CatalogExplorer({
     return modules.filter((module) => (!term || `${module.title} ${module.summary} ${module.subject}`.toLocaleLowerCase("id-ID").includes(term)) && (level === "Semua" || module.level === level));
   }, [level, modules, query]);
   const levels = ["Semua", ...Array.from(new Set(modules.map((module) => module.level)))];
+  const chapters = filtered.filter((module) => module.catalogKind === "chapter");
+  const supplementary = filtered.filter((module) => module.catalogKind === "supplementary");
+  const regularModules = filtered.filter((module) => module.catalogKind === "module");
+  const visibleGroups = [
+    { title: "Daftar chapter", eyebrow: "AUDIT MASTERCLASS", modules: chapters },
+    { title: "Materi pendukung", eyebrow: "PENGANTAR AUDIT", modules: supplementary },
+    { title: "Materi tersedia", eyebrow: "KATALOG MODUL", modules: regularModules },
+  ].filter((group) => group.modules.length);
   return (
     <main className={styles.page} id="main-content" style={{ paddingTop: "var(--nav-height)" }}>
       <div className="container">
         <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>{crumbs.map((crumb, index) => <span key={crumb.href}>{index ? <span aria-hidden="true">/</span> : null}<Link href={crumb.href}>{crumb.label}</Link></span>)}</nav>
         <header className={styles.pageHeader}><span className="eyebrow text-delima">PUSPITACORE · BELAJAR</span><h1>{title}</h1>{description && <p>{description}</p>}</header>
         {topics.length > 0 && <section className={styles.topicSection} aria-labelledby="subtopics-title"><div className={styles.sectionIntro}><span className="eyebrow text-delima">LANJUTKAN KE TOPIK</span><h2 id="subtopics-title">Pilih arah belajarmu.</h2></div><div className={styles.topicGrid}>{topics.map((topic, index) => <Link key={topic.href} href={topic.href} className={`${styles.topicCard} ${!topic.moduleCount ? styles.comingSoon : ""}`} aria-label={!topic.moduleCount ? `${topic.title}, akan hadir` : undefined}><div className={styles.topicArt} aria-hidden="true"><span>✳</span><strong>{topic.moduleCount ? "DALAMI." : "SEGERA."}</strong><small>TOPIK / {String(index + 1).padStart(2, "0")}</small></div><div className={styles.topicContent}><span className={styles.cardEyebrow}>{topic.moduleCount ? "JALUR BELAJAR" : "ROADMAP BELUM AKTIF"}</span><h3>{topic.title}</h3>{topic.description && <p>{topic.description}</p>}<div className={styles.cardFoot}><span className={styles.metaPill}>{topic.moduleCount ? `${topic.moduleCount} modul tersedia` : "Akan hadir"}</span><span className={styles.cardLink}>{topic.moduleCount ? "Buka topik →" : "Lihat roadmap →"}</span></div></div></Link>)}</div></section>}
-        <section className={styles.moduleSection} aria-labelledby="catalog-title"><div className={styles.sectionIntro}><span className="eyebrow text-delima">KATALOG MODUL</span><h2 id="catalog-title">Materi yang bisa langsung dipelajari.</h2></div>{modules.length > 0 && <div className={styles.filters}><label>Cari modul<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Judul atau kata kunci" /></label><label>Level<select value={level} onChange={(event) => setLevel(event.target.value)}>{levels.map((entry) => <option key={entry}>{entry}</option>)}</select></label></div>}{filtered.length ? <div className={styles.moduleGrid}>{filtered.map((module, index) => <article key={module.id} className={styles.moduleCard}><div className={styles.moduleArt} aria-hidden="true"><span>✳</span><strong>BELAJAR.<br />COBA.<br /><em>PAHAMI.</em></strong><small>{module.subject.toUpperCase()} / {String(index + 1).padStart(2, "0")}</small></div><div className={styles.moduleContent}><span className={styles.cardEyebrow}>{module.subject}</span><h3><Link href={`/belajar/modul/${module.slug}`}>{module.title}</Link></h3><p>{module.summary}</p><div className={styles.moduleMeta}><span>{module.level}</span><span>{module.minutes} menit</span><span>{module.pages} unit · {module.activities} aktivitas</span></div><div className={styles.cardFoot}><Link className={styles.primaryButton} href={`/belajar/modul/${module.slug}`}>Mulai belajar →</Link><small>Gratis · Tanpa login</small></div></div></article>)}</div> : <div className={styles.empty}><div className={styles.emptyArt} aria-hidden="true"><span>✳</span><strong>RUANG INI<br /><em>SEDANG TUMBUH.</em></strong></div><div><span className={styles.cardEyebrow}>PUSPITACORE BELAJAR</span><h3>{modules.length ? "Modul tidak ditemukan." : "Belum ada modul tersedia."}</h3><p>{modules.length ? "Coba kata kunci atau level lain." : "Struktur topik ini sudah disiapkan dan materi akan ditambahkan bertahap."}</p></div></div>}</section>
+        <section className={styles.moduleSection} aria-labelledby="catalog-title"><div className={styles.sectionIntro}><span className="eyebrow text-delima">KATALOG MODUL</span><h2 id="catalog-title">Materi yang bisa langsung dipelajari.</h2></div>{modules.length > 0 && <div className={styles.filters}><label>Cari modul<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Judul atau kata kunci" /></label><label>Level<select value={level} onChange={(event) => setLevel(event.target.value)}>{levels.map((entry) => <option key={entry}>{entry}</option>)}</select></label></div>}{visibleGroups.length ? visibleGroups.map((group) => <section className={styles.moduleGroup} key={group.title} aria-label={group.title}><div className={styles.groupHeading}><span className={styles.cardEyebrow}>{group.eyebrow}</span><h3>{group.title}</h3></div><div className={styles.moduleGrid}>{group.modules.map((module, index) => <CatalogModuleCard key={module.id} module={module} index={index} />)}</div></section>) : <div className={styles.empty}><div className={styles.emptyArt} aria-hidden="true"><span>✳</span><strong>RUANG INI<br /><em>SEDANG TUMBUH.</em></strong></div><div><span className={styles.cardEyebrow}>PUSPITACORE BELAJAR</span><h3>{modules.length ? "Modul tidak ditemukan." : "Belum ada modul tersedia."}</h3><p>{modules.length ? "Coba kata kunci atau level lain." : "Struktur topik ini sudah disiapkan dan materi akan ditambahkan bertahap."}</p></div></div>}</section>
       </div>
     </main>
   );

@@ -28,6 +28,8 @@ PLF `1.1.0` adds draft self-learning modules with units, weighted worksheets, ad
 
 The player does not save learner activity, answers, progress, or time to browser storage. It removes the legacy session cache for the module when the module opens. Starting a new session requires confirmation and clears only the current in-memory session.
 
+`Audit SME — Praktik Audit Berbasis Risiko` is the exception: its PLF payload sets `experience.allowResume: true`. Its revision-scoped session, including simulated workpapers, is stored only in the same browser's local storage. It is not submitted, synchronized, or audit documentation.
+
 `public/learning-sw.js` is registered only after someone opens Belajar. It caches successful same-origin `/belajar`, `/learning/`, and Next static responses and falls back to those responses while offline. It does not cache API calls, send answers, track activity, or synchronize learner data. First-time visits still require a connection.
 
 Reports conform to the supplied `plf.sessionReport` v1 schema. Reflection answers require manual review and never add automatic points. JSON downloads happen locally; PDF output uses the browser's print dialog. There is no server submission, login, admin editor, import UI, certificate issuance, or cross-device persistence in this implementation. Assessment answers are shipped to the browser for self-study.

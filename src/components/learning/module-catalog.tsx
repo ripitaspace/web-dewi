@@ -36,26 +36,14 @@ export function ModuleCatalog({ modules }: { modules: ModuleCard[] }) {
               <div className={styles.moduleCardContent}>
                 <span className={styles.eyebrow}>{module.subject}</span>
                 <h3>
-                  <Link href={`/belajar/modul/${module.slug}`}>
-                    {module.title}
-                  </Link>
+                  {module.contentStatus === "pending" ? module.title : <Link href={`/belajar/modul/${module.slug}`}>{module.title}</Link>}
                 </h3>
                 <p>{module.summary}</p>
                 <div className={styles.moduleMeta}>
-                  <span>{module.level}</span>
-                  <span>{module.minutes} menit</span>
-                  <span>
-                    {module.pages} bab · {module.activities} aktivitas
-                  </span>
+                  {module.contentStatus === "pending" ? <><span>Content Pending</span><span>Belum ada unit belajar</span></> : <><span>{module.level}</span><span>{module.minutes} menit</span><span>{module.pages} bab · {module.activities} aktivitas</span></>}
                 </div>
                 <div className={styles.moduleCardFoot}>
-                  <Link
-                    className={styles.primaryButton}
-                    href={`/belajar/modul/${module.slug}`}
-                  >
-                    Mulai belajar →
-                  </Link>
-                  <small>Gratis · Tanpa login</small>
+                  {module.contentStatus === "pending" ? <small>Content Pending · Materi sedang disiapkan</small> : <><Link className={styles.primaryButton} href={`/belajar/modul/${module.slug}`}>Mulai belajar →</Link><small>Gratis · Tanpa login</small></>}
                 </div>
               </div>
             </article>

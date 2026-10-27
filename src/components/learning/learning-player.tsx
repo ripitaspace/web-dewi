@@ -10,6 +10,7 @@ import {
   evaluate,
   formatDuration,
   storageKey,
+  restoreSession,
   summarize,
   unitForPage,
   unitResult,
@@ -59,15 +60,17 @@ export function LearningPlayer({
   );
 
   useEffect(() => {
-    // Learning activity is intentionally kept in memory only. Remove a
-    // previous version's browser cache so it cannot be resumed accidentally.
+    // Most modules intentionally remain temporary. Modules that explicitly
+    // allow resuming restore only their own revision-scoped local session.
     try {
-      localStorage.removeItem(key);
+      if (!module.experience.allowResume) localStorage.removeItem(key);
     } catch {
       // Storage access is optional because this session never depends on it.
     }
     const start = window.setTimeout(() => {
-      const next = createSession(module);
+      const next = module.experience.allowResume
+        ? restoreSession(localStorage.getItem(key), module) || createSession(module)
+        : createSession(module);
       current.current = next;
       lastInteraction.current = Date.now();
       setSession(next);
@@ -114,6 +117,24 @@ export function LearningPlayer({
         window.removeEventListener(event, interaction);
     };
   }, [module, key, change]);
+
+  useEffect(() => {
+    if (!session || !module.experience.allowResume) return;
+    try {
+      localStorage.setItem(key, JSON.stringify(session));
+    } catch {
+      // Local persistence is best effort; the active session remains usable.
+    }
+  }, [key, module.experience.allowResume, session]);
+
+  function restartSession() {
+    if (!window.confirm("Mulai ulang modul ini? Progres tersimpan untuk modul ini akan dihapus.")) return;
+    try { localStorage.removeItem(key); } catch { /* Storage is optional. */ }
+    const next = createSession(module);
+    current.current = next;
+    setSession(next);
+    setReportOpen(false);
+  }
 
   const pageIndex = session?.pageIndex ?? 0;
   const ready = !!session;
@@ -190,6 +211,7 @@ export function LearningPlayer({
   const coreActivityCount = blocks.length - optionalLearningBlocks.length;
   const currentUnit = session ? unitForPage(module, page.id) : undefined;
   const prerequisites = session ? unmetPrerequisites(module, session, currentUnit) : [];
+  const pageAssets = module.assets?.filter((asset) => asset.pageIds.includes(page.id)) || [];
   return (
     <div className={styles.room}>
       <LearningOfflineCache />
@@ -264,10 +286,7 @@ export function LearningPlayer({
         </nav>
         <div className={styles.sidebarFoot}>
           <strong>Belajar dengan ritmemu.</strong>
-          <p>
-            Tanpa login. Progres hanya berlaku selama halaman ini dibuka dan
-            akan direset saat disegarkan.
-          </p>
+            <p>{module.experience.allowResume ? "Disimpan di browser perangkat ini. Tidak tersinkron ke perangkat lain." : "Tanpa login. Progres hanya berlaku selama halaman ini dibuka dan akan direset saat disegarkan."}</p>
         </div>
       </aside>
       <div className={styles.workspace}>
@@ -291,8 +310,9 @@ export function LearningPlayer({
             <small className={styles.saveStatus}>
               {!session
                 ? "Menyiapkan sesi…"
-                : "Sesi sementara · reset saat refresh"}
+                : module.experience.allowResume ? "Tersimpan di browser ini" : "Sesi sementara · reset saat refresh"}
             </small>
+            {module.experience.allowResume && <button type="button" className={styles.quietButton} onClick={restartSession}>Mulai ulang</button>}
             <button
               type="button"
               className={styles.secondaryButton}
@@ -518,6 +538,11 @@ export function LearningPlayer({
                   tercatat terpisah.
                 </p>
               </section>
+              {pageAssets.length > 0 && <section className={styles.railCard}>
+                <span className={styles.eyebrow}>Dokumen kasus</span>
+                <h2>Konteks saat ini</h2>
+                {pageAssets.map((asset) => <div className={styles.worksheet} key={asset.id}><strong>{asset.title}</strong><small>{asset.summary}</small></div>)}
+              </section>}
               {session && module.learningUnits?.map((unit) => {
                 const unitSummary = unitResult(module, session, unit);
                 return (

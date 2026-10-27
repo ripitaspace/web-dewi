@@ -50,6 +50,11 @@ function validAnswer(value: unknown): value is Answer {
   for (const key of ["selected", "value", "text"])
     if (key in value && typeof value[key] !== "string") return false;
   if ("truth" in value && typeof value.truth !== "boolean") return false;
+  if (
+    "workpaper" in value &&
+    (!record(value.workpaper) ||
+      !Object.values(value.workpaper).every((x) => typeof x === "string"))
+  ) return false;
   for (const key of ["selections", "order"])
     if (
       key in value &&
@@ -366,7 +371,7 @@ export function worksheetResult(
   const max = blocks.reduce((sum, block) => sum + (block.grading?.points || 0), 0);
   const score = blocks.reduce((sum, block) => sum + (bestAttempt(module, session, block.id)?.earned || 0), 0);
   const completed = blocks.filter((block) => session.completed[block.id]).length;
-  return { score, max, percentage: max ? Math.round((score / max) * 100) : 0, completed, total: blocks.length };
+  return { score, max, percentage: max ? Math.round((score / max) * 100) : blocks.length ? Math.round((completed / blocks.length) * 100) : 0, completed, total: blocks.length };
 }
 
 export function unitResult(module: LearningModule, session: Session, unit: SelfLearningUnit) {

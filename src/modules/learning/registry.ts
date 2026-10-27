@@ -13,6 +13,7 @@ export const learningDomains: LearningDomain[] = [
 
 export const learningTopics: LearningTopic[] = [
   { id: "audit-assurance", domainId: "audit", parentId: null, slug: "audit-dan-asurans", title: "Audit & Asurans", order: 1, status: "published" },
+  { id: "audit-sme", domainId: "audit", parentId: null, slug: "audit-sme", title: "Audit SME", order: 2, status: "published", description: "Roadmap audit yang dirancang untuk konteks usaha kecil dan menengah." },
   { id: "audit-foundations", domainId: "audit", parentId: "audit-assurance", slug: "fondasi-dan-profesi-audit", title: "Fondasi & Profesi Audit", order: 1, status: "published", description: "Bangun cara berpikir auditor, profesi, etika, dan tujuan penugasan." },
   { id: "audit-intro", domainId: "audit", parentId: "audit-foundations", slug: "pengantar-audit", title: "Pengantar Audit", order: 1, status: "published", description: "Mulai dari teori inti, bukti, asurans, jenis audit, hingga rancangan penugasan." },
   { id: "audit-profession", domainId: "audit", parentId: "audit-foundations", slug: "profesi-auditor", title: "Profesi Auditor", order: 2, status: "published" },
@@ -72,31 +73,113 @@ export const learningTopics: LearningTopic[] = [
   { id: "tax-corporate", domainId: "pajak", parentId: null, slug: "pph-badan", title: "PPh Badan", order: 5, status: "published" },
 ];
 
+type AuditChapterSeed = {
+  number: number;
+  title: string;
+  summary: string;
+  relatedTopicId: string;
+  slug?: string;
+  available?: boolean;
+};
+
+/**
+ * This is intentionally only curriculum metadata. The table of contents is a
+ * source for scope and ordering, not a substitute for the copyrighted text.
+ */
+const auditChapterSeeds: AuditChapterSeed[] = [
+  { number: 1, title: "The Demand for Audit and Other Assurance Services", summary: "Mengapa pengguna informasi membutuhkan audit dan jasa assurance independen.", relatedTopicId: "audit-intro", slug: "mengapa-audit-dibutuhkan", available: true },
+  { number: 2, title: "The CPA Profession", summary: "Peran, kompetensi, dan tanggung jawab profesi auditor.", relatedTopicId: "audit-profession" },
+  { number: 3, title: "Audit Reports", summary: "Struktur dan fungsi laporan auditor.", relatedTopicId: "audit-reporting" },
+  { number: 4, title: "Professional Ethics", summary: "Etika, independensi, dan pertimbangan profesional.", relatedTopicId: "audit-ethics" },
+  { number: 5, title: "Legal Liability", summary: "Tanggung jawab hukum dalam praktik audit.", relatedTopicId: "audit-profession" },
+  { number: 6, title: "Audit Responsibilities and Objectives", summary: "Tanggung jawab auditor, asersi, dan tujuan audit.", relatedTopicId: "audit-objectives" },
+  { number: 7, title: "Audit Evidence", summary: "Kecukupan, ketepatan, dan evaluasi bukti audit.", relatedTopicId: "audit-evidence" },
+  { number: 8, title: "Audit Planning and Materiality", summary: "Perencanaan penugasan dan penetapan materialitas.", relatedTopicId: "audit-materiality" },
+  { number: 9, title: "Assessing the Risk of Material Misstatement", summary: "Identifikasi dan penilaian risiko salah saji material.", relatedTopicId: "audit-risk" },
+  { number: 10, title: "Assessing and Responding to Fraud Risks", summary: "Penilaian serta respons atas risiko kecurangan.", relatedTopicId: "audit-fraud" },
+  { number: 11, title: "Internal Control and COSO Framework", summary: "Pemahaman pengendalian internal dan kerangka COSO.", relatedTopicId: "audit-internal-control" },
+  { number: 12, title: "Assessing Control Risk and Reporting on Internal Controls", summary: "Penilaian risiko pengendalian dan pelaporan pengendalian internal.", relatedTopicId: "audit-control-testing" },
+  { number: 13, title: "Overall Audit Strategy and Audit Program", summary: "Penyusunan strategi menyeluruh dan program audit.", relatedTopicId: "audit-program" },
+  { number: 14, title: "Audit of the Sales and Collection Cycle", summary: "Audit siklus penjualan dan penagihan.", relatedTopicId: "audit-sales-collection" },
+  { number: 15, title: "Audit Sampling for Tests of Controls and Substantive Tests of Transactions", summary: "Sampling untuk pengujian pengendalian dan transaksi.", relatedTopicId: "audit-sampling" },
+  { number: 16, title: "Completing the Tests in the Sales and Collection Cycle: Accounts Receivable", summary: "Penyelesaian pengujian piutang dalam siklus penjualan dan penagihan.", relatedTopicId: "audit-sales-collection" },
+  { number: 17, title: "Audit Sampling for Tests of Details of Balances", summary: "Sampling untuk pengujian rinci saldo.", relatedTopicId: "audit-sampling" },
+  { number: 18, title: "Audit of the Acquisition and Payment Cycle", summary: "Audit siklus perolehan dan pembayaran.", relatedTopicId: "audit-acquisition-payment" },
+  { number: 19, title: "Completing the Tests in the Acquisition and Payment Cycle", summary: "Penyelesaian pengujian dalam siklus perolehan dan pembayaran.", relatedTopicId: "audit-acquisition-payment" },
+  { number: 20, title: "Audit of the Payroll and Personnel Cycle", summary: "Audit siklus penggajian dan personalia.", relatedTopicId: "audit-payroll" },
+  { number: 21, title: "Audit of the Inventory and Warehousing Cycle", summary: "Audit siklus persediaan dan pergudangan.", relatedTopicId: "audit-inventory" },
+  { number: 22, title: "Audit of the Capital Acquisition and Repayment Cycle", summary: "Audit siklus perolehan modal dan pelunasan.", relatedTopicId: "audit-capital" },
+  { number: 23, title: "Audit of Cash and Financial Instruments", summary: "Audit kas dan instrumen keuangan.", relatedTopicId: "audit-cash" },
+  { number: 24, title: "Completing the Audit", summary: "Penyelesaian audit, evaluasi bukti, dan final review.", relatedTopicId: "audit-completion" },
+  { number: 25, title: "Other Assurance Services", summary: "Jasa assurance lain dan ruang lingkup penugasannya.", relatedTopicId: "audit-other-assurance" },
+  { number: 26, title: "Internal and Governmental Financial Auditing and Operational Auditing", summary: "Audit internal, pemerintahan, dan operasional.", relatedTopicId: "audit-special" },
+];
+
+export const auditMasterclassChapters: LearningModuleRegistration[] = auditChapterSeeds.map((chapter) => ({
+  id: `audit-chapter-${String(chapter.number).padStart(2, "0")}`,
+  publicCode: `MOD-AUD-${String(chapter.number).padStart(3, "0")}`,
+  slug: chapter.slug || `audit-masterclass-chapter-${String(chapter.number).padStart(2, "0")}`,
+  title: `Chapter ${chapter.number} · ${chapter.title}`,
+  description: chapter.summary,
+  primaryTopicId: "audit-intro",
+  relatedTopicIds: chapter.relatedTopicId === "audit-intro" ? undefined : [chapter.relatedTopicId],
+  version: "1.0.0",
+  level: "beginner",
+  status: "published",
+  estimatedMinutes: chapter.available ? 20 : undefined,
+  tags: ["audit", "audit masterclass", `chapter ${chapter.number}`],
+  learningUnitCount: chapter.available ? 1 : 0,
+  activityCount: chapter.available ? 5 : 0,
+  contentStatus: chapter.available ? "available" : "pending",
+  catalogKind: "chapter",
+}));
+
+const auditSupplementarySeeds = [
+  ["hakikat-audit", "Hakikat Audit", "Bangun model mental audit: informasi, kriteria, bukti, pertimbangan, dan laporan.", 20],
+  ["bukti-dan-pertimbangan-auditor", "Bukti dan Pertimbangan Auditor", "Nilai kecukupan dan ketepatan bukti serta pentingnya kompetensi dan independensi.", 20],
+  ["akuntansi-bukan-audit", "Akuntansi Bukan Audit", "Bedakan penyusunan informasi dengan pemeriksaan klaim dan bukti atas informasi tersebut.", 17],
+  ["jasa-asurans-dan-non-asurans", "Jasa Asurans dan Non-Asurans", "Bandingkan audit, review, atestasi, pembukuan, dan konsultasi secara bertanggung jawab.", 20],
+  ["tiga-jenis-audit", "Tiga Jenis Audit", "Bedakan audit laporan keuangan, kepatuhan, dan operasional melalui tujuan dan kriteria.", 20],
+  ["peran-dan-jenis-auditor", "Peran dan Jenis Auditor", "Kenali auditor eksternal, internal, pemerintah, dan pajak beserta konteks objektivitasnya.", 18],
+  ["capstone-rancangan-penugasan-audit", "Capstone: Rancangan Penugasan Audit", "Satukan klaim, kriteria, risiko, bukti, jenis audit, dan komunikasi hasil dalam satu kasus.", 20],
+] as const;
+
+export const auditSupplementaryModules: LearningModuleRegistration[] = auditSupplementarySeeds.map(([slug, title, description, estimatedMinutes], index) => ({
+  id: `audit-supplementary-${String(index + 1).padStart(2, "0")}`,
+  publicCode: `MOD-AUD-${String(index + 101).padStart(3, "0")}`,
+  slug,
+  title: `Pengantar Audit · ${title}`,
+  description,
+  primaryTopicId: "audit-intro",
+  version: "2.0.0",
+  level: "beginner",
+  status: "published",
+  estimatedMinutes,
+  tags: ["audit", "pengantar audit", "micro-learning"],
+  learningUnitCount: 1,
+  activityCount: 5,
+  contentStatus: "available",
+  catalogKind: "supplementary",
+}));
+
 export const learningModuleRegistry: LearningModuleRegistration[] = [
-  ...([
-    ["01", "hakikat-audit", "Hakikat Audit", "Bangun model mental audit: informasi, kriteria, bukti, pertimbangan, dan laporan.", 20],
-    ["02", "bukti-dan-pertimbangan-auditor", "Bukti dan Pertimbangan Auditor", "Nilai kecukupan dan ketepatan bukti serta pentingnya kompetensi dan independensi.", 20],
-    ["03", "akuntansi-bukan-audit", "Akuntansi Bukan Audit", "Bedakan penyusunan informasi dengan pemeriksaan klaim dan bukti atas informasi tersebut.", 17],
-    ["04", "mengapa-audit-dibutuhkan", "Mengapa Audit Dibutuhkan", "Pahami risiko informasi, sumbernya, serta cara audit membantu pengguna keputusan.", 20],
-    ["05", "jasa-asurans-dan-non-asurans", "Jasa Asurans dan Non-Asurans", "Bandingkan audit, review, atestasi, pembukuan, dan konsultasi secara bertanggung jawab.", 20],
-    ["06", "tiga-jenis-audit", "Tiga Jenis Audit", "Bedakan audit laporan keuangan, kepatuhan, dan operasional melalui tujuan dan kriteria.", 20],
-    ["07", "peran-dan-jenis-auditor", "Peran dan Jenis Auditor", "Kenali auditor eksternal, internal, pemerintah, dan pajak beserta konteks objektivitasnya.", 18],
-    ["08", "capstone-rancangan-penugasan-audit", "Capstone: Rancangan Penugasan Audit", "Satukan klaim, kriteria, risiko, bukti, jenis audit, dan komunikasi hasil dalam satu kasus.", 20],
-  ] as const satisfies readonly [string, string, string, string, number][]).map(([number, slug, title, description, estimatedMinutes]) => ({
-    id: `audit-mikro-${number}`,
-    publicCode: `MOD-AUD-${number.padStart(3, "0")}`,
-    slug,
-    title: `${number} · ${title}`,
-    description,
-    primaryTopicId: "audit-intro",
-    version: "2.0.0",
-    level: "beginner" as const,
-    status: "published" as const,
-    estimatedMinutes,
-    tags: ["audit", "pengantar audit", "micro-learning"],
-    learningUnitCount: 1,
-    activityCount: 5,
-  })),
+  ...auditMasterclassChapters,
+  ...auditSupplementaryModules,
+  {
+    id: "audit-sme-risk-based",
+    publicCode: "MOD-AUD-201",
+    slug: "audit-sme",
+    title: "Audit SME — Praktik Audit Berbasis Risiko",
+    description: "Latihan audit SME berbasis risiko melalui kasus Dephta Furniture dan Kumar & Co.",
+    primaryTopicId: "audit-sme",
+    version: "1.0.0",
+    level: "intermediate",
+    status: "published",
+    estimatedMinutes: 660,
+    tags: ["audit SME", "IFAC 2010", "risk-based audit"],
+    learningUnitCount: 22,
+    activityCount: 66,
+  },
   {
     id: "template-self-learning",
     publicCode: "MOD-AKT-002",
@@ -176,7 +259,20 @@ export function getModulesForDomain(domainId: string) {
 }
 export function moduleCard(module: LearningModuleRegistration): ModuleCard {
   const topic = learningTopics.find((entry) => entry.id === module.primaryTopicId);
-  return { slug: module.slug, id: module.id, revision: Number(module.version.split(".")[0]) || 1, title: module.title, summary: module.description, subject: domainById(topic?.domainId || "")?.title || "Belajar", minutes: module.estimatedMinutes || 0, level: module.level === "beginner" ? "Pemula" : module.level, pages: module.learningUnitCount || 0, activities: module.activityCount || 0 };
+  return {
+    slug: module.slug,
+    id: module.id,
+    revision: Number(module.version.split(".")[0]) || 1,
+    title: module.title,
+    summary: module.description,
+    subject: domainById(topic?.domainId || "")?.title || "Belajar",
+    minutes: module.estimatedMinutes || 0,
+    level: module.level === "beginner" ? "Pemula" : module.level,
+    pages: module.learningUnitCount || 0,
+    activities: module.activityCount || 0,
+    contentStatus: module.contentStatus || "available",
+    catalogKind: module.catalogKind || "module",
+  };
 }
 export function getPublishedModuleCards(options: { descendants?: boolean; level?: string; query?: string } = {}) { return getModulesForTopic(undefined, options).map(moduleCard); }
 export function getTopicTree(domainId: string, parentId: string | null = null): TopicTreeNode[] { return getChildTopics(domainId, parentId).map((topic) => ({ ...topic, children: getTopicTree(domainId, topic.id), moduleCount: getModulesForTopic(topic.id, { descendants: true }).length })); }

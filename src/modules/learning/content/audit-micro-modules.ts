@@ -13,6 +13,7 @@ type AuditModuleSpec = {
   number: string;
   slug: string;
   title: string;
+  catalogTitle?: string;
   summary: string;
   minutes: number;
   objective: string;
@@ -81,7 +82,7 @@ const specs: AuditModuleSpec[] = [
     reflection: "Mengapa audit membutuhkan pemahaman akuntansi tetapi bukan pekerjaan akuntansi?",
   },
   {
-    number: "04", slug: "mengapa-audit-dibutuhkan", title: "Mengapa Audit Dibutuhkan", minutes: 20,
+    number: "04", slug: "mengapa-audit-dibutuhkan", title: "Mengapa Audit Dibutuhkan", catalogTitle: "Chapter 1 · The Demand for Audit and Other Assurance Services", minutes: 20,
     summary: "Pahami keputusan pengguna laporan, risiko informasi, penyebabnya, dan cara audit menguranginya.",
     objective: "Membedakan risiko usaha dan risiko informasi serta memilih cara proporsional untuk menguranginya.",
     chapters: [
@@ -159,6 +160,7 @@ const specs: AuditModuleSpec[] = [
 function moduleFrom(spec: AuditModuleSpec, index: number): LearningModule {
   const id = `audit-fondasi-${spec.number}`;
   const competencyId = `kompetensi-audit-fondasi-${spec.number}`;
+  const moduleTitle = spec.catalogTitle || `Pengantar Audit · ${spec.title}`;
   const chapterPages: LearningModule["pages"] = spec.chapters.map((chapter, position) => ({
     id: `${id}-${chapter.id}`,
     title: `${position === 0 ? "Mulai" : "Pahami"} · ${chapter.title}`,
@@ -179,15 +181,15 @@ function moduleFrom(spec: AuditModuleSpec, index: number): LearningModule {
 
   return {
     kind: "plf.module", schemaVersion: "1.1.0", id, revision: 2,
-    metadata: { title: `${spec.number} · ${spec.title}: Pengantar Audit`, summary: spec.summary, subject: "Audit dan Asurans", level: "beginner", estimatedMinutes: spec.minutes, tags: ["audit", "pengantar audit", "teori audit", "micro-learning", spec.slug], author: "PuspitaCore Belajar" },
+    metadata: { title: moduleTitle, summary: spec.summary, subject: "Audit dan Asurans", level: "beginner", estimatedMinutes: spec.minutes, tags: ["audit", "pengantar audit", "teori audit", "micro-learning", spec.slug], author: "PuspitaCore Belajar" },
     experience: { profile: "mixed", navigation: "flexible", allowResume: false },
     prerequisites: { moduleIds: index ? [`audit-fondasi-${specs[index - 1]!.number}`] : [], competencyIds: [], notes: index ? "Modul sebelumnya direkomendasikan agar alur konsep tetap utuh." : "Tidak memerlukan pengalaman audit sebelumnya." },
     competencies: [{ id: competencyId, title: spec.objective }],
     learningPolicy: { allowRetry: true, feedbackTiming: "after_submit", hintMode: "guided_only", timerMode: "advisory", allowSkip: true, remediationEnabled: true, solutionsAfterAttempt: true },
     assessment: { passingScore: 75, requireAllRequired: true, attemptPolicy: "best" },
     reportPolicy: { scope: "learning_unit", formats: ["json", "print"], downloadOnCompletion: true, dataLocation: "client_only" },
-    references: [sourceReference], outline: [{ type: "section", id: `${id}-section`, title: spec.title, children: [{ type: "unit", unitId: `${id}-unit` }] }],
-    learningUnits: [{ id: `${id}-unit`, title: spec.title, learningObjectives: [spec.objective], competencyIds: [competencyId], prerequisiteUnitIds: [], pageIds: [...chapterPages.map((page) => page.id), observeId, applyId], worksheets: [
+    references: [sourceReference], outline: [{ type: "section", id: `${id}-section`, title: moduleTitle, children: [{ type: "unit", unitId: `${id}-unit` }] }],
+    learningUnits: [{ id: `${id}-unit`, title: moduleTitle, learningObjectives: [spec.objective], competencyIds: [competencyId], prerequisiteUnitIds: [], pageIds: [...chapterPages.map((page) => page.id), observeId, applyId], worksheets: [
       { id: `${id}-guided`, title: "Latihan terbimbing", mode: "guided", difficulty: "easy", complexityWeight: 1, targetMinutes: { min: 4, max: 6 }, scoreWeight: 1, blockIds: [choiceId, matchingId] },
       { id: `${id}-independent`, title: "Penerapan mandiri", mode: "independent", difficulty: "medium", complexityWeight: 2, targetMinutes: { min: 5, max: 7 }, scoreWeight: 2, blockIds: [caseId] },
     ], masteryCriteria: { minimumScore: 75, requiredWorksheetIds: [`${id}-independent`] }, report: { enabled: true } }],

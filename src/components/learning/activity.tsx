@@ -43,6 +43,7 @@ export const activityLabels: Record<BlockType, string> = {
   comparison_table: "Tabel perbandingan",
   deep_dive: "Pendalaman",
   reference: "Referensi",
+  audit_workpaper: "Workpaper audit",
 };
 const icons: Record<BlockType, string> = {
   reading: "▤",
@@ -65,6 +66,7 @@ const icons: Record<BlockType, string> = {
   comparison_table: "▦",
   deep_dive: "◌",
   reference: "↗",
+  audit_workpaper: "▤",
 };
 
 const roleLabels: Record<string, string> = {
@@ -337,6 +339,13 @@ export function Activity({
             const reference = references.find((entry) => entry.id === id);
             return reference ? <div key={id}><strong>{reference.title}</strong><small>{reference.type}{reference.edition ? ` · ${reference.edition}` : ""}</small>{reference.url && <a href={reference.url} target="_blank" rel="noreferrer">Buka sumber ↗</a>}</div> : null;
           })}</div>
+        )}
+        {block.type === "audit_workpaper" && (
+          <div className={styles.workpaper}>
+            <p>Simulasi pembelajaran - bukan dokumentasi audit aktual atau bukti kepatuhan ISA.</p>
+            {block.workpaper?.fields.map((field) => <label key={field.id}>{field.label}<textarea value={answer.workpaper?.[field.id] || ""} placeholder={field.placeholder} onChange={(event) => onAnswer({ workpaper: { ...(answer.workpaper || {}), [field.id]: event.target.value } })} /></label>)}
+            <button type="button" className={styles.primaryButton} onClick={() => onComplete()} disabled={block.workpaper?.fields.some((field) => field.required && !answer.workpaper?.[field.id]?.trim())}>Simpan workpaper</button>
+          </div>
         )}
         {block.type === "image" && (
           <figure className={styles.figure}>

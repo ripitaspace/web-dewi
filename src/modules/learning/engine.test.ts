@@ -8,6 +8,7 @@ import selfLearningSchema from "./schemas/plf-module-v1.1.schema.json";
 import reportSchema from "./schemas/plf-report-v1.schema.json";
 import { getLearningModule, learningCatalog, mediaSource } from "./catalog";
 import { auditMicroModules } from "./content/audit-micro-modules";
+import { auditSmeModule } from "./content/audit-sme.plf";
 import {
   bestAttempt,
   blocksOf,
@@ -105,6 +106,24 @@ describe("PLF self-learning v1.1", () => {
     const validate = ajv.compile(selfLearningSchema);
     expect(validate(selfLearning), JSON.stringify(validate.errors)).toBe(true);
     expect(validateSelfLearningModule(selfLearning)).toEqual([]);
+  });
+
+  it("ships the Audit SME blueprint with resumable, validated workpapers", () => {
+    const validate = ajv.compile(selfLearningSchema);
+    expect(validate(auditSmeModule), JSON.stringify(validate.errors)).toBe(true);
+    expect(auditSmeModule.learningUnits).toHaveLength(22);
+    expect(auditSmeModule.experience.allowResume).toBe(true);
+    const session = createSession(auditSmeModule);
+    const workpaper = blocksOf(auditSmeModule).find((entry) => entry.type === "audit_workpaper")!;
+    session.answers[workpaper.id] = { workpaper: { "field-1": "Risiko pendapatan", "field-2": "Konfirmasi", "field-3": "Risiko signifikan" } };
+    session.completed[workpaper.id] = true;
+    const check = blocksOf(auditSmeModule).find((entry) => entry.id === "check-v2-4")!;
+    const answer = { selected: "reasoned" };
+    session.answers[check.id] = answer;
+    session.attempts[check.id] = [{ ...evaluate(check, answer)!, answer, at: session.startedAt }];
+    session.completed[check.id] = true;
+    expect(unitResult(auditSmeModule, session, auditSmeModule.learningUnits![0]!).mastered).toBe(true);
+    expect(restoreSession(JSON.stringify(session), auditSmeModule)).toEqual(session);
   });
 
   it("calculates weighted worksheet mastery and accepts open navigation", () => {
