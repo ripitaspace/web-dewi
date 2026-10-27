@@ -1,5 +1,14 @@
 import type { LearningModule } from "../types";
 
+type Chapter = {
+  id: string;
+  title: string;
+  content: string;
+  terms: [string, string][];
+  table?: { title: string; columns: string[]; rows: (string | number)[][] };
+  deepDive?: string;
+};
+
 type AuditModuleSpec = {
   number: string;
   slug: string;
@@ -7,14 +16,10 @@ type AuditModuleSpec = {
   summary: string;
   minutes: number;
   objective: string;
-  concept: string;
-  glossary: [string, string][];
-  example: string;
-  question: string;
-  options: [string, string][];
-  correctOption: string;
-  trueFalsePrompt: string;
-  trueFalseAnswer: boolean;
+  chapters: Chapter[];
+  example: [string, string][];
+  guided: { prompt: string; options: [string, string][]; correct: string };
+  pairs: [string, string, string][];
   scenario: string;
   decision: string;
   decisionOptions: [string, string][];
@@ -27,229 +32,179 @@ const sourceReference = {
   title: "Auditing and Assurance Services, Global Edition ke-18 — Bab 1",
   type: "buku teks",
   url: null,
-  edition: "Digunakan sebagai rujukan konsep; seluruh contoh dan latihan diadaptasi untuk belajar mandiri.",
+  edition: "Konsep diadaptasi secara orisinal untuk pembelajar Indonesia; regulasi Amerika Serikat hanya konteks buku.",
 };
 
 const specs: AuditModuleSpec[] = [
   {
-    number: "01", slug: "dasar-audit", title: "Dasar Audit", minutes: 18,
-    summary: "Mulai dari tujuan audit, informasi yang diperiksa, dan enam unsur dalam sebuah penugasan.",
-    objective: "Mengidentifikasi tujuan audit dan enam unsur audit pada cerita usaha sederhana.",
-    concept: "Audit adalah proses mengumpulkan dan mengevaluasi bukti mengenai informasi untuk menentukan kesesuaiannya dengan kriteria, lalu melaporkan hasilnya kepada pihak yang berkepentingan. Enam unsur yang perlu terlihat adalah informasi, kriteria, bukti, auditor yang kompeten dan independen, serta laporan hasil pemeriksaan.",
-    glossary: [["Informasi", "Hal yang dinilai, misalnya laporan penjualan."], ["Kriteria", "Tolok ukur untuk menilai informasi."], ["Bukti", "Dasar yang mendukung kesimpulan auditor."]],
-    example: "Pemilik toko ingin mengetahui apakah angka kas akhir bulan dapat dipercaya. Auditor membandingkan catatan kas dengan bukti penerimaan dan pengeluaran, memakai prosedur yang disepakati, lalu menyampaikan kesimpulannya.",
-    question: "Dalam cerita toko, apa informasi utama yang diperiksa?", options: [["laporan-kas", "Angka dan catatan kas"], ["seragam", "Seragam auditor"], ["jadwal", "Jadwal rapat pemilik"]], correctOption: "laporan-kas",
-    trueFalsePrompt: "Audit dimulai dengan kesimpulan tanpa memeriksa bukti.", trueFalseAnswer: false,
-    scenario: "Seorang pemeriksa menerima catatan penjualan tetapi tidak memiliki standar pembanding untuk menilainya.", decision: "Apa yang paling perlu ditetapkan sebelum menarik kesimpulan?", decisionOptions: [["kriteria", "Kriteria atau tolok ukur penilaian"], ["tebakan", "Tebakan berdasarkan pengalaman"]], correctDecision: "kriteria",
-    reflection: "Sebutkan satu informasi di sekitar kamu yang akan lebih dipercaya jika diperiksa secara independen.",
+    number: "01", slug: "hakikat-audit", title: "Hakikat Audit", minutes: 20,
+    summary: "Bangun model mental audit: informasi, kriteria, bukti, pertimbangan, dan laporan.",
+    objective: "Memetakan informasi, kriteria, bukti, auditor, pengguna, dan laporan pada satu penugasan.",
+    chapters: [
+      { id: "definisi", title: "Kapan sebuah pemeriksaan disebut audit?", content: "# Audit adalah proses pembuktian\n\nAudit bukan sekadar mencari kesalahan. Audit mengumpulkan dan mengevaluasi bukti untuk menentukan kesesuaian informasi dengan kriteria yang ditetapkan, lalu mengomunikasikan hasilnya kepada pengguna.\n\nInformasi dapat berupa laporan keuangan, kepatuhan kontrak, atau efektivitas proses. Auditor harus tahu informasi yang diuji dan standar yang dipakai sebelum mencari bukti.", terms: [["Informasi", "Hal yang diuji."], ["Kriteria", "Tolok ukur penilaian."], ["Pengguna", "Pihak yang memakai hasil audit."]], deepDive: "Audit memberi keyakinan wajar berdasarkan bukti; audit tidak menjanjikan kepastian absolut." },
+      { id: "unsur", title: "Enam unsur yang terhubung", content: "# Rantai logika audit\n\nAudit menghubungkan **informasi**, **kriteria**, **bukti**, **auditor kompeten**, **independensi**, dan **laporan**. Jika satu unsur hilang, kesimpulan audit melemah.\n\nContohnya, angka piutang adalah informasi; kebijakan akuntansi menjadi kriteria; faktur, surat jalan, dan konfirmasi pelanggan menjadi bukti.", terms: [["Kompetensi", "Kemampuan memahami kriteria dan menilai bukti."], ["Independensi", "Sikap objektif tanpa kepentingan yang mengganggu."], ["Laporan", "Komunikasi hasil audit."]], table: { title: "Peta unsur audit", columns: ["Unsur", "Pertanyaan pengarah"], rows: [["Informasi", "Apa yang diperiksa?"], ["Kriteria", "Dibandingkan dengan standar apa?"], ["Bukti", "Apa yang mendukung kesimpulan?"], ["Laporan", "Apa yang perlu diketahui pengguna?"]] } },
+      { id: "alur", title: "Dari klaim menuju kesimpulan", content: "# Jangan mulai dari opini\n\nAuditor memulai dari klaim, menetapkan tujuan pemeriksaan, memilih bukti, menilai hasilnya, lalu menyusun kesimpulan. Alur ini menjadi dasar seluruh seri Audit & Asurans.", terms: [["Klaim", "Pernyataan pihak yang diperiksa."], ["Tujuan audit", "Hal yang ingin dipastikan auditor."]] },
+    ],
+    example: [["Situasi", "PT Sagara meminta kredit bank dengan laporan kas akhir bulan."], ["Bukti", "Auditor membandingkan catatan kas dengan bukti transaksi dan catatan bank."], ["Laporan", "Hasil pemeriksaan membantu bank menilai reliabilitas informasi."]],
+    guided: { prompt: "Dalam kasus kredit PT Sagara, apa yang menjadi kriteria pemeriksaan saldo kas?", options: [["catatan-bank", "Catatan bank dan kebijakan pencatatan yang berlaku"], ["warna-logo", "Warna logo perusahaan"], ["target-penjualan", "Target penjualan bulanan"]], correct: "catatan-bank" },
+    pairs: [["informasi", "Saldo kas PT Sagara", "Informasi"], ["kriteria", "Kebijakan pencatatan kas", "Kriteria"], ["bukti", "Rekening koran bank", "Bukti"]],
+    scenario: "Manajemen memberi daftar penjualan tetapi tidak menjelaskan standar penilaian atau memberi dokumen pendukung.", decision: "Apa langkah paling tepat sebelum kesimpulan dibuat?", decisionOptions: [["tetapkan", "Tetapkan kriteria dan kumpulkan bukti relevan"], ["opini", "Langsung menyatakan laporan dapat dipercaya"], ["tebak", "Membandingkan dengan perkiraan pribadi"]], correctDecision: "tetapkan",
+    reflection: "Pilih satu informasi di sekitar kamu. Kriteria dan bukti apa yang diperlukan agar informasi itu dapat diaudit?",
   },
   {
-    number: "02", slug: "bukti-kriteria-dan-independensi", title: "Bukti, Kriteria, dan Independensi", minutes: 18,
-    summary: "Pelajari cara memilih bukti, memakai kriteria, dan menjaga kompetensi serta independensi auditor.",
-    objective: "Memilih bukti yang relevan dan menjelaskan mengapa auditor harus kompeten serta independen.",
-    concept: "Bukti yang banyak belum tentu cukup. Auditor membutuhkan bukti yang relevan dan andal terhadap kriteria yang jelas. Kompetensi membuat auditor mampu mengevaluasi bukti, sedangkan independensi membantu kesimpulan tidak dipengaruhi kepentingan pihak yang diperiksa.",
-    glossary: [["Relevan", "Berkaitan langsung dengan pertanyaan yang diuji."], ["Andal", "Layak dipercaya berdasarkan sumber dan cara diperolehnya."], ["Independensi", "Sikap objektif tanpa kepentingan yang mengganggu penilaian."]],
-    example: "Untuk memeriksa saldo piutang, auditor dapat menelaah faktur, dokumen pengiriman, dan konfirmasi pelanggan. Pesan promosi perusahaan bukan bukti utama karena tidak menjawab apakah piutang benar ada.",
-    question: "Bukti mana yang paling langsung mendukung keberadaan piutang pelanggan?", options: [["konfirmasi", "Konfirmasi dari pelanggan"], ["iklan", "Materi iklan perusahaan"], ["rumor", "Rumor di media sosial"]], correctOption: "konfirmasi",
-    trueFalsePrompt: "Auditor boleh mengaudit perusahaan miliknya sendiri selama bukti yang dikumpulkan banyak.", trueFalseAnswer: false,
-    scenario: "Auditor diminta menyimpulkan bahwa persediaan benar ada hanya dari daftar yang dibuat manajer gudang.", decision: "Langkah terbaik berikutnya adalah…", decisionOptions: [["tambah-bukti", "Memperoleh bukti tambahan, misalnya observasi fisik"], ["langsung-lapor", "Langsung menerbitkan kesimpulan"]], correctDecision: "tambah-bukti",
-    reflection: "Bukti seperti apa yang menurutmu paling sulit dikumpulkan tanpa sikap independen?",
+    number: "02", slug: "bukti-dan-pertimbangan-auditor", title: "Bukti dan Pertimbangan Auditor", minutes: 20,
+    summary: "Pelajari jenis, kecukupan, ketepatan, kompetensi, dan independensi yang membentuk pertimbangan auditor.",
+    objective: "Membandingkan kualitas bukti dan menjelaskan perlunya kompetensi serta independensi auditor.",
+    chapters: [
+      { id: "bentuk", title: "Bukti audit bukan hanya dokumen", content: "# Bukti menjawab pertanyaan audit\n\nBukti adalah informasi yang digunakan auditor untuk menilai klaim terhadap kriteria. Bukti dapat berasal dari dokumen dan data elektronik, komunikasi pihak luar, observasi auditor, maupun penjelasan pihak yang diperiksa.\n\nAuditor memilih kombinasi bukti yang paling sesuai dengan tujuan audit, bukan sekadar mengumpulkan dokumen sebanyak mungkin.", terms: [["Bukti audit", "Informasi untuk membentuk kesimpulan."], ["Observasi", "Melihat proses atau kondisi secara langsung."], ["Konfirmasi", "Tanggapan langsung dari pihak ketiga."]], deepDive: "Penjelasan manajemen memberi konteks, tetapi biasanya perlu didukung bukti lain saat risikonya tinggi." },
+      { id: "mutu", title: "Cukup dan tepat", content: "# Dua pertanyaan sebelum percaya\n\nBukti yang **cukup** berkaitan dengan jumlah yang dibutuhkan. Bukti yang **tepat** berkaitan dengan relevansi dan keandalannya. Banyak bukti lemah tidak selalu lebih baik daripada sedikit bukti yang sangat relevan dan andal.\n\nAuditor memilih jenis, waktu, dan luas prosedur berdasarkan tujuan serta risiko pemeriksaan.", terms: [["Kecukupan", "Jumlah bukti yang memadai."], ["Ketepatan", "Relevansi dan keandalan bukti."], ["Pertimbangan profesional", "Penilaian beralasan berdasarkan fakta dan kompetensi."]], table: { title: "Membandingkan bukti", columns: ["Bukti", "Kegunaan utama"], rows: [["Konfirmasi pelanggan", "Mendukung keberadaan piutang"], ["Surat jalan", "Mendukung pengiriman barang"], ["Penjelasan manajemen", "Memberi konteks, perlu diuji"]] } },
+      { id: "independen", title: "Kompeten tidak cukup tanpa independen", content: "# Kesimpulan harus dapat dipercaya\n\nAuditor perlu memahami kriteria dan bukti, tetapi kemampuan itu tidak cukup jika bias atau kepentingan memengaruhi penilaian. Independensi menjaga kepercayaan pengguna terhadap proses dan laporan audit.", terms: [["Bias", "Kecenderungan yang mengganggu penilaian."], ["Objektivitas", "Menilai berdasarkan fakta dan kriteria."]] },
+    ],
+    example: [["Klaim", "Piutang PT Sagara benar ada pada akhir tahun."], ["Bukti", "Auditor menelaah faktur, surat jalan, pembayaran setelah tanggal laporan, dan konfirmasi pelanggan."], ["Pertimbangan", "Konfirmasi pihak ketiga lebih langsung daripada materi promosi."]],
+    guided: { prompt: "Bukti mana yang paling langsung mendukung keberadaan piutang pelanggan?", options: [["konfirmasi", "Konfirmasi dari pelanggan"], ["iklan", "Materi iklan perusahaan"], ["rapat", "Undangan rapat internal"]], correct: "konfirmasi" },
+    pairs: [["dokumen", "Faktur penjualan", "Dokumen transaksi"], ["pihak-ketiga", "Konfirmasi pelanggan", "Bukti pihak luar"], ["observasi", "Mengamati hitung persediaan", "Observasi auditor"]],
+    scenario: "Auditor diminta menyimpulkan persediaan benar ada hanya berdasarkan daftar kepala gudang.", decision: "Respons paling tepat adalah…", decisionOptions: [["tambahkan", "Memperoleh bukti tambahan, seperti observasi fisik"], ["terbitkan", "Langsung menerbitkan kesimpulan"], ["hapus", "Mengabaikan seluruh daftar tanpa prosedur lain"]], correctDecision: "tambahkan",
+    reflection: "Mengapa bukti dari pihak ketiga sering lebih kuat daripada penjelasan lisan saja?",
   },
   {
-    number: "03", slug: "mengapa-audit-dibutuhkan", title: "Mengapa Audit Dibutuhkan", minutes: 17,
-    summary: "Pahami mengapa pengguna informasi memerlukan audit dan bedakan risiko informasi dari risiko usaha.",
-    objective: "Membedakan risiko informasi dari risiko usaha dalam keputusan pengguna laporan.",
-    concept: "Pengguna laporan sering membuat keputusan tanpa melihat kegiatan perusahaan secara langsung. Risiko informasi muncul ketika informasi yang dipakai untuk mengambil keputusan salah atau tidak lengkap. Risiko usaha adalah ketidakpastian dari kegiatan bisnis itu sendiri; audit mengurangi risiko informasi, bukan menjamin bisnis akan berhasil.",
-    glossary: [["Risiko informasi", "Risiko keputusan dibuat berdasarkan informasi yang keliru."], ["Risiko usaha", "Risiko kegiatan bisnis tidak mencapai hasil yang diharapkan."], ["Pengguna informasi", "Pihak yang memakai laporan untuk membuat keputusan."]],
-    example: "Bank mempertimbangkan pinjaman berdasarkan laporan keuangan distributor. Audit dapat membantu bank menilai apakah laporan tersebut dapat diandalkan, tetapi tidak dapat menjamin distributor akan selalu laku menjual produknya.",
-    question: "Risiko mana yang terutama dikurangi oleh audit laporan keuangan?", options: [["informasi", "Risiko informasi"], ["cuaca", "Risiko cuaca buruk"], ["pasar", "Seluruh risiko pasar"]], correctOption: "informasi",
-    trueFalsePrompt: "Laporan yang diaudit menjamin perusahaan tidak akan mengalami kerugian usaha.", trueFalseAnswer: false,
-    scenario: "Investor ragu karena laporan laba perusahaan dibuat oleh manajemen yang juga akan menerima bonus berdasarkan laba tersebut.", decision: "Manfaat audit yang paling tepat adalah…", decisionOptions: [["kurangi-risiko", "Mengurangi risiko informasi bagi investor"], ["jamin-laba", "Menjamin laba perusahaan tahun depan"]], correctDecision: "kurangi-risiko",
-    reflection: "Pernahkah kamu membuat keputusan dengan informasi yang ternyata tidak lengkap? Apa dampaknya?",
+    number: "03", slug: "akuntansi-bukan-audit", title: "Akuntansi Bukan Audit", minutes: 17,
+    summary: "Bedakan pekerjaan menghasilkan informasi dengan pekerjaan menguji klaim dan bukti atas informasi tersebut.",
+    objective: "Membedakan tanggung jawab manajemen, akuntan, dan auditor pada transaksi sederhana.",
+    chapters: [
+      { id: "akuntansi", title: "Akuntansi menghasilkan informasi", content: "# Dari transaksi menjadi laporan\n\nAkuntansi mengidentifikasi, mencatat, mengklasifikasikan, dan meringkas peristiwa ekonomi agar tersedia informasi untuk keputusan. Manajemen bertanggung jawab atas penyusunan dan penyajian informasi tersebut.", terms: [["Pencatatan", "Merekam transaksi ekonomi."], ["Klasifikasi", "Mengelompokkan transaksi ke akun."], ["Manajemen", "Pihak yang bertanggung jawab atas laporan."]] },
+      { id: "audit", title: "Audit menguji informasi", content: "# Auditor tidak menyusun laporan untuk klien\n\nAuditor menilai apakah informasi yang dicatat mencerminkan peristiwa ekonomi yang benar-benar terjadi dan sesuai kriteria. Keahlian auditor adalah menentukan prosedur, memilih item yang diuji, dan mengevaluasi hasil bukti. Auditor tidak mengambil alih tanggung jawab manajemen.", terms: [["Prosedur audit", "Langkah untuk memperoleh bukti."], ["Pernyataan manajemen", "Klaim dalam laporan yang diuji auditor."]], table: { title: "Dua pekerjaan berbeda", columns: ["Akuntansi", "Audit"], rows: [["Mencatat transaksi", "Menguji bukti atas catatan"], ["Menyusun laporan", "Mengevaluasi kesesuaian dengan kriteria"], ["Tanggung jawab manajemen", "Kesimpulan independen auditor"]] } },
+    ],
+    example: [["Akuntan", "Mencatat penjualan kredit dan menyusun saldo piutang."], ["Auditor", "Memilih sampel faktur, surat jalan, dan pembayaran pelanggan."], ["Manajemen", "Menanggapi koreksi atau temuan."]],
+    guided: { prompt: "Siapa yang terutama bertanggung jawab menyusun laporan keuangan?", options: [["manajemen", "Manajemen perusahaan"], ["auditor", "Auditor eksternal"], ["bank", "Bank pemberi pinjaman"]], correct: "manajemen" },
+    pairs: [["mencatat", "Staf akuntansi mencatat transaksi", "Akuntansi"], ["menguji", "Auditor mengonfirmasi piutang", "Audit"], ["menyajikan", "Direksi menerbitkan laporan", "Manajemen"]],
+    scenario: "Auditor menemukan faktur penjualan yang belum dicatat perusahaan.", decision: "Apa tindakan paling tepat?", decisionOptions: [["komunikasikan", "Kumpulkan bukti, nilai dampaknya, lalu komunikasikan temuan"], ["catat", "Mencatat transaksi itu sendiri sebagai pengganti manajemen"], ["abaikan", "Mengabaikannya karena auditor tidak melihat faktur"]], correctDecision: "komunikasikan",
+    reflection: "Mengapa audit membutuhkan pemahaman akuntansi tetapi bukan pekerjaan akuntansi?",
   },
   {
-    number: "04", slug: "risiko-informasi", title: "Sumber dan Pengurangan Risiko Informasi", minutes: 19,
-    summary: "Kenali penyebab informasi tidak andal dan cara menguranginya secara proporsional.",
-    objective: "Mengidentifikasi sumber risiko informasi dan memilih cara pengurangannya.",
-    concept: "Risiko informasi dapat muncul karena informasi terlalu jauh dari pengguna, pihak yang menyiapkan informasi memiliki insentif berbeda, data sangat banyak dan rumit, atau pengguna tidak memiliki keahlian untuk memeriksa sendiri. Audit independen, akses langsung, dan pembagian risiko melalui perjanjian adalah beberapa cara yang dapat digunakan.",
-    glossary: [["Kompleksitas", "Banyaknya detail atau perhitungan yang menyulitkan penilaian."], ["Konflik kepentingan", "Kepentingan pihak penyusun tidak selalu sama dengan pengguna."], ["Mitigasi", "Langkah untuk mengurangi risiko."]],
-    example: "Pemberi pinjaman berada di kota lain, sedangkan gudang dan transaksi ada di banyak lokasi. Jarak, jumlah transaksi, dan target bonus manajemen membuat pemberi pinjaman membutuhkan informasi yang lebih dapat dipercaya.",
-    question: "Manakah contoh konflik kepentingan yang meningkatkan risiko informasi?", options: [["bonus", "Manajer memperoleh bonus jika laba tinggi"], ["alamat", "Bank mengetahui alamat perusahaan"], ["arsip", "Pelanggan menyimpan kuitansi"]], correctOption: "bonus",
-    trueFalsePrompt: "Semakin rumit data, semakin mudah pengguna memeriksanya sendiri tanpa bantuan.", trueFalseAnswer: false,
-    scenario: "Koperasi ingin memberi kredit kepada usaha yang jauh lokasinya dan mempunyai ribuan transaksi setiap bulan.", decision: "Kombinasi langkah yang paling masuk akal adalah…", decisionOptions: [["audit", "Meminta informasi yang diperiksa secara independen"], ["abaikan", "Mengabaikan laporan karena transaksi terlalu banyak"]], correctDecision: "audit",
-    reflection: "Penyebab risiko informasi mana yang paling sering kamu lihat pada organisasi kecil?",
+    number: "04", slug: "mengapa-audit-dibutuhkan", title: "Mengapa Audit Dibutuhkan", minutes: 20,
+    summary: "Pahami keputusan pengguna laporan, risiko informasi, penyebabnya, dan cara audit menguranginya.",
+    objective: "Membedakan risiko usaha dan risiko informasi serta memilih cara proporsional untuk menguranginya.",
+    chapters: [
+      { id: "keputusan", title: "Keputusan kredit dimulai dari informasi", content: "# Bank tidak hanya menilai angka\n\nSaat memberi pinjaman, bank mempertimbangkan tingkat imbal hasil bebas risiko, risiko usaha peminjam, dan risiko informasi yang dipakai untuk mengambil keputusan. Audit tidak menghilangkan risiko usaha, tetapi dapat mengurangi risiko informasi.", terms: [["Risiko usaha", "Kemungkinan bisnis tidak mencapai hasil."], ["Risiko informasi", "Kemungkinan keputusan memakai informasi tidak andal."], ["Pengguna eksternal", "Pihak luar seperti bank atau investor."]] },
+      { id: "penyebab", title: "Mengapa informasi menjadi tidak andal", content: "# Empat sumber risiko informasi\n\nRisiko meningkat ketika pengguna jauh dari kegiatan perusahaan, penyedia informasi memiliki kepentingan berbeda, data sangat banyak, atau transaksi sangat kompleks. Kondisi ini tidak selalu berarti fraud; kondisi tersebut menjelaskan perlunya pemeriksaan sistematis.", terms: [["Keterpencilan", "Pengguna tidak dapat memeriksa langsung."], ["Bias", "Penyajian dipengaruhi tujuan penyedia."], ["Kompleksitas", "Transaksi atau aturan sulit dipahami."]] },
+      { id: "respons", title: "Tiga respons terhadap risiko", content: "# Memilih cara pengurangan risiko\n\nPengguna dapat memverifikasi sendiri, berbagi risiko dengan manajemen melalui perjanjian atau tanggung jawab hukum, atau memakai audit independen. Pilihan terbaik bergantung pada biaya, kebutuhan keputusan, dan risiko yang dapat diterima.", terms: [["Verifikasi langsung", "Pengguna memeriksa sendiri informasi."], ["Audit independen", "Pemeriksaan oleh pihak kompeten yang objektif."]], table: { title: "Respons risiko", columns: ["Respons", "Keterbatasan"], rows: [["Verifikasi sendiri", "Mahal bila setiap pengguna melakukannya"], ["Berbagi risiko", "Kerugian belum tentu pulih"], ["Audit independen", "Memerlukan biaya, dapat dipakai banyak pengguna"]] } },
+    ],
+    example: [["Keputusan", "Bank menilai permohonan kredit PT Sagara."], ["Risiko", "Manajemen memiliki bonus berbasis laba dan bank jauh dari operasi."], ["Nilai audit", "Laporan independen membantu menilai reliabilitas laporan."]],
+    guided: { prompt: "Risiko mana yang terutama dikurangi oleh audit laporan keuangan?", options: [["informasi", "Risiko informasi"], ["pasar", "Seluruh risiko pasar"], ["cuaca", "Risiko cuaca buruk"]], correct: "informasi" },
+    pairs: [["jarak", "Bank tidak mengamati gudang", "Keterpencilan"], ["bonus", "Manajer mendapat bonus saat laba tinggi", "Bias dan motif"], ["ribuan", "Ribuan transaksi diproses", "Data bervolume besar"]],
+    scenario: "Koperasi hendak memberi kredit kepada usaha jauh dengan ribuan transaksi dan target laba tinggi.", decision: "Langkah paling proporsional adalah…", decisionOptions: [["audit", "Meminta informasi yang diperiksa secara independen"], ["abaikan", "Mengabaikan seluruh informasi"], ["jamin", "Menganggap laba tinggi menjamin kredit aman"]], correctDecision: "audit",
+    reflection: "Kapan biaya audit mungkin lebih besar daripada manfaatnya bagi pengguna informasi?",
   },
   {
-    number: "05", slug: "akuntansi-vs-audit", title: "Akuntansi vs Audit", minutes: 17,
-    summary: "Bedakan pekerjaan menyusun informasi dengan pekerjaan memeriksa bukti atas informasi tersebut.",
-    objective: "Membedakan tanggung jawab akuntan dan auditor pada transaksi sederhana.",
-    concept: "Akuntansi mengidentifikasi, mencatat, mengklasifikasikan, dan menyajikan transaksi. Audit memeriksa bukti serta menilai apakah informasi yang disajikan sesuai kriteria. Auditor tidak mengambil alih tanggung jawab manajemen untuk menyusun laporan keuangan.",
-    glossary: [["Akuntansi", "Proses menghasilkan informasi keuangan."], ["Audit", "Pemeriksaan bukti atas informasi dengan kriteria."], ["Manajemen", "Pihak yang bertanggung jawab atas penyusunan informasi."]],
-    example: "Staf akuntansi mencatat penjualan kredit dan membuat laporan piutang. Auditor kemudian memilih sampel faktur, dokumen pengiriman, dan pembayaran pelanggan untuk menguji apakah angka piutang wajar.",
-    question: "Siapa yang terutama bertanggung jawab menyusun laporan keuangan?", options: [["manajemen", "Manajemen perusahaan"], ["auditor", "Auditor eksternal"], ["bank", "Bank pemberi pinjaman"]], correctOption: "manajemen",
-    trueFalsePrompt: "Auditor menggantikan staf akuntansi dalam mencatat seluruh transaksi harian.", trueFalseAnswer: false,
-    scenario: "Auditor menemukan faktur penjualan yang belum dicatat oleh perusahaan.", decision: "Tindakan auditor yang paling tepat adalah…", decisionOptions: [["komunikasikan", "Mengumpulkan bukti dan mengomunikasikan temuan kepada manajemen"], ["catat-rahasia", "Mencatatnya diam-diam tanpa memberi tahu manajemen"]], correctDecision: "komunikasikan",
-    reflection: "Bagian mana dari pekerjaan akuntansi yang semula kamu kira dilakukan auditor?",
+    number: "05", slug: "jasa-asurans-dan-nonasurans", title: "Jasa Asurans dan Non-Asurans", minutes: 20,
+    summary: "Pahami peta jasa profesional: assurance, attestation, audit, review, dan jasa non-asurans.",
+    objective: "Mengklasifikasikan kebutuhan klien sebagai audit, review, attestation, assurance lain, atau non-asurans.",
+    chapters: [
+      { id: "assurance", title: "Apa yang diperbaiki oleh assurance?", content: "# Assurance meningkatkan kualitas informasi\n\nJasa assurance adalah jasa profesional independen yang meningkatkan kualitas informasi bagi pengambil keputusan. Nilainya muncul dari kompetensi dan objektivitas penyedia jasa, bukan dari janji bahwa seluruh risiko pengguna hilang.\n\nAssurance dapat berlaku pada informasi keuangan maupun nonkeuangan, seperti informasi keberlanjutan atau efektivitas pengendalian.", terms: [["Assurance", "Jasa independen untuk meningkatkan kualitas informasi."], ["Keyakinan wajar", "Keyakinan tinggi, bukan absolut."], ["Informasi nonkeuangan", "Informasi selain laporan keuangan."]] },
+      { id: "attestation", title: "Attestation: menguji asersi pihak lain", content: "# Ada asersi dan ada laporan\n\nAttestation adalah assurance ketika profesional memberikan laporan mengenai subjek atau asersi yang dibuat pihak lain. Audit laporan keuangan, audit pengendalian internal, dan review laporan keuangan adalah kategori penting.\n\nAudit mengumpulkan bukti lebih luas untuk keyakinan tinggi; review menyediakan keyakinan lebih terbatas.", terms: [["Attestation", "Assurance yang melaporkan atas asersi pihak lain."], ["Review", "Penugasan dengan keyakinan lebih terbatas."], ["Pengendalian internal", "Proses yang membantu mencegah atau mendeteksi salah saji."]] },
+      { id: "nonassurance", title: "Tidak semua jasa akuntan adalah audit", content: "# Tujuan penugasan menentukan jenis jasa\n\nPembukuan membantu menyiapkan informasi; jasa pajak membantu kepatuhan; konsultasi menghasilkan rekomendasi bagi manajemen. Jasa tersebut tidak otomatis memberikan kesimpulan assurance.\n\nTujuan, pengguna, subjek, kriteria, dan keluaran harus diperjelas sebelum menerima penugasan.", terms: [["Pembukuan", "Jasa menyiapkan atau mencatat informasi."], ["Konsultasi", "Jasa yang terutama menghasilkan rekomendasi."], ["Ruang lingkup", "Batas pekerjaan yang disepakati."]], table: { title: "Peta jasa", columns: ["Jasa", "Keluaran utama"], rows: [["Audit", "Kesimpulan berdasarkan bukti"], ["Review", "Keyakinan terbatas"], ["Pembukuan", "Informasi tersusun"], ["Konsultasi", "Rekomendasi manajemen"]] } },
+    ],
+    example: [["Permintaan", "Yayasan meminta keyakinan atas laporan untuk donor."], ["Analisis", "Tentukan pengguna, tingkat keyakinan, dan asersi yang diuji."], ["Pilihan", "Audit atau review dipilih menurut kebutuhan assurance."]],
+    guided: { prompt: "Pernyataan paling tepat tentang assurance adalah…", options: [["meningkatkan", "Meningkatkan keyakinan, bukan menjamin kepastian mutlak"], ["menjamin", "Menjamin seluruh keputusan pengguna benar"], ["mencatat", "Selalu berarti mencatat transaksi"]], correct: "meningkatkan" },
+    pairs: [["audit", "Keyakinan tinggi atas laporan keuangan", "Audit"], ["review", "Keyakinan terbatas", "Review"], ["pembukuan", "Menyusun transaksi ke buku besar", "Non-asurans"]],
+    scenario: "Klien meminta 'audit semua usaha' tanpa menyebut informasi, periode, pengguna, atau keluaran.", decision: "Respons profesional yang tepat adalah…", decisionOptions: [["jelaskan", "Memperjelas tujuan, ruang lingkup, kriteria, dan keluaran"], ["janji", "Langsung menjanjikan opini audit"], ["catat", "Mulai membukukan transaksi tanpa tujuan"]], correctDecision: "jelaskan",
+    reflection: "Mengapa jasa pembukuan yang baik belum tentu merupakan jasa assurance?",
   },
   {
-    number: "06", slug: "prosedur-audit-dan-tanggung-jawab", title: "Prosedur Audit dan Tanggung Jawab", minutes: 18,
-    summary: "Lihat contoh prosedur audit dan pahami batas tanggung jawab auditor maupun manajemen.",
-    objective: "Memilih prosedur audit yang sesuai untuk menguji pernyataan manajemen.",
-    concept: "Prosedur audit adalah langkah untuk memperoleh bukti, misalnya inspeksi dokumen, observasi, konfirmasi, dan perhitungan ulang. Pemilihan prosedur bergantung pada pernyataan yang diuji. Manajemen bertanggung jawab atas laporan; auditor bertanggung jawab atas kesimpulan berdasarkan bukti yang diperoleh.",
-    glossary: [["Inspeksi", "Menelaah dokumen atau aset fisik."], ["Konfirmasi", "Meminta tanggapan langsung dari pihak ketiga."], ["Pernyataan", "Klaim manajemen yang diuji auditor."]],
-    example: "Untuk menguji apakah barang benar telah dikirim, auditor dapat menelaah faktur dan surat jalan. Untuk menguji apakah pelanggan mengakui saldo piutang, auditor dapat mengirimkan konfirmasi.",
-    question: "Prosedur yang paling langsung memperoleh jawaban dari pelanggan adalah…", options: [["konfirmasi", "Konfirmasi"], ["wawancara-internal", "Wawancara internal saja"], ["promosi", "Membaca materi promosi"]], correctOption: "konfirmasi",
-    trueFalsePrompt: "Satu prosedur audit selalu cukup untuk membuktikan semua pernyataan manajemen.", trueFalseAnswer: false,
-    scenario: "Perusahaan mengklaim semua persediaan di gudang benar ada pada akhir tahun.", decision: "Prosedur paling relevan untuk memulai pengujian adalah…", decisionOptions: [["observasi", "Mengobservasi perhitungan fisik persediaan"], ["desain", "Menilai desain logo kemasan"]], correctDecision: "observasi",
-    reflection: "Mengapa bukti dari pihak ketiga sering berguna untuk audit?",
+    number: "06", slug: "tiga-jenis-audit", title: "Tiga Jenis Audit", minutes: 20,
+    summary: "Bandingkan audit laporan keuangan, kepatuhan, dan operasional melalui tujuan, kriteria, bukti, serta pengguna hasilnya.",
+    objective: "Mengklasifikasikan jenis audit berdasarkan tujuan dan kriteria penugasan.",
+    chapters: [
+      { id: "peta", title: "Jenis audit ditentukan oleh tujuan", content: "# Jangan mulai dari jabatan auditor\n\nAudit laporan keuangan, kepatuhan, dan operasional sama-sama memakai bukti serta kriteria. Perbedaannya terletak pada pertanyaan yang dijawab: apakah laporan disajikan wajar, apakah aturan dipatuhi, atau apakah proses berjalan efektif dan efisien.\n\nJenis audit tidak ditentukan hanya oleh siapa auditornya.", terms: [["Audit laporan keuangan", "Menilai kesesuaian laporan dengan kerangka pelaporan."], ["Audit kepatuhan", "Menilai pemenuhan aturan atau kontrak."], ["Audit operasional", "Menilai efisiensi dan efektivitas proses."]] },
+      { id: "operasional", title: "Audit operasional", content: "# Menilai proses, bukan hanya angka\n\nAudit operasional mengevaluasi efisiensi dan efektivitas operasi. Kriterianya dapat berupa target waktu, tingkat kesalahan, biaya, atau standar proses. Keluaran yang diharapkan sering berupa rekomendasi perbaikan.", terms: [["Efisiensi", "Menggunakan sumber daya secara hemat."], ["Efektivitas", "Mencapai tujuan yang ditetapkan."]] },
+      { id: "bandingkan", title: "Kepatuhan dan laporan keuangan", content: "# Dua fokus yang berbeda\n\nAudit kepatuhan menguji pemenuhan aturan atau kontrak. Audit laporan keuangan menguji apakah laporan disajikan sesuai kerangka pelaporan dalam hal material. Keduanya membutuhkan bukti, tetapi pengguna, kriteria, dan laporan dapat berbeda.", terms: [["Material", "Cukup penting untuk memengaruhi keputusan."], ["Ketentuan", "Aturan yang menjadi kriteria."]], table: { title: "Membandingkan tiga jenis audit", columns: ["Jenis", "Kriteria", "Keluaran"], rows: [["Operasional", "Target waktu dan kesalahan", "Rekomendasi"], ["Kepatuhan", "Kontrak atau kebijakan", "Status kepatuhan"], ["Laporan keuangan", "Kerangka pelaporan", "Kesimpulan kewajaran"]] } },
+    ],
+    example: [["Gudang", "Persediaan dan penerimaan barang diperiksa."], ["Tiga pertanyaan", "Apakah angka wajar? Prosedur dipatuhi? Proses efisien?"], ["Kesimpulan", "Satu objek dapat menjadi tiga penugasan berbeda."]],
+    guided: { prompt: "Audit yang menilai ketentuan perjanjian kredit dipenuhi disebut…", options: [["kepatuhan", "Audit kepatuhan"], ["operasional", "Audit operasional"], ["keuangan", "Audit laporan keuangan"]], correct: "kepatuhan" },
+    pairs: [["wajar", "Laporan sesuai kerangka", "Laporan keuangan"], ["kontrak", "Memenuhi syarat kredit", "Kepatuhan"], ["efisien", "Mempercepat pemenuhan pesanan", "Operasional"]],
+    scenario: "Direktur ingin mengetahui mengapa banyak pesanan terlambat meski stok tersedia.", decision: "Tujuan audit paling tepat adalah…", decisionOptions: [["operasional", "Menilai efektivitas dan efisiensi proses"], ["laporan", "Memberi opini atas laporan keuangan"], ["kepatuhan", "Menilai kontrak kredit"]], correctDecision: "operasional",
+    reflection: "Tuliskan satu proses yang dapat diaudit operasional dan dua ukuran keberhasilannya.",
   },
   {
-    number: "07", slug: "audit-review-dan-asurans", title: "Audit, Review, dan Asurans", minutes: 19,
-    summary: "Bandingkan audit, review, dan jasa asurans dari tujuan, prosedur, serta tingkat keyakinannya.",
-    objective: "Membedakan audit, review, dan asurans berdasarkan kebutuhan pengguna serta keluaran penugasan.",
-    concept: "Jasa asurans meningkatkan kualitas informasi bagi pengambil keputusan. Audit memberikan tingkat keyakinan yang tinggi melalui prosedur yang lebih luas. Review umumnya memberikan keyakinan terbatas dengan prosedur yang lebih terbatas. Tidak ada jasa asurans yang menjanjikan kepastian mutlak.",
-    glossary: [["Asurans", "Jasa untuk meningkatkan kualitas informasi bagi pengguna."], ["Audit", "Penugasan asurans dengan pemeriksaan lebih luas."], ["Review", "Penugasan dengan keyakinan terbatas."]],
-    example: "Yayasan yang ingin meyakinkan donor besar dapat memerlukan audit laporan keuangan. Organisasi yang hanya membutuhkan penelaahan terbatas untuk kebutuhan internal mungkin mempertimbangkan review sesuai kebutuhannya.",
-    question: "Pernyataan yang paling tepat tentang asurans adalah…", options: [["meningkatkan", "Meningkatkan keyakinan pengguna, bukan menjamin kepastian mutlak"], ["menjamin", "Menjamin semua keputusan pengguna pasti benar"], ["mencatat", "Selalu berarti mencatat transaksi harian"]], correctOption: "meningkatkan",
-    trueFalsePrompt: "Review dan audit selalu menggunakan prosedur dengan keluasan yang sama.", trueFalseAnswer: false,
-    scenario: "Donor meminta keyakinan yang lebih tinggi atas laporan keuangan sebelum memberi dana besar.", decision: "Jenis kebutuhan yang paling sesuai adalah…", decisionOptions: [["audit", "Audit laporan keuangan"], ["pembukuan", "Sekadar jasa pembukuan"]], correctDecision: "audit",
-    reflection: "Dalam situasi apa keyakinan terbatas mungkin sudah cukup?",
+    number: "07", slug: "peran-dan-jenis-auditor", title: "Peran dan Jenis Auditor", minutes: 18,
+    summary: "Kenali auditor eksternal, internal, pemerintah, dan pajak; pahami perbedaan tujuan serta independensinya.",
+    objective: "Menjelaskan perbedaan peran, pengguna hasil, dan batas independensi pada jenis auditor utama.",
+    chapters: [
+      { id: "peran", title: "Auditor bekerja untuk kebutuhan berbeda", content: "# Siapa memeriksa siapa?\n\nAuditor eksternal memberikan penilaian independen sesuai penugasan, umumnya untuk pengguna luar. Auditor internal membantu organisasi mengevaluasi tata kelola, risiko, pengendalian, kepatuhan, dan operasi. Auditor pemerintah serta pemeriksa pajak bekerja dalam mandat lembaga atau aturan tertentu.", terms: [["Auditor eksternal", "Pihak independen dari luar organisasi."], ["Auditor internal", "Pemeriksa di dalam organisasi."], ["Mandat", "Wewenang pemeriksaan dari lembaga."]] },
+      { id: "batas", title: "Independensi selalu bergantung konteks", content: "# Objektivitas tidak sama untuk setiap peran\n\nAuditor internal tidak sepenuhnya independen dari organisasinya karena hubungan kerja, tetapi dapat menjaga objektivitas terhadap unit operasi melalui struktur pelaporan dan tata kelola. Auditor eksternal perlu independen dari klien agar pengguna luar dapat mengandalkan kesimpulannya.\n\nContoh profesi dan lisensi di buku berasal dari Amerika Serikat; penerapan Indonesia memerlukan rujukan setempat.", terms: [["Objektivitas", "Menilai berdasarkan fakta dan kriteria."], ["Komite audit", "Pihak tata kelola yang mengawasi fungsi audit."]], table: { title: "Peran dan pengguna", columns: ["Auditor", "Pengguna utama hasil"], rows: [["Eksternal", "Kreditur, investor, atau pengguna luar"], ["Internal", "Manajemen dan tata kelola"], ["Pemerintah/pajak", "Lembaga pemberi mandat dan publik"]] } },
+    ],
+    example: [["Kondisi", "Komite audit meminta evaluasi proses pengadaan."], ["Pilihan", "Audit internal dapat menilai pengendalian dan proses."], ["Batas", "Tujuan, pengguna, dan independensi harus dijelaskan sejak awal."]],
+    guided: { prompt: "Fungsi yang terutama membantu manajemen dan tata kelola mengevaluasi pengendalian adalah…", options: [["internal", "Audit internal"], ["eksternal", "Audit eksternal untuk investor"], ["pelanggan", "Pelanggan perusahaan"]], correct: "internal" },
+    pairs: [["luar", "Kreditur memakai laporan independen", "Auditor eksternal"], ["tata-kelola", "Komite audit mengawasi pemeriksaan", "Audit internal"], ["mandat", "Menguji ketentuan lembaga", "Pemerintah/pajak"]],
+    scenario: "Manajer gudang meminta auditor internal yang melapor kepadanya menilai gudangnya sendiri.", decision: "Pengamanan objektivitas paling tepat adalah…", decisionOptions: [["lapor", "Gunakan jalur pelaporan independen dari manajer gudang"], ["setuju", "Biarkan manajer gudang menyetujui seluruh kesimpulan"], ["hapus", "Hapus pemeriksaan karena internal audit tidak boleh mengaudit proses"]], correctDecision: "lapor",
+    reflection: "Mengapa pengguna luar mungkin membutuhkan auditor eksternal meskipun ada audit internal kuat?",
   },
   {
-    number: "08", slug: "asurans-lain-dan-non-asurans", title: "Asurans Lain dan Non-Asurans", minutes: 17,
-    summary: "Kenali perbedaan jasa asurans lain, pembukuan, konsultasi, dan permintaan klien yang perlu diperjelas.",
-    objective: "Mengklasifikasikan kebutuhan klien sebagai jasa asurans atau non-asurans.",
-    concept: "Tidak semua jasa profesional adalah audit atau asurans. Pembukuan membantu menyiapkan informasi, konsultasi membantu memecahkan masalah, sedangkan asurans menilai atau meningkatkan keyakinan atas informasi tertentu. Ruang lingkup, pengguna laporan, dan jenis keluaran harus diperjelas sebelum menerima penugasan.",
-    glossary: [["Non-asurans", "Jasa yang tidak memberikan kesimpulan asurans."], ["Konsultasi", "Bantuan analisis atau rekomendasi untuk klien."], ["Ruang lingkup", "Batas pekerjaan yang disepakati."]],
-    example: "Usaha kecil meminta bantuan menyusun pembukuan bulanan. Pekerjaan itu membantu menghasilkan informasi, tetapi belum menjadi audit karena tidak ada pemeriksaan independen dan kesimpulan asurans.",
-    question: "Menyusun transaksi ke buku besar untuk klien terutama merupakan…", options: [["pembukuan", "Jasa pembukuan non-asurans"], ["audit", "Audit laporan keuangan"], ["opini", "Pemberian opini audit otomatis"]], correctOption: "pembukuan",
-    trueFalsePrompt: "Setiap jasa yang dilakukan akuntan pasti memberikan asurans.", trueFalseAnswer: false,
-    scenario: "Klien berkata, 'Tolong audit semua usaha saya,' tetapi belum menyebut informasi, periode, atau pengguna hasilnya.", decision: "Respons profesional yang tepat adalah…", decisionOptions: [["jelaskan", "Memperjelas tujuan, ruang lingkup, dan keluaran terlebih dahulu"], ["janji", "Langsung menjanjikan opini tanpa informasi tambahan"]], correctDecision: "jelaskan",
-    reflection: "Informasi apa yang harus kamu tanyakan sebelum menyebut sebuah pekerjaan sebagai audit?",
-  },
-  {
-    number: "09", slug: "audit-laporan-keuangan", title: "Audit Laporan Keuangan", minutes: 18,
-    summary: "Fokus pada tujuan audit laporan keuangan, kriteria, bukti, dan pengguna hasilnya.",
-    objective: "Menjelaskan tujuan serta kriteria utama audit laporan keuangan.",
-    concept: "Audit laporan keuangan menilai apakah laporan keuangan disajikan secara wajar, dalam semua hal yang material, sesuai kerangka pelaporan yang berlaku. Auditor mengumpulkan bukti atas berbagai pernyataan manajemen sebelum menyampaikan laporan kepada pengguna yang berkepentingan.",
-    glossary: [["Material", "Cukup penting untuk memengaruhi keputusan pengguna."], ["Penyajian wajar", "Penyajian yang sesuai kerangka pelaporan dalam hal material."], ["Kerangka pelaporan", "Aturan atau standar yang menjadi kriteria laporan."]],
-    example: "Kreditur menelaah laporan keuangan perusahaan sebelum memperpanjang pinjaman. Mereka menggunakan laporan auditor sebagai salah satu masukan untuk menilai kualitas informasi, bersama informasi lain tentang perusahaan.",
-    question: "Kriteria utama dalam audit laporan keuangan adalah…", options: [["kerangka", "Kerangka pelaporan keuangan yang berlaku"], ["selera", "Selera pribadi auditor"], ["target", "Target penjualan pemilik"]], correctOption: "kerangka",
-    trueFalsePrompt: "Audit laporan keuangan bertujuan menjamin tidak ada kesalahan sekecil apa pun.", trueFalseAnswer: false,
-    scenario: "Kreditur meminta kepastian apakah laporan keuangan yang dipakai untuk memberi pinjaman disajikan secara wajar.", decision: "Jenis audit yang relevan adalah…", decisionOptions: [["laporan", "Audit laporan keuangan"], ["operasional", "Audit operasional atas efisiensi gudang"]], correctDecision: "laporan",
-    reflection: "Mengapa konsep materialitas penting ketika memeriksa laporan keuangan?",
-  },
-  {
-    number: "10", slug: "audit-kepatuhan", title: "Audit Kepatuhan", minutes: 17,
-    summary: "Uji pemenuhan kontrak atau aturan dengan kriteria kepatuhan yang jelas.",
-    objective: "Mengidentifikasi tujuan dan kriteria audit kepatuhan pada kasus sederhana.",
-    concept: "Audit kepatuhan menilai apakah aktivitas atau informasi telah memenuhi ketentuan yang ditetapkan, seperti perjanjian kredit, kebijakan internal, atau peraturan. Kriteria kepatuhan harus spesifik agar auditor dapat membandingkan kondisi sebenarnya dengan kewajiban yang berlaku.",
-    glossary: [["Kepatuhan", "Pemenuhan terhadap ketentuan yang berlaku."], ["Ketentuan", "Aturan, kontrak, atau kebijakan sebagai kriteria."], ["Pelanggaran", "Kondisi yang tidak memenuhi ketentuan."]],
-    example: "Perjanjian pinjaman mengharuskan perusahaan menjaga rasio tertentu dan menyerahkan laporan setiap tiga bulan. Auditor kepatuhan memeriksa dokumen dan perhitungan untuk menilai apakah syarat tersebut dipenuhi.",
-    question: "Kriteria utama audit kepatuhan perjanjian kredit adalah…", options: [["kontrak", "Syarat dalam kontrak kredit"], ["mood", "Perasaan pemberi pinjaman"], ["iklan", "Isi iklan perusahaan"]], correctOption: "kontrak",
-    trueFalsePrompt: "Audit kepatuhan hanya dapat dilakukan terhadap aturan pemerintah.", trueFalseAnswer: false,
-    scenario: "Sebuah organisasi ingin memastikan pengadaan selalu melalui persetujuan dua pejabat sesuai kebijakan internal.", decision: "Fokus pemeriksaan yang tepat adalah…", decisionOptions: [["otorisasi", "Bukti otorisasi sesuai kebijakan"], ["laba", "Prediksi laba tahun depan"]], correctDecision: "otorisasi",
-    reflection: "Sebutkan satu aturan sederhana yang dapat diuji melalui audit kepatuhan.",
-  },
-  {
-    number: "11", slug: "audit-operasional", title: "Audit Operasional", minutes: 18,
-    summary: "Nilai efisiensi dan efektivitas proses kerja dengan tujuan serta ukuran kinerja yang tepat.",
-    objective: "Membedakan audit operasional dari audit laporan keuangan dan memilih ukuran proses yang relevan.",
-    concept: "Audit operasional mengevaluasi efisiensi dan efektivitas kegiatan organisasi. Fokusnya bukan hanya apakah angka dicatat dengan benar, tetapi apakah proses mencapai tujuan dengan sumber daya yang wajar. Kriterianya dapat berupa target waktu, tingkat kesalahan, biaya, atau standar proses yang disetujui.",
-    glossary: [["Efisiensi", "Menggunakan sumber daya secara hemat untuk menghasilkan keluaran."], ["Efektivitas", "Tingkat pencapaian tujuan yang ditetapkan."], ["Proses", "Rangkaian kegiatan untuk menghasilkan keluaran."]],
-    example: "Gudang sering terlambat mengirim pesanan. Audit operasional dapat memetakan alur pesanan, mengukur waktu proses, mencari hambatan, dan merekomendasikan perbaikan.",
-    question: "Ukuran yang paling relevan untuk audit operasional proses pengiriman adalah…", options: [["waktu", "Waktu dari pesanan diterima sampai barang dikirim"], ["warna", "Warna seragam staf"], ["logo", "Ukuran logo gudang"]], correctOption: "waktu",
-    trueFalsePrompt: "Audit operasional hanya memeriksa apakah laporan keuangan disajikan wajar.", trueFalseAnswer: false,
-    scenario: "Direktur ingin mengetahui mengapa banyak pesanan terlambat walaupun stok tersedia.", decision: "Tujuan audit yang paling tepat adalah…", decisionOptions: [["efektivitas", "Menilai efektivitas dan efisiensi proses pemenuhan pesanan"], ["opini-lk", "Memberi opini atas laporan keuangan"]], correctDecision: "efektivitas",
-    reflection: "Proses apa yang menurutmu layak dievaluasi efisiensi dan efektivitasnya?",
-  },
-  {
-    number: "12", slug: "jenis-audit-dan-peran-auditor", title: "Jenis Audit dan Peran Auditor", minutes: 20,
-    summary: "Satukan tiga jenis audit dan peran auditor internal maupun eksternal lewat kasus klasifikasi penutup.",
-    objective: "Mengklasifikasikan jenis audit dan menjelaskan peran auditor internal serta eksternal.",
-    concept: "Audit laporan keuangan berfokus pada kewajaran laporan, audit kepatuhan pada pemenuhan ketentuan, dan audit operasional pada efisiensi serta efektivitas. Auditor internal bekerja untuk membantu organisasi memperbaiki tata kelola dan pengendalian, sedangkan auditor eksternal memberikan penilaian independen sesuai penugasan. Jenis audit tidak ditentukan hanya oleh siapa auditornya, tetapi oleh tujuan dan kriterianya.",
-    glossary: [["Auditor internal", "Pemeriksa yang membantu organisasi mengevaluasi dan memperbaiki proses."], ["Auditor eksternal", "Pemeriksa independen dari luar organisasi."], ["Klasifikasi", "Menentukan jenis audit berdasarkan tujuan dan kriteria."]],
-    example: "Satu gudang dapat diperiksa dari tiga sudut: kewajaran angka persediaan dalam laporan keuangan, kepatuhan pada prosedur penerimaan barang, atau efisiensi proses penyimpanan. Tujuan pemeriksaan menentukan jenis auditnya.",
-    question: "Apa penentu utama untuk mengklasifikasikan jenis audit?", options: [["tujuan", "Tujuan dan kriteria penugasan"], ["jabatan", "Jabatan orang yang bertanya"], ["lokasi", "Lokasi kantor auditor"]], correctOption: "tujuan",
-    trueFalsePrompt: "Auditor internal dan auditor eksternal selalu menjalankan tujuan audit yang sama.", trueFalseAnswer: false,
-    scenario: "Direktur meminta pemeriksaan untuk mengetahui apakah prosedur penerimaan barang dipatuhi, lalu ingin rekomendasi agar prosesnya lebih cepat.", decision: "Langkah paling tepat adalah…", decisionOptions: [["pisahkan", "Memisahkan tujuan kepatuhan dan operasional, lalu menetapkan kriteria masing-masing"], ["campur", "Menyebut semuanya audit laporan keuangan tanpa membedakan tujuan"]], correctDecision: "pisahkan",
-    reflection: "Bagaimana kamu akan menjelaskan perbedaan tiga jenis audit kepada rekan kerja dalam dua kalimat?",
+    number: "08", slug: "capstone-rancangan-penugasan-audit", title: "Capstone: Rancangan Penugasan Audit", minutes: 20,
+    summary: "Satukan teori menjadi rancangan penugasan: klaim, kriteria, risiko, bukti, jenis audit, dan komunikasi hasil.",
+    objective: "Menyusun keputusan awal penugasan audit sederhana dari satu kasus utuh.",
+    chapters: [
+      { id: "brief", title: "Brief PT Sagara", content: "# Satu organisasi, beberapa kebutuhan\n\nPT Sagara mengajukan kredit bank, mengalami selisih persediaan, dan menerima keluhan atas keterlambatan pengiriman. Bank membutuhkan informasi keuangan andal; direksi ingin mengetahui apakah proses gudang dipatuhi dan efektif.\n\nKasus ini memperlihatkan bahwa satu organisasi dapat membutuhkan beberapa penugasan audit yang berbeda.", terms: [["Brief penugasan", "Ringkasan tujuan, pengguna, informasi, dan batas pekerjaan."], ["Ruang lingkup", "Bagian organisasi atau informasi yang dicakup."]] },
+      { id: "rancang", title: "Rancang pertanyaan sebelum prosedur", content: "# Dari kebutuhan pengguna ke prosedur\n\nMulailah dengan pengguna dan keputusan mereka. Tentukan informasi atau proses yang diuji, kriteria, risiko informasi, dan bukti awal. Baru setelah itu pilih jenis audit serta prosedur yang proporsional.\n\nUrutan ini mencegah auditor mengumpulkan bukti tanpa tahu pertanyaan yang ingin dijawab.", terms: [["Ruang lingkup", "Batas pekerjaan yang disepakati."], ["Prosedur", "Langkah untuk memperoleh dan mengevaluasi bukti."]], table: { title: "Kanvas penugasan", columns: ["Elemen", "Pertanyaan"], rows: [["Pengguna", "Siapa memakai hasil?"], ["Klaim/proses", "Apa yang dinilai?"], ["Kriteria", "Standar apa yang dipakai?"], ["Bukti", "Apa yang mendukung kesimpulan?"], ["Laporan", "Apa yang dikomunikasikan?"]] } },
+      { id: "integrasi", title: "Satu kasus, beberapa penugasan", content: "# Hindari jawaban tunggal untuk semua masalah\n\nPermintaan bank atas laporan keuangan dapat mengarah ke audit laporan keuangan. Kepatuhan penerimaan barang mengarah ke audit kepatuhan. Keterlambatan pengiriman dapat mengarah ke audit operasional.\n\nSetiap penugasan membutuhkan tujuan, kriteria, bukti, pengguna, dan bentuk laporan yang jelas.", terms: [["Integrasi", "Melihat hubungan beberapa penugasan."], ["Rekomendasi", "Saran perbaikan yang lazim pada audit operasional."]] },
+    ],
+    example: [["Kebutuhan bank", "Menilai apakah laporan dapat dipakai dalam keputusan kredit."], ["Kebutuhan direksi", "Menilai kepatuhan gudang dan penyebab keterlambatan."], ["Rancangan", "Pisahkan tujuan, kriteria, bukti awal, dan penerima laporan."]],
+    guided: { prompt: "Langkah pertama saat menerima permintaan pemeriksaan adalah…", options: [["tujuan", "Menjelaskan pengguna, keputusan, tujuan, dan ruang lingkup"], ["bukti", "Mengumpulkan seluruh dokumen tanpa pertanyaan audit"], ["opini", "Menulis opini sebelum memahami informasi"]], correct: "tujuan" },
+    pairs: [["bank", "Kewajaran laporan keuangan", "Laporan keuangan"], ["prosedur", "Kepatuhan penerimaan barang", "Kepatuhan"], ["terlambat", "Efisiensi pengiriman", "Operasional"]],
+    scenario: "Direksi meminta satu audit untuk kredit bank, kepatuhan gudang, dan keterlambatan pesanan tanpa membedakan hasil yang dibutuhkan.", decision: "Rancangan awal paling kuat adalah…", decisionOptions: [["pisahkan", "Memisahkan tujuan, kriteria, bukti, dan pengguna laporan"], ["campur", "Menggunakan satu kriteria untuk seluruh masalah"], ["tebak", "Memilih prosedur berdasarkan dokumen termudah"]], correctDecision: "pisahkan",
+    reflection: "Buat ringkasan tiga baris: pengguna, informasi/proses, dan bukti awal untuk salah satu kebutuhan PT Sagara.",
   },
 ];
 
 function moduleFrom(spec: AuditModuleSpec, index: number): LearningModule {
-  const id = `audit-mikro-${spec.number}`;
-  const competencyId = `kompetensi-audit-${spec.number}`;
-  const introId = `${id}-pahami`;
-  const practiceId = `${id}-latihan`;
+  const id = `audit-fondasi-${spec.number}`;
+  const competencyId = `kompetensi-audit-fondasi-${spec.number}`;
+  const chapterPages: LearningModule["pages"] = spec.chapters.map((chapter, position) => ({
+    id: `${id}-${chapter.id}`,
+    title: `${position === 0 ? "Mulai" : "Pahami"} · ${chapter.title}`,
+    blocks: [
+      { id: `${id}-${chapter.id}-materi`, type: "reading", role: position === 0 ? "discover" : "understand", required: true, title: chapter.title, competencyIds: [competencyId], markdown: chapter.content },
+      { id: `${id}-${chapter.id}-glosarium`, type: "glossary", role: "understand", required: false, title: "Istilah kunci", glossaryItems: chapter.terms.map(([term, definition]) => ({ term, definition })) },
+      ...(chapter.table ? [{ id: `${id}-${chapter.id}-tabel`, type: "comparison_table" as const, role: "understand" as const, required: false, title: chapter.table.title, columns: chapter.table.columns, rows: chapter.table.rows }] : []),
+      ...(chapter.deepDive ? [{ id: `${id}-${chapter.id}-pendalaman`, type: "deep_dive" as const, role: "deep_dive" as const, required: false, title: "Pendalaman", content: chapter.deepDive }] : []),
+      { id: `${id}-${chapter.id}-referensi`, type: "reference", role: "understand", required: false, title: "Dasar materi", referenceIds: [sourceReference.id] },
+    ],
+  }));
+  const firstMaterialId = `${id}-${spec.chapters[0]!.id}-materi`;
+  const choiceId = `${id}-pilihan-terbimbing`;
+  const matchingId = `${id}-cocokkan-terbimbing`;
+  const caseId = `${id}-kasus-mandiri`;
+  const observeId = `${id}-amati`;
   const applyId = `${id}-terapkan`;
-  const readingId = `${id}-bacaan`;
-  const choiceId = `${id}-pilihan`;
-  const truthId = `${id}-benar-salah`;
-  const decisionId = `${id}-kasus`;
-  const reflectionId = `${id}-refleksi`;
 
   return {
-    kind: "plf.module",
-    schemaVersion: "1.1.0",
-    id,
-    revision: 1,
-    metadata: {
-      title: `${spec.number} · ${spec.title}: Pengantar Audit`,
-      summary: spec.summary,
-      subject: "Audit dan Asurans",
-      level: "beginner",
-      estimatedMinutes: spec.minutes,
-      tags: ["audit", "pengantar audit", "micro-learning", spec.slug],
-      author: "PuspitaCore Belajar",
-    },
+    kind: "plf.module", schemaVersion: "1.1.0", id, revision: 2,
+    metadata: { title: `${spec.number} · ${spec.title}: Pengantar Audit`, summary: spec.summary, subject: "Audit dan Asurans", level: "beginner", estimatedMinutes: spec.minutes, tags: ["audit", "pengantar audit", "teori audit", "micro-learning", spec.slug], author: "PuspitaCore Belajar" },
     experience: { profile: "mixed", navigation: "flexible", allowResume: false },
-    prerequisites: {
-      moduleIds: index ? [`audit-mikro-${specs[index - 1]!.number}`] : [],
-      competencyIds: [],
-      notes: index ? "Modul sebelumnya direkomendasikan agar alur konsep tetap utuh." : "Tidak memerlukan pengalaman audit sebelumnya.",
-    },
+    prerequisites: { moduleIds: index ? [`audit-fondasi-${specs[index - 1]!.number}`] : [], competencyIds: [], notes: index ? "Modul sebelumnya direkomendasikan agar alur konsep tetap utuh." : "Tidak memerlukan pengalaman audit sebelumnya." },
     competencies: [{ id: competencyId, title: spec.objective }],
     learningPolicy: { allowRetry: true, feedbackTiming: "after_submit", hintMode: "guided_only", timerMode: "advisory", allowSkip: true, remediationEnabled: true, solutionsAfterAttempt: true },
     assessment: { passingScore: 75, requireAllRequired: true, attemptPolicy: "best" },
     reportPolicy: { scope: "learning_unit", formats: ["json", "print"], downloadOnCompletion: true, dataLocation: "client_only" },
-    references: [sourceReference],
-    outline: [{ type: "section", id: `${id}-section`, title: spec.title, children: [{ type: "unit", unitId: `${id}-unit` }] }],
-    learningUnits: [{
-      id: `${id}-unit`, title: spec.title, learningObjectives: [spec.objective], competencyIds: [competencyId], prerequisiteUnitIds: [], pageIds: [introId, practiceId, applyId],
-      worksheets: [
-        { id: `${id}-guided`, title: "Latihan terbimbing", mode: "guided", difficulty: "easy", complexityWeight: 1, targetMinutes: { min: 4, max: 6 }, scoreWeight: 1, blockIds: [choiceId, truthId] },
-        { id: `${id}-independent`, title: "Penerapan mandiri", mode: "independent", difficulty: "medium", complexityWeight: 2, targetMinutes: { min: 5, max: 7 }, scoreWeight: 2, blockIds: [decisionId] },
-      ],
-      masteryCriteria: { minimumScore: 75, requiredWorksheetIds: [`${id}-independent`] }, report: { enabled: true },
-    }],
-    pages: [
-      {
-        id: introId, title: `Pahami · ${spec.title}`, blocks: [
-          { id: readingId, type: "reading", role: "discover", required: true, title: "Mulai dari konsep", competencyIds: [competencyId], markdown: `# ${spec.title}\n\n${spec.concept}\n\n**Target sesi:** ${spec.objective}` },
-          { id: `${id}-glosarium`, type: "glossary", role: "understand", required: false, title: "Istilah penting", glossaryItems: spec.glossary.map(([term, definition]) => ({ term, definition })) },
-          { id: `${id}-referensi`, type: "reference", role: "understand", required: false, title: "Dasar materi", referenceIds: [sourceReference.id] },
-        ],
-      },
-      {
-        id: practiceId, title: `Coba · ${spec.title}`, blocks: [
-          { id: `${id}-contoh`, type: "worked_example", role: "observe", required: false, title: "Contoh singkat", steps: [{ title: "Situasi", explanation: spec.example }, { title: "Cara berpikir", explanation: "Tentukan tujuan, informasi atau kegiatan yang diuji, lalu pilih bukti dan kriteria yang sesuai." }] },
-          { id: choiceId, type: "single_choice", role: "guided_practice", required: true, title: "Cek pemahaman", competencyIds: [competencyId], prompt: spec.question, options: spec.options.map(([optionId, text]) => ({ id: optionId, text })), hints: ["Kembali ke contoh dan pilih jawaban yang paling langsung menjawab pertanyaan."], remediation: { onIncorrect: { targetBlockId: readingId } }, grading: { correctOptionId: spec.correctOption, points: 10, explanation: "Periksa kembali tujuan pemeriksaan dan konsep utama pada materi." } },
-          { id: truthId, type: "true_false", role: "guided_practice", required: true, title: "Benar atau salah", competencyIds: [competencyId], prompt: spec.trueFalsePrompt, grading: { correct: spec.trueFalseAnswer, points: 10, explanation: "Jawaban ini mengikuti batas tujuan audit dan peran pihak-pihak yang terlibat." } },
-        ],
-      },
-      {
-        id: applyId, title: `Terapkan · ${spec.title}`, blocks: [
-          { id: decisionId, type: "case_decision", role: "independent_practice", required: true, title: "Kasus mini", competencyIds: [competencyId], scenario: spec.scenario, prompt: spec.decision, options: spec.decisionOptions.map(([optionId, text]) => ({ id: optionId, text })), grading: { optionScores: Object.fromEntries(spec.decisionOptions.map(([optionId]) => [optionId, optionId === spec.correctDecision ? 1 : 0])), points: 20, explanation: "Pilih tindakan yang selaras dengan tujuan penugasan dan bukti yang dibutuhkan." } },
-          { id: `${id}-catatan`, type: "callout", role: "deep_dive", required: false, variant: "note", title: "Ingat", content: "Hasil audit membantu pengguna menilai informasi atau proses. Hasil tersebut bukan jaminan bahwa semua risiko hilang." },
-          { id: reflectionId, type: "reflection", role: "reflect", required: true, reviewMode: "self", title: "Refleksi", competencyIds: [competencyId], prompt: spec.reflection, rubric: ["Menghubungkan konsep dengan situasi nyata", "Menjelaskan alasan secara singkat"] },
-        ],
-      },
+    references: [sourceReference], outline: [{ type: "section", id: `${id}-section`, title: spec.title, children: [{ type: "unit", unitId: `${id}-unit` }] }],
+    learningUnits: [{ id: `${id}-unit`, title: spec.title, learningObjectives: [spec.objective], competencyIds: [competencyId], prerequisiteUnitIds: [], pageIds: [...chapterPages.map((page) => page.id), observeId, applyId], worksheets: [
+      { id: `${id}-guided`, title: "Latihan terbimbing", mode: "guided", difficulty: "easy", complexityWeight: 1, targetMinutes: { min: 4, max: 6 }, scoreWeight: 1, blockIds: [choiceId, matchingId] },
+      { id: `${id}-independent`, title: "Penerapan mandiri", mode: "independent", difficulty: "medium", complexityWeight: 2, targetMinutes: { min: 5, max: 7 }, scoreWeight: 2, blockIds: [caseId] },
+    ], masteryCriteria: { minimumScore: 75, requiredWorksheetIds: [`${id}-independent`] }, report: { enabled: true } }],
+    pages: [...chapterPages,
+      { id: observeId, title: `Amati · ${spec.title}`, blocks: [
+        { id: `${id}-contoh`, type: "worked_example", role: "observe", required: false, title: "Membaca kasus dengan cara auditor", steps: spec.example.map(([title, explanation]) => ({ title, explanation })) },
+        { id: choiceId, type: "single_choice", role: "guided_practice", required: true, title: "Cek pemahaman", competencyIds: [competencyId], prompt: spec.guided.prompt, options: spec.guided.options.map(([optionId, text]) => ({ id: optionId, text })), hints: ["Kembali ke bab teori yang menjelaskan tujuan dan kriteria penugasan."], remediation: { onIncorrect: { targetBlockId: firstMaterialId } }, grading: { correctOptionId: spec.guided.correct, points: 10, explanation: "Periksa lagi hubungan antara tujuan, informasi, kriteria, dan bukti." } },
+        { id: matchingId, type: "matching", role: "guided_practice", required: true, title: "Pasangkan konsep", competencyIds: [competencyId], prompt: "Pasangkan contoh dengan konsep audit yang tepat.", pairs: spec.pairs.map(([pairId, left, right]) => ({ id: pairId, left, right })), grading: { points: 10, partialCredit: true, explanation: "Setiap pasangan memperlihatkan fungsi konsep dalam penugasan audit." } },
+      ] },
+      { id: applyId, title: `Terapkan · ${spec.title}`, blocks: [
+        { id: caseId, type: "case_decision", role: "independent_practice", required: true, title: "Kasus mandiri", competencyIds: [competencyId], scenario: spec.scenario, prompt: spec.decision, options: spec.decisionOptions.map(([optionId, text]) => ({ id: optionId, text })), grading: { optionScores: Object.fromEntries(spec.decisionOptions.map(([optionId]) => [optionId, optionId === spec.correctDecision ? 1 : 0])), points: 20, explanation: "Pilih langkah yang selaras dengan tujuan penugasan, kriteria, dan bukti yang diperlukan." } },
+        { id: `${id}-catatan`, type: "callout", role: "deep_dive", required: false, variant: "note", title: "Prinsip yang dibawa ke modul berikutnya", content: "Audit adalah proses penalaran berbasis bukti. Jawaban yang baik menjelaskan informasi, kriteria, bukti, dan pengguna hasilnya." },
+        { id: `${id}-refleksi`, type: "reflection", role: "reflect", required: true, reviewMode: "self", title: "Refleksi", competencyIds: [competencyId], prompt: spec.reflection, rubric: ["Menghubungkan teori dengan situasi", "Menjelaskan alasan secara singkat"] },
+      ] },
     ],
   };
 }
 
 export const auditMicroModules = specs.map(moduleFrom);
-export const auditMicroModulesBySlug = Object.fromEntries(
-  specs.map((spec, index) => [spec.slug, auditMicroModules[index]!]),
-);
+export const auditMicroModulesBySlug = Object.fromEntries(specs.map((spec, index) => [spec.slug, auditMicroModules[index]!])) as Record<string, LearningModule>;

@@ -13,14 +13,45 @@ export const learningDomains: LearningDomain[] = [
 
 export const learningTopics: LearningTopic[] = [
   { id: "audit-assurance", domainId: "audit", parentId: null, slug: "audit-dan-asurans", title: "Audit & Asurans", order: 1, status: "published" },
-  { id: "audit-intro", domainId: "audit", parentId: "audit-assurance", slug: "pengantar-audit", title: "Pengantar Audit", order: 1, status: "published" },
-  { id: "audit-planning", domainId: "audit", parentId: "audit-assurance", slug: "perencanaan-audit", title: "Perencanaan Audit", order: 2, status: "published" },
-  { id: "audit-risk", domainId: "audit", parentId: "audit-planning", slug: "risiko-audit", title: "Risiko Audit", order: 1, status: "published" },
-  { id: "audit-materiality", domainId: "audit", parentId: "audit-planning", slug: "materialitas", title: "Materialitas", order: 2, status: "published" },
-  { id: "audit-evidence", domainId: "audit", parentId: "audit-assurance", slug: "bukti-audit", title: "Bukti Audit", order: 3, status: "published" },
-  { id: "audit-reporting", domainId: "audit", parentId: "audit-assurance", slug: "pelaporan-audit", title: "Pelaporan Audit", order: 4, status: "published" },
-  { id: "internal-audit", domainId: "audit", parentId: null, slug: "audit-internal", title: "Audit Internal", order: 2, status: "published" },
-  { id: "audit-ethics", domainId: "audit", parentId: null, slug: "etika-dan-independensi", title: "Etika & Independensi", order: 3, status: "published" },
+  { id: "audit-foundations", domainId: "audit", parentId: "audit-assurance", slug: "fondasi-dan-profesi-audit", title: "Fondasi & Profesi Audit", order: 1, status: "published", description: "Bangun cara berpikir auditor, profesi, etika, dan tujuan penugasan." },
+  { id: "audit-intro", domainId: "audit", parentId: "audit-foundations", slug: "pengantar-audit", title: "Pengantar Audit", order: 1, status: "published", description: "Mulai dari teori inti, bukti, asurans, jenis audit, hingga rancangan penugasan." },
+  { id: "audit-profession", domainId: "audit", parentId: "audit-foundations", slug: "profesi-auditor", title: "Profesi Auditor", order: 2, status: "published" },
+  { id: "audit-ethics", domainId: "audit", parentId: "audit-foundations", slug: "etika-dan-independensi", title: "Etika & Independensi", order: 3, status: "published" },
+  { id: "audit-objectives", domainId: "audit", parentId: "audit-foundations", slug: "tanggung-jawab-dan-tujuan-audit", title: "Tanggung Jawab dan Tujuan Audit", order: 4, status: "published" },
+  { id: "audit-planning-risk", domainId: "audit", parentId: "audit-assurance", slug: "perencanaan-dan-risiko-audit", title: "Perencanaan & Risiko Audit", order: 2, status: "published", description: "Siapkan penugasan dengan memahami klien, entitas, materialitas, dan risiko." },
+  { id: "audit-client-acceptance", domainId: "audit", parentId: "audit-planning-risk", slug: "penerimaan-klien", title: "Penerimaan Klien", order: 1, status: "published" },
+  { id: "audit-entity-understanding", domainId: "audit", parentId: "audit-planning-risk", slug: "memahami-entitas", title: "Memahami Entitas", order: 2, status: "published" },
+  { id: "audit-materiality", domainId: "audit", parentId: "audit-planning-risk", slug: "materialitas", title: "Materialitas", order: 3, status: "published" },
+  { id: "audit-risk", domainId: "audit", parentId: "audit-planning-risk", slug: "risiko-audit", title: "Risiko Audit", order: 4, status: "published" },
+  { id: "audit-fraud", domainId: "audit", parentId: "audit-planning-risk", slug: "risiko-kecurangan", title: "Risiko Kecurangan", order: 5, status: "published" },
+  { id: "audit-evidence-controls", domainId: "audit", parentId: "audit-assurance", slug: "bukti-dan-pengendalian-internal", title: "Bukti & Pengendalian Internal", order: 3, status: "published", description: "Pelajari bukti, prosedur, pengendalian, pengujian, dan program audit." },
+  { id: "audit-evidence", domainId: "audit", parentId: "audit-evidence-controls", slug: "bukti-audit", title: "Bukti Audit", order: 1, status: "published" },
+  { id: "audit-procedures", domainId: "audit", parentId: "audit-evidence-controls", slug: "prosedur-audit", title: "Prosedur Audit", order: 2, status: "published" },
+  { id: "audit-internal-control", domainId: "audit", parentId: "audit-evidence-controls", slug: "pengendalian-internal", title: "Pengendalian Internal", order: 3, status: "published" },
+  { id: "audit-control-testing", domainId: "audit", parentId: "audit-evidence-controls", slug: "pengujian-pengendalian", title: "Pengujian Pengendalian", order: 4, status: "published" },
+  { id: "audit-program", domainId: "audit", parentId: "audit-evidence-controls", slug: "strategi-dan-program-audit", title: "Strategi dan Program Audit", order: 5, status: "published" },
+  { id: "audit-cycles", domainId: "audit", parentId: "audit-assurance", slug: "siklus-transaksi-dan-akun", title: "Audit Siklus Transaksi & Akun", order: 4, status: "published", description: "Jelajahi siklus transaksi, akun penting, dan sampling audit." },
+  { id: "audit-sales-collection", domainId: "audit", parentId: "audit-cycles", slug: "penjualan-dan-piutang", title: "Penjualan dan Piutang", order: 1, status: "published" },
+  { id: "audit-acquisition-payment", domainId: "audit", parentId: "audit-cycles", slug: "pembelian-dan-utang", title: "Pembelian dan Utang", order: 2, status: "published" },
+  { id: "audit-payroll", domainId: "audit", parentId: "audit-cycles", slug: "penggajian-dan-personalia", title: "Penggajian dan Personalia", order: 3, status: "published" },
+  { id: "audit-inventory", domainId: "audit", parentId: "audit-cycles", slug: "persediaan-dan-pergudangan", title: "Persediaan dan Pergudangan", order: 4, status: "published" },
+  { id: "audit-capital", domainId: "audit", parentId: "audit-cycles", slug: "pendanaan-dan-ekuitas", title: "Pendanaan dan Ekuitas", order: 5, status: "published" },
+  { id: "audit-cash", domainId: "audit", parentId: "audit-cycles", slug: "kas-dan-instrumen-keuangan", title: "Kas dan Instrumen Keuangan", order: 6, status: "published" },
+  { id: "audit-sampling", domainId: "audit", parentId: "audit-cycles", slug: "sampling-audit", title: "Sampling Audit", order: 7, status: "published" },
+  { id: "audit-completion-reporting", domainId: "audit", parentId: "audit-assurance", slug: "penyelesaian-dan-pelaporan-audit", title: "Penyelesaian & Pelaporan", order: 5, status: "published", description: "Tutup penugasan dengan evaluasi, opini, dan komunikasi yang tepat." },
+  { id: "audit-completion", domainId: "audit", parentId: "audit-completion-reporting", slug: "penyelesaian-audit", title: "Penyelesaian Audit", order: 1, status: "published" },
+  { id: "audit-reporting", domainId: "audit", parentId: "audit-completion-reporting", slug: "pelaporan-audit", title: "Pelaporan Audit", order: 2, status: "published" },
+  { id: "audit-opinions", domainId: "audit", parentId: "audit-completion-reporting", slug: "opini-audit", title: "Opini Audit", order: 3, status: "published" },
+  { id: "audit-communication", domainId: "audit", parentId: "audit-completion-reporting", slug: "komunikasi-hasil-audit", title: "Komunikasi Hasil Audit", order: 4, status: "published" },
+  { id: "audit-other-assurance", domainId: "audit", parentId: "audit-assurance", slug: "asurans-dan-jasa-terkait", title: "Asurans dan Jasa Terkait", order: 6, status: "published", description: "Bedakan review, kompilasi, atestasi, jasa asurans, dan non-asurans." },
+  { id: "audit-review-compilation", domainId: "audit", parentId: "audit-other-assurance", slug: "review-dan-kompilasi", title: "Review dan Kompilasi", order: 1, status: "published" },
+  { id: "audit-attestation", domainId: "audit", parentId: "audit-other-assurance", slug: "atestasi", title: "Atestasi", order: 2, status: "published" },
+  { id: "audit-assurance-other", domainId: "audit", parentId: "audit-other-assurance", slug: "asurans-lain", title: "Asurans Lain", order: 3, status: "published" },
+  { id: "audit-nonassurance", domainId: "audit", parentId: "audit-other-assurance", slug: "jasa-non-asurans", title: "Jasa Non-Asurans", order: 4, status: "published" },
+  { id: "audit-special", domainId: "audit", parentId: "audit-assurance", slug: "audit-internal-pemerintah-dan-operasional", title: "Audit Internal, Pemerintah & Operasional", order: 7, status: "published", description: "Pahami mandat, peran, dan fokus audit dalam berbagai organisasi." },
+  { id: "internal-audit", domainId: "audit", parentId: "audit-special", slug: "audit-internal", title: "Audit Internal", order: 1, status: "published" },
+  { id: "audit-government", domainId: "audit", parentId: "audit-special", slug: "audit-pemerintah", title: "Audit Pemerintah", order: 2, status: "published" },
+  { id: "audit-operational", domainId: "audit", parentId: "audit-special", slug: "audit-operasional", title: "Audit Operasional", order: 3, status: "published" },
   { id: "accounting-basic", domainId: "akuntansi", parentId: null, slug: "akuntansi-dasar", title: "Akuntansi Dasar", order: 1, status: "published" },
   { id: "accounting-equation", domainId: "akuntansi", parentId: "accounting-basic", slug: "persamaan-dasar-akuntansi", title: "Persamaan Dasar Akuntansi", order: 1, status: "published" },
   { id: "accounting-journal", domainId: "akuntansi", parentId: "accounting-basic", slug: "jurnal-umum", title: "Jurnal Umum", order: 2, status: "published" },
@@ -43,18 +74,14 @@ export const learningTopics: LearningTopic[] = [
 
 export const learningModuleRegistry: LearningModuleRegistration[] = [
   ...([
-    ["01", "dasar-audit", "Dasar Audit", "Mulai dari tujuan audit, informasi yang diperiksa, dan enam unsur dalam sebuah penugasan.", 18],
-    ["02", "bukti-kriteria-dan-independensi", "Bukti, Kriteria, dan Independensi", "Pilih bukti yang relevan serta pahami kompetensi dan independensi auditor.", 18],
-    ["03", "mengapa-audit-dibutuhkan", "Mengapa Audit Dibutuhkan", "Bedakan risiko informasi dari risiko usaha dan alasan audit dibutuhkan.", 17],
-    ["04", "risiko-informasi", "Sumber dan Pengurangan Risiko Informasi", "Kenali penyebab risiko informasi dan cara menguranginya.", 19],
-    ["05", "akuntansi-vs-audit", "Akuntansi vs Audit", "Bedakan pekerjaan menyusun informasi dan memeriksa bukti.", 17],
-    ["06", "prosedur-audit-dan-tanggung-jawab", "Prosedur Audit dan Tanggung Jawab", "Pilih prosedur audit yang sesuai dan pahami batas tanggung jawabnya.", 18],
-    ["07", "audit-review-dan-asurans", "Audit, Review, dan Asurans", "Bandingkan tujuan, prosedur, dan tingkat keyakinan penugasan.", 19],
-    ["08", "asurans-lain-dan-non-asurans", "Asurans Lain dan Non-Asurans", "Bedakan jasa asurans dari pembukuan dan konsultasi.", 17],
-    ["09", "audit-laporan-keuangan", "Audit Laporan Keuangan", "Pahami tujuan, kriteria, dan bukti audit laporan keuangan.", 18],
-    ["10", "audit-kepatuhan", "Audit Kepatuhan", "Uji pemenuhan kontrak atau aturan memakai kriteria yang jelas.", 17],
-    ["11", "audit-operasional", "Audit Operasional", "Nilai efisiensi dan efektivitas proses kerja.", 18],
-    ["12", "jenis-audit-dan-peran-auditor", "Jenis Audit dan Peran Auditor", "Satukan tiga jenis audit dan peran auditor lewat kasus penutup.", 20],
+    ["01", "hakikat-audit", "Hakikat Audit", "Bangun model mental audit: informasi, kriteria, bukti, pertimbangan, dan laporan.", 20],
+    ["02", "bukti-dan-pertimbangan-auditor", "Bukti dan Pertimbangan Auditor", "Nilai kecukupan dan ketepatan bukti serta pentingnya kompetensi dan independensi.", 20],
+    ["03", "akuntansi-bukan-audit", "Akuntansi Bukan Audit", "Bedakan penyusunan informasi dengan pemeriksaan klaim dan bukti atas informasi tersebut.", 17],
+    ["04", "mengapa-audit-dibutuhkan", "Mengapa Audit Dibutuhkan", "Pahami risiko informasi, sumbernya, serta cara audit membantu pengguna keputusan.", 20],
+    ["05", "jasa-asurans-dan-non-asurans", "Jasa Asurans dan Non-Asurans", "Bandingkan audit, review, atestasi, pembukuan, dan konsultasi secara bertanggung jawab.", 20],
+    ["06", "tiga-jenis-audit", "Tiga Jenis Audit", "Bedakan audit laporan keuangan, kepatuhan, dan operasional melalui tujuan dan kriteria.", 20],
+    ["07", "peran-dan-jenis-auditor", "Peran dan Jenis Auditor", "Kenali auditor eksternal, internal, pemerintah, dan pajak beserta konteks objektivitasnya.", 18],
+    ["08", "capstone-rancangan-penugasan-audit", "Capstone: Rancangan Penugasan Audit", "Satukan klaim, kriteria, risiko, bukti, jenis audit, dan komunikasi hasil dalam satu kasus.", 20],
   ] as const satisfies readonly [string, string, string, string, number][]).map(([number, slug, title, description, estimatedMinutes]) => ({
     id: `audit-mikro-${number}`,
     publicCode: `MOD-AUD-${number.padStart(3, "0")}`,
@@ -62,13 +89,13 @@ export const learningModuleRegistry: LearningModuleRegistration[] = [
     title: `${number} · ${title}`,
     description,
     primaryTopicId: "audit-intro",
-    version: "1.0.0",
+    version: "2.0.0",
     level: "beginner" as const,
     status: "published" as const,
     estimatedMinutes,
     tags: ["audit", "pengantar audit", "micro-learning"],
-    learningUnitCount: 3,
-    activityCount: 4,
+    learningUnitCount: 1,
+    activityCount: 5,
   })),
   {
     id: "template-self-learning",
@@ -160,6 +187,21 @@ export function resolveCatalogRoute(domainSlug: string, segments: string[] = [])
   let topic: LearningTopic | undefined;
   for (const segment of segments) { topic = getChildTopics(domain.id, parentId).find((entry) => entry.slug === segment); if (!topic) return undefined; parentId = topic.id; }
   return { domain, topic };
+}
+
+const legacyCatalogRedirects: Record<string, string> = {
+  "audit/audit-dan-asurans/pengantar-audit": "/belajar/audit/audit-dan-asurans/fondasi-dan-profesi-audit/pengantar-audit",
+  "audit/audit-dan-asurans/perencanaan-audit": "/belajar/audit/audit-dan-asurans/perencanaan-dan-risiko-audit",
+  "audit/audit-dan-asurans/perencanaan-audit/risiko-audit": "/belajar/audit/audit-dan-asurans/perencanaan-dan-risiko-audit/risiko-audit",
+  "audit/audit-dan-asurans/perencanaan-audit/materialitas": "/belajar/audit/audit-dan-asurans/perencanaan-dan-risiko-audit/materialitas",
+  "audit/audit-dan-asurans/bukti-audit": "/belajar/audit/audit-dan-asurans/bukti-dan-pengendalian-internal/bukti-audit",
+  "audit/audit-dan-asurans/pelaporan-audit": "/belajar/audit/audit-dan-asurans/penyelesaian-dan-pelaporan-audit/pelaporan-audit",
+  "audit/audit-internal": "/belajar/audit/audit-dan-asurans/audit-internal-pemerintah-dan-operasional/audit-internal",
+  "audit/etika-dan-independensi": "/belajar/audit/audit-dan-asurans/fondasi-dan-profesi-audit/etika-dan-independensi",
+};
+
+export function legacyCatalogRedirect(domainSlug: string, segments: string[] = []) {
+  return legacyCatalogRedirects[[domainSlug, ...segments].join("/")];
 }
 export function breadcrumbs(domain: LearningDomain, topic?: LearningTopic): CatalogBreadcrumb[] {
   const items = [{ label: "Belajar", href: "/belajar" }, { label: domain.title, href: `/belajar/${domain.slug}` }];

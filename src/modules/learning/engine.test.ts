@@ -127,18 +127,19 @@ describe("PLF self-learning v1.1", () => {
 });
 
 describe("audit micro-learning series", () => {
-  it("keeps all 12 audit modules valid, short, and available through their public slugs", () => {
-    expect(auditMicroModules).toHaveLength(12);
+  it("keeps all eight theory-first audit modules valid, short, and available through their public slugs", () => {
+    expect(auditMicroModules).toHaveLength(8);
     for (const module of auditMicroModules) {
       const validate = ajv.compile(selfLearningSchema);
       expect(validate(module), JSON.stringify(validate.errors)).toBe(true);
       expect(validateSelfLearningModule(module)).toEqual([]);
       expect(module.metadata.estimatedMinutes).toBeLessThanOrEqual(20);
-      expect(module.pages).toHaveLength(3);
+      expect(module.pages.length).toBeGreaterThanOrEqual(4);
+      expect(module.pages.length).toBeLessThanOrEqual(5);
       expect(module.learningUnits?.[0]?.worksheets).toHaveLength(2);
     }
-    expect(getLearningModule("dasar-audit")?.metadata.estimatedMinutes).toBe(18);
-    expect(getLearningModule("jenis-audit-dan-peran-auditor")?.metadata.estimatedMinutes).toBe(20);
+    expect(getLearningModule("hakikat-audit")?.metadata.estimatedMinutes).toBe(20);
+    expect(getLearningModule("capstone-rancangan-penugasan-audit")?.metadata.estimatedMinutes).toBe(20);
   });
 });
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { CatalogExplorer } from "@/components/learning/catalog-explorer";
@@ -9,6 +9,7 @@ import {
   getModulesForDomain,
   getModulesForTopic,
   getPublishedDomains,
+  legacyCatalogRedirect,
   learningTopics,
   moduleCard,
   resolveCatalogRoute,
@@ -34,6 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LearningCatalogRoute({ params }: Props) {
   const { domain: domainSlug, topic: segments = [] } = await params;
+  const legacyDestination = legacyCatalogRedirect(domainSlug, segments);
+  if (legacyDestination) redirect(legacyDestination);
   const route = resolveCatalogRoute(domainSlug, segments);
   if (!route) notFound();
   const { domain, topic } = route;
