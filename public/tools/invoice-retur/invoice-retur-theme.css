@@ -185,6 +185,19 @@ main > section.single-workspace-hidden { display: none !important; }
 .export-confirm-dialog p { margin: 0; color: #74513b; font-size: .86rem; line-height: 1.58; }
 .export-confirm-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
 .export-confirm-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; }
+.xml-export[hidden] { display: none; }
+.xml-export { position: fixed; inset: 0; z-index: 101; display: grid; place-items: start center; padding: 74px 22px 22px; }
+.xml-export-backdrop { position: absolute; inset: 0; background: rgba(16,43,70,.5); backdrop-filter: blur(3px); }
+.xml-export-dialog { position: relative; width: min(100%, 680px); max-height: calc(100vh - 96px); overflow: auto; padding: 25px; border: 1px solid #d1dce3; border-radius: 18px; background: #fff; box-shadow: 0 22px 62px rgba(16,43,70,.25); }
+.xml-export-dialog h2 { margin: 7px 0 10px; }
+.xml-export-dialog > p { margin: 0; color: #60778a; font-size: .86rem; line-height: 1.58; }
+.xml-export-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 14px; }
+.xml-export-fields label { display: grid; gap: 6px; color: #245b87; font-size: .72rem; font-weight: 800; }
+.xml-export-fields input, .xml-export-fields select { width: 100%; min-height: 42px; padding: 9px 10px; border: 1px solid #b7c9d5; border-radius: 9px; background: #fbfdfe; color: #172c42; font: inherit; }
+.xml-export-result { padding: 14px 16px; border: 1px solid #d9e2e8; border-radius: 12px; background: #f7fbfd; }
+.xml-export-result strong { color: #102b46; font-size: .82rem; }
+.xml-export-result ul { display: grid; gap: 6px; margin: 10px 0 0; padding-left: 18px; color: #60778a; font-size: .75rem; line-height: 1.45; }
+.xml-export-note { margin-top: 14px !important; font-size: .74rem !important; }
 @media(max-width:1100px) {
   main { padding-inline: 22px; }
   .workspace-toolbar { margin-inline: -22px; padding-inline: 22px; }
@@ -201,6 +214,9 @@ main > section.single-workspace-hidden { display: none !important; }
   .export-confirm { align-items: start; padding: 18px 12px 12px; }
   .export-confirm-dialog { border-radius: 16px; }
   .export-confirm-actions, .export-confirm-actions button { width: 100%; }
+  .xml-export { padding: 18px 12px 12px; }
+  .xml-export-dialog { max-height: calc(100vh - 30px); border-radius: 16px; }
+  .xml-export-fields { grid-template-columns: 1fr; }
 }
 
 /* Invoice Retur uses its own blue workspace palette. Coretax keeps the default theme above. */

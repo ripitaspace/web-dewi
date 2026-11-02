@@ -36,7 +36,7 @@ export function CoretaxEmbed({ variant = "coretax" }: CoretaxEmbedProps) {
     <iframe
       ref={iframeRef}
       className="coretax-embed"
-      src={isInvoiceRetur ? "/tools/invoice-retur/invoice-retur-workspace.html?v=8" : "/tools/coretax/coretax-workspace.html"}
+      src={isInvoiceRetur ? "/tools/invoice-retur/invoice-retur-workspace.html?v=10" : "/tools/coretax/coretax-workspace.html"}
       title={isInvoiceRetur ? "RIPITA Invoice Retur Scrapper" : "RIPITA Invoice Scraper"}
       style={workspaceHeight ? { height: `${workspaceHeight}px` } : undefined}
       onLoad={requestWorkspaceHeight}

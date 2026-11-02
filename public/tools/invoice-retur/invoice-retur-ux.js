@@ -87,14 +87,14 @@
     workspaceToolbar.innerHTML =
       workspaceTitleMarkup() +
       '<div class="workspace-actions"><button type="button" class="icon-action" id="uploadWorkspace" aria-label="Pilih PDF atau ZIP" title="Pilih PDF atau ZIP" data-tooltip="Pilih PDF atau ZIP">' + icon("upload") + '</button><button type="button" class="secondary icon-action" id="folderWorkspace" aria-label="Pilih folder" title="Pilih folder" data-tooltip="Pilih folder">' + icon("folder") + '</button><button type="button" class="secondary icon-action" id="clearWorkspace" aria-label="Kosongkan daftar" title="Kosongkan daftar" data-tooltip="Kosongkan daftar">' + icon("trash") + '</button><button type="button" class="secondary icon-action" id="zipWorkspace" aria-label="Unduh ZIP Nota Retur" title="Unduh ZIP Nota Retur" data-tooltip="Unduh ZIP Nota Retur">' + icon("folderZip") + '</button><button type="button" class="icon-action" id="exportWorkspace" aria-label="Unduh rekap Excel" title="Unduh rekap Excel" data-tooltip="Unduh rekap Excel">' + icon("download") + '</button></div>';
-    workspaceToolbar.querySelector(".workspace-actions").insertAdjacentHTML("beforeend", '<button type="button" class="secondary icon-action xml-action" id="exportXmlWorkspace" aria-label="Unduh XML" title="Unduh XML (segera hadir)" data-tooltip="Unduh XML (segera hadir)"><span aria-hidden="true">XML</span></button>');
+    workspaceToolbar.querySelector(".workspace-actions").insertAdjacentHTML("beforeend", '<button type="button" class="secondary icon-action xml-action" id="exportXmlWorkspace" aria-label="Buat XML Retur Dokumen Lain" title="Buat XML Retur Dokumen Lain" data-tooltip="Buat XML Retur Dokumen Lain"><span aria-hidden="true">XML</span></button>');
     main.insertBefore(workspaceToolbar, inbox);
     $("uploadWorkspace").addEventListener("click", function () { $("files").click(); });
     $("folderWorkspace").addEventListener("click", function () { $("folder").click(); });
     $("clearWorkspace").addEventListener("click", function () { window.clearInvoices(); });
     $("zipWorkspace").addEventListener("click", function () { if (typeof window.downloadWorkspaceZip === "function") window.downloadWorkspaceZip(); });
     $("exportWorkspace").addEventListener("click", function () { window.exportExcel(); });
-    $("exportXmlWorkspace").addEventListener("click", function () { showToast("Ekspor XML belum tersedia.", "warning"); });
+    $("exportXmlWorkspace").addEventListener("click", function () { showToast("Gunakan workspace Nota Retur untuk membuat XML Retur Pajak Masukan.", "warning"); });
 
     var helper = document.createElement("div");
     helper.className = "workflow-guide";
@@ -920,6 +920,12 @@
       zipButton.dataset.tooltip = renameable ? (isReturnWorkspace ? "Unduh ZIP Nota Retur" : "Unduh ZIP faktur rapi") : "ZIP belum siap";
     }
     if (byId("clearWorkspace")) byId("clearWorkspace").disabled = !data.length;
+    var xmlButton = byId("exportXmlWorkspace");
+    if (xmlButton) {
+      xmlButton.disabled = !isReturnWorkspace || !data.length;
+      xmlButton.title = !isReturnWorkspace ? "XML hanya tersedia untuk workspace Nota Retur" : data.length ? "Buat XML Retur Dokumen Lain" : "Impor minimal satu nota retur terlebih dahulu";
+      xmlButton.dataset.tooltip = xmlButton.title;
+    }
   }
   function closeExportDialog() { if (byId("exportConfirm")) byId("exportConfirm").hidden = true; }
   function openExportDialog() {
@@ -931,6 +937,165 @@
     byId("exportConfirmCopy").textContent = "Batch ini berisi " + parts.join(" dan ") + ". Anda tetap dapat mengunduh seluruh " + itemRowsCount() + " baris hasil sekarang, termasuk data header atau error.";
     byId("exportConfirm").hidden = false;
     byId("exportConfirmReview").focus();
+  }
+  function tinTokens(value) { return String(value || "").match(/\d{15,16}/g) || []; }
+  function cleanTin(value) { return String(value || "").replace(/\D/g, ""); }
+  function singleTin(value) { var tokens = tinTokens(value); return tokens.length === 1 ? tokens[0] : ""; }
+  function xmlDate(value) {
+    var text = String(value || "").trim();
+    var match = text.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if (!match) return "";
+    var date = new Date(Date.UTC(Number(match[3]), Number(match[2]) - 1, Number(match[1])));
+    return date.getUTCFullYear() === Number(match[3]) && date.getUTCMonth() === Number(match[2]) - 1 && date.getUTCDate() === Number(match[1]) ? text : "";
+  }
+  function xmlAmount(value) {
+    return value == null || value === "" || !Number.isFinite(Number(value)) || Number(value) < 0 ? "" : String(Math.round(Number(value) * 100) / 100);
+  }
+  function xmlValue(value) { return safe(value); }
+  // Nilai contoh pada sheet DATA template DJP yang dilampirkan. Nilai ini
+  // dipakai sebagai titik awal batch, bukan sebagai klasifikasi otomatis nota.
+  var XML_CODE_DEFAULTS = {
+    input: { transactionType: "04", documentType: "01", transactionDetail: "01", transactionDocument: "08" },
+    output: { transactionType: "01", documentType: "01", transactionDetail: "01", transactionDocument: "01" }
+  };
+  function xmlMode() { return (byId("xmlMode") || {}).value || "input"; }
+  function xmlDefaultCodes(mode) { return XML_CODE_DEFAULTS[mode] || XML_CODE_DEFAULTS.input; }
+  function xmlCodes() {
+    return {
+      transactionType: (byId("xmlTransactionType") || {}).value || "",
+      documentType: (byId("xmlDocumentType") || {}).value || "",
+      transactionDetail: (byId("xmlTransactionDetail") || {}).value || "",
+      transactionDocument: (byId("xmlTransactionDocument") || {}).value || ""
+    };
+  }
+  function xmlUsesDefaultCodes(codes, mode) {
+    var defaults = xmlDefaultCodes(mode);
+    return Object.keys(defaults).every(function (key) { return codes[key] === defaults[key]; });
+  }
+  function applyXmlDefaults() {
+    var defaults = xmlDefaultCodes(xmlMode());
+    var fields = {
+      transactionType: byId("xmlTransactionType"),
+      documentType: byId("xmlDocumentType"),
+      transactionDetail: byId("xmlTransactionDetail"),
+      transactionDocument: byId("xmlTransactionDocument")
+    };
+    Object.keys(fields).forEach(function (key) {
+      if (fields[key]) fields[key].value = defaults[key];
+    });
+    renderXmlAssessment();
+  }
+  function xmlParty(invoice, mode) {
+    return mode === "output" ? { name: invoice.seller || "", tin: singleTin(invoice.sellerNPWP), address: invoice.sellerAddress || "" } : { name: invoice.buyer || "", tin: singleTin(invoice.buyerNPWP), address: invoice.buyerAddress || "" };
+  }
+  function xmlCounterparty(invoice, mode) {
+    return mode === "output" ? { name: invoice.buyer || "", tin: singleTin(invoice.buyerNPWP), address: invoice.buyerAddress || "" } : { name: invoice.seller || "", tin: singleTin(invoice.sellerNPWP), address: invoice.sellerAddress || "" };
+  }
+  function xmlDateForMode(value, mode) {
+    var date = xmlDate(value);
+    return mode === "output" && date ? date.slice(0, 2) + "-" + date.slice(3, 5) + "-" + date.slice(6) : mode === "input" && date ? date.slice(6) + "-" + date.slice(3, 5) + "-" + date.slice(0, 2) : "";
+  }
+  function xmlInvoiceWarnings(invoice, mode, codes) {
+    var warnings = [];
+    if (!String(invoice.originalInvoiceNumber || invoice.reference || "").trim()) warnings.push("nomor faktur asal belum terbaca");
+    if (!String(invoice.returnNoteNumber || invoice.number || "").trim()) warnings.push("nomor nota retur belum terbaca");
+    if (!xmlDateForMode(invoice.date, mode)) warnings.push("tanggal nota retur tidak valid");
+    if (!xmlParty(invoice, mode).tin) warnings.push("TIN entitas belum tunggal atau belum terbaca");
+    if (!xmlCounterparty(invoice, mode).tin) warnings.push("TIN lawan transaksi belum tunggal atau belum terbaca");
+    if (mode === "output" && !xmlCounterparty(invoice, mode).address) warnings.push("alamat pembeli belum terbaca");
+    if (invoice.dpp == null) warnings.push("DPP/netto belum terbaca");
+    if (invoice.ppn == null) warnings.push("PPN belum terbaca");
+    Object.keys(codes).forEach(function (key) { if (!codes[key]) warnings.push("kode " + key + " belum dipilih"); });
+    return warnings;
+  }
+  function xmlAssessment() {
+    var mode = xmlMode(), codes = xmlCodes(), groups = {}, warnings = [];
+    records().forEach(function (invoice) {
+      var party = xmlParty(invoice, mode);
+      var key = party.tin || "TANPA-TIN-" + (party.name || invoice.invoiceId || invoice.number || "TIDAK-DIKENAL");
+      if (!groups[key]) groups[key] = { party: party, invoices: [] };
+      groups[key].invoices.push(invoice);
+      xmlInvoiceWarnings(invoice, mode, codes).forEach(function (warning) { warnings.push((invoice.returnNoteNumber || invoice.number || "Tanpa nomor") + ": " + warning); });
+    });
+    return { mode: mode, codes: codes, groups: Object.keys(groups).map(function (key) { return groups[key]; }), warnings: warnings };
+  }
+  function renderXmlAssessment() {
+    var summary = byId("xmlExportSummary");
+    var list = byId("xmlExportWarnings");
+    var button = byId("xmlDownload");
+    if (!summary || !list || !button) return;
+    var assessment = xmlAssessment();
+    var noteCount = assessment.groups.reduce(function (total, group) { return total + group.invoices.length; }, 0);
+    var codeText = [assessment.codes.transactionType, assessment.codes.documentType, assessment.codes.transactionDetail, assessment.codes.transactionDocument].join(" / ");
+    var entities = assessment.groups.map(function (group) {
+      return (group.party.name || "Entitas tanpa nama") + (group.party.tin ? " (TIN " + group.party.tin + ")" : " (TIN perlu diperiksa)");
+    });
+    summary.textContent = (assessment.mode === "input" ? "Retur Dok Lain Masukan" : "Retur Dok Lain Keluaran") + " · " + noteCount + " nota · " + entities.join("; ") + " · kode " + codeText;
+    var notes = assessment.warnings.slice();
+    if (xmlUsesDefaultCodes(assessment.codes, assessment.mode)) notes.unshift("Kode batch mengikuti contoh pada sheet DATA template Excel.");
+    else notes.unshift("Kode batch telah disesuaikan dari contoh pada sheet DATA template Excel. Pastikan kode ini sesuai transaksi.");
+    if (assessment.groups.length > 1) notes.unshift("Batch memiliki beberapa entitas. Sistem akan membuat satu XML terpisah untuk setiap TIN entitas.");
+    list.innerHTML = notes.length ? notes.map(function (note) { return "<li>" + safe(note) + "</li>"; }).join("") : "<li>Semua data yang diperlukan telah terbaca. Tetap periksa hasil sebelum diunggah ke Coretax.</li>";
+    button.disabled = !noteCount;
+    button.textContent = "Unduh XML " + (noteCount ? "(" + noteCount + " nota)" : "");
+  }
+  function openXmlDialog() {
+    if (!records().length) { notify("Impor minimal satu nota retur sebelum membuat XML.", "warning"); return; }
+    byId("xmlExportDialog").hidden = false;
+    applyXmlDefaults();
+    byId("xmlMode").focus();
+  }
+  function closeXmlDialog() { if (byId("xmlExportDialog")) byId("xmlExportDialog").hidden = true; }
+  function specialDocReturnData(invoice, mode, codes) {
+    var counterparty = xmlCounterparty(invoice, mode);
+    var header = [
+      "\t\t\t<DocumentNumber>" + xmlValue(invoice.originalInvoiceNumber || invoice.reference || "") + "</DocumentNumber>",
+      "\t\t\t<ReturnDocumentNumber>" + xmlValue(invoice.returnNoteNumber || invoice.number || "") + "</ReturnDocumentNumber>",
+      "\t\t\t<TransactionType>" + xmlValue(codes.transactionType) + "</TransactionType>",
+      "\t\t\t<DocumentType>" + xmlValue(codes.documentType) + "</DocumentType>",
+      "\t\t\t<TransactionDetail>" + xmlValue(codes.transactionDetail) + "</TransactionDetail>",
+      "\t\t\t<TransactionDocument>" + xmlValue(codes.transactionDocument) + "</TransactionDocument>",
+      "\t\t\t<DocumentDate>" + xmlValue(xmlDateForMode(invoice.date, mode)) + "</DocumentDate>"
+    ];
+    if (mode === "input") header.push("\t\t\t<Period>" + xmlValue(xmlDate(invoice.date).slice(3, 5).replace(/^0/, "")) + "</Period>", "\t\t\t<Year>" + xmlValue(xmlDate(invoice.date).slice(6)) + "</Year>", "\t\t\t<SellerTIN>" + xmlValue(counterparty.tin) + "</SellerTIN>", "\t\t\t<SellerTaxpayerName>" + xmlValue(counterparty.name) + "</SellerTaxpayerName>");
+    else header.push("\t\t\t<BuyerTIN>" + xmlValue(counterparty.tin) + "</BuyerTIN>", "\t\t\t<BuyerTaxpayerName>" + xmlValue(counterparty.name) + "</BuyerTaxpayerName>", "\t\t\t<BuyerAddress>" + xmlValue(counterparty.address) + "</BuyerAddress>");
+    header.push("\t\t\t<ReturnTaxBase>" + xmlAmount(invoice.dpp) + "</ReturnTaxBase>", "\t\t\t<ReturnVAT>" + xmlAmount(invoice.ppn) + "</ReturnVAT>", "\t\t\t<ReturnSTLG>" + xmlAmount(invoice.ppnbm) + "</ReturnSTLG>");
+    return ["\t\t<" + (mode === "input" ? "InputReturnData" : "OutputReturnData") + ">"].concat(header).concat(["\t\t</" + (mode === "input" ? "InputReturnData" : "OutputReturnData") + ">"] ).join("\n");
+  }
+  function specialDocReturnXml(group, mode, codes) {
+    var input = mode === "input";
+    return [
+      '<?xml version="1.0" encoding="UTF-8" ?>',
+      input ? "<InputSpecialDocReturn>" : '<OutputSpecialDocReturn xsi:noNamespaceSchemaLocation="schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+      "\t<TIN>" + xmlValue(group.party.tin) + "</TIN>",
+      "\t<" + (input ? "InputReturnDataList" : "OutputReturnDataList") + ">",
+      group.invoices.map(function (invoice) { return specialDocReturnData(invoice, mode, codes); }).join("\n"),
+      "\t</" + (input ? "InputReturnDataList" : "OutputReturnDataList") + ">",
+      input ? "</InputSpecialDocReturn>" : "</OutputSpecialDocReturn>"
+    ].join("\n");
+  }
+  function downloadSpecialDocReturnXml() {
+    var assessment = xmlAssessment();
+    if (!assessment.groups.length) { renderXmlAssessment(); return; }
+    var files = 0;
+    assessment.groups.forEach(function (group) {
+      var xml = specialDocReturnXml(group, assessment.mode, assessment.codes);
+      var parsed = new DOMParser().parseFromString(xml, "application/xml");
+      if (parsed.querySelector("parsererror")) { notify("XML tidak dapat dibuat karena struktur hasil tidak valid.", "warning"); return; }
+      var months = group.invoices.map(function (invoice) { var date = xmlDate(invoice.date); return date ? date.slice(6) + "-" + date.slice(3, 5) : ""; }).filter(Boolean);
+      var period = months.length && months.every(function (month) { return month === months[0]; }) ? months[0] : "MULTIMASA";
+      var prefix = assessment.mode === "input" ? "RIPITA_Retur_Dok_Lain_Masukan" : "RIPITA_Retur_Dok_Lain_Keluaran";
+      var name = prefix + "_" + renameSlug(group.party.name, "ENTITAS") + "_" + period + ".xml";
+      var url = URL.createObjectURL(new Blob([xml], { type: "application/xml;charset=utf-8" }));
+      var link = document.createElement("a");
+      link.href = url;
+      link.download = name;
+      link.click();
+      window.setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      files += 1;
+    });
+    closeXmlDialog();
+    notify(files + " XML Retur Dok Lain sedang diunduh.", "success");
   }
   function setFilter(next) {
     activeFilter = next;
@@ -954,15 +1119,15 @@
     inbox.classList.remove("hidden");
     toolbar.dataset.singleWorkspaceReady = "true";
     toolbar.innerHTML = workspaceTitleMarkup() + '<div class="workspace-actions"><button type="button" class="icon-action" id="uploadWorkspace" aria-label="Pilih PDF atau ZIP" title="Pilih PDF atau ZIP" data-tooltip="Pilih PDF atau ZIP">' + glyph("upload") + '</button><button type="button" class="secondary icon-action" id="folderWorkspace" aria-label="Pilih folder" title="Pilih folder" data-tooltip="Pilih folder">' + glyph("folder") + '</button><button type="button" class="secondary icon-action" id="clearWorkspace" aria-label="Kosongkan daftar" title="Kosongkan daftar" data-tooltip="Kosongkan daftar">' + glyph("trash") + '</button><button type="button" class="secondary icon-action" id="zipWorkspace" aria-label="Unduh ZIP Nota Retur" title="Unduh ZIP Nota Retur" data-tooltip="Unduh ZIP Nota Retur">' + glyph("folderZip") + '</button><button type="button" class="icon-action" id="exportWorkspace" aria-label="Unduh rekap Excel" title="Unduh rekap Excel" data-tooltip="Unduh rekap Excel">' + glyph("download") + '</button></div>';
-    toolbar.querySelector(".workspace-actions").insertAdjacentHTML("beforeend", '<button type="button" class="secondary icon-action xml-action" id="exportXmlWorkspace" aria-label="Unduh XML" title="Unduh XML (segera hadir)" data-tooltip="Unduh XML (segera hadir)"><span aria-hidden="true">XML</span></button>');
+    toolbar.querySelector(".workspace-actions").insertAdjacentHTML("beforeend", '<button type="button" class="secondary icon-action xml-action" id="exportXmlWorkspace" aria-label="Buat XML Retur Dokumen Lain" title="Buat XML Retur Dokumen Lain" data-tooltip="Buat XML Retur Dokumen Lain"><span aria-hidden="true">XML</span></button>');
     byId("uploadWorkspace").addEventListener("click", function () { byId("files").click(); });
     byId("folderWorkspace").addEventListener("click", function () { byId("folder").click(); });
     byId("clearWorkspace").addEventListener("click", function () { window.clearInvoices(); });
     byId("zipWorkspace").addEventListener("click", downloadRenamedZip);
     byId("exportWorkspace").addEventListener("click", function () { window.exportExcel(); });
-    byId("exportXmlWorkspace").addEventListener("click", function () { notify("Ekspor XML belum tersedia.", "warning"); });
+    byId("exportXmlWorkspace").addEventListener("click", openXmlDialog);
     var guide = document.querySelector(".workflow-guide");
-    if (guide) guide.innerHTML = '<span><b>1.</b> Masukkan ' + (isReturnWorkspace ? "nota retur" : "faktur") + '</span><i>→</i><span><b>2.</b> Lihat hasil per barang</span><i>→</i><span><b>3.</b> Review bila perlu</span><i>→</i><span><b>4.</b> Unduh Excel</span>';
+    if (guide) guide.innerHTML = '<span><b>1.</b> Masukkan ' + (isReturnWorkspace ? "nota retur" : "faktur") + '</span><i>→</i><span><b>2.</b> Lihat hasil per barang</span><i>→</i><span><b>3.</b> Review bila perlu</span><i>→</i><span><b>4.</b> Unduh Excel atau XML</span>';
     var importPanel = byId("drop").closest(".panel");
     var uploadNote = document.querySelector(".upload-note");
     if (uploadNote) uploadNote.textContent = "Diproses langsung di browser. Tidak diunggah dan tidak disimpan; data hilang saat halaman dimuat ulang.";
@@ -989,8 +1154,13 @@
       controls.querySelector("#exportFromReview").innerHTML = glyph("download") + "Unduh rekap Excel";
     }
     document.body.insertAdjacentHTML("beforeend", '<div id="exportConfirm" class="export-confirm" hidden><div class="export-confirm-backdrop" data-close-export></div><section class="export-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="exportConfirmTitle"><span class="workspace-kicker">KONFIRMASI UNDUH</span><h2 id="exportConfirmTitle">Ada data yang perlu perhatian</h2><p id="exportConfirmCopy"></p><div class="export-confirm-actions"><button type="button" class="secondary" data-close-export>Batal</button><button type="button" class="secondary" id="exportConfirmReview">' + glyph("review") + 'Periksa antrean</button><button type="button" id="exportConfirmContinue">' + glyph("download") + 'Tetap unduh semua</button></div></section></div>');
+    document.body.insertAdjacentHTML("beforeend", '<div id="xmlExportDialog" class="xml-export" hidden><div class="xml-export-backdrop" data-close-xml></div><section class="xml-export-dialog" role="dialog" aria-modal="true" aria-labelledby="xmlExportTitle"><span class="workspace-kicker">XML CORETAX</span><h2 id="xmlExportTitle">Buat XML Retur Dokumen Lain</h2><p>Pilih jenis XML dan kode transaksi. Nama serta TIN entitas akan diambil otomatis dari pembeli atau penjual pada hasil ekstraksi.</p><div class="xml-export-fields"><label>Jenis XML<select id="xmlMode"><option value="input">Retur Dok Lain Masukan</option><option value="output">Retur Dok Lain Keluaran</option></select></label><label>Jenis transaksi<select id="xmlTransactionType"><option value="">Pilih kode</option><option value="01">01 · Penyerahan</option><option value="02">02 · Ekspor</option><option value="03">03 · Impor</option><option value="04">04 · Pembelian</option><option value="05">05 · Tidak dikreditkan</option></select></label><label>Jenis dokumen<select id="xmlDocumentType"><option value="">Pilih kode</option><option value="01">01 · Normal</option><option value="02">02 · Pengganti</option></select></label><label>Detail transaksi<select id="xmlTransactionDetail"><option value="">Pilih kode</option><option value="01">01 · Bukan pemungut PPN</option><option value="02">02 · Instansi pemerintah</option><option value="03">03 · Pemungut PPN selain pemerintah</option><option value="04">04 · DPP lain</option><option value="05">05 · Nilai lain</option><option value="06">06 · VAT refund turis</option><option value="07">07 · PPN tidak dipungut</option><option value="08">08 · PPN dibebaskan</option><option value="09">09 · Aset tidak terkait usaha</option><option value="10">10 · Penyerahan barang/jasa lain</option><option value="11">11 · Ekspor barang berwujud</option><option value="12">12 · Ekspor barang tidak berwujud</option><option value="13">13 · Ekspor jasa</option><option value="14">14 · Impor BKP</option><option value="15">15 · Pemanfaatan BKP/JKP</option></select></label><label>Dokumen transaksi<select id="xmlTransactionDocument"><option value="">Pilih kode</option><option value="01">01 · Dokumen dipersamakan faktur</option><option value="02">02 · Cukai rokok</option><option value="03">03 · Dokumen kawasan berikat</option><option value="04">04 · PEB</option><option value="05">05 · PEB jasa/BKP tidak berwujud</option><option value="06">06 · PIB dan pembayaran</option><option value="07">07 · Pembayaran</option><option value="08">08 · Dokumen khusus</option><option value="09">09 · SKPKB/SKPKBT</option><option value="10">10 · PIB</option></select></label></div><div class="xml-export-result"><strong id="xmlExportSummary">Pilih jenis XML untuk melihat entitas yang terdeteksi.</strong><ul id="xmlExportWarnings"></ul></div><p class="xml-export-note">XML dibuat dari template Retur Dok Lain DJP. Peringatan perlu diperiksa sebelum file diunggah ke Coretax.</p><div class="export-confirm-actions"><button type="button" class="secondary" data-close-xml>Batal</button><button type="button" id="xmlDownload">Unduh XML</button></div></section></div>');
     document.querySelectorAll("[data-close-export]").forEach(function (button) { button.addEventListener("click", closeExportDialog); });
     byId("exportConfirmReview").addEventListener("click", function () { closeExportDialog(); var next = records().find(function (invoice) { return invoice.status !== "PARSED"; }); if (next) window.review(records().indexOf(next)); });
+    document.querySelectorAll("[data-close-xml]").forEach(function (button) { button.addEventListener("click", closeXmlDialog); });
+    byId("xmlMode").addEventListener("change", applyXmlDefaults);
+    ["xmlTransactionType", "xmlDocumentType", "xmlTransactionDetail", "xmlTransactionDocument"].forEach(function (id) { byId(id).addEventListener("change", renderXmlAssessment); });
+    byId("xmlDownload").addEventListener("click", downloadSpecialDocReturnXml);
   }
   function patchSingleWorkspaceRuntime() {
     var baseRender = window.render;
@@ -1023,7 +1193,11 @@
       card.onkeydown = function (event) { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setFilter(card.dataset.filter); } };
     });
     if (byId("resetFilter")) byId("resetFilter").onclick = function () { setFilter("all"); };
-    document.addEventListener("keydown", function (event) { if (event.key === "Escape" && byId("exportConfirm") && !byId("exportConfirm").hidden) closeExportDialog(); });
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      if (byId("exportConfirm") && !byId("exportConfirm").hidden) closeExportDialog();
+      if (byId("xmlExportDialog") && !byId("xmlExportDialog").hidden) closeXmlDialog();
+    });
     renderFlatQueue();
     updateSummary();
   }
