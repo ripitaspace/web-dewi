@@ -367,17 +367,28 @@
   function parseTableItems(pages) {
     var items = [];
     var foundTable = false;
+    var tableActive = false;
+    // OCR frequently places a product name at the bottom of one page and its
+    // price on the next. Keep it until the price row is found.
+    var pending = [];
     pages.forEach(function (page) {
       var lines = String(page.text || "").split("\n").map(function (line) { return line.trim(); }).filter(Boolean);
       var start = lines.findIndex(function (line) { return /Nama Barang Kena Pajak\s*\/\s*Jasa Kena Pajak/i.test(line); });
-      if (start < 0) return;
-      foundTable = true;
+      if (start >= 0) {
+        foundTable = true;
+        tableActive = true;
+      }
+      // Continuation pages of a Faktur Pajak normally omit the table heading.
+      // Once the first heading has been seen, their full contents remain part
+      // of the item table until the invoice summary begins.
+      if (!tableActive) return;
+      var blockStart = start >= 0 ? start + 1 : 0;
       var end = lines.findIndex(function (line, index) {
-        return index > start && /^Harga Jual\s*\/\s*Penggantian\s*\/\s*Uang Muka\s*\/\s*Termin/i.test(line);
+        return index >= blockStart && /^Harga Jual\s*\/\s*Penggantian\s*\/\s*Uang Muka\s*\/\s*Termin/i.test(line);
       });
       if (end < 0) end = lines.length;
-      var block = lines.slice(start + 1, end);
-      var pending = [];
+      var block = lines.slice(blockStart, end);
+      if (end < lines.length) tableActive = false;
       for (var index = 0; index < block.length; index += 1) {
         var line = block[index];
         // Some PDF generators keep the item number, code, unit, and gross amount
@@ -423,6 +434,21 @@
     return { foundTable: foundTable, items: items };
   }
 
+  function itemSequenceIssues(items) {
+    var issues = [];
+    var previous = null;
+    items.forEach(function (item) {
+      var number = Number(item.no);
+      if (!Number.isInteger(number) || number <= 0) {
+        issues.push("nomor item tidak terbaca");
+        return;
+      }
+      if (previous !== null && number !== previous + 1) issues.push("nomor item tidak berurutan antara " + previous + " dan " + number);
+      previous = number;
+    });
+    return issues;
+  }
+
   function validateItem(item) {
     var issues = [];
     if (!String(item.name || "").replace(/\s+/g, " ").trim()) issues.push("nama barang tidak terbaca");
@@ -452,6 +478,8 @@
       var totalGross = invoice.items.reduce(function (total, item) { return total + item.gross; }, 0);
       if (Math.abs(totalGross - invoice.grossTotal) > Math.max(1, invoice.grossTotal * 0.02)) issues.push("total bruto item tidak cocok dengan total faktur");
     }
+    var sequenceIssues = itemSequenceIssues(invoice.items);
+    if (sequenceIssues.length) issues.push(sequenceIssues[0] + (sequenceIssues.length > 1 ? "; dan " + (sequenceIssues.length - 1) + " temuan urutan lain" : ""));
     return issues;
   }
 
