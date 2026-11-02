@@ -87,12 +87,14 @@
     workspaceToolbar.innerHTML =
       workspaceTitleMarkup() +
       '<div class="workspace-actions"><button type="button" class="icon-action" id="uploadWorkspace" aria-label="Pilih PDF atau ZIP" title="Pilih PDF atau ZIP" data-tooltip="Pilih PDF atau ZIP">' + icon("upload") + '</button><button type="button" class="secondary icon-action" id="folderWorkspace" aria-label="Pilih folder" title="Pilih folder" data-tooltip="Pilih folder">' + icon("folder") + '</button><button type="button" class="secondary icon-action" id="clearWorkspace" aria-label="Kosongkan daftar" title="Kosongkan daftar" data-tooltip="Kosongkan daftar">' + icon("trash") + '</button><button type="button" class="secondary icon-action" id="zipWorkspace" aria-label="Unduh ZIP Nota Retur" title="Unduh ZIP Nota Retur" data-tooltip="Unduh ZIP Nota Retur">' + icon("folderZip") + '</button><button type="button" class="icon-action" id="exportWorkspace" aria-label="Unduh rekap Excel" title="Unduh rekap Excel" data-tooltip="Unduh rekap Excel">' + icon("download") + '</button></div>';
+    workspaceToolbar.querySelector(".workspace-actions").insertAdjacentHTML("beforeend", '<button type="button" class="secondary icon-action xml-action" id="exportXmlWorkspace" aria-label="Unduh XML" title="Unduh XML (segera hadir)" data-tooltip="Unduh XML (segera hadir)"><span aria-hidden="true">XML</span></button>');
     main.insertBefore(workspaceToolbar, inbox);
     $("uploadWorkspace").addEventListener("click", function () { $("files").click(); });
     $("folderWorkspace").addEventListener("click", function () { $("folder").click(); });
     $("clearWorkspace").addEventListener("click", function () { window.clearInvoices(); });
     $("zipWorkspace").addEventListener("click", function () { if (typeof window.downloadWorkspaceZip === "function") window.downloadWorkspaceZip(); });
     $("exportWorkspace").addEventListener("click", function () { window.exportExcel(); });
+    $("exportXmlWorkspace").addEventListener("click", function () { showToast("Ekspor XML belum tersedia.", "warning"); });
 
     var helper = document.createElement("div");
     helper.className = "workflow-guide";
@@ -282,18 +284,6 @@
     return ocrLibraryPromise;
   }
 
-  function linesFromPdfContent(content) {
-    var rows = new Map();
-    content.items.forEach(function (part) {
-      var y = Math.round(part.transform[5] / 3) * 3;
-      if (!rows.has(y)) rows.set(y, []);
-      rows.get(y).push({ x: part.transform[4], text: part.str });
-    });
-    return Array.from(rows.entries()).sort(function (left, right) { return right[0] - left[0]; }).map(function (entry) {
-      return entry[1].sort(function (left, right) { return left.x - right.x; }).map(function (part) { return part.text; }).join(" ").replace(/\s+/g, " ").trim();
-    }).filter(Boolean).join("\n");
-  }
-
   function renderPdfPage(page) {
     var viewport = page.getViewport({ scale: 2 });
     var canvas = document.createElement("canvas");
@@ -308,62 +298,9 @@
     });
   }
 
-  function findInvoiceNumber(text) {
-    // A return note uses its own number ("Nomor", "No." or "No. :"),
-    // while the longer number after "Atas Faktur Pajak" is only a reference.
-    var source = String(text || "");
-    var match = source.match(/(?:^|\n)\s*(?:Nomor|No\.)\s*[:.]?\s*((?!Urut\b)[A-Za-z0-9][\w-]{4,})/im);
-    if (!match) return "";
-    return match[1].replace(/\s+/g, "").trim();
-  }
-
+  function groupInvoicePages(pages) { return window.ReturnNoteParser.group(pages); }
   function sourcePageRange(pages) {
-    if (!pages.length) return "";
-    var first = pages[0].sourcePage;
-    var last = pages[pages.length - 1].sourcePage;
-    return first === last ? String(first) : first + "–" + last;
-  }
-
-  function groupInvoicePages(pages) {
-    var groups = [];
-    var current;
-    pages.forEach(function (page) {
-      var number = findInvoiceNumber(page.text);
-      if (number && (!current || (current.number && current.number !== number))) {
-        current = { number: number, pages: [] };
-        groups.push(current);
-      }
-      if (!current) {
-        current = { number: "", pages: [] };
-        groups.push(current);
-      }
-      if (number && !current.number) current.number = number;
-      current.pages.push(page);
-    });
-    return groups;
-  }
-
-  function parseCurrency(value) {
-    var text = String(value == null ? "" : value).replace(/[^\d,.-]/g, "");
-    if (!text) return null;
-    var comma = text.lastIndexOf(",");
-    var dot = text.lastIndexOf(".");
-    if (comma !== -1 && dot !== -1) text = comma > dot ? text.replace(/\./g, "").replace(",", ".") : text.replace(/,/g, "");
-    else if (comma !== -1) text = text.replace(/,/g, ".");
-    else text = text.replace(/\./g, "");
-    var parsed = Number(text);
-    return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
-  }
-
-  function parseQuantity(value) {
-    var text = String(value == null ? "" : value).replace(/[^\d,.-]/g, "");
-    if (!text) return null;
-    var comma = text.lastIndexOf(",");
-    var dot = text.lastIndexOf(".");
-    if (comma !== -1 && dot !== -1) text = comma > dot ? text.replace(/\./g, "").replace(",", ".") : text.replace(/,/g, "");
-    else if (comma !== -1) text = text.replace(/,/g, ".");
-    var parsed = Number(text);
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+    return pages.length === 1 ? String(pages[0].sourcePage) : pages[0].sourcePage + "–" + pages[pages.length - 1].sourcePage;
   }
 
   function isLikelyUnit(value) {
@@ -373,160 +310,8 @@
     return /^[A-Za-z0-9./ -]+$/.test(unit);
   }
 
-  function cleanUnit(value) {
-    var unit = String(value || "").replace(/\s+/g, " ").trim();
-    return isLikelyUnit(unit) ? unit : "";
-  }
-
-  function isItemTableNoise(line) {
-    return /^(No\.?|Kode(?:\s+Barang)?|Nama Barang|Jasa Kena Pajak|Harga Jual|Penggantian|Uang Muka|Termin|Potongan Harga|PPnBM)/i.test(line);
-  }
-
-  function parseTableItems(pages) {
-    var items = [];
-    var foundTable = false;
-    var tableActive = false;
-    function parseReturnMoney(value) {
-      var number = String(value == null ? "" : value).replace(/[^\d,.-]/g, "");
-      if (!number) return null;
-      var lastDot = number.lastIndexOf(".");
-      var lastComma = number.lastIndexOf(",");
-      var separator = Math.max(lastDot, lastComma);
-      var decimals = separator >= 0 ? number.length - separator - 1 : 0;
-      // Amounts such as 31,464,000 and 1.560.614 use thousand separators;
-      // OCR sometimes emits 168186.0, which is a decimal amount.
-      if (separator >= 0 && decimals > 0 && decimals < 3) {
-        var integer = number.slice(0, separator).replace(/[.,]/g, "");
-        return Number(integer + "." + number.slice(separator + 1));
-      }
-      return Number(number.replace(/[.,]/g, ""));
-    }
-    function parseReturnQty(value, unit) {
-      var number = String(value == null ? "" : value).replace(/[^\d,.-]/g, "");
-      if (!number) return null;
-      if (/^(PCS?|UNIT|BTL|BOTOL|BOX|KARTON)$/i.test(String(unit || "")) && /^[1-9]\d*[,.]\d{3}$/.test(number)) return Number(number.replace(/[.,]/g, ""));
-      return Number(number.replace(",", "."));
-    }
-    function totalStart(line) {
-      return /^(?:Jumlah\s+(?:Harga\s+)?(?:Jual\s+)?(?:BKP|PKP)|Dikurangi\s+Potongan|Pajak\s+Pertambahan|PPN\b|PPnBM\b)/i.test(line);
-    }
-    pages.forEach(function (page) {
-      var lines = String(page.text || "").split("\n").map(function (line) { return line.trim(); }).filter(Boolean);
-      var start = lines.findIndex(function (line) { return /(Macam\s+dan\s+Jenis|Barang\s+Kena\s+Pajak|Harga\s+Satuan\s+Faktur\s+Pajak)/i.test(line); });
-      if (start >= 0) {
-        foundTable = true;
-        tableActive = true;
-      }
-      if (!tableActive) return;
-      var blockStart = start >= 0 ? start + 1 : 0;
-      var end = lines.findIndex(function (line, index) {
-        return index >= blockStart && totalStart(line);
-      });
-      if (end < 0) end = lines.length;
-      var block = lines.slice(blockStart, end);
-      if (end < lines.length) tableActive = false;
-      block.forEach(function (line) {
-        // Both source layouts resolve to: number, description, qty, unit,
-        // original unit price, and the value returned. OCR may read 1 as +.
-        var row = line.match(/^([0-9+]+)[.)]?\s+(.+?)\s+(\d+(?:[.,]\d+)?)\s+([A-Za-z]{2,12})\s+([\d.,]+)\s+([\d.,]+)\s*$/i);
-        if (!row) return;
-        var sequence = row[1].replace(/\+/g, "1");
-        var unit = cleanUnit(row[4]);
-        var qty = parseReturnQty(row[3], unit);
-        var unitPrice = parseReturnMoney(row[5]);
-        var returnedValue = parseReturnMoney(row[6]);
-        if (!unit || qty == null || unitPrice == null || returnedValue == null) return;
-        items.push({
-          no: Number(sequence) || items.length + 1,
-          code: "",
-          name: row[2].replace(/[|]/g, "").replace(/\s+/g, " ").trim(),
-          qty: qty,
-          unit: unit,
-          rawUnit: row[4],
-          unitPrice: unitPrice,
-          gross: returnedValue,
-          returnedValue: returnedValue,
-          discount: 0,
-          ppnbmRate: null,
-          ppnbm: null,
-          page: page.sourcePage,
-          sourcePage: page.sourcePage
-        });
-      });
-    });
-    return { foundTable: foundTable, items: items };
-  }
-
-  function parseReturnInvoice(pages, filename, path) {
-    var text = pages.map(function (page) { return page.text; }).join("\n");
-    var lines = text.split("\n").map(function (line) { return line.trim(); }).filter(Boolean);
-    // BSP prints `Tgl.:` and places zero discount / PPnBM as a dash or a blank
-    // cell. Keep this branch narrow so other return-note formats retain their
-    // existing OCR fallback behavior.
-    var isBspFormat = /\bTgl\.\s*:/i.test(text) && /Harga\s+PKP\s+yang\s+dikembalikan/i.test(text);
-    function capture(pattern) { var match = text.match(pattern); return match ? String(match[1] || "").replace(/\s+/g, " ").trim() : ""; }
-    function amountFor(label, options) {
-      options = options || {};
-      var position = lines.findIndex(function (line) { return label.test(line); });
-      if (position < 0) return null;
-      var values = lines[position].match(/[\d][\d.,]*/g) || [];
-      if (isBspFormat && !values.length) {
-        if (options.blankIsZero && /(?:^|\s)-\s*$/.test(lines[position])) return 0;
-        // A blank PPnBM cell is not followed by another amount. Never let it
-        // consume the signing date below the totals table.
-        if (options.allowBlank) return null;
-        var next = String(lines[position + 1] || "").trim();
-        values = /^\d[\d.,]*$/.test(next) ? [next] : [];
-      }
-      // Some scan/OCR results put the total in the following line. Only look
-      // there when the labelled line has no numeric value of its own.
-      if (!values.length && !isBspFormat) values = (lines[position + 1] || "").match(/[\d][\d.,]*/g) || [];
-      return values.length ? parseReturnAmount(values[values.length - 1]) : null;
-    }
-    function parseReturnAmount(value) {
-      var number = String(value || "").replace(/[^\d,.-]/g, "");
-      var separator = Math.max(number.lastIndexOf("."), number.lastIndexOf(","));
-      var decimals = separator >= 0 ? number.length - separator - 1 : 0;
-      if (separator >= 0 && decimals > 0 && decimals < 3) return Number(number.slice(0, separator).replace(/[.,]/g, "") + "." + number.slice(separator + 1));
-      return number ? Number(number.replace(/[.,]/g, "")) : null;
-    }
-    function party(startPattern, endPattern) {
-      var start = lines.findIndex(function (line) { return startPattern.test(line); });
-      if (start < 0) return { name: "", npwp: "", address: "" };
-      var section = lines.slice(start + 1, lines.findIndex(function (line, index) { return index > start && endPattern.test(line); }) > start ? lines.findIndex(function (line, index) { return index > start && endPattern.test(line); }) : start + 8).join("\n");
-      var name = captureFrom(section, /(?:Nama|Nana|Name)\s*[:.]?\s*([^\n]+)/i);
-      var npwp = captureFrom(section, /NPWP\s*[:.]?\s*([^\n]+)/i).replace(/[^\d]/g, "");
-      var address = captureFrom(section, /Alamat\s*[:.]?\s*([\s\S]*?)(?:\n\s*NPWP|$)/i).replace(/\s+/g, " ").trim();
-      return { name: name, npwp: npwp, address: address };
-    }
-    function captureFrom(value, pattern) { var match = value.match(pattern); return match ? String(match[1] || "").trim() : ""; }
-    var buyer = party(/^(?:Pembeli|PEMBELI)\b/i, /^(?:Kepada\s+Penjual|KEPADA\s+PENJUAL)\b/i);
-    var seller = party(/^(?:Kepada\s+Penjual|KEPADA\s+PENJUAL)\b/i, /^(?:No\.?\s*Urut|Macam\s+dan\s+Jenis|Harga\s+Satuan)\b/i);
-    var noteNumber = findInvoiceNumber(text);
-    var originalInvoice = capture(/Atas\s+Faktur\s+Pajak\s+Nomor\s*[:.]?\s*([\d.\-\s]{12,})/i).replace(/\s+/g, "");
-    var date = isBspFormat
-      ? capture(/Tgl\.\s*:\s*(\d{1,2}\s+[A-Za-z]+\s+\d{4})/i)
-      : capture(/(?:Tanggal|Tgl\.?\s*Nota\s*Ref\.?)\s*[:.]?\s*(\d{1,2}(?:[-\s])[A-Za-z0-9]+(?:[-\s])\d{4})/i);
-    var items = parseTableItems(pages).items;
-    var invoice = {
-      key: "", filename: filename, path: path, number: noteNumber, returnNoteNumber: noteNumber,
-      originalInvoiceNumber: originalInvoice, date: date, place: "", seller: seller.name,
-      sellerNPWP: seller.npwp, sellerAddress: seller.address, buyer: buyer.name,
-      buyerNPWP: buyer.npwp, buyerAddress: buyer.address, nik: "", passport: "", otherId: "", email: "",
-      grossTotal: amountFor(/Jumlah\s+(?:Harga\s+)?(?:Jual\s+)?(?:BKP|PKP).*?(?:dikembalikan|kembali)/i),
-      discountTotal: amountFor(/Dikurangi\s+Potongan\s+Harga/i, { blankIsZero: true }),
-      dpp: amountFor(/Jumlah\s+(?:Harga\s+)?(?:BKP|PKP)\s+Netto/i),
-      ppn: amountFor(/(?:PPN|Pajak\s+Pertambahan\s+Nilai).*?(?:kembali|dikembalikan)/i),
-      ppnbm: amountFor(/PPnBM|Pajak\s+Penjualan\s+Atas\s+Barang\s+Mewah/i, { allowBlank: true }),
-      reference: originalInvoice, signatory: "", pages: pages.length, items: items, raw: text, unmapped: "",
-      format: isBspFormat ? "BSP" : "GENERIC",
-      status: !noteNumber ? "ERROR" : !items.length ? "REVIEW" : "PARSED",
-      message: !noteNumber ? "Nomor nota retur tidak ditemukan" : !items.length ? "Barang retur tidak terdeteksi" : "Nota retur berhasil dibaca",
-      imported: new Date().toISOString()
-    };
-    invoice.key = (invoice.sellerNPWP && noteNumber ? invoice.sellerNPWP + "|" : "FILE|" + filename + "|") + noteNumber;
-    return invoice;
-  }
+  function parseTableItems(pages) { return window.ReturnNoteParser.tableItems(pages); }
+  function parseReturnInvoice(pages, filename, path) { return window.ReturnNoteParser.parse(pages, filename, path); }
 
   function exportReturnExcel() {
     if (!window.XLSX || !getInvoices().length) return;
@@ -541,10 +326,10 @@
           "Nama Pembeli": invoice.buyer || "", "NPWP Pembeli": invoice.buyerNPWP || "", "Alamat Pembeli": invoice.buyerAddress || "",
           "Nama Penjual": invoice.seller || "", "NPWP Penjual": invoice.sellerNPWP || "", "Alamat Penjual": invoice.sellerAddress || "",
           "Nomor Urut Barang": item.no == null ? "" : item.no, "Nama Barang": item.name || "", "Kuantitas": item.qty == null ? "" : item.qty, "Satuan": item.unit || "",
-          "Harga Satuan Faktur": item.unitPrice == null ? "" : item.unitPrice, "Nilai Barang Dikembalikan": item.returnedValue == null ? item.gross || "" : item.returnedValue,
+          "Harga Satuan Faktur": item.unitPrice == null ? "" : item.unitPrice, "Nilai Barang Dikembalikan": item.returnedValue == null ? item.gross ?? "" : item.returnedValue,
           "Jumlah Harga Retur": invoice.grossTotal == null ? "" : invoice.grossTotal, "Potongan Harga": invoice.discountTotal == null ? "" : invoice.discountTotal,
           "Jumlah Harga Retur Netto": invoice.dpp == null ? "" : invoice.dpp, "PPN Diminta Kembali": invoice.ppn == null ? "" : invoice.ppn, "PPnBM Diminta Kembali": invoice.ppnbm == null ? "" : invoice.ppnbm,
-          "Jumlah Harga Retur SUM": index === 0 ? invoice.grossTotal || "" : "", "Potongan Harga SUM": index === 0 ? invoice.discountTotal || "" : "", "Netto Retur SUM": index === 0 ? invoice.dpp || "" : "", "PPN SUM": index === 0 ? invoice.ppn || "" : "", "PPnBM SUM": index === 0 ? invoice.ppnbm || "" : "",
+          "Jumlah Harga Retur SUM": index === 0 ? invoice.grossTotal ?? "" : "", "Potongan Harga SUM": index === 0 ? invoice.discountTotal ?? "" : "", "Netto Retur SUM": index === 0 ? invoice.dpp ?? "" : "", "PPN SUM": index === 0 ? invoice.ppn ?? "" : "", "PPnBM SUM": index === 0 ? invoice.ppnbm ?? "" : "",
           "Halaman Sumber": item.page || invoice.pageRange || "", "Status Parsing": invoice.status || "", "Pesan Validasi": invoice.message || "", "Raw Text PDF": invoice.raw || ""
         });
       });
@@ -575,15 +360,16 @@
   function validateItem(item) {
     var issues = [];
     if (!String(item.name || "").replace(/\s+/g, " ").trim()) issues.push("nama barang tidak terbaca");
-    if (item.qty == null) issues.push("kuantitas bukan angka positif");
+    if (item.qty == null || item.qty <= 0) issues.push("kuantitas bukan angka positif");
     if (!isLikelyUnit(item.unit)) {
       issues.push(item.rawUnit ? "satuan terlihat seperti angka atau nominal" : "satuan tidak terbaca");
       item.unit = "";
     }
     if (item.unitPrice == null) issues.push("harga satuan bukan nominal");
+    if (item.gross == null) issues.push("nilai barang dikembalikan tidak terbaca");
     if (item.gross != null && item.qty != null && item.unitPrice != null) {
       var expectedGross = item.qty * item.unitPrice;
-      var tolerance = Math.max(1, expectedGross * 0.02);
+      var tolerance = 1;
       if (Math.abs(item.gross - expectedGross) > tolerance) issues.push("harga × kuantitas tidak cocok dengan bruto");
     }
     item.validationMessage = issues.join("; ");
@@ -593,18 +379,24 @@
 
   function validateInvoiceItems(invoice) {
     var issues = [];
+    if (!invoice.items.length) issues.push("barang retur tidak terdeteksi");
     invoice.items.forEach(function (item) {
       var rowIssues = validateItem(item);
       if (rowIssues.length) issues.push("baris " + (item.no || "?") + ": " + rowIssues.join(", "));
     });
     if (invoice.grossTotal != null && invoice.items.length && invoice.items.every(function (item) { return item.gross != null; })) {
       var totalGross = invoice.items.reduce(function (total, item) { return total + item.gross; }, 0);
-      if (Math.abs(totalGross - invoice.grossTotal) > Math.max(1, invoice.grossTotal * 0.02)) issues.push("total bruto item tidak cocok dengan total faktur");
+      if (Math.abs(totalGross - invoice.grossTotal) > 1) issues.push("total bruto item tidak cocok dengan total faktur");
     }
     var sequenceIssues = itemSequenceIssues(invoice.items);
     if (sequenceIssues.length) issues.push(sequenceIssues[0] + (sequenceIssues.length > 1 ? "; dan " + (sequenceIssues.length - 1) + " temuan urutan lain" : ""));
     if (isInvoiceReturWorkspace) {
-      if (!invoice.originalInvoiceNumber) issues.push("nomor faktur pajak asal tidak terbaca");
+      if (!invoice.originalInvoiceNumber || invoice.originalInvoiceNumber.replace(/\D/g, "").length !== 16) issues.push("nomor faktur pajak asal harus 16 digit");
+      if (!invoice.date) issues.push("tanggal nota retur tidak terbaca");
+      if (!/^\d{16}$/.test(invoice.buyerNPWP || "")) issues.push("NPWP pembeli harus 16 digit");
+      if (!invoice.sellerNPWP) issues.push("NPWP penjual belum lengkap");
+      if (!invoice.buyerAddress || !invoice.sellerAddress) issues.push("alamat pihak belum lengkap");
+      if (invoice.dpp != null && invoice.discountTotal != null && invoice.grossTotal != null && Math.abs(invoice.grossTotal - invoice.discountTotal - invoice.dpp) > 1) issues.push("netto tidak cocok dengan bruto dikurangi diskon");
       if (!invoice.buyer) issues.push("data pembeli tidak terbaca");
       if (!invoice.seller) issues.push("data penjual tidak terbaca");
       if (invoice.grossTotal == null) issues.push("jumlah harga retur tidak terbaca");
@@ -635,7 +427,8 @@
       for (var sourcePage = 1; sourcePage <= documentPdf.numPages; sourcePage += 1) {
         var page = await documentPdf.getPage(sourcePage);
         var content = await page.getTextContent();
-        var text = linesFromPdfContent(content);
+        var pageLayout = window.ReturnNoteParser.layout(content);
+        var text = pageLayout.text;
         var wasOcr = false;
         var confidence = 100;
         var ocrError = "";
@@ -660,7 +453,7 @@
             ocrError = error instanceof Error ? error.message : "OCR gagal membaca halaman";
           }
         }
-        pages.push({ text: text, sourcePage: sourcePage, ocr: wasOcr, confidence: confidence, ocrError: ocrError });
+        pages.push({ layout: wasOcr ? null : pageLayout, text: text, sourcePage: sourcePage, ocr: wasOcr, confidence: confidence, ocrError: ocrError });
       }
     } finally {
       if (worker) await worker.terminate();
@@ -723,13 +516,28 @@
       var reviewState = $("reviewState");
       if (reviewState && invoice) reviewState.textContent = invoice.status === "PARSED" ? "Hasil sudah dibaca — cek kembali sebelum export" : "Perlu dicek: " + (invoice.message || "lengkapi data barang");
       var preview = $("pdfPreview");
+      if (preview && invoice && preview.src !== "about:blank") preview.src = preview.src.split("#")[0] + "#page=" + (invoice.items[0] && invoice.items[0].sourcePage || parseInt(invoice.pageRange, 10) || 1);
       if (preview && preview.src === "about:blank") {
         preview.setAttribute("aria-label", "Pratinjau PDF tidak tersedia untuk data yang dipulihkan dari sesi sebelumnya");
         if (reviewState) reviewState.textContent = "Pratinjau tersedia untuk PDF yang baru diimpor pada sesi ini. Impor ulang file untuk melihat dokumennya.";
       }
     };
     window.editItem = async function (invoiceIndex, itemIndex, key, value) {
-      await originalEditItem(invoiceIndex, itemIndex, key, value);
+      if (isInvoiceReturWorkspace) {
+        var edited = invoices[invoiceIndex], row = edited.items[itemIndex];
+        row[key] = key === "qty" ? window.ReturnNoteParser.quantity(String(value), row.unit) : ["unitPrice", "gross", "discount"].includes(key) ? window.ReturnNoteParser.amount(value) : value;
+        if (key === "gross") row.returnedValue = row.gross;
+        if (key === "qty" || key === "unitPrice") row.returnedValue = row.gross = row.qty != null && row.unitPrice != null ? Math.round(row.qty * row.unitPrice * 100) / 100 : null;
+        var reviewRow = $("reviewItems") && $("reviewItems").children[itemIndex];
+        var grossInput = reviewRow && reviewRow.querySelectorAll("input")[4];
+        if (grossInput) grossInput.value = row.gross == null ? "" : row.gross;
+        if (key === "name" || key === "unit") row.productId = await getProduct(edited, row);
+        var issues = validateInvoiceItems(edited);
+        edited.status = issues.length ? "REVIEW" : "PARSED";
+        edited.message = issues.join("; ") || "Koreksi telah divalidasi";
+        await put("invoices", edited);
+        window.render();
+      } else await originalEditItem(invoiceIndex, itemIndex, key, value);
       var state = $("reviewState");
       if (state) state.textContent = "Perubahan tersimpan di batch dan akan masuk ke file export";
       showToast("Perubahan item tersimpan untuk export.", "success");
@@ -859,6 +667,7 @@
     if (isInvoiceReturWorkspace) {
       window.parseInvoice = parseReturnInvoice;
       window.exportExcel = exportReturnExcel;
+      window.extractReturnInvoicesFromPdf = extractInvoicesFromPdf;
     }
     buildWorkspace();
     patchRuntime();
@@ -917,6 +726,9 @@
     close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'
   };
   function byId(id) { return document.getElementById(id); }
+  function workspaceTitleMarkup() {
+    return '<div class="workspace-title"><span class="workspace-kicker">RIPITAX · ' + (isReturnWorkspace ? 'INVOICE RETUR' : 'CORETAX') + '</span><strong>' + (isReturnWorkspace ? 'Invoice Retur Scrapper' : 'Invoice Scraper') + '</strong><small id="batchSummary">Belum ada batch aktif</small></div>';
+  }
   function glyph(name) { return '<span class="ux-icon ux-icon-' + name + '">' + svg[name] + "</span>"; }
   function safe(value) { return String(value == null ? "" : value).replace(/[&<>"']/g, function (character) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]; }); }
   function notify(message, tone) {
@@ -1044,7 +856,7 @@
   function itemCell(item) {
     if (!item) return '<div class="queue-item queue-item-empty"><strong>Barang belum tersedia</strong><small>Data header atau error tetap dapat diunduh.</small></div>';
     var identity = [item.productId || "Product ID belum dibuat", item.code ? "Kode " + item.code : ""].filter(Boolean).join(" · ");
-    var values = [item.qty != null ? "Qty " + format(item.qty) : "", item.unit || "", item.unitPrice != null ? "Rp " + format(item.unitPrice) : ""].filter(Boolean).join(" · ");
+    var values = [item.qty != null ? "Qty " + new Intl.NumberFormat("id-ID", { maximumFractionDigits: 6 }).format(item.qty) : "", item.unit || "", item.unitPrice != null ? "Rp " + format(item.unitPrice) : ""].filter(Boolean).join(" · ");
     var validation = item.validationMessage ? '<small class="queue-item-validation">' + safe(item.validationMessage) + "</small>" : "";
     return '<div class="queue-item"><strong title="' + safe(item.name || "Nama barang belum terbaca") + '">' + safe(item.name || "Nama barang belum terbaca") + '</strong><small>' + safe(identity) + '</small><small>' + safe(values || "Lengkapi detail saat review") + "</small>" + validation + "</div>";
   }
@@ -1142,11 +954,13 @@
     inbox.classList.remove("hidden");
     toolbar.dataset.singleWorkspaceReady = "true";
     toolbar.innerHTML = workspaceTitleMarkup() + '<div class="workspace-actions"><button type="button" class="icon-action" id="uploadWorkspace" aria-label="Pilih PDF atau ZIP" title="Pilih PDF atau ZIP" data-tooltip="Pilih PDF atau ZIP">' + glyph("upload") + '</button><button type="button" class="secondary icon-action" id="folderWorkspace" aria-label="Pilih folder" title="Pilih folder" data-tooltip="Pilih folder">' + glyph("folder") + '</button><button type="button" class="secondary icon-action" id="clearWorkspace" aria-label="Kosongkan daftar" title="Kosongkan daftar" data-tooltip="Kosongkan daftar">' + glyph("trash") + '</button><button type="button" class="secondary icon-action" id="zipWorkspace" aria-label="Unduh ZIP Nota Retur" title="Unduh ZIP Nota Retur" data-tooltip="Unduh ZIP Nota Retur">' + glyph("folderZip") + '</button><button type="button" class="icon-action" id="exportWorkspace" aria-label="Unduh rekap Excel" title="Unduh rekap Excel" data-tooltip="Unduh rekap Excel">' + glyph("download") + '</button></div>';
+    toolbar.querySelector(".workspace-actions").insertAdjacentHTML("beforeend", '<button type="button" class="secondary icon-action xml-action" id="exportXmlWorkspace" aria-label="Unduh XML" title="Unduh XML (segera hadir)" data-tooltip="Unduh XML (segera hadir)"><span aria-hidden="true">XML</span></button>');
     byId("uploadWorkspace").addEventListener("click", function () { byId("files").click(); });
     byId("folderWorkspace").addEventListener("click", function () { byId("folder").click(); });
     byId("clearWorkspace").addEventListener("click", function () { window.clearInvoices(); });
     byId("zipWorkspace").addEventListener("click", downloadRenamedZip);
     byId("exportWorkspace").addEventListener("click", function () { window.exportExcel(); });
+    byId("exportXmlWorkspace").addEventListener("click", function () { notify("Ekspor XML belum tersedia.", "warning"); });
     var guide = document.querySelector(".workflow-guide");
     if (guide) guide.innerHTML = '<span><b>1.</b> Masukkan ' + (isReturnWorkspace ? "nota retur" : "faktur") + '</span><i>→</i><span><b>2.</b> Lihat hasil per barang</span><i>→</i><span><b>3.</b> Review bila perlu</span><i>→</i><span><b>4.</b> Unduh Excel</span>';
     var importPanel = byId("drop").closest(".panel");

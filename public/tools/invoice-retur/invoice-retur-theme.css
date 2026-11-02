@@ -145,6 +145,7 @@ main > section.single-workspace-hidden { display: none !important; }
 .workspace-actions button { min-height: 42px; white-space: nowrap; }
 .workspace-actions button:disabled { cursor: not-allowed; }
 .workspace-actions .icon-action { position: relative; width: 42px; min-width: 42px; padding: 0; }
+.workspace-actions .xml-action { width: 48px; min-width: 48px; font-size: .62rem; font-weight: 800; letter-spacing: .04em; }
 .workspace-actions .icon-action .ux-icon { width: 18px; height: 18px; }
 .workspace-actions .icon-action::after { content: attr(data-tooltip); position: absolute; top: calc(100% + 9px); right: 0; z-index: 6; width: max-content; max-width: 190px; padding: 7px 9px; border-radius: 8px; background: #1e1b18; box-shadow: 0 8px 18px rgba(30,27,24,.2); color: #f3e7d3; font-size: .68rem; font-weight: 700; line-height: 1.25; opacity: 0; pointer-events: none; transform: translateY(-3px); transition: opacity .16s ease, transform .16s ease; }
 .workspace-actions .icon-action:hover::after, .workspace-actions .icon-action:focus-visible::after { opacity: 1; transform: translateY(0); }
@@ -259,6 +260,9 @@ body[data-workspace="invoice-retur"] #invoiceRows tr.needs-attention { backgroun
 body[data-workspace="invoice-retur"] .empty-table-row strong { color: #155a7c; }
 body[data-workspace="invoice-retur"] .empty-table-row span { color: #60778a; }
 body[data-workspace="invoice-retur"] .review-toolbar { border-bottom-color: #d1dce3; background: rgba(247,251,253,.96); }
+body[data-workspace="invoice-retur"] .review { grid-template-columns: minmax(0, 1fr); }
+body[data-workspace="invoice-retur"] .review > * { min-width: 0; }
+body[data-workspace="invoice-retur"] #pdfPreview { max-width: 100%; }
 body[data-workspace="invoice-retur"] .review-toolbar .workspace-kicker { color: #155a7c; }
 body[data-workspace="invoice-retur"] progress { accent-color: #155a7c; }
 body[data-workspace="invoice-retur"] .ux-toast { background: #102b46; color: #fff; }

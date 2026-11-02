@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CoretaxWorkspaceVariant = "coretax" | "invoice-retur";
 
@@ -10,6 +10,7 @@ interface CoretaxEmbedProps {
 
 export function CoretaxEmbed({ variant = "coretax" }: CoretaxEmbedProps) {
   const [workspaceHeight, setWorkspaceHeight] = useState<number | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const isInvoiceRetur = variant === "invoice-retur";
 
   useEffect(() => {
@@ -23,15 +24,22 @@ export function CoretaxEmbed({ variant = "coretax" }: CoretaxEmbedProps) {
     }
 
     window.addEventListener("message", receiveWorkspaceHeight);
+    iframeRef.current?.contentWindow?.postMessage({ type: "request-coretax-workspace-height" }, window.location.origin);
     return () => window.removeEventListener("message", receiveWorkspaceHeight);
   }, []);
 
+  function requestWorkspaceHeight() {
+    iframeRef.current?.contentWindow?.postMessage({ type: "request-coretax-workspace-height" }, window.location.origin);
+  }
+
   return (
     <iframe
+      ref={iframeRef}
       className="coretax-embed"
-      src={isInvoiceRetur ? "/tools/invoice-retur/invoice-retur-workspace.html?v=7" : "/tools/coretax/coretax-workspace.html"}
+      src={isInvoiceRetur ? "/tools/invoice-retur/invoice-retur-workspace.html?v=8" : "/tools/coretax/coretax-workspace.html"}
       title={isInvoiceRetur ? "RIPITA Invoice Retur Scrapper" : "RIPITA Invoice Scraper"}
       style={workspaceHeight ? { height: `${workspaceHeight}px` } : undefined}
+      onLoad={requestWorkspaceHeight}
     />
   );
 }
