@@ -3262,6 +3262,25 @@ code.notion-inline-code {
 .coretax-hero .lead { max-width: 830px; }
 .coretax-shell { max-width: 1100px; }
 .coretax-embed { display: block; width: 100%; height: 1400px; min-height: 900px; border: 1px solid var(--line-strong); border-radius: 18px; background: #f3f6f8; box-shadow: var(--shadow-soft); }
+.invoice-retur-page {
+  --line: rgba(36, 91, 135, 0.22);
+  --line-strong: rgba(36, 91, 135, 0.42);
+  background:
+    radial-gradient(circle at 82% 10%, rgba(140, 201, 222, 0.32), transparent 28rem),
+    linear-gradient(180deg, #eaf5fa 0%, #f8fbfd 44%, #eaf5fa 100%);
+}
+.invoice-retur-page .tool-category-hero { background: linear-gradient(135deg, rgba(36, 91, 135, 0.08), rgba(140, 201, 222, 0.18)); }
+.invoice-retur-page .breadcrumb { color: rgba(16, 43, 70, 0.66); }
+.invoice-retur-page .breadcrumb a,
+.invoice-retur-page .text-rempah { color: var(--selat); }
+.invoice-retur-page .display-lg { color: #102b46; }
+.invoice-retur-page .lead.muted { color: #41627c; }
+.invoice-retur-page .coretax-embed {
+  border-color: rgba(36, 91, 135, 0.4);
+  background: #f3f6f8;
+  box-shadow: 0 18px 40px rgba(16, 43, 70, 0.14);
+}
+.invoice-retur-page .coretax-embed:focus-visible { outline-color: var(--selat); }
 .rename-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 16px; margin-bottom: 16px; }
 .rename-controls, .rename-drop, .rename-table-card { padding: 26px; }
 .rename-controls h2, .rename-drop h2 { margin: 7px 0 21px; font-size: 1.55rem; }

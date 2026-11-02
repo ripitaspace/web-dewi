@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invoice Retur Scrapper</title>
+  <style>html,body{width:100%;margin:0;border:0;overflow:hidden}#coretaxLegacy{display:block;width:100%;min-height:900px;margin:0;border:0}</style>
+</head>
+<body>
+  <template id="workspaceToolbarTemplate">
+    <div id="workspaceToolbar" class="workspace-toolbar">
+      <div id="workspaceTitleSlot"></div>
+      <div class="workspace-actions">
+        <button type="button" class="icon-action" id="uploadWorkspace" aria-label="Pilih PDF atau ZIP" title="Pilih PDF atau ZIP" data-tooltip="Pilih PDF atau ZIP"><span class="ux-icon ux-icon-upload"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0 4 4m-4-4L8 7M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></span></button>
+        <button type="button" class="secondary icon-action" id="folderWorkspace" aria-label="Pilih folder" title="Pilih folder" data-tooltip="Pilih folder"><span class="ux-icon ux-icon-folder"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2.5h6.5A2.5 2.5 0 0 1 21 9v8.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-11Z"/></svg></span></button>
+        <button type="button" class="secondary icon-action" id="clearWorkspace" aria-label="Kosongkan daftar" title="Kosongkan daftar" data-tooltip="Kosongkan daftar"><span class="ux-icon ux-icon-trash"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v5m4-5v5M9 4h6l1 3H8l1-3Zm-3 3 1 14h10l1-14"/></svg></span></button>
+        <button type="button" class="secondary icon-action" id="zipWorkspace" aria-label="Unduh ZIP faktur rapi" title="Unduh ZIP faktur rapi" data-tooltip="Unduh ZIP faktur rapi"><span class="ux-icon ux-icon-folderZip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2.5h6.5A2.5 2.5 0 0 1 21 9v8.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-11Z"/><path d="M12 10h.01M12 13h.01M12 16h.01M10.5 18h3"/></svg></span></button>
+        <button type="button" class="icon-action" id="exportWorkspace" aria-label="Unduh rekap Excel" title="Unduh rekap Excel" data-tooltip="Unduh rekap Excel"><span class="ux-icon ux-icon-download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13m0 0 4 4m-4 4-4-4M5 20h14"/></svg></span></button>
+      </div>
+    </div>
+  </template>
+  <iframe id="coretaxLegacy" src="/tools/invoice-retur/Invoice_Retur_Scrapper.html?mode=invoice-retur" title="RIPITA Invoice Retur Scrapper"></iframe>
+  <script>
+    (function () {
+      var frame = document.getElementById("coretaxLegacy");
+      frame.addEventListener("load", function () {
+        var doc = frame.contentDocument;
+        if (!doc || !doc.head) return;
+        function resizeWorkspace() {
+          var height = Math.max(900, doc.documentElement.scrollHeight, doc.body ? doc.body.scrollHeight : 0);
+          frame.style.height = height + "px";
+          window.parent.postMessage({ type: "coretax-workspace-height", height: height }, window.location.origin);
+        }
+
+        var theme = doc.createElement("link");
+        theme.rel = "stylesheet";
+        theme.href = "/tools/invoice-retur/invoice-retur-theme.css";
+        theme.addEventListener("load", resizeWorkspace);
+        doc.head.appendChild(theme);
+
+        var ux = doc.createElement("script");
+        ux.src = "/tools/invoice-retur/invoice-retur-ux.js?v=7";
+        ux.async = false;
+        ux.addEventListener("load", resizeWorkspace);
+        doc.head.appendChild(ux);
+
+        if (window.ResizeObserver && doc.body) new ResizeObserver(resizeWorkspace).observe(doc.body);
+        if (window.MutationObserver && doc.body) new MutationObserver(resizeWorkspace).observe(doc.body, { childList: true, subtree: true, attributes: true });
+        frame.contentWindow.addEventListener("resize", resizeWorkspace);
+        resizeWorkspace();
+      });
+    }());
+  </script>
+</body>
+</html>

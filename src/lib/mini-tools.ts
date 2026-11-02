@@ -22,6 +22,7 @@ export const MINI_TOOL_FILTERS = [
 
 export const MINI_TOOLS: MiniTool[] = [
   { number: "09", category: "Tax Essentials", title: "Coretax Invoice Scraper & Renamer", description: "Ekstrak data dan rename faktur pajak.", icon: "▤", iconSrc: "/images/artworks/tool-coretax-scraper.png", status: "available", href: "/karya/pajak/coretax" },
+  { number: "23", category: "Tax Essentials", title: "Invoice Retur Rahasia", description: "Membantu Mbak Lulik membuat invoice retur secara lebih mudah.", icon: "↶", iconSrc: "/images/artworks/invoice-retur-rahasia.png", status: "maintenance", href: "/karya/pajak/invoice-retur-rahasia" },
   { number: "01", category: "Business Essentials", title: "Quotation Generator", description: "Membuat surat penawaran harga.", icon: "“", iconSrc: "/images/artworks/tool-quotation-generator.png", status: "available", href: "/karya/tools/quotation-generator" },
   { number: "02", category: "Business Essentials", title: "Invoice Generator", description: "Membuat invoice atau tagihan pelanggan.", icon: "▤", iconSrc: "/images/artworks/tool-invoice-generator.png", status: "maintenance", href: "/karya/tools/invoice-generator" },
   { number: "03", category: "Business Essentials", title: "Kuitansi Generator", description: "Membuat bukti penerimaan pembayaran.", icon: "✓", iconSrc: "/images/artworks/tool-kuitansi-generator.png", status: "maintenance", href: "/karya/tools/kuitansi-generator" },

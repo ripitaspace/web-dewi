@@ -30,6 +30,13 @@ export default function PajakPage() {
               <div><span className="topic-pill">CORETAX · MINI TOOL</span><h2>Invoice Scraper</h2><p>Ubah batch Faktur Pajak PDF menjadi data barang yang bisa diperiksa dan diekspor ke Excel.</p></div>
               <span className="btn primary">Buka Coretax →</span>
             </Link>
+            <Link href="/karya/pajak/invoice-retur-rahasia" className="tax-tool-card card card-hover">
+              <div className="tax-tool-icon" aria-hidden="true">
+                <img src="/images/artworks/invoice-retur-rahasia.png" alt="" />
+              </div>
+              <div><span className="topic-pill">INVOICE RETUR · MINI TOOL</span><h2>Invoice Retur Rahasia</h2><p>Ruang sederhana untuk membantu Mbak Lulik membuat invoice retur dengan lebih mudah.</p></div>
+              <span className="btn primary">Lihat tool →</span>
+            </Link>
           </div>
         </section>
       </main>
