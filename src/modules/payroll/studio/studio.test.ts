@@ -69,6 +69,34 @@ describe("Studio tax calculations", () => {
         pay.company.month = 12;
         expect(createEngine(pay).payrollResult(pay.recipients[0], 12)!.tax).toBeLessThan(0);
     });
+    it("distinguishes gross, automatic gross-up, and employer-borne payroll tax", () => {
+        const s = valid(), r = s.recipients[0], entry = s.entries[0];
+        r.ptkp = "TK/0"; entry.amount = 12000000;
+        let result = createEngine(s).payrollResult(r, 10)!;
+        expect(result.tax).toBe(480000); expect(result.netCash).toBe(11520000);
+
+        r.taxMethod = "gross_up"; r.grossUp = "Yes";
+        result = createEngine(s).payrollResult(r, 10)!;
+        expect(Math.abs(result.tax - result.parts.taxAllowance)).toBeLessThanOrEqual(1);
+        expect(result.gross).toBeGreaterThanOrEqual(12499999); expect(result.gross).toBeLessThanOrEqual(12500000);
+        expect(result.tax).toBe(500000); expect(Math.abs(result.netCash - 12000000)).toBeLessThanOrEqual(1);
+
+        r.taxMethod = "employer_borne"; r.grossUp = "No";
+        result = createEngine(s).payrollResult(r, 10)!;
+        expect(result.gross).toBe(12000000); expect(result.tax).toBe(480000);
+        expect(result.netCash).toBe(12000000); expect(result.employerBorneTax).toBe(480000);
+    });
+    it("solves gross-up with Pasal 17 in the final period", () => {
+        const s = valid(), r = s.recipients[0], entry = s.entries[0];
+        Object.assign(r, { startMonth: 10, endMonth: 10, ptkp: "TK/0", taxMethod: "gross_up", grossUp: "Yes" });
+        entry.amount = 130000000;
+        const result = createEngine(s).payrollResult(r, 10)!;
+        expect(result.docType).toBe("BPA1"); expect(result.gross).toBe(136264600);
+        expect(result.parts.taxAllowance).toBe(6264600); expect(result.tax).toBe(6264600);
+        expect(result.netCash).toBe(130000000);
+        const fields = Object.fromEntries(createEngine(s).documentsForPeriod()[0].fields);
+        expect(fields.GrossUpOpt).toBe("Yes"); expect(fields.IncomeTaxBenefit).toBe(6264600);
+    });
 });
 describe("XML adapters and gates", () => {
     it.each([["BPMP", "fixed", 10, false, false], ["BP21", "nonemployee", 10, false, false], ["BP26", "nonemployee", 10, true, false], ["BPA1", "fixed", 12, false, false], ["BPA2", "fixed", 12, false, true]] as const)("matches official %s root and ordered tags", (type, kind, month, foreign, government) => {
@@ -108,6 +136,13 @@ describe("Backup, CSV, IDs and ZIP", () => {
             expect(() => checkBackup(corrupt)).toThrow();
         s.nextId = 1;
         expect(nextId(s, "P")).not.toBe(s.recipients[0].id);
+    });
+    it("migrates legacy GrossUpOpt Yes backups to automatic gross-up", () => {
+        const legacy = demo();
+        delete (legacy.recipients[0] as Partial<typeof legacy.recipients[0]>).taxMethod;
+        legacy.recipients[0].grossUp = "Yes";
+        expect(() => checkBackup(legacy)).not.toThrow();
+        expect(legacy.recipients[0].taxMethod).toBe("gross_up");
     });
     it("roundtrips quoted CSV, skips duplicates and reports invalid rows", () => {
         const s = demo();
@@ -159,5 +194,20 @@ describe("RIPITAX PAYROLL workbook import", () => {
         expect(imported.studio.company.name).toBe("PT DRAG DROP");
         expect(recipient).toMatchObject({ employeeId: "EMP-DAILY", whStatus: "PartialYear", subject: "changed", annualComplete: true, workForSecondEmployer: "Yes", previousSlip: "BP-001", rank: "III/a", passport: "A123", kitas: "K123", dob: "1990-01-01", birthCity: "Jakarta" });
         expect(entry).toMatchObject({ id: "TRX-001-fee", comp: "fee", amount: 1800000, days: 3, equalDaily: true, excludedLabor: 200000, excludedMaterial: 100000, proof: true });
+    });
+    it("parses Excel serial end dates, normalizes methods, and reports out-of-period rows", async () => {
+        const book = XLSX.utils.book_new(), rows: (string | number)[][] = Array.from({ length: 13 }, () => []);
+        rows[4][2] = "PT TEST"; rows[4][10] = "0000000000000000"; rows[4][18] = "0000000000000000000000"; rows[4][26] = 2026; rows[4][30] = "Oktober"; rows[4][34] = "2026-10-31";
+        rows[10] = [...PAYROLL_HEADERS];
+        rows[11] = ["TRX-383", "P0383", "Laras", "0000000000000001", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Masa terakhir", "2026-10-01", 46326, 130000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, " GROSS UP ", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-383", "2026-10-31", "", "", "Staf", "", "", "serial date"];
+        rows[12] = ["TRX-384", "P0384", "Adi", "0000000000000002", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Normal", "2025-12-01", "", 12000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Ditanggung perusahaan", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-384", "2026-10-31", "", "", "Staf", "", "", "outside period"];
+        XLSX.utils.book_append_sheet(book, XLSX.utils.aoa_to_sheet(rows), "PAYROLL");
+        const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => XLSX.write(book, { type: "array", bookType: "xlsx" }) } as File);
+        const laras = imported.studio.recipients.find(r => r.employeeId === "P0383")!, adi = imported.studio.recipients.find(r => r.employeeId === "P0384")!;
+        expect(laras).toMatchObject({ endMonth: 10, taxMethod: "gross_up", grossUp: "Yes" });
+        expect(createEngine(imported.studio).payrollResult(laras, 10)).toMatchObject({ docType: "BPA1", tax: 6264600 });
+        expect(adi).toMatchObject({ taxMethod: "employer_borne", startMonth: 12, endMonth: 12 });
+        expect(imported.studio.entries.some(e => e.recipientId === adi.id)).toBe(false);
+        expect(imported.errors.join(" ")).toContain("di luar masa kerja penerima P0384");
     });
 });

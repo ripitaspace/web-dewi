@@ -1,3 +1,5 @@
+export type TaxMethod = "gross" | "gross_up" | "employer_borne";
+
 export type Recipient = {
     id: string;
     employeeId: string;
@@ -25,7 +27,9 @@ export type Recipient = {
     receiptNo: string;
     facility: string;
     taxObject: string;
-    grossUp: string;
+    // Kept for the Coretax A1 adapter and legacy v2 backups. New logic uses taxMethod.
+    grossUp: "No" | "Yes";
+    taxMethod: TaxMethod;
     workForSecondEmployer: string;
     previousSlip: string;
     annualComplete: boolean;
@@ -74,6 +78,7 @@ export type Result = {
     deductions: number;
     tax: number;
     netCash: number;
+    employerBorneTax?: number;
     rate: number | null;
     method: string;
     trace: string[];

@@ -10,7 +10,7 @@ export function nextId(s: Studio, prefix: string) {
     } while (used.has(id));
     return id;
 }
-export function recipientDefault(s: Studio): Recipient { const id = nextId(s, "P"); return { id, employeeId: id, name: "", tin: "", tku: "", kind: "fixed", residency: "SPDN", citizenship: "Resident", ptkp: "TK/0", sector: "private", startMonth: 1, endMonth: 12, subject: "existing", position: "", rank: "", nip: "", passport: "", kitas: "", country: "", address: "", dob: "", birthCity: "", foreignTin: "", receiptNo: "", facility: "N/A", taxObject: "", grossUp: "No", workForSecondEmployer: "No", previousSlip: "", annualComplete: false, whStatus: "auto", note: "" }; }
+export function recipientDefault(s: Studio): Recipient { const id = nextId(s, "P"); return { id, employeeId: id, name: "", tin: "", tku: "", kind: "fixed", residency: "SPDN", citizenship: "Resident", ptkp: "TK/0", sector: "private", startMonth: 1, endMonth: 12, subject: "existing", position: "", rank: "", nip: "", passport: "", kitas: "", country: "", address: "", dob: "", birthCity: "", foreignTin: "", receiptNo: "", facility: "N/A", taxObject: "", grossUp: "No", taxMethod: "gross", workForSecondEmployer: "No", previousSlip: "", annualComplete: false, whStatus: "auto", note: "" }; }
 export function entryDefault(s: Studio, recipientId = s.recipients[0]?.id || ""): Entry { return { id: nextId(s, "T"), recipientId, month: s.company.month, comp: "salary", amount: 0, description: "", documentType: "CommercialInvoice", documentNo: "", documentDate: "", withholdingDate: "", days: 1, equalDaily: false, excludedLabor: 0, excludedMaterial: 0, proof: false }; }
 export function componentsFor(kind: string) { return ["fixed", "pension"].includes(kind) ? Object.keys(COMPONENTS).filter(k => k !== "fee") : ["fee"]; }
 export function adaptEntry(e: Entry, s: Studio) { const r = s.recipients.find(r => r.id === e.recipientId); if (r && !componentsFor(r.kind).includes(e.comp))
@@ -34,6 +34,7 @@ export function demo(): Studio {
             position: "Staf",
             facility: "N/A",
             grossUp: "No",
+            taxMethod: "gross",
             workForSecondEmployer: "No",
             annualComplete: true,
             whStatus: "FullYear",
@@ -92,8 +93,12 @@ export function checkBackup(value: unknown): asserts value is Studio {
             throw Error("ID penerima kosong atau duplikat.");
         // Backup v2 sebelum kolom ID pegawai diperkenalkan tetap dapat dipulihkan.
         if (!Object.hasOwn(r, "employeeId")) r.employeeId = r.id;
+        // Backup lama hanya menyimpan GrossUpOpt. Sesuai kebijakan migrasi, Yes lama
+        // diperlakukan sebagai gross-up, bukan PPh yang ditanggung perusahaan.
+        if (!Object.hasOwn(r, "taxMethod")) r.taxMethod = r.grossUp === "Yes" ? "gross_up" : "gross";
+        r.grossUp = r.taxMethod === "gross_up" ? "Yes" : "No";
         ids.add(r.id);
-        if (!Object.entries(defaults).every(([k, v]) => typeof r[k] === typeof v) || !Object.hasOwn(KINDS, String(r.kind)) || !PTKP.includes(String(r.ptkp)) || !["SPDN", "SPLN"].includes(String(r.residency)) || !["Resident", "Foreign"].includes(String(r.citizenship)) || !["private", "government"].includes(String(r.sector)) || !["existing", "changed"].includes(String(r.subject)) || !["auto", "FullYear", "PartialYear", "Annualized"].includes(String(r.whStatus)) || !["No", "Yes"].includes(String(r.grossUp)) || !["No", "Yes"].includes(String(r.workForSecondEmployer)) || !["N/A", "DTP", "ETC", "COD", "TaxExAr21"].includes(String(r.facility)) || !month(r.startMonth) || !month(r.endMonth) || Number(r.startMonth) > Number(r.endMonth))
+        if (!Object.entries(defaults).every(([k, v]) => typeof r[k] === typeof v) || !Object.hasOwn(KINDS, String(r.kind)) || !PTKP.includes(String(r.ptkp)) || !["SPDN", "SPLN"].includes(String(r.residency)) || !["Resident", "Foreign"].includes(String(r.citizenship)) || !["private", "government"].includes(String(r.sector)) || !["existing", "changed"].includes(String(r.subject)) || !["auto", "FullYear", "PartialYear", "Annualized"].includes(String(r.whStatus)) || !["gross", "gross_up", "employer_borne"].includes(String(r.taxMethod)) || !["No", "Yes"].includes(String(r.grossUp)) || !["No", "Yes"].includes(String(r.workForSecondEmployer)) || !["N/A", "DTP", "ETC", "COD", "TaxExAr21"].includes(String(r.facility)) || !month(r.startMonth) || !month(r.endMonth) || Number(r.startMonth) > Number(r.endMonth))
             throw Error("Data penerima tidak lengkap atau tidak valid.");
     }
     const entryIds = new Set<string>();

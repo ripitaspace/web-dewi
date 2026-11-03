@@ -39,6 +39,7 @@ export function createEngine(state: Studio): {
         deductions: number;
         tax: number;
         netCash: number;
+        employerBorneTax: number;
         issues: string[];
         docType: string;
     };

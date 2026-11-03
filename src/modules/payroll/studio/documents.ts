@@ -21,6 +21,8 @@ export function createDocumentSnapshot(input: Studio) {
     const people = state.recipients.map(recipient => {
         const summary = engine.taxMonthSummary(recipient, state.company.month);
         const parts = engine.periodParts(recipient, state.company.month).parts;
+        const generatedAllowance = summary.rows.reduce((total, row) => total + (row.parts.taxAllowance || 0), 0);
+        if (summary.rows.some(row => Object.hasOwn(row.parts, "taxAllowance"))) parts.taxAllowance = generatedAllowance;
         const entries = engine.linesFor(recipient.id, state.company.month);
         const errors: string[] = [];
         if (!state.company.name.trim()) errors.push('Isi nama perusahaan.');
@@ -75,6 +77,7 @@ export function payrollColumns(snapshot: DocumentSnapshot) {
     return [
         ...components.map(key => ({ key, label: componentLabel(key), value: (p: PayrollPerson) => p.parts[key] || 0 })),
         ...(['gross', 'cash', 'tax', 'deductions', 'netCash'] as const).map((key, index) => ({ key, label: ['Bruto pajak', 'Penghasilan tunai', 'PPh 21/26', 'Potongan nonpajak', 'Netto dibayarkan'][index], value: (p: PayrollPerson) => p.summary[key] })),
+        ...(snapshot.people.some(p => p.summary.employerBorneTax > 0) ? [{ key: 'employerBorneTax', label: 'PPh ditanggung perusahaan', value: (p: PayrollPerson) => p.summary.employerBorneTax }] : []),
     ];
 }
 export async function payrollWorkbook(snapshot: DocumentSnapshot) {

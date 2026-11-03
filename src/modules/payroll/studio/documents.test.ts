@@ -56,8 +56,8 @@ describe('Step 04 shared document snapshot', () => {
         let snapshot = createDocumentSnapshot(state);
         expect(snapshot.people[0].errors).toEqual([]); expect(snapshot.people[0].xmlErrors.length).toBeGreaterThan(0);
         expect(snapshot.people.find(p => p.recipient.kind === 'former')!.errors).toEqual([]);
-        state.recipients[0].grossUp = 'Yes'; snapshot = createDocumentSnapshot(state);
-        expect(snapshot.people[0].errors.join(' ')).toContain('Gross-up');
+        state.recipients[0].taxMethod = 'gross_up'; state.recipients[0].grossUp = 'Yes'; snapshot = createDocumentSnapshot(state);
+        expect(snapshot.people[0].errors.join(' ')).not.toContain('Gross-up');
     });
     it('uses recipient category, not XML type, for slip titles and preserves negative reconciliation', () => {
         const snapshot = createDocumentSnapshot(demo());
@@ -130,10 +130,10 @@ describe('PDF, Excel and binary ZIP', () => {
         const columns = payrollColumns(snapshot), total = rows.at(-1)!;
         columns.forEach((column, i) => expect(total[i + 3]).toBe(snapshot.people.reduce((sum, p) => sum + column.value(p), 0)));
     });
-    it('blocks a final slip with calculation issues while keeping marked preview available', async () => {
-        const state = demo(); state.recipients[0].grossUp = 'Yes'; const snapshot = createDocumentSnapshot(state);
-        await expect(slipPdf(snapshot, snapshot.people[0])).rejects.toThrow('Gross-up');
-        expect(await pdfText(await slipPdf(snapshot, snapshot.people[0], '', true))).toContain('PERLU PERBAIKAN');
+    it('creates a final slip using the same automatic gross-up amount as the summary', async () => {
+        const state = demo(); state.recipients[0].taxMethod = 'gross_up'; state.recipients[0].grossUp = 'Yes'; const snapshot = createDocumentSnapshot(state);
+        expect(snapshot.people[0].errors).toEqual([]);
+        expect(await pdfText(await slipPdf(snapshot, snapshot.people[0]))).toContain('Tunjangan PPh');
     });
     it('handles long details, repeated recap headers and binary data without corrupting XML', async () => {
         const state = demo();

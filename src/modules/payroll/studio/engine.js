@@ -41,38 +41,107 @@ export function createEngine(state) {
         if (e.comp === 'zakat')
             out.zakat += amount;
     } return out; }
+    function taxMethod(r) { return ['gross', 'gross_up', 'employer_borne'].includes(r.taxMethod) ? r.taxMethod : r.grossUp === 'Yes' ? 'gross_up' : 'gross'; }
+    function withGrossUpAllowance(parts, allowance) {
+        const manual = n(parts.parts.taxAllowance), gross = parts.gross - manual, cash = parts.cash - manual;
+        return { ...parts, gross: gross + allowance, cash: cash + allowance, parts: { ...parts.parts, taxAllowance: allowance } };
+    }
+    function grossUpCandidates(r, baseGross) {
+        const table = RULES.ter[category(r)], candidates = [];
+        for (let i = 0; i < table.rate.length; i++) {
+            const rate = table.rate[i], upper = table.upper[i];
+            candidates.push(Math.round(baseGross * rate / (1 - rate)));
+            if (Number.isFinite(upper))
+                candidates.push(Math.max(0, Math.round(upper - baseGross)));
+        }
+        return candidates;
+    }
+    function solveGrossUp(taxForAllowance, seed = 0, candidates = []) {
+        let allowance = Math.max(0, Math.round(seed)), iterations = [], cycle = false;
+        for (let i = 0; i < 100; i++) {
+            const tax = Math.max(0, Math.round(taxForAllowance(allowance))), residual = Math.abs(tax - allowance);
+            iterations.push(allowance);
+            if (residual <= 1) {
+                const alternate = Math.max(0, Math.round(taxForAllowance(tax))), alternateResidual = Math.abs(alternate - tax);
+                return alternateResidual < residual ? { allowance: tax, residual: alternateResidual, converged: true } : { allowance, residual, converged: true };
+            }
+            if (iterations.includes(tax)) { cycle = true; break; }
+            allowance = tax;
+        }
+        const nearby = [...new Set([...iterations, allowance, ...candidates])].flatMap(value => [-2, -1, 0, 1, 2].map(delta => Math.max(0, Math.round(value + delta))));
+        const best = nearby.map(value => ({ allowance: value, residual: Math.abs(Math.max(0, Math.round(taxForAllowance(value))) - value) })).sort((a, b) => a.residual - b.residual || a.allowance - b.allowance)[0];
+        return { allowance: best?.allowance || 0, residual: best?.residual ?? Infinity, converged: !!best && best.residual <= 1, cycle };
+    }
+    function monthlyGrossUpParts(r, month) {
+        const raw = periodParts(r, month);
+        if (taxMethod(r) !== 'gross_up')
+            return { parts: raw, solution: null };
+        const manual = n(raw.parts.taxAllowance), baseGross = raw.gross - manual;
+        const solution = solveGrossUp(allowance => {
+            const gross = baseGross + allowance;
+            return gross * ter(r, gross).rate;
+        }, manual, grossUpCandidates(r, baseGross));
+        return { parts: withGrossUpAllowance(raw, solution.allowance), solution };
+    }
+    function annualCalculation(r, month, currentAllowance = 0) {
+        let gross = 0, pension = 0, zakat = 0, cashSum = 0;
+        const prior = [], components = {};
+        for (let m = Number(r.startMonth); m <= Number(r.endMonth); m++) {
+            let x = periodParts(r, m);
+            if (taxMethod(r) === 'gross_up')
+                x = m < month ? monthlyGrossUpParts(r, m).parts : m === month ? withGrossUpAllowance(x, currentAllowance) : x;
+            gross += x.gross;
+            pension += x.pension;
+            zakat += x.zakat;
+            cashSum += x.cash;
+            for (const [key, value] of Object.entries(x.parts))
+                components[key] = n(components[key]) + n(value);
+            if (m < month) {
+                const t = ter(r, x.gross);
+                prior.push({ month: m, gross: x.gross, tax: Math.round(x.gross * t.rate) });
+            }
+        }
+        const costCap = r.kind === 'pension' ? 200000 : 500000;
+        const cost = Math.min(Math.round(gross * .05), costCap * (Number(r.endMonth) - Number(r.startMonth) + 1));
+        const net = Math.max(0, gross - cost - pension - zakat), ptkp = RULES.ptkp[r.ptkp] || 0, pkp = Math.floor(Math.max(0, net - ptkp) / 1000) * 1000, calc = art17(pkp), withheld = prior.reduce((a, b) => a + b.tax, 0);
+        return { gross, cost, pension, zakat, net, ptkp, pkp, annualTax: calc.tax, prior: withheld, tax: calc.tax - withheld, segments: calc.segments, cashSum, components };
+    }
     function payrollResult(r, month) {
-        const p = periodParts(r, month), last = Number(r.endMonth) === Number(month), active = inScope(r, month);
+        const raw = periodParts(r, month), last = Number(r.endMonth) === Number(month), active = inScope(r, month), methodOpt = taxMethod(r);
         if (!active)
             return null;
-        const terInfo = ter(r, p.gross);
-        let tax = 0, method = '', explain = [], annual = null, issues = [];
+        let p = raw, terInfo = ter(r, raw.gross), tax = 0, method = '', explain = [], annual = null, issues = [];
         if (!last) {
+            if (methodOpt === 'gross_up') {
+                const adjusted = monthlyGrossUpParts(r, month);
+                p = adjusted.parts;
+                if (!adjusted.solution?.converged)
+                    issues.push('Gross-up tidak konvergen hingga toleransi Rp1; perlu review manual.');
+            }
+            terInfo = ter(r, p.gross);
             tax = Math.round(p.gross * terInfo.rate);
             method = 'TER ' + terInfo.category + ' · ' + pct(terInfo.rate);
             explain = [`Bruto pajak: ${rupi(p.gross)}`, `PTKP ${r.ptkp} → kategori TER ${terInfo.category}`, `Lapisan bruto: ${rupi(terInfo.lower)} s.d. ${Number.isFinite(terInfo.upper) ? rupi(terInfo.upper) : 'tak terbatas'}`, `PPh 21 = ${rupi(p.gross)} × ${pct(terInfo.rate)} = ${rupi(tax)}`];
+            if (methodOpt === 'gross_up')
+                explain.unshift(`Gross-up otomatis: tunjangan PPh ${rupi(p.parts.taxAllowance)}.`);
         }
         else {
-            let gross = 0, pension = 0, zakat = 0, cashSum = 0;
-            const prior = [];
-            for (let m = Number(r.startMonth); m <= Number(r.endMonth); m++) {
-                const x = periodParts(r, m);
-                gross += x.gross;
-                pension += x.pension;
-                zakat += x.zakat;
-                cashSum += x.cash;
-                if (m < month) {
-                    const t = ter(r, x.gross);
-                    prior.push({ month: m, gross: x.gross, tax: Math.round(x.gross * t.rate) });
-                }
+            let calculated = annualCalculation(r, month);
+            if (methodOpt === 'gross_up' && calculated.tax > 0) {
+                const adjusted = solveGrossUp(allowance => Math.max(0, annualCalculation(r, month, allowance).tax), n(raw.parts.taxAllowance));
+                p = withGrossUpAllowance(raw, adjusted.allowance);
+                calculated = annualCalculation(r, month, adjusted.allowance);
+                if (!adjusted.converged)
+                    issues.push('Gross-up masa terakhir tidak konvergen hingga toleransi Rp1; perlu review manual.');
             }
-            const costCap = r.kind === 'pension' ? 200000 : 500000;
-            const cost = Math.min(Math.round(gross * .05), costCap * (Number(r.endMonth) - Number(r.startMonth) + 1));
-            const net = Math.max(0, gross - cost - pension - zakat), ptkp = RULES.ptkp[r.ptkp] || 0, pkp = Math.floor(Math.max(0, net - ptkp) / 1000) * 1000, calc = art17(pkp), withheld = prior.reduce((a, b) => a + b.tax, 0);
-            tax = calc.tax - withheld;
+            else if (methodOpt === 'gross_up')
+                p = withGrossUpAllowance(raw, 0);
+            tax = calculated.tax;
             method = 'Pasal 17 · masa terakhir';
-            annual = { gross, cost, pension, zakat, net, ptkp, pkp, annualTax: calc.tax, prior: withheld, tax, segments: calc.segments, cashSum };
-            explain = [`Bruto selama masa kerja: ${rupi(gross)}`, `Biaya ${r.kind === 'pension' ? 'pensiun' : 'jabatan'}: min(5% × bruto, batas per bulan × masa kerja) = ${rupi(cost)}`, `Iuran pensiun/JHT pengurang: ${rupi(pension)}`, `Zakat wajib melalui perusahaan: ${rupi(zakat)}`, `Neto: ${rupi(net)}`, `PTKP ${r.ptkp}: ${rupi(ptkp)}`, `PKP setelah pembulatan ribuan: ${rupi(pkp)}`, ...calc.segments.map(s => `${rupi(s.base)} × ${pct(s.rate)} = ${rupi(s.tax)}`), `PPh setahun/periode: ${rupi(calc.tax)}`, `Potongan sebelumnya: ${rupi(withheld)}`, `PPh masa terakhir: ${rupi(tax)}`];
+            annual = calculated;
+            explain = [`Bruto selama masa kerja: ${rupi(calculated.gross)}`, `Biaya ${r.kind === 'pension' ? 'pensiun' : 'jabatan'}: min(5% × bruto, batas per bulan × masa kerja) = ${rupi(calculated.cost)}`, `Iuran pensiun/JHT pengurang: ${rupi(calculated.pension)}`, `Zakat wajib melalui perusahaan: ${rupi(calculated.zakat)}`, `Neto: ${rupi(calculated.net)}`, `PTKP ${r.ptkp}: ${rupi(calculated.ptkp)}`, `PKP setelah pembulatan ribuan: ${rupi(calculated.pkp)}`, ...calculated.segments.map(s => `${rupi(s.base)} × ${pct(s.rate)} = ${rupi(s.tax)}`), `PPh setahun/periode: ${rupi(calculated.annualTax)}`, `Potongan sebelumnya: ${rupi(calculated.prior)}`, `PPh masa terakhir: ${rupi(tax)}`];
+            if (methodOpt === 'gross_up')
+                explain.unshift(`Gross-up otomatis masa terakhir: tunjangan PPh ${rupi(p.parts.taxAllowance)}.`);
             if (tax < 0)
                 explain.push('Pemotongan negatif: perlu pengembalian/penyesuaian kelebihan potong sesuai ketentuan.');
             if (!r.annualComplete)
@@ -82,9 +151,8 @@ export function createEngine(state) {
             if (r.workForSecondEmployer === 'Yes')
                 issues.push('Penggabungan penghasilan pemberi kerja sebelumnya perlu review bukti potong.');
         }
-        if (r.grossUp === 'Yes')
-            issues.push('Gross-up otomatis belum didukung: gunakan tunjangan PPh yang sudah dihitung atau review manual.');
-        return { recipientId: r.id, month, kind: r.kind, docType: last ? (r.sector === 'government' ? 'BPA2' : 'BPA1') : 'BPMP', gross: p.gross, cash: p.cash, deductions: p.cashDeduct, tax, netCash: p.cash - p.cashDeduct - tax, rate: last ? null : terInfo.rate, method, parts: p.parts, entries: p.entries, annual, trace: explain, issues };
+        const employerBorne = methodOpt === 'employer_borne';
+        return { recipientId: r.id, month, kind: r.kind, docType: last ? (r.sector === 'government' ? 'BPA2' : 'BPA1') : 'BPMP', gross: p.gross, cash: p.cash, deductions: p.cashDeduct, tax, netCash: p.cash - p.cashDeduct - (employerBorne ? 0 : tax), employerBorneTax: employerBorne ? tax : 0, rate: last ? null : terInfo.rate, method, parts: p.parts, entries: p.entries, annual, trace: explain, issues };
     }
     function nonPayrollResults(r, month) {
         const results = [];
@@ -158,7 +226,8 @@ export function createEngine(state) {
                 issues.push('Fasilitas pajak selain N/A memerlukan review terhadap ketentuan dan tarif khusus.');
             if (e.comp !== 'fee' && !(r.kind === 'casual_month' || r.kind === 'casual_daily' || r.kind === 'commissioner'))
                 issues.push('Jenis komponen bukan honorarium/jasa: periksa klasifikasi manual.');
-            results.push({ recipientId: r.id, entryId: e.id, month, kind: r.kind, docType: r.residency === 'SPLN' ? 'BP26' : 'BP21', gross, cash: gross, deductions: 0, netCash: gross - tax, tax, rate, deemed, method, trace, issues, entry: e, parts: { [e.comp]: gross } });
+            const employerBorne = taxMethod(r) === 'employer_borne';
+            results.push({ recipientId: r.id, entryId: e.id, month, kind: r.kind, docType: r.residency === 'SPLN' ? 'BP26' : 'BP21', gross, cash: gross, deductions: 0, netCash: gross - (employerBorne ? 0 : tax), employerBorneTax: employerBorne ? tax : 0, tax, rate, deemed, method, trace, issues, entry: e, parts: { [e.comp]: gross } });
         }
         return results;
     }
@@ -172,7 +241,7 @@ export function createEngine(state) {
         return r.taxObject || '27-100-99'; if (r.taxObject)
         return r.taxObject; if (r.kind === 'casual_daily')
         return result?.deemed === 50 ? '21-100-30' : '21-100-24'; return TAX_CODE[r.kind] || ''; }
-    function taxMonthSummary(r, month) { const rs = monthResults(r, month); return { rows: rs, gross: rs.reduce((a, x) => a + x.gross, 0), cash: rs.reduce((a, x) => a + x.cash, 0), deductions: rs.reduce((a, x) => a + x.deductions, 0), tax: rs.reduce((a, x) => a + x.tax, 0), netCash: rs.reduce((a, x) => a + x.netCash, 0), issues: rs.flatMap(x => x.issues), docType: documentKind(r, month) }; }
+    function taxMonthSummary(r, month) { const rs = monthResults(r, month); return { rows: rs, gross: rs.reduce((a, x) => a + x.gross, 0), cash: rs.reduce((a, x) => a + x.cash, 0), deductions: rs.reduce((a, x) => a + x.deductions, 0), tax: rs.reduce((a, x) => a + x.tax, 0), netCash: rs.reduce((a, x) => a + x.netCash, 0), employerBorneTax: rs.reduce((a, x) => a + n(x.employerBorneTax), 0), issues: rs.flatMap(x => x.issues), docType: documentKind(r, month) }; }
     function validCalendarDate(v) { if (!/^\d{4}-\d{2}-\d{2}$/.test(v || ''))
         return false; const d = new Date(v + 'T00:00:00Z'); return Number.isFinite(d.getTime()) && d.toISOString().slice(0, 10) === v; }
     function personError(r, type) { const errors = []; if (!r.name.trim())
@@ -261,10 +330,10 @@ export function createEngine(state) {
             return [
                 ['TaxPeriodMonth', month], ['TaxPeriodYear', year], ['CounterpartTin', r.foreignTin], ['CounterpartReceiptNumber', r.receiptNo || '-'], ['CounterpartName', r.name], ['CounterpartCountry', r.country], ['CounterpartAddress', r.address], ['CounterpartDob', r.dob], ['CounterpartBirthCity', r.birthCity], ['CounterpartPassport', r.passport || nil], ['CounterpartKitas', r.kitas || nil], ['TaxCertificate', r.facility], ['TaxObjectCode', objectCode(r, res)], ['Gross', Math.round(res.gross)], ['Deemed', res.deemed], ['Rate', percentNumber(res.rate)], ['Document', e.documentType], ['DocumentNumber', e.documentNo], ['DocumentDate', e.documentDate], ['IDPlaceOfBusinessActivity', company.tku], ['WithholdingDate', baseWithholding]
             ];
-        const comp = sumComp(r), status = r.whStatus === 'auto' ? (Number(r.startMonth) === 1 && Number(r.endMonth) === 12 ? 'FullYear' : 'PartialYear') : r.whStatus, months = status === 'Annualized' ? (Number(r.endMonth) - Number(r.startMonth) + 1) : 0;
+        const comp = res.annual?.components || sumComp(r), status = r.whStatus === 'auto' ? (Number(r.startMonth) === 1 && Number(r.endMonth) === 12 ? 'FullYear' : 'PartialYear') : r.whStatus, months = status === 'Annualized' ? (Number(r.endMonth) - Number(r.startMonth) + 1) : 0;
         if (type === 'BPA1')
             return [
-                ['WorkForSecondEmployer', r.workForSecondEmployer], ['TaxPeriodMonthStart', r.startMonth], ['TaxPeriodMonthEnd', r.endMonth], ['TaxPeriodYear', year], ['CounterpartOpt', r.citizenship], ['CounterpartPassport', r.passport || nil], ['CounterpartTin', r.tin], ['TaxExemptOpt', r.ptkp], ['StatusOfWithholding', status], ['CounterpartPosition', r.position], ['TaxObjectCode', objectCode(r, res)], ['NumberOfMonths', months], ['SalaryPensionJhtTht', fi(comp, 'salary')], ['GrossUpOpt', r.grossUp], ['IncomeTaxBenefit', fi(comp, 'taxAllowance')], ['OtherBenefit', fi(comp, 'allowance') + fi(comp, 'overtime')], ['Honorarium', fi(comp, 'honorarium')], ['InsurancePaidByEmployer', fi(comp, 'employerInsurance')], ['Natura', fi(comp, 'natura')], ['TantiemBonusThr', fi(comp, 'bonus') + fi(comp, 'thr')], ['PensionContributionJhtThtFee', fi(comp, 'pensionContribution')], ['Zakat', fi(comp, 'zakat')], ['PrevWhTaxSlip', r.previousSlip || nil], ['TaxCertificate', r.facility], ['Article21IncomeTax', 0], ['IDPlaceOfBusinessActivity', company.tku], ['WithholdingDate', company.withholdingDate]
+                ['WorkForSecondEmployer', r.workForSecondEmployer], ['TaxPeriodMonthStart', r.startMonth], ['TaxPeriodMonthEnd', r.endMonth], ['TaxPeriodYear', year], ['CounterpartOpt', r.citizenship], ['CounterpartPassport', r.passport || nil], ['CounterpartTin', r.tin], ['TaxExemptOpt', r.ptkp], ['StatusOfWithholding', status], ['CounterpartPosition', r.position], ['TaxObjectCode', objectCode(r, res)], ['NumberOfMonths', months], ['SalaryPensionJhtTht', fi(comp, 'salary')], ['GrossUpOpt', taxMethod(r) === 'gross_up' ? 'Yes' : 'No'], ['IncomeTaxBenefit', fi(comp, 'taxAllowance')], ['OtherBenefit', fi(comp, 'allowance') + fi(comp, 'overtime')], ['Honorarium', fi(comp, 'honorarium')], ['InsurancePaidByEmployer', fi(comp, 'employerInsurance')], ['Natura', fi(comp, 'natura')], ['TantiemBonusThr', fi(comp, 'bonus') + fi(comp, 'thr')], ['PensionContributionJhtThtFee', fi(comp, 'pensionContribution')], ['Zakat', fi(comp, 'zakat')], ['PrevWhTaxSlip', r.previousSlip || nil], ['TaxCertificate', r.facility], ['Article21IncomeTax', 0], ['IDPlaceOfBusinessActivity', company.tku], ['WithholdingDate', company.withholdingDate]
             ];
         return [
             ['WorkForSecondEmployer', r.workForSecondEmployer], ['TaxPeriodMonthStart', r.startMonth], ['TaxPeriodMonthEnd', r.endMonth], ['TaxPeriodYear', year], ['CounterpartTin', r.tin], ['CounterpartNipNrp', r.nip], ['TaxExemptOpt', r.ptkp], ['StatusOfWithholding', status], ['CounterpartPosition', r.position], ['CounterpartRank', r.rank], ['TaxObjectCode', objectCode(r, res)], ['NumberOfMonths', months], ['SalaryPensionJhtTht', fi(comp, 'salary')], ['WifeBenefit', fi(comp, 'wifeBenefit')], ['ChildBenefit', fi(comp, 'childBenefit')], ['IncomeImprovementBenefit', fi(comp, 'incomeImprovement')], ['StructuralFunctionalBenefit', fi(comp, 'structuralBenefit')], ['RiceBenefit', fi(comp, 'riceBenefit')], ['OtherBenefit', fi(comp, 'allowance') + fi(comp, 'overtime')], ['OtherRegularIncome', fi(comp, 'otherRegular')], ['PensionContributionJhtThtFee', fi(comp, 'pensionContribution')], ['Zakat', fi(comp, 'zakat')], ['PrevWhTaxSlip', r.previousSlip || nil], ['Article21IncomeTax', 0], ['IDPlaceOfBusinessActivity', company.tku], ['WithholdingDate', company.withholdingDate]
@@ -284,8 +353,6 @@ export function createEngine(state) {
                 if (anyGross <= 0)
                     continue;
                 const type = result.docType, doc = { type, recipientId: r.id, result, entry: null, fields: fieldSetFor(type, r, result) };
-                if (result.annual)
-                    result.annual.components = sumComp(r);
                 doc.errors = documentErrors(doc);
                 docs.push(doc);
             }
