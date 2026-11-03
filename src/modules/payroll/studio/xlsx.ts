@@ -4,6 +4,7 @@ import type { Recipient } from "./model";
 import payrollTemplate from "./payroll-template-contract.json";
 
 export const PAYROLL_HEADERS = payrollTemplate.headers;
+const LEGACY_PAYROLL_HEADERS = PAYROLL_HEADERS.slice(0, 38);
 
 type Cell = string | number | Date | null | undefined;
 type Row = Record<string, Cell>;
@@ -13,8 +14,20 @@ const documentTypes: Record<string, string> = { "Tagihan / Invoice": "Commercial
 const components: [string, string][] = [["Gaji / Pensiun", "salary"], ["Tunjangan", "allowance"], ["Lembur", "overtime"], ["THR", "thr"], ["Bonus", "bonus"], ["Honorarium / Jasa", "fee"], ["JKK/JKM Perusahaan", "employerInsurance"], ["Natura Kena Pajak", "natura"], ["Tunjangan PPh", "taxAllowance"], ["Iuran Pensiun/JHT", "pensionContribution"], ["BPJS Potongan Lain", "bpjsDeduction"], ["Zakat Wajib", "zakat"], ["Potongan Lain", "otherDeduction"]];
 
 function text(value: Cell) { return String(value ?? "").trim(); }
-function amount(value: Cell) { const number = typeof value === "number" ? value : Number(text(value).replace(/[^0-9,-]/g, "").replace(",", ".")); return Number.isFinite(number) ? number : 0; }
-function month(value: Cell, fallback: number) { return months[text(value)] || fallback; }
+function amount(value: Cell) {
+    if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+    const source = text(value).replace(/[^0-9,.-]/g, ""), negative = source.startsWith("-");
+    const groups = source.replace(/-/g, "").split(/[,.]/), last = groups.at(-1) || "";
+    const normalized = groups.length > 1 && last.length > 0 && last.length <= 2 ? `${groups.slice(0, -1).join("")}.${last}` : groups.join("");
+    const number = Number(`${negative ? "-" : ""}${normalized}`);
+    return Number.isFinite(number) ? number : 0;
+}
+function month(value: Cell, fallback: number) {
+    const source = text(value), fromName = months[source];
+    if (fromName) return fromName;
+    const matched = /^(?:\d{4})-(\d{2})-\d{2}$/.exec(source), fromDate = Number(matched?.[1]);
+    return Number.isInteger(fromDate) && fromDate >= 1 && fromDate <= 12 ? fromDate : fallback;
+}
 function date(sheet: XLSX.WorkSheet, address: string, fallback = "") { const cell = sheet[address]; return cell ? XLSX.utils.format_cell(cell).trim() : fallback; }
 function yes(value: Cell) { return ["ya", "yes", "true", "1"].includes(text(value).toLocaleLowerCase("id-ID")); }
 function whStatus(value: Cell) { return ({ "penuh tahun": "FullYear", "masa sebagian": "PartialYear", disetahunkan: "Annualized" }[text(value).toLocaleLowerCase("id-ID")] || "auto") as Recipient["whStatus"]; }
@@ -23,7 +36,7 @@ function findHeaderRow(sheet: XLSX.WorkSheet) {
     for (let row = range.s.r; row <= range.e.r; row++) {
         const headers = new Set<string>();
         for (let column = range.s.c; column <= range.e.c; column++) headers.add(text(sheet[XLSX.utils.encode_cell({ r: row, c: column })]?.v));
-        if (PAYROLL_HEADERS.every(header => headers.has(header))) return row;
+        if ([PAYROLL_HEADERS, LEGACY_PAYROLL_HEADERS].some(required => required.every(header => headers.has(header)))) return row;
     }
     return -1;
 }

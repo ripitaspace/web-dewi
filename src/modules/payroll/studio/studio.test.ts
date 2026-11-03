@@ -138,6 +138,15 @@ describe("RIPITAX PAYROLL workbook import", () => {
         expect(imported.entries).toBe(2);
         expect(imported.studio.recipients[0].position).toBe("Analis");
     });
+    it("keeps the 38-column template released before the extended drag-and-drop contract compatible", async () => {
+        const legacyHeaders = PAYROLL_HEADERS.slice(0, 38), book = XLSX.utils.book_new(), rows: (string | number)[][] = Array.from({ length: 12 }, () => []);
+        rows[4][2] = "PT LEGACY"; rows[4][10] = "0000000000000000"; rows[4][18] = "0000000000000000000000"; rows[4][26] = 2026; rows[4][30] = "Oktober"; rows[4][34] = "2026-10-31";
+        rows[10] = legacyHeaders; rows[11] = ["TRX-LEGACY", "EMP-LEGACY", "Lili", "0000000000000001", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Normal", "2021-03-15", "", "10,000,000", 0, 0, 0, 0, 0, "590,700", 0, 0, "515,474", "120,000", 0, 0, "Gross", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-001", "2026-10-31", "", "", "Staf", "", "", "Data template lama"];
+        const sheet = XLSX.utils.aoa_to_sheet(rows); XLSX.utils.book_append_sheet(book, sheet, "PAYROLL");
+        const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => XLSX.write(book, { type: "array", bookType: "xlsx" }) } as File);
+        expect(imported.studio.recipients[0]).toMatchObject({ employeeId: "EMP-LEGACY", startMonth: 3, endMonth: 12 });
+        expect(imported.studio.entries).toEqual(expect.arrayContaining([expect.objectContaining({ id: "TRX-LEGACY-salary", amount: 10000000 }), expect.objectContaining({ comp: "employerInsurance", amount: 590700 }), expect.objectContaining({ comp: "pensionContribution", amount: 515474 }), expect.objectContaining({ comp: "bpjsDeduction", amount: 120000 })]));
+    });
     it("imports a filled copy of the public drag-and-drop template", async () => {
         const book = XLSX.read(await readFile("public/tools/payroll/RIPITAX_PAYROLL.xlsx"), { type: "buffer", cellDates: true });
         const sheet = book.Sheets.PAYROLL, row = Object.fromEntries(PAYROLL_HEADERS.map(header => [header, ""]));
