@@ -1,15 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { COMPONENTS, DOCUMENT_TYPES, KINDS, MONTHS, OBJECT_OPTIONS, PTKP, XML_META } from "@/modules/payroll/studio/catalog.js";
+import { COMPONENTS, DOCUMENT_TYPES, KINDS, MONTHS, OBJECT_OPTIONS, PTKP } from "@/modules/payroll/studio/catalog.js";
 import { createEngine, rupi } from "@/modules/payroll/studio/engine.js";
 import { adaptEntry, checkBackup, componentsFor, copySalary, dateFor, demo, entryDefault, fresh, nextId, recipientDefault } from "@/modules/payroll/studio/data";
 import { exportCSV, importCSV } from "@/modules/payroll/studio/csv";
 import { importPayrollWorkbook } from "@/modules/payroll/studio/xlsx";
-import { zipStore } from "@/modules/payroll/studio/zip.js";
 import type { Entry, Recipient, Studio } from "@/modules/payroll/studio/model";
-import { Drawer, Field, Slip, Table, type Options } from "./pph21-studio-parts";
+import { Drawer, Field, Table, type Options } from "./pph21-studio-parts";
 import styles from "./pph21-payroll-studio.module.css";
+import { Pph21DocumentWorkspace } from "./pph21-document-workspace";
 const TABS = ["Penerima", "Penghasilan", "Perhitungan", "Slip & XML"];
 const months = MONTHS.map((m, i) => [String(i + 1), m] as [
     string,
@@ -32,26 +31,24 @@ function ToolbarIcon({ name }: { name: "download" | "upload" | "database" | "set
 }
 export function Pph21PayrollStudio() {
     const [state, setState] = useState<Studio>(fresh), [ready, setReady] = useState(false), [tab, setTab] = useState(0), [notice, setNotice] = useState("");
-    const [settings, setSettings] = useState(false), [filter, setFilter] = useState("period"), [personFilter, setPersonFilter] = useState(""), [chosenCalc, setChosenCalc] = useState(""), [xmlType, setXmlType] = useState("BPMP"), [slipId, setSlipId] = useState(""), [logo, setLogo] = useState(""), [payrollDragging, setPayrollDragging] = useState(false);
+    const [settings, setSettings] = useState(false), [filter, setFilter] = useState("period"), [personFilter, setPersonFilter] = useState(""), [chosenCalc, setChosenCalc] = useState(""), [logo, setLogo] = useState(""), [payrollDragging, setPayrollDragging] = useState(false);
     const [drawer, setDrawer] = useState<{
-        mode: "recipient" | "entry" | "slip";
+        mode: "recipient" | "entry";
         id: string;
-    } | null>(null), [printId, setPrintId] = useState(""), [importErrors, setImportErrors] = useState<string[]>([]);
+    } | null>(null), [importErrors, setImportErrors] = useState<string[]>([]);
     const restoreRef = useRef<HTMLInputElement>(null), csvRef = useRef<HTMLInputElement>(null), payrollRef = useRef<HTMLInputElement>(null), logoRef = useRef<HTMLInputElement>(null);
     useEffect(() => { let active = true; queueMicrotask(() => { if (!active)
         return;
         localStorage.removeItem("ripitax-payroll-v1");
         setReady(true); }); return () => { active = false; }; }, []);
-    function replace(next: Studio) { setState(next); }
+    const [documentSession, setDocumentSession] = useState(0);
+    function replace(next: Studio, resetDocuments = false) { setState(next); if (resetDocuments) setDocumentSession(n => n + 1); }
     function mutate(fn: (s: Studio) => void) { const next = structuredClone(state); fn(next); replace(next); }
     const engine = createEngine(state), docs = engine.documentsForPeriod();
     const summaries = state.recipients.map(r => ({ r, ...engine.taxMonthSummary(r, state.company.month) }));
     const totals = summaries.reduce((a, s) => ({ gross: a.gross + s.gross, tax: a.tax + s.tax, net: a.net + s.netCash }), { gross: 0, tax: 0, net: 0 });
-    const batch = engine.xmlBatchStatus(docs, xmlType), xml = engine.makeXml(xmlType, batch.list), batches = Object.keys(XML_META).map(t => engine.xmlBatchStatus(docs, t)), zipReady = batches.some(b => b.count) && batches.every(b => !b.count || b.ready);
-    const currentCalc = state.recipients.find(r => r.id === chosenCalc) || state.recipients[0], slipRecipient = state.recipients.find(r => r.id === slipId) || state.recipients[0];
+    const currentCalc = state.recipients.find(r => r.id === chosenCalc) || state.recipients[0];
     const detailPerson = drawer?.mode === "recipient" ? state.recipients.find(r => r.id === drawer.id) : null, detailEntry = drawer?.mode === "entry" ? state.entries.find(e => e.id === drawer.id) : null;
-    useEffect(() => { if (!printId)
-        return; const done = () => { document.body.classList.remove("ripitax-studio-printing"); setPrintId(""); }; document.body.classList.add("ripitax-studio-printing"); window.addEventListener("afterprint", done); const frame = requestAnimationFrame(() => window.print()); return () => { cancelAnimationFrame(frame); window.removeEventListener("afterprint", done); document.body.classList.remove("ripitax-studio-printing"); }; }, [printId]);
     function updateRecipient(id: string, key: keyof Recipient, value: string | number | boolean) { mutate(s => { const r = s.recipients.find(r => r.id === id)!; Object.assign(r, { [key]: ["startMonth", "endMonth"].includes(key) ? Math.max(1, Math.min(12, Number(value))) : value }); if (key === "startMonth" && r.startMonth > r.endMonth)
         r.endMonth = r.startMonth; if (key === "endMonth" && r.endMonth < r.startMonth)
         r.startMonth = r.endMonth; if (key === "kind") {
@@ -76,7 +73,7 @@ export function Pph21PayrollStudio() {
         checkBackup(v);
         if (!confirmReplace("Restore mengganti seluruh data v2. Sudah backup dan lanjutkan?"))
             return;
-        replace(v);
+        replace(v, true);
         setDrawer(null);
         setImportErrors([]);
         setNotice("Backup v2 berhasil dipulihkan.");
@@ -102,7 +99,7 @@ export function Pph21PayrollStudio() {
         const imported = await importPayrollWorkbook(file);
         if (!confirmReplace("Impor Template payroll mengganti seluruh data sesi ini. Lanjutkan?"))
             return;
-        replace(imported.studio);
+        replace(imported.studio, true);
         setDrawer(null);
         setImportErrors(imported.errors);
         setNotice(imported.recipients + " penerima dan " + imported.entries + " komponen diimpor; " + imported.errors.length + " baris ditolak.");
@@ -121,21 +118,6 @@ export function Pph21PayrollStudio() {
     reader.onload = () => { setLogo(String(reader.result || "")); setNotice("Logo perusahaan siap dipakai pada slip sesi ini."); };
     reader.onerror = () => setNotice("Logo tidak dapat dibaca.");
     reader.readAsDataURL(file); }
-    function exportXml(all = false) { if (all ? !zipReady : !batch.ready)
-        return; const files = (all ? Object.keys(XML_META) : [xmlType]).flatMap(t => { const b = engine.xmlBatchStatus(docs, t); return b.count ? [{ name: engine.fileName(t), content: engine.makeXml(t, b.list) }] : []; }); if (files.some(f => new DOMParser().parseFromString(f.content, "application/xml").querySelector("parsererror"))) {
-        setNotice("Struktur XML gagal diperiksa.");
-        return;
-    } if (all)
-        download(`RIPITAX_XML_${state.company.year}-${state.company.month}.zip`, zipStore(files));
-    else
-        download(files[0].name, files[0].content, "application/xml;charset=utf-8"); }
-    async function copyXml() { try {
-        await navigator.clipboard.writeText(xml);
-        setNotice("XML disalin.");
-    }
-    catch {
-        setNotice("Salin otomatis dibatasi. Pilih teks pada pratinjau XML.");
-    } }
     function tku(id?: string) { const tin = id ? engine.person(id)?.tin : state.company.tin; if (!/^\d{16}$/.test(tin || "")) {
         setNotice("Isi NIK/NPWP 16 digit dahulu.");
         return;
@@ -179,7 +161,7 @@ export function Pph21PayrollStudio() {
         return <div className={styles.studio}>Memuat ruang kerja lokal…</div>;
     return <div className={styles.studio}>
   <header className={styles.topbar}><div><span className={styles.eyebrow}>RIPITAX · STUDIO V2</span><h2>Satu ruang untuk payroll-mu.</h2><p>Penerima, penghasilan, perhitungan, sampai dokumen.</p><span className={styles.localBadge}>● Data hanya ada selama sesi ini</span></div><div className={styles.toolbar} role="group" aria-label="Aksi data RIPITAX"><button type="button" className={styles.iconButton} aria-label="Backup JSON" title="Backup JSON" data-tooltip="Backup JSON" onClick={() => download(`RIPITAX_BACKUP_${state.company.year}.json`, JSON.stringify(state, null, 2))}><ToolbarIcon name="download"/></button><button type="button" className={styles.iconButton} aria-label="Restore JSON" title="Restore JSON" data-tooltip="Restore JSON" onClick={() => restoreRef.current?.click()}><ToolbarIcon name="upload"/></button><button type="button" className={styles.iconButton} aria-label="Muat contoh" title="Muat contoh" data-tooltip="Muat contoh" onClick={() => { if (confirmReplace("Muat contoh mengganti seluruh data sesi ini. Lanjutkan?")) {
-        replace(demo());
+        replace(demo(), true);
         setDrawer(null);
         setNotice("");
     } }}><ToolbarIcon name="database"/></button><button type="button" className={styles.iconButton} aria-label="Pengaturan" title="Pengaturan" data-tooltip="Pengaturan" aria-expanded={settings} onClick={() => setSettings(!settings)}><ToolbarIcon name="settings-2"/></button></div></header>
@@ -217,9 +199,9 @@ export function Pph21PayrollStudio() {
             string
         ])]} onChange={v => setPersonFilter(String(v))}/></div><Table head={["Penerima", "Bulan", "Komponen", "Nominal (Rp)", "Keterangan", "Perlakuan", "Aksi"]} empty={!filtered.length ? "Belum ada penghasilan pada filter ini." : undefined}>{filtered.map(e => <tr key={e.id}><td>{ef(e, "recipientId", "Penerima", state.recipients.map(r => [r.id, recipientLabel(r)]), "text", true)}</td><td>{ef(e, "month", "Bulan", months, "text", true)}</td><td>{ef(e, "comp", "Komponen", componentsFor(engine.person(e.recipientId)?.kind || "fixed").map(k => [k, COMPONENTS[k as keyof typeof COMPONENTS].label]), "text", true)}</td><td>{ef(e, "amount", "Nominal (Rp)", undefined, "number", true)}</td><td>{ef(e, "description", "Keterangan", undefined, "text", true)}</td><td>{COMPONENTS[e.comp as keyof typeof COMPONENTS]?.tax ? "Bruto pajak" : "Potongan"}{COMPONENTS[e.comp as keyof typeof COMPONENTS]?.cash === 0 ? " · Non-tunai" : ""}</td><td><div className={styles.rowActions}><button onClick={() => setDrawer({ mode: "entry", id: e.id })}>Detail</button><button onClick={() => duplicate(e.id, false)}>Salin</button><button className={styles.danger} onClick={() => remove(e.id, false)}>Hapus</button></div></td></tr>)}</Table></section>}
   {tab === 2 && <><section className={styles.card}><div className={styles.sectionHead}><div><h3>Hasil perhitungan masa pajak</h3><p>Otomatis mengikuti data. Buka Rincian untuk menelusuri formula.</p></div><button onClick={() => setNotice("Perhitungan diperbarui dari data aktif.")}>Hitung ulang</button></div><Table head={["Penerima", "Kategori", "Bruto pajak", "Penghasilan tunai", "Metode", "PPh 21/26", "Bersih dibayarkan", "Validasi", "Aksi"]} empty={!summaries.length ? "Belum ada penerima untuk dihitung." : undefined}>{summaries.map(s => { const errors = docs.filter(d => d.recipientId === s.r.id).flatMap(d => d.errors); return <tr key={s.r.id}><td>{recipientLabel(s.r)}</td><td>{KINDS[s.r.kind as keyof typeof KINDS]}</td><td>{rupi(s.gross)}</td><td>{rupi(s.cash)}</td><td>{[...new Set(s.rows.map(r => r.method))].join("; ") || "—"}</td><td>{rupi(s.tax)}</td><td><strong>{rupi(s.netCash)}</strong></td><td>{errors.length ? errors.length + " masalah" : s.rows.length ? "OK" : "Belum ada hasil"}</td><td><button onClick={() => setChosenCalc(s.r.id)}>Rincian</button></td></tr>; })}</Table></section><div className={styles.twoCol}><section className={styles.card}><h3>Jejak perhitungan</h3><p className={styles.help}>{currentCalc ? recipientLabel(currentCalc) : ""}</p><div className={styles.trace}>{currentCalc ? engine.monthResults(currentCalc, state.company.month).map((r, i) => <div key={i}><strong>{r.method}</strong>{r.trace.map((t, j) => <p key={j}>{t}</p>)}{r.issues.map(t => <p className={styles.warning} key={t}>{t}</p>)}</div>) : "Pilih penerima untuk melihat cara hitung."}</div></section><section className={styles.card}><h3>Ringkasan & kontrol</h3><p className={styles.help}>Perhitungan masa terakhir membutuhkan seluruh penghasilan sejak masa awal. Konfirmasikan riwayat melalui Detail Penerima sebelum ekspor A1/A2.</p><dl className={styles.summary}>{[["Bruto pajak", totals.gross], ["PPh 21/26", totals.tax], ["Bersih dibayarkan", totals.net]].map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{rupi(Number(v))}</dd></div>)}</dl></section></div></>}
-  {tab === 3 && <><div className={styles.sectionHead}><div><h3>Slip pembayaran & XML Coretax</h3><p>Dua keluaran dari data yang sama.</p></div><button onClick={() => setNotice(docs.reduce((a, d) => a + d.errors.length, 0) + " masalah validasi pada " + docs.length + " dokumen.")}>Validasi ulang</button></div><div className={styles.twoCol}><section className={styles.card}><div className={styles.sectionHead}><h3>Pratinjau XML</h3><span className={styles.badge}>{batch.ready ? "Lolos validasi lokal" : batch.count ? batch.issues.length + " masalah" : "Belum ada dokumen"}</span></div><div className={styles.actions}>{Object.keys(XML_META).map(t => <button key={t} aria-pressed={t === xmlType} className={t === xmlType ? styles.primary : ""} onClick={() => setXmlType(t)}>{t} · {engine.xmlBatchStatus(docs, t).count}</button>)}</div><pre className={styles.code} tabIndex={0} aria-label="Konten XML hasil generator">{xml}</pre><div className={styles.actions}><button disabled={!batch.ready} onClick={() => void copyXml()}>Salin XML</button><button className={styles.primary} disabled={!batch.ready} onClick={() => exportXml()}>Unduh XML</button><button disabled={!zipReady} onClick={() => exportXml(true)}>Unduh ZIP semua XML</button></div><p className={styles.help}>Struktur mengikuti template DJP. Penerimaan data diperiksa saat impor ke Coretax.</p></section><section className={styles.card}><h3>Validasi & dokumen</h3>{!batch.count ? <p className={styles.empty}>Belum ada dokumen {xmlType} untuk masa ini.</p> : batch.ready ? <p className={styles.success}>{batch.count} dokumen lolos validasi lokal.</p> : <div className={styles.issues}>{batch.issues.map((i, n) => <div key={n}><p><strong>{i.name}</strong><br />{i.text}</p><button onClick={() => repair(i.id, i.text)}>Perbaiki</button></div>)}</div>}<hr /><h3>Slip pembayaran</h3><Field label="Pilih penerima" value={slipRecipient?.id || ""} options={state.recipients.map(r => [r.id, recipientLabel(r)])} onChange={v => setSlipId(String(v))}/>{slipRecipient && <p className={styles.net}>{rupi(engine.taxMonthSummary(slipRecipient, state.company.month).netCash)}</p>}<div className={styles.actions}><button disabled={!slipRecipient} onClick={() => setDrawer({ mode: "slip", id: slipRecipient.id })}>Lihat slip</button><button disabled={!slipRecipient} className={styles.primary} onClick={() => setPrintId(slipRecipient.id)}>Cetak / Simpan PDF</button></div><p className={styles.help}>Slip adalah dokumen internal. Penghasilan tunai dibedakan dari bruto pajak.</p></section></div></>}
+  <Pph21DocumentWorkspace key={documentSession} state={state} logo={logo} visible={tab === 3} repair={repair}/>
   </section><p className={styles.footnote}>RIPITAX · Data tidak disimpan dan hilang saat halaman dimuat ulang · Tidak terhubung ke Coretax</p>
-  {drawer && <Drawer title={drawer.mode === "recipient" ? "Detail penerima" : drawer.mode === "entry" ? "Detail penghasilan" : "Pratinjau slip"} onClose={() => setDrawer(null)}>
+  {drawer && <Drawer title={drawer.mode === "recipient" ? "Detail penerima" : "Detail penghasilan"} onClose={() => setDrawer(null)}>
    {detailPerson && <><div className={styles.detailGrid}>
     {rf(detailPerson, "employeeId", "ID pegawai")}{rf(detailPerson, "name", "Nama penerima")}{rf(detailPerson, detailPerson.residency === "SPLN" ? "foreignTin" : "tin", "NIK / NPWP / TIN")}{rf(detailPerson, "position", "Jabatan / posisi")}{rf(detailPerson, "citizenship", "Kewarganegaraan", [["Resident", "WNI"], ["Foreign", "WNA"]])}
     {rf(detailPerson, "facility", "Fasilitas pajak", [["N/A", "Tidak ada"], ["DTP", "Ditanggung pemerintah"], ["ETC", "Fasilitas lain"], ["COD", "SKD / Treaty"], ["TaxExAr21", "Pengecualian Pasal 21"]])}
@@ -235,8 +217,6 @@ export function Pph21PayrollStudio() {
     {([["nip", "NIP / NRP (A2)"], ["rank", "Pangkat / golongan (A2)"], ["passport", "Paspor"], ["kitas", "KITAS"], ["foreignTin", "TIN luar negeri"], ["receiptNo", "Nomor SKD WPLN"], ["country", "Kode negara ISO-3"], ["dob", "Tanggal lahir"], ["birthCity", "Tempat lahir"], ["address", "Alamat luar negeri"], ["note", "Catatan"]] as const).map(([k, l]) => rf(detailPerson, k, l, undefined, k === "dob" ? "date" : "text"))}
    </div><p className={styles.help}>Gross-up otomatis belum tersedia. Opsi khusus memerlukan review.</p><button className={styles.primary} onClick={() => { setChosenCalc(detailPerson.id); setTab(2); setDrawer(null); }}>Lihat perhitungan</button></>}
    {detailEntry && <div className={styles.detailGrid}>{ef(detailEntry, "documentType", "Jenis dokumen referensi", DOCUMENT_TYPES)}{ef(detailEntry, "documentNo", "Nomor dokumen referensi")}{ef(detailEntry, "documentDate", "Tanggal dokumen referensi", undefined, "date")}{ef(detailEntry, "withholdingDate", "Tanggal pemotongan (kosong = default)", undefined, "date")}{ef(detailEntry, "days", "Jumlah hari upah", undefined, "number")}{ef(detailEntry, "equalDaily", "Upah sama setiap hari", undefined, "checkbox")}{ef(detailEntry, "excludedLabor", "Upah pihak ketiga yang dikecualikan", undefined, "number")}{ef(detailEntry, "excludedMaterial", "Material yang dikecualikan", undefined, "number")}{ef(detailEntry, "proof", "Ada kontrak dan bukti biaya", undefined, "checkbox")}{ef(detailEntry, "description", "Keterangan")}<p className={styles.help}>Transaksi dengan pengecualian biaya memerlukan review pemetaan XML.</p></div>}
-   {drawer.mode === "slip" && engine.person(drawer.id) && <><Slip state={state} recipient={engine.person(drawer.id)!} logo={logo}/><button onClick={() => { setPrintId(drawer.id); setDrawer(null); }}>Cetak / Simpan PDF</button></>}
   </Drawer>}
-  {printId && engine.person(printId) && createPortal(<div className={styles.printRoot}><Slip state={state} recipient={engine.person(printId)!} logo={logo}/></div>, document.body)}
  </div>;
 }

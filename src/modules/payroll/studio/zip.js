@@ -8,14 +8,15 @@ function crc32(u8) { let c = 0xffffffff; for (const b of u8)
     c = crcTable[(c ^ b) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
 function u16(a, v) { a.push(v & 255, (v >>> 8) & 255); }
 function u32(a, v) { a.push(v & 255, (v >>> 8) & 255, (v >>> 16) & 255, (v >>> 24) & 255); }
+/** @param {{name: string, content: string | Uint8Array}[]} files */
 function zipStore(files) {
     const enc = new TextEncoder(), chunks = [], central = [];
     let offset = 0;
     for (const f of files) {
-        const name = enc.encode(f.name), data = enc.encode(f.content), crc = crc32(data), lh = [];
+        const name = enc.encode(f.name), data = typeof f.content === 'string' ? enc.encode(f.content) : f.content, crc = crc32(data), lh = [];
         u32(lh, 0x04034b50);
         u16(lh, 20);
-        u16(lh, 0);
+        u16(lh, 0x0800);
         u16(lh, 0);
         u16(lh, 0);
         u16(lh, 0);
@@ -29,7 +30,7 @@ function zipStore(files) {
         u32(ch, 0x02014b50);
         u16(ch, 20);
         u16(ch, 20);
-        u16(ch, 0);
+        u16(ch, 0x0800);
         u16(ch, 0);
         u16(ch, 0);
         u16(ch, 0);
