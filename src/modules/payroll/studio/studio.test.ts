@@ -6,6 +6,7 @@ import { KINDS, RULES, XML_META } from "./catalog.js";
 import { zipStore } from "./zip.js";
 import { importPayrollWorkbook, PAYROLL_HEADERS } from "./xlsx";
 import * as XLSX from "xlsx";
+import { readFile } from "node:fs/promises";
 import shapes from "./official-xml-shapes.json";
 function valid(kind = "fixed", month = 10, foreign = false, government = false) {
     const s = fresh();
@@ -136,5 +137,18 @@ describe("RIPITAX PAYROLL workbook import", () => {
         expect(imported.recipients).toBe(1);
         expect(imported.entries).toBe(2);
         expect(imported.studio.recipients[0].position).toBe("Analis");
+    });
+    it("imports a filled copy of the public drag-and-drop template", async () => {
+        const book = XLSX.read(await readFile("public/tools/payroll/RIPITAX_PAYROLL.xlsx"), { type: "buffer", cellDates: true });
+        const sheet = book.Sheets.PAYROLL, row = Object.fromEntries(PAYROLL_HEADERS.map(header => [header, ""]));
+        Object.assign(row, { "ID Transaksi": "TRX-001", "ID Penerima": "EMP-DAILY", "Nama Penerima": "Maya", "NIK / NPWP / TIN": "0000000000000001", "Jenis Penerima": "Tidak tetap / harian", "Subjek Pajak": "SPDN", PTKP: "TK/0", Sektor: "Swasta", Bulan: "Oktober", "Status Masa": "Masa Sebagian", "Mulai Kerja": "Februari", "Akhir Kerja": "November", "Honorarium / Jasa": 1800000, "Tanggal Potong": "2026-10-31", "Jumlah Hari Upah": 3, "Upah Harian Sama": "Ya", "Pengurang Upah Tenaga Kerja": 200000, "Pengurang Material": 100000, "Bukti Biaya / Kontrak": "Ya", "Status Kewajiban Subjek": "Berubah", "Riwayat Tahunan Lengkap": "Ya", "Pemberi Kerja Kedua": "Ya", "Bukti Potong Sebelumnya": "BP-001", "Pangkat / Golongan": "III/a", Paspor: "A123", KITAS: "K123", "Alamat SPLN": "Tidak dipakai", "Tanggal Lahir": "1990-01-01", "Tempat Lahir": "Jakarta" });
+        XLSX.utils.sheet_add_json(sheet, [row], { header: [...PAYROLL_HEADERS], skipHeader: true, origin: "A12" });
+        sheet.C5 = { t: "s", v: "PT DRAG DROP" }; sheet.K5 = { t: "s", v: "0000000000000000" }; sheet.S5 = { t: "s", v: "0000000000000000000000" }; sheet.AA5 = { t: "n", v: 2026 }; sheet.AE5 = { t: "s", v: "Oktober" }; sheet.AI5 = { t: "s", v: "2026-10-31" };
+        const bytes = XLSX.write(book, { type: "array", bookType: "xlsx" });
+        const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => bytes } as File);
+        const recipient = imported.studio.recipients[0], entry = imported.studio.entries[0];
+        expect(imported.studio.company.name).toBe("PT DRAG DROP");
+        expect(recipient).toMatchObject({ employeeId: "EMP-DAILY", whStatus: "PartialYear", subject: "changed", annualComplete: true, workForSecondEmployer: "Yes", previousSlip: "BP-001", rank: "III/a", passport: "A123", kitas: "K123", dob: "1990-01-01", birthCity: "Jakarta" });
+        expect(entry).toMatchObject({ id: "TRX-001-fee", comp: "fee", amount: 1800000, days: 3, equalDaily: true, excludedLabor: 200000, excludedMaterial: 100000, proof: true });
     });
 });

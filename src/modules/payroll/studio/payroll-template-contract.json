@@ -1,0 +1,9 @@
+{
+  "sheetName": "PAYROLL",
+  "headers": [
+    "ID Transaksi", "ID Penerima", "Nama Penerima", "NIK / NPWP / TIN", "Jenis Penerima", "Subjek Pajak", "PTKP", "Sektor", "Bulan", "Status Masa", "Mulai Kerja", "Akhir Kerja",
+    "Gaji / Pensiun", "Tunjangan", "Lembur", "THR", "Bonus", "Honorarium / Jasa", "JKK/JKM Perusahaan", "Natura Kena Pajak", "Tunjangan PPh", "Iuran Pensiun/JHT", "BPJS Potongan Lain", "Zakat Wajib", "Potongan Lain",
+    "Metode Pajak", "Fasilitas Pajak", "Kode Objek", "Tanggal Potong", "Jenis Dokumen", "Nomor Dokumen", "Tanggal Dokumen", "ID TKU Penerima", "Negara Penerima", "Jabatan", "NIP / NRP", "Nomor SKD", "Catatan",
+    "Pangkat / Golongan", "Paspor", "KITAS", "Alamat SPLN", "Tanggal Lahir", "Tempat Lahir", "Status Kewajiban Subjek", "Riwayat Tahunan Lengkap", "Pemberi Kerja Kedua", "Bukti Potong Sebelumnya", "Jumlah Hari Upah", "Upah Harian Sama", "Pengurang Upah Tenaga Kerja", "Pengurang Material", "Bukti Biaya / Kontrak"
+  ]
+}
