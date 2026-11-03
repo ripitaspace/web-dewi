@@ -168,9 +168,9 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                         >
                           Pelajari
                         </button>
-                        <Link href="/ripita" className="btn btn-secondary btn-small">
+                        <a href="https://www.ripita.space" className="btn btn-secondary btn-small" target="_blank" rel="noreferrer">
                           Lihat di RIPITA
-                        </Link>
+                        </a>
                       </div>
                     </article>
                   );
@@ -214,9 +214,9 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
               </div>
             ) : null}
             <div className="button-row" style={{ marginTop: "28px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-              <Link href="/ripita" className="btn btn-primary">
+              <a href="https://www.ripita.space" className="btn btn-primary" target="_blank" rel="noreferrer">
                 Lihat Modul di RIPITA Ecosystem →
-              </Link>
+              </a>
             </div>
           </div>
         )}

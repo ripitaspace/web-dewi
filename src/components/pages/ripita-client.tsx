@@ -18,7 +18,7 @@ export function RipitaClient() {
     { key: "tax", label: "Tax Tech" },
     { key: "logistics", label: "Logistics" },
     { key: "vendor", label: "Vendor CRM" },
-    { key: "education", label: "Education" },
+    { key: "education", label: "RIPINTAR" },
     { key: "knowledge", label: "Knowledge Base" },
     { key: "projects", label: "Operations" },
   ];

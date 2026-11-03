@@ -26,8 +26,8 @@ export const ROUTE_ORDER = [
   { key: "pemikiran", label: "Pemikiran", path: "/pemikiran", num: "03" },
   { key: "karya", label: "Karya", path: "/karya", num: "04" },
   { key: "belajar", label: "Belajar", path: "/belajar", num: "05" },
-  { key: "kerja-bersama", label: "Kerja Bersama", path: "/kerja-bersama", num: "06" },
-  { key: "ripita", label: "RIPITA", path: "/ripita", num: "07" },
+  { key: "ripita", label: "RIPINTAR", path: "https://www.ripita.space", num: "06" },
+  { key: "kerja-bersama", label: "Kerja Bersama", path: "/kerja-bersama", num: "07" },
 ] as const;
 
 export const FOCUS_ITEMS: FocusItem[] = [
@@ -113,10 +113,10 @@ export const ECOSYSTEM: Record<string, EcoNode> = {
     status: "Concept",
   },
   education: {
-    title: "Education",
-    purpose: "Membawa teori profesional lebih dekat dengan proses dan keputusan di dunia kerja.",
-    products: ["Mini Course", "Workbook", "Learning Path", "Professional Programs"],
-    status: "Planned",
+    title: "RIPINTAR",
+    purpose: "Ruang buku digital untuk membahas satu materi secara utuh: dari konsep dan konteks, sampai contoh penerapan serta coding lengkap yang bisa dipelajari pelan-pelan.",
+    products: ["Buku Digital Bertahap", "Bab Konsep & Konteks", "Contoh Penerapan", "Coding Lengkap & Catatan"],
+    status: "In Development",
   },
   knowledge: {
     title: "Knowledge & Assessment",

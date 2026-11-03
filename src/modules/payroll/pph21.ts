@@ -21,7 +21,12 @@ function round(value: number) { return Math.round(Math.max(0, value)); }
 function article17(pkp: number) { let prior = 0; let tax = 0; for (const [cap, rate] of ARTICLE_17) { const taxable = Math.max(0, Math.min(pkp, cap) - prior); tax += taxable * rate; prior = cap; if (pkp <= cap) break; } return round(tax); }
 function terMonthly(ptkp: PtkpStatus, gross: number) { const table = TER[CATEGORY[ptkp]]; return table.rate[table.upper.findIndex((upper) => gross <= upper)] ?? 0; }
 function income(line: PaymentLine) { return line.salary + line.allowance + line.bonus + line.overtime + line.natura + line.employerJkkJkm; }
-function flags(line: PaymentLine) { return Object.entries(line.reviewFlags).filter(([, active]) => active).map(([name]) => ({ dtp: "Fasilitas PPh 21 DTP", multipleEmployers: "lebih dari satu pemberi kerja", foreignCurrency: "mata uang asing", historicalCorrection: "koreksi historis" })[name as keyof PaymentLine["reviewFlags"]]); }
+const REVIEW_FLAG_LABELS: Record<keyof PaymentLine["reviewFlags"], string> = { dtp: "Fasilitas PPh 21 DTP", multipleEmployers: "lebih dari satu pemberi kerja", foreignCurrency: "mata uang asing", historicalCorrection: "koreksi historis" };
+function flags(line: PaymentLine) {
+  // Backup/localStorage versi sebelumnya belum selalu memiliki reviewFlags.
+  // Tidak adanya field berarti tidak ada tanda review, bukan kegagalan hitung.
+  return Object.entries(line.reviewFlags ?? {}).filter(([, active]) => active).map(([name]) => REVIEW_FLAG_LABELS[name as keyof PaymentLine["reviewFlags"]]).filter((label): label is string => Boolean(label));
+}
 
 export function createEmptyPayment(employeeId: string): PaymentLine {
   return { employeeId, salary: 0, allowance: 0, bonus: 0, overtime: 0, natura: 0, employerJkkJkm: 0, pensionEmployee: 0, jhtEmployee: 0, jpEmployee: 0, healthEmployee: 0, zakat: 0, daysPaid: 1, otherDeductions: [], reviewFlags: { dtp: false, multipleEmployers: false, foreignCurrency: false, historicalCorrection: false } };

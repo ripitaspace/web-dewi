@@ -429,7 +429,7 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
           <Link href="/karya">Karya</Link>
           <Link href="/belajar">Belajar</Link>
           <Link href="/kerja-bersama">Kerja Bersama</Link>
-          <Link href="/ripita">RIPITA</Link>
+          <a href="https://www.ripita.space" target="_blank" rel="noreferrer">RIPINTAR</a>
         </nav>
         <div className="nav-actions">
           <a

@@ -18,4 +18,9 @@ describe("calculatePph21", () => {
     expect(result.taxAllowance).toBeGreaterThan(0);
     expect(result.takeHomePay).toBe(10_000_000);
   });
+  it("calculates safely for legacy payment data without review flags", () => {
+    const legacyLine = { ...createEmptyPayment(employee.id), salary: 10_000_000 } as Partial<ReturnType<typeof createEmptyPayment>>;
+    delete legacyLine.reviewFlags;
+    expect(calculatePph21(employee, legacyLine as ReturnType<typeof createEmptyPayment>).pph21).toBe(200_000);
+  });
 });
