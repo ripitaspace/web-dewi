@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
-import { Pph21ReferenceDownload } from "@/components/tools/pph21-reference-download";
 import { InvoiceExtensionInfo } from "@/components/tools/invoice-extension-info";
 import { CompileDocumentClient } from "@/components/tools/compile-document-client";
 import { MakalahGeneratorClient } from "@/components/tools/makalah-generator-client";
@@ -39,8 +38,8 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
     <>
       <SiteHeader currentKey="karya" />
       <main id="main-content" style={{ paddingTop: "var(--nav-height)" }}>
-        <section className="page-hero tool-category-hero">
-          <div className="container">
+        <section className={`page-hero tool-category-hero${slug === "pph-21-calculator" ? " payroll-hero" : ""}`}>
+          <div className={slug === "pph-21-calculator" ? "payroll-container" : "container"}>
             <nav className="breadcrumb" aria-label="Breadcrumb">
               <Link href="/karya">Karya</Link><span>/</span><span>{tool.category}</span>
             </nav>
@@ -50,8 +49,8 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
           </div>
         </section>
 
-        <section className="section-tight" style={{ borderTop: "1px solid var(--line)" }}>
-          <div className="container">
+        <section className={`section-tight${slug === "pph-21-calculator" ? " payroll-workspace" : ""}`} style={{ borderTop: "1px solid var(--line)" }}>
+          <div className={slug === "pph-21-calculator" ? "payroll-container" : "container"}>
             {slug === "kalkulator-bea-cukai" ? <BeaCukaiCalculatorClient /> : slug === "pph-21-calculator" ? <Pph21PayrollStudio /> : slug === "extension-download-faktur-otomatis" || slug === "download-faktur-laptop-kentang" || slug === "download-bukti-potong-otomatis" ? <InvoiceExtensionInfo laptopKentang={slug === "download-faktur-laptop-kentang"} kind={slug === "download-bukti-potong-otomatis" ? "withholding-slip" : "invoice"} /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : slug === "makalah-generator" ? <MakalahGeneratorClient /> : slug === "quotation-generator" ? <QuotationGeneratorClient /> : (
             <div className="tool-placeholder card">
               <span className="tool-placeholder__icon" aria-hidden="true">{tool.icon}</span>
@@ -59,11 +58,6 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
                 <span className="topic-pill">UNDER MAINTENANCE</span>
                 <h2>Ruang parser sedang disiapkan.</h2>
                 <p>Halaman kerja untuk {tool.title} akan tersedia di sini. Nantinya data tetap diproses langsung di perangkatmu, tanpa login atau penyimpanan transaksi.</p>
-                {slug === "pph-21-calculator" && (
-                  <div className="button-row" style={{ marginBottom: "12px" }}>
-                    <Pph21ReferenceDownload />
-                  </div>
-                )}
                 <Link href="/karya" className="btn primary">← Kembali ke Karya</Link>
               </div>
             </div>

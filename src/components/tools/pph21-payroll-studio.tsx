@@ -1,96 +1,214 @@
 "use client";
-
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { COMPONENTS, DOCUMENT_TYPES, KINDS, MONTHS, OBJECT_OPTIONS, PTKP, XML_META } from "@/modules/payroll/studio/catalog.js";
+import { createEngine, rupi } from "@/modules/payroll/studio/engine.js";
+import { adaptEntry, checkBackup, componentsFor, copySalary, dateFor, demo, entryDefault, fresh, nextId, recipientDefault } from "@/modules/payroll/studio/data";
+import { exportCSV, importCSV } from "@/modules/payroll/studio/csv";
+import { zipStore } from "@/modules/payroll/studio/zip.js";
+import type { Entry, Recipient, Studio } from "@/modules/payroll/studio/model";
+import { Drawer, Field, Slip, Table, type Options } from "./pph21-studio-parts";
 import styles from "./pph21-payroll-studio.module.css";
-import { PAYROLL_IMPORT_TEMPLATE, readPayrollImport, type ImportPreview } from "@/modules/payroll/import";
-import { calculatePph21, createEmptyPayment, PPH21_RULES_2026 } from "@/modules/payroll/pph21";
-import { PAYROLL_SCHEMA, type CompanyProfile, type Employee, type PaymentLine, type PayrollStore, type RecipientType, type TaxMode } from "@/modules/payroll/types";
-
-const STORAGE_KEY = PAYROLL_SCHEMA;
-const money = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
-const recipientLabels: Record<RecipientType, string> = { permanent: "Pegawai tetap", "temporary-monthly": "Pegawai tidak tetap · bulanan", "temporary-daily": "Pegawai tidak tetap · harian", pensioner: "Pensiunan", "non-employee": "Bukan pegawai / jasa", "event-participant": "Peserta kegiatan", "former-employee": "Mantan pegawai", foreign: "Orang pribadi luar negeri" };
-const newId = (prefix: string) => `${prefix}-${globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`}`;
-const number = (value: string) => Math.max(0, Number(value) || 0);
-
-function blankCompany(): CompanyProfile { return { name: "Nama perusahaan", address: "Alamat perusahaan", taxId: "", signer: "Penanggung jawab payroll", defaults: { healthEmployee: 0, jhtEmployee: 0, jpEmployee: 0, jkkJkmEmployer: 0 } }; }
-function blankRun(period = "2026-01") { return { id: newId("run"), period, paymentDate: `${period}-25`, items: [] as PaymentLine[], selectedEmployeeIds: [] as string[] }; }
-function initialStore(): PayrollStore { return { schema: PAYROLL_SCHEMA, company: blankCompany(), employees: [], runs: [blankRun()] }; }
-function baseGross(line: PaymentLine) { return line.salary + line.allowance + line.bonus + line.overtime + line.natura + line.employerJkkJkm; }
-function emptyReviewFlags(): PaymentLine["reviewFlags"] { return { dtp: false, multipleEmployers: false, foreignCurrency: false, historicalCorrection: false }; }
-function createPayment(employeeId: string, company: CompanyProfile) { return { ...createEmptyPayment(employeeId), healthEmployee: company.defaults.healthEmployee, jhtEmployee: company.defaults.jhtEmployee, jpEmployee: company.defaults.jpEmployee, employerJkkJkm: company.defaults.jkkJkmEmployer }; }
-function download(name: string, content: string, type: string) { const href = URL.createObjectURL(new Blob([content], { type })); const link = document.createElement("a"); link.href = href; link.download = name; link.click(); URL.revokeObjectURL(href); }
-function validStore(value: unknown): value is PayrollStore { const candidate = value as PayrollStore; return candidate?.schema === PAYROLL_SCHEMA && Array.isArray(candidate.employees) && Array.isArray(candidate.runs); }
-
-function Document({ company, employee, line, period, result }: { company: CompanyProfile; employee: Employee; line: PaymentLine; period: string; result: ReturnType<typeof calculatePph21> }) {
-  const paymentDocument = employee.recipientType !== "permanent" && employee.recipientType !== "temporary-monthly" && employee.recipientType !== "temporary-daily" && employee.recipientType !== "pensioner";
-  const earnings = [["Gaji / honorarium", line.salary], ["Tunjangan", line.allowance], ["Bonus", line.bonus], ["Lembur", line.overtime], ["Natura objek pajak", line.natura], ["JKK/JKM pemberi kerja", line.employerJkkJkm], ...(result.taxAllowance ? [["Tunjangan pajak (gross-up)", result.taxAllowance]] : [])] as [string, number][];
-  const deductions: [string, number][] = [["Iuran pensiun", line.pensionEmployee], ["JHT pegawai", line.jhtEmployee], ["JP pegawai", line.jpEmployee], ["BPJS Kesehatan pegawai", line.healthEmployee], ["Zakat/sumbangan wajib", line.zakat], ...line.otherDeductions.map((item) => [item.label || "Potongan lain", item.amount] as [string, number]), ["PPh 21", result.pph21]];
-  return <article className={styles.document}>
-    <header><div><span>RIPITAX · PAYROLL</span><h2>{company.name || "Nama perusahaan"}</h2><p>{company.address || "Alamat perusahaan"}</p></div><div className={styles.documentTitle}><span>{paymentDocument ? "BUKTI PEMBAYARAN" : "SLIP GAJI"}</span><b>{period}</b><small>Dokumen internal · bukan bukti potong DJP</small></div></header>
-    <section className={styles.documentIdentity}><div><span>Nama penerima</span><b>{employee.name}</b></div><div><span>ID / NIK / NPWP</span><b>{employee.employeeId || employee.taxId || "—"}</b></div><div><span>Jenis penerima</span><b>{recipientLabels[employee.recipientType]}</b></div></section>
-    <section className={styles.documentColumns}><div><h3>Pendapatan</h3>{earnings.filter(([, amount]) => amount > 0).map(([label, amount]) => <p key={label}><span>{label}</span><b>{money.format(amount)}</b></p>)}</div><div><h3>Potongan</h3>{deductions.length ? deductions.map(([label, amount]) => <p key={label}><span>{label}</span><b>− {money.format(amount)}</b></p>) : <p><span>Tidak ada potongan</span><b>—</b></p>}</div></section>
-    <section className={styles.documentTotals}><p><span>Penghasilan bruto</span><b>{money.format(result.gross)}</b></p><p><span>{employee.taxMode === "gross-up" ? "PPh 21 ditanggung sebagai tunjangan" : "PPh 21 dipotong"}</span><b>{money.format(result.pph21)}</b></p><p className={styles.netPay}><span>Total diterima</span><b>{money.format(result.takeHomePay)}</b></p></section>
-    <footer><p>Metode pajak: {result.method}. {result.warnings[0] || "Perhitungan lokal berdasarkan data pada periode ini."}</p><div><span>Disetujui oleh</span><i /> <b>{company.signer || "—"}</b></div></footer>
-  </article>;
+const TABS = ["Penerima", "Penghasilan", "Perhitungan", "Slip & XML"];
+const months = MONTHS.map((m, i) => [String(i + 1), m] as [
+    string,
+    string
+]);
+const yesNo: [
+    string,
+    string
+][] = [["No", "Tidak"], ["Yes", "Ya — perlu review"]];
+function recipientLabel(r: Recipient) { return `${r.employeeId || r.id} · ${r.name || "Tanpa nama"}`; }
+function download(name: string, content: string | Blob, mime = "application/json") { const url = URL.createObjectURL(content instanceof Blob ? content : new Blob([content], { type: mime })); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 3000); }
+function ToolbarIcon({ name }: { name: "download" | "upload" | "database" | "settings-2" }) {
+    const paths = {
+        download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></>,
+        upload: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></>,
+        database: <><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></>,
+        "settings-2": <><path d="M20 7h-9"/><path d="M14 17H3"/><circle cx="17" cy="7" r="3"/><circle cx="6" cy="17" r="3"/></>,
+    } as const;
+    return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
-
 export function Pph21PayrollStudio() {
-  const [store, setStore] = useState<PayrollStore>(initialStore);
-  const [runId, setRunId] = useState(store.runs[0]!.id);
-  const [employeeId, setEmployeeId] = useState("");
-  const [newPeriod, setNewPeriod] = useState("2026-02");
-  const [notice, setNotice] = useState("Mulai dengan profil perusahaan, lalu tambahkan pegawai atau impor file Excel.");
-  const [hydrated, setHydrated] = useState(false);
-  const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
-  const [printIds, setPrintIds] = useState<string[]>([]);
-  const importRef = useRef<HTMLInputElement>(null); const jsonRef = useRef<HTMLInputElement>(null);
-  const run = store.runs.find((item) => item.id === runId) ?? store.runs[0]!;
-  const employee = store.employees.find((item) => item.id === employeeId) ?? store.employees[0];
-  const line = employee ? run.items.find((item) => item.employeeId === employee.id) ?? createPayment(employee.id, store.company) : undefined;
-  const reviewFlags = line?.reviewFlags ?? emptyReviewFlags();
-
-  /* eslint-disable react-hooks/set-state-in-effect -- The local browser snapshot intentionally replaces the SSR-safe empty state once after mount. */
-  useEffect(() => { try { const saved = localStorage.getItem(STORAGE_KEY); if (saved) { const parsed = JSON.parse(saved); if (validStore(parsed)) { setStore(parsed); setRunId(parsed.runs[0]?.id ?? ""); setEmployeeId(parsed.employees[0]?.id ?? ""); setNotice("Data payroll lokal dimuat dari perangkat ini."); } } } catch { setNotice("Simpanan lokal tidak dapat dibaca; data baru digunakan."); } finally { setHydrated(true); } }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
-  useEffect(() => { if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }, [hydrated, store]);
-  useEffect(() => { const clean = () => document.body.classList.remove("payroll-printing"); window.addEventListener("afterprint", clean); return () => window.removeEventListener("afterprint", clean); }, []);
-
-  const results = useMemo(() => new Map(store.employees.map((person) => {
-    const current = run.items.find((item) => item.employeeId === person.id) ?? createPayment(person.id, store.company);
-    const history = store.runs.filter((item) => item.period.slice(0, 4) === run.period.slice(0, 4) && item.period < run.period).map((item) => item.items.find((lineItem) => lineItem.employeeId === person.id)).filter((value): value is PaymentLine => Boolean(value));
-    const priorGross = history.reduce((total, item) => total + baseGross(item), 0); const priorPph = history.reduce((total, item) => total + calculatePph21(person, item).pph21, 0); const priorTaxDeductions = history.reduce((total, item) => total + item.pensionEmployee + item.jhtEmployee + item.jpEmployee + item.zakat, 0);
-    return [person.id, calculatePph21(person, current, { priorGross, priorPph, priorTaxDeductions, monthsWorked: Number(run.period.slice(5, 7)), isFinalPeriod: run.period.endsWith("-12") })] as const;
-  })), [run, store]);
-  const summary = [...results.values()].reduce((total, result) => ({ gross: total.gross + result.gross, pph: total.pph + result.pph21, net: total.net + result.takeHomePay }), { gross: 0, pph: 0, net: 0 });
-
-  function updateCompany(patch: Partial<CompanyProfile>) { setStore((current) => ({ ...current, company: { ...current.company, ...patch } })); }
-  function updateDefaults(key: keyof CompanyProfile["defaults"], value: string) { setStore((current) => ({ ...current, company: { ...current.company, defaults: { ...current.company.defaults, [key]: number(value) } } })); }
-  function addEmployee() { const id = newId("employee"); const person: Employee = { id, name: `Pegawai ${store.employees.length + 1}`, employeeId: `EMP-${String(store.employees.length + 1).padStart(3, "0")}`, taxId: "", recipientType: "permanent", taxMode: "deducted", ptkp: "TK/0" }; setStore((current) => ({ ...current, employees: [...current.employees, person], runs: current.runs.map((candidate) => candidate.id === run.id ? { ...candidate, items: [...candidate.items, createPayment(id, current.company)], selectedEmployeeIds: [...candidate.selectedEmployeeIds, id] } : candidate) })); setEmployeeId(id); setNotice("Pegawai baru dan komponen payroll awal sudah ditambahkan."); }
-  function updateEmployee(patch: Partial<Employee>) { if (!employee) return; setStore((current) => ({ ...current, employees: current.employees.map((person) => person.id === employee.id ? { ...person, ...patch } : person) })); }
-  function deleteEmployee() { if (!employee || !confirm(`Hapus ${employee.name} dari data lokal?`)) return; setStore((current) => ({ ...current, employees: current.employees.filter((person) => person.id !== employee.id), runs: current.runs.map((candidate) => ({ ...candidate, items: candidate.items.filter((item) => item.employeeId !== employee.id), selectedEmployeeIds: candidate.selectedEmployeeIds.filter((id) => id !== employee.id) })) })); setEmployeeId(store.employees.find((person) => person.id !== employee.id)?.id ?? ""); }
-  function updateLine(patch: Partial<PaymentLine>) { if (!employee) return; setStore((current) => ({ ...current, runs: current.runs.map((candidate) => { if (candidate.id !== run.id) return candidate; const found = candidate.items.some((item) => item.employeeId === employee.id); return { ...candidate, items: found ? candidate.items.map((item) => item.employeeId === employee.id ? { ...item, ...patch } : item) : [...candidate.items, { ...createPayment(employee.id, current.company), ...patch }] }; }) })); }
-  function addRun() { if (!/^2026-(0[1-9]|1[0-2])$/.test(newPeriod)) { setNotice("V1 hanya mendukung masa pajak 2026."); return; } const existing = store.runs.find((item) => item.period === newPeriod); if (existing) { setRunId(existing.id); setNotice(`Periode ${newPeriod} sudah dibuka.`); return; } const next = blankRun(newPeriod); next.items = store.employees.map((person) => createPayment(person.id, store.company)); next.selectedEmployeeIds = store.employees.map((person) => person.id); setStore((current) => ({ ...current, runs: [...current.runs, next] })); setRunId(next.id); setNotice(`Periode payroll ${newPeriod} dibuat.`); }
-  async function previewImport(event: ChangeEvent<HTMLInputElement>) { const file = event.target.files?.[0]; if (!file) return; try { setImportPreview(await readPayrollImport(file)); setNotice("Pratinjau impor siap. Data belum disimpan sampai kamu menerapkannya."); } catch (error) { setNotice(error instanceof Error ? error.message : "Impor tidak dapat dibaca."); } finally { event.target.value = ""; } }
-  function applyImport() { if (!importPreview?.rows.length) { setNotice("Tidak ada baris valid untuk diterapkan."); return; } const newEmployees: Employee[] = []; const items: PaymentLine[] = []; importPreview.rows.forEach((item) => { const existing = store.employees.find((person) => person.employeeId === item.employeeId); const id = existing?.id ?? newId("employee"); if (!existing) newEmployees.push({ id, name: item.name, employeeId: item.employeeId, taxId: "", recipientType: item.recipientType, taxMode: item.taxMode, ptkp: item.ptkp }); items.push({ ...createPayment(id, store.company), salary: item.salary, allowance: item.allowance, bonus: item.bonus, overtime: item.overtime, natura: item.natura, pensionEmployee: item.pension, jhtEmployee: item.jht, jpEmployee: item.jp, healthEmployee: item.health, otherDeductions: item.otherDeductions ? [{ id: newId("deduction"), label: "Potongan lain (impor)", amount: item.otherDeductions }] : [] }); }); setStore((current) => ({ ...current, employees: [...current.employees, ...newEmployees], runs: current.runs.map((candidate) => candidate.id === run.id ? { ...candidate, items: [...candidate.items.filter((item) => !items.some((next) => next.employeeId === item.employeeId)), ...items], selectedEmployeeIds: Array.from(new Set([...candidate.selectedEmployeeIds, ...items.map((item) => item.employeeId)])) } : candidate) })); setEmployeeId(items[0]?.employeeId ?? ""); setImportPreview(null); setNotice(`${items.length} baris impor diterapkan ke periode ${run.period}.`); }
-  function exportStore() { download(`ripitax-payroll-${run.period}.json`, JSON.stringify(store, null, 2), "application/json"); setNotice("Backup JSON diunduh."); }
-  async function importStore(event: ChangeEvent<HTMLInputElement>) { const file = event.target.files?.[0]; if (!file) return; try { const value = JSON.parse(await file.text()); if (!validStore(value)) throw new Error("Format backup tidak cocok."); setStore(value); setRunId(value.runs[0]?.id ?? ""); setEmployeeId(value.employees[0]?.id ?? ""); setNotice("Backup JSON dipulihkan ke perangkat ini."); } catch (error) { setNotice(error instanceof Error ? error.message : "Backup tidak dapat dibaca."); } finally { event.target.value = ""; } }
-  function printSelected() { const ids = run.selectedEmployeeIds.length ? run.selectedEmployeeIds : store.employees.map((person) => person.id); if (!ids.length) { setNotice("Tambahkan pegawai terlebih dahulu."); return; } setPrintIds(ids); document.body.classList.add("payroll-printing"); requestAnimationFrame(() => requestAnimationFrame(() => window.print())); }
-
-  return <div className={styles.studio} data-ripita-page-content>
-    <header className={styles.topbar}><div><span>RIPITAX · PAYROLL 2026</span><h2>PPh 21 & slip gaji, tetap di perangkatmu.</h2><p>Data tidak dikirim ke server. Hitungan adalah alat kerja internal—periksa kembali kasus khusus sebelum pemotongan nyata.</p></div><div className={styles.actions}><button type="button" onClick={() => download("template-ripitax-payroll.csv", PAYROLL_IMPORT_TEMPLATE, "text/csv;charset=utf-8")}>Unduh template Excel</button><button type="button" onClick={() => importRef.current?.click()}>Impor Excel</button><button type="button" onClick={exportStore}>Ekspor JSON</button><button type="button" onClick={() => jsonRef.current?.click()}>Impor JSON</button><button type="button" className={styles.primary} onClick={printSelected}>Cetak slip terpilih</button><input ref={importRef} className={styles.hidden} type="file" accept=".xlsx,.csv,text/csv" onChange={previewImport} /><input ref={jsonRef} className={styles.hidden} type="file" accept="application/json,.json" onChange={importStore} /></div></header>
-    <p className={styles.notice} role="status">{notice}</p>
-    <section className={styles.kpis}><div><span>Total bruto</span><b>{money.format(summary.gross)}</b></div><div><span>Total PPh 21/26</span><b>{money.format(summary.pph)}</b></div><div><span>Total dibayarkan</span><b>{money.format(summary.net)}</b></div><div><span>Pegawai dalam periode</span><b>{store.employees.length}</b></div></section>
-    <div className={styles.layout}><div className={styles.editor}>
-      <section className={styles.card}><div className={styles.head}><div><span>01 · PERUSAHAAN</span><h3>Identitas untuk slip.</h3></div></div><div className={styles.fields}><label>Nama perusahaan<input value={store.company.name} onChange={(event) => updateCompany({ name: event.target.value })} /></label><label>NPWP/NIK pemotong<input value={store.company.taxId} onChange={(event) => updateCompany({ taxId: event.target.value })} /></label><label className={styles.full}>Alamat<input value={store.company.address} onChange={(event) => updateCompany({ address: event.target.value })} /></label><label>Penandatangan<input value={store.company.signer} onChange={(event) => updateCompany({ signer: event.target.value })} /></label></div><details className={styles.defaults}><summary>Default BPJS & komponen awal</summary><div className={styles.fields}><label>BPJS Kes. pegawai<input type="number" min="0" value={store.company.defaults.healthEmployee} onChange={(event) => updateDefaults("healthEmployee", event.target.value)} /></label><label>JHT pegawai<input type="number" min="0" value={store.company.defaults.jhtEmployee} onChange={(event) => updateDefaults("jhtEmployee", event.target.value)} /></label><label>JP pegawai<input type="number" min="0" value={store.company.defaults.jpEmployee} onChange={(event) => updateDefaults("jpEmployee", event.target.value)} /></label><label>JKK/JKM pemberi kerja<input type="number" min="0" value={store.company.defaults.jkkJkmEmployer} onChange={(event) => updateDefaults("jkkJkmEmployer", event.target.value)} /></label></div></details></section>
-      <section className={styles.card}><div className={styles.head}><div><span>02 · PERIODE</span><h3>Payroll bulanan.</h3></div><div className={styles.inline}><input type="month" value={newPeriod} min="2026-01" max="2026-12" onChange={(event) => setNewPeriod(event.target.value)} /><button type="button" onClick={addRun}>Buka periode</button></div></div><div className={styles.fields}><label>Masa payroll<select value={run.id} onChange={(event) => setRunId(event.target.value)}>{store.runs.map((item) => <option key={item.id} value={item.id}>{item.period}</option>)}</select></label><label>Tanggal pembayaran<input type="date" value={run.paymentDate} onChange={(event) => setStore((current) => ({ ...current, runs: current.runs.map((item) => item.id === run.id ? { ...item, paymentDate: event.target.value } : item) }))} /></label></div></section>
-      <section className={styles.card}><div className={styles.head}><div><span>03 · DIREKTORI</span><h3>Pegawai & penerima pembayaran.</h3></div><button type="button" className={styles.primary} onClick={addEmployee}>+ Tambah pegawai</button></div>{store.employees.length ? <div className={styles.employeeList}>{store.employees.map((person) => <button type="button" className={person.id === employee?.id ? styles.activeEmployee : ""} key={person.id} onClick={() => setEmployeeId(person.id)}><b>{person.name}</b><span>{recipientLabels[person.recipientType]} · {person.employeeId}</span></button>)}</div> : <p className={styles.help}>Belum ada data. Tambahkan pegawai secara manual atau impor Excel.</p>}</section>
-      {employee && line && <><section className={styles.card}><div className={styles.head}><div><span>04 · PROFIL PENERIMA</span><h3>{employee.name}</h3></div><button type="button" className={styles.danger} onClick={deleteEmployee}>Hapus</button></div><div className={styles.fields}><label>Nama<input value={employee.name} onChange={(event) => updateEmployee({ name: event.target.value })} /></label><label>ID pegawai/vendor<input value={employee.employeeId} onChange={(event) => updateEmployee({ employeeId: event.target.value })} /></label><label>Jenis penerima<select value={employee.recipientType} onChange={(event) => updateEmployee({ recipientType: event.target.value as RecipientType })}>{Object.entries(recipientLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label>Metode PPh<select value={employee.taxMode} onChange={(event) => updateEmployee({ taxMode: event.target.value as TaxMode })}><option value="deducted">Dipotong dari penerima</option><option value="gross-up">Gross-up / tunjangan pajak</option></select></label><label>Status PTKP<select value={employee.ptkp} onChange={(event) => updateEmployee({ ptkp: event.target.value as Employee["ptkp"] })}>{["TK/0","TK/1","TK/2","TK/3","K/0","K/1","K/2","K/3"].map((value) => <option key={value}>{value}</option>)}</select></label><label>NPWP/NIK (opsional)<input value={employee.taxId} onChange={(event) => updateEmployee({ taxId: event.target.value })} /></label>{employee.recipientType === "foreign" && <label>Tarif P3B bila ada (%)<input type="number" min="0" max="20" value={employee.treatyRate ?? ""} onChange={(event) => updateEmployee({ treatyRate: event.target.value ? number(event.target.value) : undefined })} /></label>}</div></section>
-      <section className={styles.card}><div className={styles.head}><div><span>05 · PENGHASILAN & POTONGAN</span><h3>Isi angka untuk {run.period}.</h3></div></div><div className={styles.fields}>{([[["salary","Gaji / honorarium"],["allowance","Tunjangan"],["bonus","Bonus"],["overtime","Lembur"],["natura","Natura objek pajak"],["employerJkkJkm","JKK/JKM pemberi kerja"],["pensionEmployee","Iuran pensiun pegawai"],["jhtEmployee","JHT pegawai"],["jpEmployee","JP pegawai"],["healthEmployee","BPJS Kesehatan pegawai"],["zakat","Zakat/sumbangan wajib"]] as [keyof PaymentLine, string][]]).flat().map(([key, label]) => <label key={key}>{label}<input type="number" min="0" step="1000" value={typeof line[key] === "number" ? line[key] as number : 0} onChange={(event) => updateLine({ [key]: number(event.target.value) } as Partial<PaymentLine>)} /></label>)}</div>{employee.recipientType === "temporary-daily" && <label className={styles.days}>Hari dibayar<input type="number" min="1" value={line.daysPaid} onChange={(event) => updateLine({ daysPaid: Math.max(1, number(event.target.value)) })} /></label>}<div className={styles.flags}><b>Tandai agar hasil tidak dipakai otomatis:</b>{([[["dtp","DTP"],["multipleEmployers","Lebih dari satu pemberi kerja"],["foreignCurrency","Mata uang asing"],["historicalCorrection","Koreksi historis"]] as [keyof PaymentLine["reviewFlags"], string][]]).flat().map(([key, label]) => <label key={key}><input type="checkbox" checked={reviewFlags[key]} onChange={(event) => updateLine({ reviewFlags: { ...reviewFlags, [key]: event.target.checked } })} /> {label}</label>)}</div></section></>}
-    </div><aside className={styles.summary}>
-      <section className={styles.card}><span>REVIEW PAYROLL</span><h3>{employee ? employee.name : "Pilih pegawai"}</h3>{employee && line ? (() => { const result = results.get(employee.id)!; return <><strong className={styles.net}>{money.format(result.takeHomePay)}</strong><p className={styles.help}>Total diterima penerima.</p><dl><div><dt>Bruto</dt><dd>{money.format(result.gross)}</dd></div><div><dt>PPh 21/26</dt><dd>{money.format(result.pph21)}</dd></div><div><dt>Potongan pegawai</dt><dd>{money.format(result.employeeDeductions)}</dd></div><div><dt>Metode</dt><dd>{result.method}</dd></div></dl>{result.warnings.map((warning) => <p className={styles.warning} key={warning}>{warning}</p>)}<details><summary>Jejak perhitungan</summary>{result.trace.map((item) => <p className={styles.help} key={item}>{item}</p>)}</details><label className={styles.check}><input type="checkbox" checked={run.selectedEmployeeIds.includes(employee.id)} onChange={(event) => setStore((current) => ({ ...current, runs: current.runs.map((item) => item.id === run.id ? { ...item, selectedEmployeeIds: event.target.checked ? [...item.selectedEmployeeIds, employee.id] : item.selectedEmployeeIds.filter((id) => id !== employee.id) } : item) }))} /> Sertakan dalam cetak massal</label></>; })() : <p className={styles.help}>Tambahkan atau pilih pegawai untuk mengisi payroll.</p>}</section>
-      <section className={styles.card}><span>ATURAN</span><h3>PPh 21 tahun 2026</h3><p className={styles.help}>{PPH21_RULES_2026.version}. DTP 2026, P3B, kurs asing, penghasilan multi-pemberi kerja, dan koreksi historis wajib ditinjau manual.</p><a href={PPH21_RULES_2026.sources[1]} target="_blank" rel="noreferrer">Buka referensi PMK 168/2023 ↗</a></section>
-      {importPreview && <section className={styles.card}><span>PRATINJAU IMPOR</span><h3>{importPreview.rows.length} baris valid</h3>{importPreview.issues.map((issue) => <p className={styles.warning} key={`${issue.row}-${issue.message}`}>Baris {issue.row}: {issue.message}</p>)}<div className={styles.actions}><button type="button" className={styles.primary} onClick={applyImport}>Terapkan impor</button><button type="button" onClick={() => setImportPreview(null)}>Batal</button></div></section>}
-    </aside></div>
-    <div className={styles.printArea}>{printIds.map((id) => { const person = store.employees.find((item) => item.id === id); const payment = run.items.find((item) => item.employeeId === id); const result = results.get(id); return person && payment && result ? <Document key={id} company={store.company} employee={person} line={payment} period={run.period} result={result} /> : null; })}</div>
-  </div>;
+    const [state, setState] = useState<Studio>(fresh), [ready, setReady] = useState(false), [tab, setTab] = useState(0), [notice, setNotice] = useState("");
+    const [settings, setSettings] = useState(false), [filter, setFilter] = useState("period"), [personFilter, setPersonFilter] = useState(""), [chosenCalc, setChosenCalc] = useState(""), [xmlType, setXmlType] = useState("BPMP"), [slipId, setSlipId] = useState("");
+    const [drawer, setDrawer] = useState<{
+        mode: "recipient" | "entry" | "slip";
+        id: string;
+    } | null>(null), [printId, setPrintId] = useState(""), [importErrors, setImportErrors] = useState<string[]>([]);
+    const restoreRef = useRef<HTMLInputElement>(null), csvRef = useRef<HTMLInputElement>(null);
+    useEffect(() => { let active = true; queueMicrotask(() => { if (!active)
+        return;
+        localStorage.removeItem("ripitax-payroll-v1");
+        setReady(true); }); return () => { active = false; }; }, []);
+    function replace(next: Studio) { setState(next); }
+    function mutate(fn: (s: Studio) => void) { const next = structuredClone(state); fn(next); replace(next); }
+    const engine = createEngine(state), docs = engine.documentsForPeriod();
+    const summaries = state.recipients.map(r => ({ r, ...engine.taxMonthSummary(r, state.company.month) }));
+    const totals = summaries.reduce((a, s) => ({ gross: a.gross + s.gross, tax: a.tax + s.tax, net: a.net + s.netCash }), { gross: 0, tax: 0, net: 0 });
+    const batch = engine.xmlBatchStatus(docs, xmlType), xml = engine.makeXml(xmlType, batch.list), batches = Object.keys(XML_META).map(t => engine.xmlBatchStatus(docs, t)), zipReady = batches.some(b => b.count) && batches.every(b => !b.count || b.ready);
+    const currentCalc = state.recipients.find(r => r.id === chosenCalc) || state.recipients[0], slipRecipient = state.recipients.find(r => r.id === slipId) || state.recipients[0];
+    const detailPerson = drawer?.mode === "recipient" ? state.recipients.find(r => r.id === drawer.id) : null, detailEntry = drawer?.mode === "entry" ? state.entries.find(e => e.id === drawer.id) : null;
+    useEffect(() => { if (!printId)
+        return; const done = () => { document.body.classList.remove("ripitax-studio-printing"); setPrintId(""); }; document.body.classList.add("ripitax-studio-printing"); window.addEventListener("afterprint", done); const frame = requestAnimationFrame(() => window.print()); return () => { cancelAnimationFrame(frame); window.removeEventListener("afterprint", done); document.body.classList.remove("ripitax-studio-printing"); }; }, [printId]);
+    function updateRecipient(id: string, key: keyof Recipient, value: string | number | boolean) { mutate(s => { const r = s.recipients.find(r => r.id === id)!; Object.assign(r, { [key]: ["startMonth", "endMonth"].includes(key) ? Math.max(1, Math.min(12, Number(value))) : value }); if (key === "startMonth" && r.startMonth > r.endMonth)
+        r.endMonth = r.startMonth; if (key === "endMonth" && r.endMonth < r.startMonth)
+        r.startMonth = r.endMonth; if (key === "kind") {
+        r.taxObject = "";
+        s.entries.filter(e => e.recipientId === id).forEach(e => adaptEntry(e, s));
+    } if (key === "residency")
+        r.taxObject = ""; }); }
+    function updateEntry(id: string, key: keyof Entry, value: string | number | boolean) { mutate(s => { const e = s.entries.find(e => e.id === id)!; Object.assign(e, { [key]: ["month", "days"].includes(key) ? Math.max(1, Math.floor(Number(value))) : value }); if (key === "recipientId")
+        adaptEntry(e, s); }); }
+    function rf(r: Recipient, key: keyof Recipient, label: string, options?: Options, type = "text", compact = false) { return <Field key={key} label={label} value={r[key]} options={options} type={type} compact={compact} onChange={v => updateRecipient(r.id, key, v)}/>; }
+    function ef(e: Entry, key: keyof Entry, label: string, options?: Options, type = "text", compact = false) { return <Field key={key} label={label} value={e[key]} options={options} type={type} compact={compact} onChange={v => updateEntry(e.id, key, v)}/>; }
+    function confirmReplace(message: string) { return !(state.recipients.length || state.entries.length || state.company.name || state.company.tin) || window.confirm(message); }
+    function company(key: keyof Studio["company"], value: string | number | boolean) {
+        if (key === "year" && (state.entries.length || state.recipients.length) && !window.confirm("Mengubah tahun memberi tahun baru pada seluruh data workspace ini. Backup dahulu. Lanjutkan?"))
+            return;
+        mutate(s => { const old = dateFor(s.company.year, s.company.month); Object.assign(s.company, { [key]: ["year", "month"].includes(key) ? Number(value) : value }); if (["year", "month"].includes(key) && s.company.withholdingDate === old)
+            s.company.withholdingDate = dateFor(s.company.year, s.company.month); });
+    }
+    async function restore(file?: File) { if (!file)
+        return; try {
+        const v: unknown = JSON.parse(await file.text());
+        checkBackup(v);
+        if (!confirmReplace("Restore mengganti seluruh data v2. Sudah backup dan lanjutkan?"))
+            return;
+        replace(v);
+        setDrawer(null);
+        setImportErrors([]);
+        setNotice("Backup v2 berhasil dipulihkan.");
+    }
+    catch (e) {
+        setNotice("Restore gagal: " + (e instanceof Error ? e.message : "Berkas tidak valid."));
+    } }
+    async function csv(file?: File) { if (!file)
+        return; try {
+        const next = structuredClone(state), result = importCSV(next, await file.text());
+        replace(next);
+        setImportErrors(result.errors);
+        setNotice(`${result.count} baris diimpor; ${result.duplicates} duplikat dilewati; ${result.errors.length} ditolak.`);
+    }
+    catch (e) {
+        setNotice(e instanceof Error ? e.message : "CSV tidak dapat dibaca.");
+    } }
+    function exportXml(all = false) { if (all ? !zipReady : !batch.ready)
+        return; const files = (all ? Object.keys(XML_META) : [xmlType]).flatMap(t => { const b = engine.xmlBatchStatus(docs, t); return b.count ? [{ name: engine.fileName(t), content: engine.makeXml(t, b.list) }] : []; }); if (files.some(f => new DOMParser().parseFromString(f.content, "application/xml").querySelector("parsererror"))) {
+        setNotice("Struktur XML gagal diperiksa.");
+        return;
+    } if (all)
+        download(`RIPITAX_XML_${state.company.year}-${state.company.month}.zip`, zipStore(files));
+    else
+        download(files[0].name, files[0].content, "application/xml;charset=utf-8"); }
+    async function copyXml() { try {
+        await navigator.clipboard.writeText(xml);
+        setNotice("XML disalin.");
+    }
+    catch {
+        setNotice("Salin otomatis dibatasi. Pilih teks pada pratinjau XML.");
+    } }
+    function tku(id?: string) { const tin = id ? engine.person(id)?.tin : state.company.tin; if (!/^\d{16}$/.test(tin || "")) {
+        setNotice("Isi NIK/NPWP 16 digit dahulu.");
+        return;
+    } if (id)
+        updateRecipient(id, "tku", tin + "000000");
+    else
+        company("tku", tin + "000000"); setNotice("Usulan ID TKU diisi. Cocokkan dengan Coretax."); }
+    function remove(id: string, recipient: boolean) { if (!window.confirm(recipient ? "Hapus penerima beserta seluruh penghasilannya?" : "Hapus baris penghasilan ini?"))
+        return; mutate(s => { if (recipient) {
+        s.recipients = s.recipients.filter(r => r.id !== id);
+        s.entries = s.entries.filter(e => e.recipientId !== id);
+    }
+    else
+        s.entries = s.entries.filter(e => e.id !== id); }); }
+    function duplicate(id: string, recipient: boolean) { mutate(s => { if (recipient) {
+        const r = s.recipients.find(r => r.id === id)!;
+        const newId = nextId(s, "P");
+        s.recipients.push({ ...r, id: newId, employeeId: newId, name: r.name + " (salinan)", tin: "", tku: "", foreignTin: "", annualComplete: false });
+    }
+    else
+        s.entries.push({ ...s.entries.find(e => e.id === id)!, id: nextId(s, "T") }); }); }
+    function repair(id: string, message: string) {
+        if (engine.companyErrors().includes(message)) {
+            const label = message.includes("NPWP") ? "NPWP 16 digit pemotong" : message.includes("TKU") ? "ID TKU pemotong (22 digit)" : message.includes("Tahun pajak") ? "Tahun pajak" : "Tanggal pemotongan";
+            document.querySelector<HTMLElement>(`[aria-label="${label}"]`)?.focus();
+            setNotice(message);
+            return;
+        }
+        const doc = docs.find(d => d.recipientId === id && d.errors.includes(message));
+        if (doc?.entry && !engine.personError(engine.person(id)!, doc.type).includes(message)) {
+            setTab(1);
+            setDrawer({ mode: "entry", id: doc.entry.id });
+        }
+        else {
+            setTab(0);
+            setDrawer({ mode: "recipient", id });
+        }
+    }
+    const filtered = state.entries.filter(e => (filter === "all" || e.month === state.company.month) && (!personFilter || e.recipientId === personFilter));
+    if (!ready)
+        return <div className={styles.studio}>Memuat ruang kerja lokal…</div>;
+    return <div className={styles.studio}>
+  <header className={styles.topbar}><div><span className={styles.eyebrow}>RIPITAX · STUDIO V2</span><h2>Satu ruang untuk payroll-mu.</h2><p>Penerima, penghasilan, perhitungan, sampai dokumen.</p><span className={styles.localBadge}>● Data hanya ada selama sesi ini</span></div><div className={styles.toolbar} role="group" aria-label="Aksi data RIPITAX"><button type="button" className={styles.iconButton} aria-label="Backup JSON" title="Backup JSON" data-tooltip="Backup JSON" onClick={() => download(`RIPITAX_BACKUP_${state.company.year}.json`, JSON.stringify(state, null, 2))}><ToolbarIcon name="download"/></button><button type="button" className={styles.iconButton} aria-label="Restore JSON" title="Restore JSON" data-tooltip="Restore JSON" onClick={() => restoreRef.current?.click()}><ToolbarIcon name="upload"/></button><button type="button" className={styles.iconButton} aria-label="Muat contoh" title="Muat contoh" data-tooltip="Muat contoh" onClick={() => { if (confirmReplace("Muat contoh mengganti seluruh data sesi ini. Lanjutkan?")) {
+        replace(demo());
+        setDrawer(null);
+        setNotice("");
+    } }}><ToolbarIcon name="database"/></button><button type="button" className={styles.iconButton} aria-label="Pengaturan" title="Pengaturan" data-tooltip="Pengaturan" aria-expanded={settings} onClick={() => setSettings(!settings)}><ToolbarIcon name="settings-2"/></button></div></header>
+  <input hidden ref={restoreRef} type="file" accept=".json,application/json" onChange={e => { void restore(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={csvRef} type="file" accept=".csv,text/csv" onChange={e => { void csv(e.target.files?.[0]); e.target.value = ""; }}/>
+  {notice && <p className={styles.notice} role="status">{notice}</p>}
+  <section className={styles.config} aria-label="Perusahaan dan masa pajak">{([["name", "Pemotong / Perusahaan"], ["tin", "NPWP 16 digit pemotong"], ["tku", "ID TKU pemotong (22 digit)"]] as const).map(([k, l]) => <Field key={k} label={l} value={state.company[k]} onChange={v => company(k, v)}/>)}<Field label="Tahun pajak" value={state.company.year} options={["2024", "2025", "2026", "2027", "2028"]} onChange={v => company("year", v)}/><Field label="Masa pajak" value={state.company.month} options={months} onChange={v => company("month", v)}/><Field label="Tanggal pemotongan" type="date" value={state.company.withholdingDate} onChange={v => company("withholdingDate", v)}/></section>
+  {settings && <section className={styles.card}><h3>Pengaturan sesi</h3><p className={styles.help}>Data tidak disimpan di browser dan hilang saat halaman dimuat ulang. Gunakan Backup JSON untuk memindahkan data; CSV hanya berisi penghasilan dan memerlukan penerima terlebih dahulu.</p><div className={styles.actions}><button onClick={() => tku()}>Usulkan ID TKU dari NPWP</button><button onClick={() => download("RIPITAX_penghasilan.csv", exportCSV(state), "text/csv;charset=utf-8")}>Unduh CSV penghasilan</button><button onClick={() => csvRef.current?.click()}>Impor CSV penghasilan</button></div><p className={styles.help}>PP 58/2023 · PMK 168/2023. Gross-up otomatis, fasilitas khusus, dan kondisi disetahunkan memerlukan review. <a href="https://www.pajak.go.id/reformdjp/coretax/template-xml-dan-converter-excel-ke-xml" target="_blank" rel="noreferrer">Referensi template XML DJP ↗</a></p></section>}
+  {importErrors.length > 0 && <details className={styles.warning}><summary>{importErrors.length} baris CSV ditolak</summary>{importErrors.map((e, i) => <p key={i}>{e}</p>)}</details>}
+  <div className={styles.tabs} role="tablist" aria-label="Tahap payroll">{TABS.map((t, i) => <button key={t} id={"studio-tab-" + i} role="tab" aria-selected={tab === i} aria-controls={"studio-panel-" + i} tabIndex={tab === i ? 0 : -1} onClick={() => setTab(i)} onKeyDown={e => { let n = i; if (e.key === "ArrowRight")
+        n = (i + 1) % 4;
+    else if (e.key === "ArrowLeft")
+        n = (i + 3) % 4;
+    else if (e.key === "Home")
+        n = 0;
+    else if (e.key === "End")
+        n = 3;
+    else
+        return; e.preventDefault(); setTab(n); document.getElementById("studio-tab-" + n)?.focus(); }}><span>0{i + 1}</span>{t}</button>)}</div>
+  <section className={styles.kpis}>{[["Bruto pajak", rupi(totals.gross)], ["PPh 21/26", rupi(totals.tax)], ["Bersih dibayarkan", rupi(totals.net)], ["Penerima", String(state.recipients.length)]].map(([l, v]) => <div key={l}><span>{l}</span><strong>{v}</strong></div>)}</section>
+  <section role="tabpanel" id={"studio-panel-" + tab} aria-labelledby={"studio-tab-" + tab} className={styles.workspace}>
+  {tab === 0 && <section className={styles.card}><div className={styles.sectionHead}><div><h3>Daftar penerima penghasilan</h3><p>Satu orang, satu baris. Lengkapi informasi lanjutan melalui Detail.</p></div><button className={styles.primary} onClick={() => mutate(s => s.recipients.push(recipientDefault(s)))}>+ Tambah penerima</button></div><Table head={["ID pegawai", "Nama", "NIK / NPWP / TIN", "Jenis penerima", "Subjek", "PTKP", "Sektor", "Mulai", "Akhir", "Tujuan XML", "Aksi"]} compact autoFitColumns={[{ min: 120, max: 260 }, { min: 200, max: 420 }, { min: 200, max: 320 }, { min: 230, max: 340 }, { min: 110, max: 180 }, { min: 90, max: 140 }, { min: 130, max: 200 }, { min: 130, max: 180 }, { min: 130, max: 180 }, { min: 100, max: 180 }, { min: 190, max: 260 }]} empty={!state.recipients.length ? "Belum ada penerima. Tambahkan penerima atau muat contoh." : undefined}>{state.recipients.map(r => <tr key={r.id}><td>{rf(r, "employeeId", "ID pegawai", undefined, "text", true)}</td><td>{rf(r, "name", "Nama penerima", undefined, "text", true)}</td><td>{rf(r, r.residency === "SPLN" ? "foreignTin" : "tin", "NIK / NPWP / TIN", undefined, "text", true)}</td><td>{rf(r, "kind", "Jenis penerima", KINDS, "text", true)}</td><td>{rf(r, "residency", "Subjek pajak", ["SPDN", "SPLN"], "text", true)}</td><td>{rf(r, "ptkp", "PTKP", PTKP, "text", true)}</td><td>{rf(r, "sector", "Sektor", [["private", "Swasta"], ["government", "Pemerintah"]], "text", true)}</td><td>{rf(r, "startMonth", "Mulai", months, "text", true)}</td><td>{rf(r, "endMonth", "Akhir", months, "text", true)}</td><td><span className={styles.badge}>{engine.documentKind(r, state.company.month)}</span></td><td><div className={styles.rowActions}><button onClick={() => setDrawer({ mode: "recipient", id: r.id })}>Detail</button><button onClick={() => duplicate(r.id, true)}>Salin</button><button className={styles.danger} onClick={() => remove(r.id, true)}>Hapus</button></div></td></tr>)}</Table></section>}
+  {tab === 1 && <section className={styles.card}><div className={styles.sectionHead}><div><h3>Penghasilan & potongan</h3><p>Satu baris untuk satu komponen payroll atau pembayaran jasa.</p></div><div className={styles.actions}><button className={styles.primary} onClick={() => { if (!state.recipients.length) {
+        setNotice("Tambahkan penerima dahulu.");
+        return;
+    } mutate(s => { const e = entryDefault(s, personFilter || s.recipients[0].id); adaptEntry(e, s); s.entries.push(e); }); }}>+ Tambah baris</button><button onClick={() => { try {
+        const s = structuredClone(state), eligible = s.recipients.filter(r => engine.isPayroll(r)), id = personFilter || (eligible.length === 1 ? eligible[0].id : ""), count = copySalary(s, id);
+        replace(s);
+        setFilter("all");
+        setNotice(count + " baris gaji ditambahkan; bulan yang terisi tidak ditimpa.");
+    }
+    catch (e) {
+        setNotice((e as Error).message);
+    } }}>Salin gaji ke bulan aktif lain</button></div></div><div className={styles.filters}><Field label="Lihat baris" value={filter} options={[["period", "Masa terpilih"], ["all", "Seluruh tahun"]]} onChange={v => setFilter(String(v))}/><Field label="Filter penerima" value={personFilter} options={[["", "Semua penerima"], ...state.recipients.map(r => [r.id, recipientLabel(r)] as [
+            string,
+            string
+        ])]} onChange={v => setPersonFilter(String(v))}/></div><Table head={["Penerima", "Bulan", "Komponen", "Nominal (Rp)", "Keterangan", "Perlakuan", "Aksi"]} empty={!filtered.length ? "Belum ada penghasilan pada filter ini." : undefined}>{filtered.map(e => <tr key={e.id}><td>{ef(e, "recipientId", "Penerima", state.recipients.map(r => [r.id, recipientLabel(r)]), "text", true)}</td><td>{ef(e, "month", "Bulan", months, "text", true)}</td><td>{ef(e, "comp", "Komponen", componentsFor(engine.person(e.recipientId)?.kind || "fixed").map(k => [k, COMPONENTS[k as keyof typeof COMPONENTS].label]), "text", true)}</td><td>{ef(e, "amount", "Nominal (Rp)", undefined, "number", true)}</td><td>{ef(e, "description", "Keterangan", undefined, "text", true)}</td><td>{COMPONENTS[e.comp as keyof typeof COMPONENTS]?.tax ? "Bruto pajak" : "Potongan"}{COMPONENTS[e.comp as keyof typeof COMPONENTS]?.cash === 0 ? " · Non-tunai" : ""}</td><td><div className={styles.rowActions}><button onClick={() => setDrawer({ mode: "entry", id: e.id })}>Detail</button><button onClick={() => duplicate(e.id, false)}>Salin</button><button className={styles.danger} onClick={() => remove(e.id, false)}>Hapus</button></div></td></tr>)}</Table></section>}
+  {tab === 2 && <><section className={styles.card}><div className={styles.sectionHead}><div><h3>Hasil perhitungan masa pajak</h3><p>Otomatis mengikuti data. Buka Rincian untuk menelusuri formula.</p></div><button onClick={() => setNotice("Perhitungan diperbarui dari data aktif.")}>Hitung ulang</button></div><Table head={["Penerima", "Kategori", "Bruto pajak", "Penghasilan tunai", "Metode", "PPh 21/26", "Bersih dibayarkan", "Validasi", "Aksi"]} empty={!summaries.length ? "Belum ada penerima untuk dihitung." : undefined}>{summaries.map(s => { const errors = docs.filter(d => d.recipientId === s.r.id).flatMap(d => d.errors); return <tr key={s.r.id}><td>{recipientLabel(s.r)}</td><td>{KINDS[s.r.kind as keyof typeof KINDS]}</td><td>{rupi(s.gross)}</td><td>{rupi(s.cash)}</td><td>{[...new Set(s.rows.map(r => r.method))].join("; ") || "—"}</td><td>{rupi(s.tax)}</td><td><strong>{rupi(s.netCash)}</strong></td><td>{errors.length ? errors.length + " masalah" : s.rows.length ? "OK" : "Belum ada hasil"}</td><td><button onClick={() => setChosenCalc(s.r.id)}>Rincian</button></td></tr>; })}</Table></section><div className={styles.twoCol}><section className={styles.card}><h3>Jejak perhitungan</h3><p className={styles.help}>{currentCalc ? recipientLabel(currentCalc) : ""}</p><div className={styles.trace}>{currentCalc ? engine.monthResults(currentCalc, state.company.month).map((r, i) => <div key={i}><strong>{r.method}</strong>{r.trace.map((t, j) => <p key={j}>{t}</p>)}{r.issues.map(t => <p className={styles.warning} key={t}>{t}</p>)}</div>) : "Pilih penerima untuk melihat cara hitung."}</div></section><section className={styles.card}><h3>Ringkasan & kontrol</h3><p className={styles.help}>Perhitungan masa terakhir membutuhkan seluruh penghasilan sejak masa awal. Konfirmasikan riwayat melalui Detail Penerima sebelum ekspor A1/A2.</p><dl className={styles.summary}>{[["Bruto pajak", totals.gross], ["PPh 21/26", totals.tax], ["Bersih dibayarkan", totals.net]].map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{rupi(Number(v))}</dd></div>)}</dl></section></div></>}
+  {tab === 3 && <><div className={styles.sectionHead}><div><h3>Slip pembayaran & XML Coretax</h3><p>Dua keluaran dari data yang sama.</p></div><button onClick={() => setNotice(docs.reduce((a, d) => a + d.errors.length, 0) + " masalah validasi pada " + docs.length + " dokumen.")}>Validasi ulang</button></div><div className={styles.twoCol}><section className={styles.card}><div className={styles.sectionHead}><h3>Pratinjau XML</h3><span className={styles.badge}>{batch.ready ? "Lolos validasi lokal" : batch.count ? batch.issues.length + " masalah" : "Belum ada dokumen"}</span></div><div className={styles.actions}>{Object.keys(XML_META).map(t => <button key={t} aria-pressed={t === xmlType} className={t === xmlType ? styles.primary : ""} onClick={() => setXmlType(t)}>{t} · {engine.xmlBatchStatus(docs, t).count}</button>)}</div><pre className={styles.code} tabIndex={0} aria-label="Konten XML hasil generator">{xml}</pre><div className={styles.actions}><button disabled={!batch.ready} onClick={() => void copyXml()}>Salin XML</button><button className={styles.primary} disabled={!batch.ready} onClick={() => exportXml()}>Unduh XML</button><button disabled={!zipReady} onClick={() => exportXml(true)}>Unduh ZIP semua XML</button></div><p className={styles.help}>Struktur mengikuti template DJP. Penerimaan data diperiksa saat impor ke Coretax.</p></section><section className={styles.card}><h3>Validasi & dokumen</h3>{!batch.count ? <p className={styles.empty}>Belum ada dokumen {xmlType} untuk masa ini.</p> : batch.ready ? <p className={styles.success}>{batch.count} dokumen lolos validasi lokal.</p> : <div className={styles.issues}>{batch.issues.map((i, n) => <div key={n}><p><strong>{i.name}</strong><br />{i.text}</p><button onClick={() => repair(i.id, i.text)}>Perbaiki</button></div>)}</div>}<hr /><h3>Slip pembayaran</h3><Field label="Pilih penerima" value={slipRecipient?.id || ""} options={state.recipients.map(r => [r.id, recipientLabel(r)])} onChange={v => setSlipId(String(v))}/>{slipRecipient && <p className={styles.net}>{rupi(engine.taxMonthSummary(slipRecipient, state.company.month).netCash)}</p>}<div className={styles.actions}><button disabled={!slipRecipient} onClick={() => setDrawer({ mode: "slip", id: slipRecipient.id })}>Lihat slip</button><button disabled={!slipRecipient} className={styles.primary} onClick={() => setPrintId(slipRecipient.id)}>Cetak / Simpan PDF</button></div><p className={styles.help}>Slip adalah dokumen internal. Penghasilan tunai dibedakan dari bruto pajak.</p></section></div></>}
+  </section><p className={styles.footnote}>RIPITAX · Data tidak disimpan dan hilang saat halaman dimuat ulang · Tidak terhubung ke Coretax</p>
+  {drawer && <Drawer title={drawer.mode === "recipient" ? "Detail penerima" : drawer.mode === "entry" ? "Detail penghasilan" : "Pratinjau slip"} onClose={() => setDrawer(null)}>
+   {detailPerson && <><div className={styles.detailGrid}>
+    {rf(detailPerson, "employeeId", "ID pegawai")}{rf(detailPerson, "name", "Nama penerima")}{rf(detailPerson, detailPerson.residency === "SPLN" ? "foreignTin" : "tin", "NIK / NPWP / TIN")}{rf(detailPerson, "position", "Jabatan / posisi")}{rf(detailPerson, "citizenship", "Kewarganegaraan", [["Resident", "WNI"], ["Foreign", "WNA"]])}
+    {rf(detailPerson, "facility", "Fasilitas pajak", [["N/A", "Tidak ada"], ["DTP", "Ditanggung pemerintah"], ["ETC", "Fasilitas lain"], ["COD", "SKD / Treaty"], ["TaxExAr21", "Pengecualian Pasal 21"]])}
+    {rf(detailPerson, "taxObject", "Kode objek pajak", [["", "Otomatis"], ...(detailPerson.residency === "SPLN" ? [["27-100-99", "PPh 26 — jasa / kegiatan"]] : OBJECT_OPTIONS[detailPerson.kind as keyof typeof OBJECT_OPTIONS] || [])] as [
+                string,
+                string
+            ][])}
+    {rf(detailPerson, "tku", "ID TKU penerima (BP21)")}<button onClick={() => tku(detailPerson.id)}>Usulkan ID TKU dari NPWP</button>
+    {rf(detailPerson, "subject", "Status kewajiban subjektif", [["existing", "Sudah SPDN sejak awal tahun"], ["changed", "Dimulai / berakhir tahun berjalan"]])}
+    {rf(detailPerson, "whStatus", "Status perhitungan tahunan", [["auto", "Otomatis"], ["FullYear", "FullYear"], ["PartialYear", "PartialYear"], ["Annualized", "Annualized — review manual"]])}
+    {rf(detailPerson, "grossUp", "Opsi gross-up", yesNo)}{rf(detailPerson, "workForSecondEmployer", "Pemberi kerja berikutnya", yesNo)}{rf(detailPerson, "previousSlip", "Nomor bukti potong sebelumnya")}
+    {rf(detailPerson, "annualComplete", "Riwayat penghasilan selama masa kerja sudah diperiksa lengkap", undefined, "checkbox")}
+    {([["nip", "NIP / NRP (A2)"], ["rank", "Pangkat / golongan (A2)"], ["passport", "Paspor"], ["kitas", "KITAS"], ["foreignTin", "TIN luar negeri"], ["receiptNo", "Nomor SKD WPLN"], ["country", "Kode negara ISO-3"], ["dob", "Tanggal lahir"], ["birthCity", "Tempat lahir"], ["address", "Alamat luar negeri"], ["note", "Catatan"]] as const).map(([k, l]) => rf(detailPerson, k, l, undefined, k === "dob" ? "date" : "text"))}
+   </div><p className={styles.help}>Gross-up otomatis belum tersedia. Opsi khusus memerlukan review.</p><button className={styles.primary} onClick={() => { setChosenCalc(detailPerson.id); setTab(2); setDrawer(null); }}>Lihat perhitungan</button></>}
+   {detailEntry && <div className={styles.detailGrid}>{ef(detailEntry, "documentType", "Jenis dokumen referensi", DOCUMENT_TYPES)}{ef(detailEntry, "documentNo", "Nomor dokumen referensi")}{ef(detailEntry, "documentDate", "Tanggal dokumen referensi", undefined, "date")}{ef(detailEntry, "withholdingDate", "Tanggal pemotongan (kosong = default)", undefined, "date")}{ef(detailEntry, "days", "Jumlah hari upah", undefined, "number")}{ef(detailEntry, "equalDaily", "Upah sama setiap hari", undefined, "checkbox")}{ef(detailEntry, "excludedLabor", "Upah pihak ketiga yang dikecualikan", undefined, "number")}{ef(detailEntry, "excludedMaterial", "Material yang dikecualikan", undefined, "number")}{ef(detailEntry, "proof", "Ada kontrak dan bukti biaya", undefined, "checkbox")}{ef(detailEntry, "description", "Keterangan")}<p className={styles.help}>Transaksi dengan pengecualian biaya memerlukan review pemetaan XML.</p></div>}
+   {drawer.mode === "slip" && engine.person(drawer.id) && <><Slip state={state} recipient={engine.person(drawer.id)!}/><button onClick={() => { setPrintId(drawer.id); setDrawer(null); }}>Cetak / Simpan PDF</button></>}
+  </Drawer>}
+  {printId && engine.person(printId) && createPortal(<div className={styles.printRoot}><Slip state={state} recipient={engine.person(printId)!}/></div>, document.body)}
+ </div>;
 }

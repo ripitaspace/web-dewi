@@ -2240,6 +2240,15 @@ body.modal-open {
   overflow: hidden;
 }
 
+.payroll-container {
+  width: min(calc(100% - 40px), 1660px);
+  margin-inline: auto;
+}
+.page-hero.payroll-hero { padding-block: 44px 32px; }
+.payroll-hero .display-lg { font-size: clamp(2rem, 4vw, 3.6rem); }
+.payroll-hero .lead { max-width: 800px; font-size: .95rem; }
+body:has(.payroll-hero) .visitor-stamp { display: none; }
+.section-tight.payroll-workspace { padding-block: 28px 56px; }
 .container {
   width: min(calc(100% - 40px), var(--content));
   margin-inline: auto;
