@@ -4,6 +4,8 @@ import { checkBackup, copySalary, dateFor, demo, entryDefault, fresh, nextId, re
 import { exportCSV, importCSV, parseCSV } from "./csv";
 import { KINDS, RULES, XML_META } from "./catalog.js";
 import { zipStore } from "./zip.js";
+import { importPayrollWorkbook, PAYROLL_HEADERS } from "./xlsx";
+import * as XLSX from "xlsx";
 import shapes from "./official-xml-shapes.json";
 function valid(kind = "fixed", month = 10, foreign = false, government = false) {
     const s = fresh();
@@ -120,4 +122,19 @@ describe("Backup, CSV, IDs and ZIP", () => {
     });
     it("copies salary without overwriting existing months", () => { const s = valid(); expect(copySalary(s, s.recipients[0].id)).toBe(11); expect(copySalary(s, s.recipients[0].id)).toBe(0); expect(s.entries).toHaveLength(12); });
     it("creates a ZIP with correct local and central signatures", async () => { const b = zipStore([{ name: "test.xml", content: "<root>✓</root>" }]), bytes = new Uint8Array(await b.arrayBuffer()), v = new DataView(bytes.buffer); expect(v.getUint32(0, true)).toBe(0x04034b50); expect(v.getUint32(bytes.length - 22, true)).toBe(0x06054b50); expect(v.getUint16(bytes.length - 12, true)).toBe(1); });
+});
+describe("RIPITAX PAYROLL workbook import", () => {
+    it("imports company metadata and component columns from the supplied template shape", async () => {
+        const book = XLSX.utils.book_new(), rows: (string | number)[][] = Array.from({ length: 12 }, () => []);
+        rows[4][2] = "PT TEMPLATE"; rows[4][10] = "0000000000000000"; rows[4][18] = "0000000000000000000000"; rows[4][26] = 2026; rows[4][30] = "Oktober"; rows[4][34] = "2026-10-31";
+        rows[10] = [...PAYROLL_HEADERS];
+        rows[11] = ["T-001", "EMP-001", "Nadia", "0000000000000001", "Pegawai tetap", "SPDN", "K/0", "Swasta", "Oktober", "Biasa", "Januari", "Desember", 10000000, 500000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Gross", "Normal", "21-100-01", "2026-10-31", "Kontrak", "K-001", "2026-10-01", "", "", "Analis", "", "", "Data uji"];
+        const sheet = XLSX.utils.aoa_to_sheet(rows); XLSX.utils.book_append_sheet(book, sheet, "PAYROLL");
+        const bytes = XLSX.write(book, { type: "array", bookType: "xlsx" });
+        const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => bytes } as File);
+        expect(imported.studio.company.name).toBe("PT TEMPLATE");
+        expect(imported.recipients).toBe(1);
+        expect(imported.entries).toBe(2);
+        expect(imported.studio.recipients[0].position).toBe("Analis");
+    });
 });

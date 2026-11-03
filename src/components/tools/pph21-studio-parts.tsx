@@ -2,7 +2,7 @@
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { createEngine, rupi } from "@/modules/payroll/studio/engine.js";
-import { COMPONENTS, KINDS } from "@/modules/payroll/studio/catalog.js";
+import { COMPONENTS, KINDS, MONTHS } from "@/modules/payroll/studio/catalog.js";
 import type { Recipient, Studio } from "@/modules/payroll/studio/model";
 import { autoFitTableColumns, type AutoFitColumn } from "./auto-fit-table-columns";
 import styles from "./pph21-payroll-studio.module.css";
@@ -48,10 +48,29 @@ export function Drawer({ title, children, onClose }: {
             onClose();
     } }}><header><div><span className={styles.eyebrow}>RIPITAX · DETAIL</span><h2 id="studio-detail-title">{title}</h2></div><button type="button" onClick={onClose} aria-label="Tutup detail">✕</button></header><div className={styles.detailBody}>{children}</div><footer><button type="button" onClick={onClose}>Selesai</button></footer></dialog>, document.body);
 }
-export function Slip({ state, recipient }: {
+export function Slip({ state, recipient, logo }: {
     state: Studio;
     recipient: Recipient;
+    logo?: string;
 }) {
     const engine = createEngine(state), m = state.company.month, result = engine.taxMonthSummary(recipient, m), parts = engine.periodParts(recipient, m);
-    return <article className={styles.slip}><header><span>RIPITAX · DOKUMEN INTERNAL</span><h2>{engine.isPayroll(recipient) ? "Slip gaji" : "Rincian pembayaran"}</h2><strong>{state.company.name || "Perusahaan belum diisi"}</strong><p>{String(m).padStart(2, "0")} / {state.company.year}</p></header><dl>{[["Nama", recipient.name], ["NIK / NPWP / TIN", recipient.residency === "SPLN" ? recipient.foreignTin : recipient.tin], ["Kategori", KINDS[recipient.kind as keyof typeof KINDS]], ["Jabatan", recipient.position || "—"]].map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl><h3>Komponen pembayaran</h3><dl>{Object.entries(parts.parts).filter(([, v]) => v > 0).map(([k, v]) => <div key={k}><dt>{COMPONENTS[k as keyof typeof COMPONENTS]?.label || k}</dt><dd>{rupi(v)}</dd></div>)}</dl><h3>Ringkasan</h3><dl>{[["Penghasilan tunai", result.cash], ["Bruto pajak (termasuk non-tunai)", result.gross], ["Potongan selain pajak", result.deductions], ["PPh 21/26", result.tax], ["Bersih dibayarkan", result.netCash]].map(([k, v]) => <div key={String(k)}><dt>{k}</dt><dd>{rupi(Number(v))}</dd></div>)}</dl><p className={styles.help}>Dokumen internal dari data pengguna. Bukan bukti potong resmi atau bukti pembayaran bank.</p></article>;
+    const earnings = Object.entries(parts.parts).filter(([key, value]) => value > 0 && COMPONENTS[key as keyof typeof COMPONENTS]?.cash !== -1);
+    const deductions = Object.entries(parts.parts).filter(([key, value]) => value > 0 && COMPONENTS[key as keyof typeof COMPONENTS]?.cash === -1);
+    const title = engine.isPayroll(recipient) ? "Slip Gaji" : "Rincian Pembayaran";
+    const identifier = recipient.residency === "SPLN" ? "TIN" : "NIK / NPWP";
+    const documentNo = `RPTX/${state.company.year}/${String(m).padStart(2, "0")}/${recipient.employeeId || recipient.id}`;
+    const taxMethod = result.rows.map(row => row.method).filter(Boolean).join(" · ");
+    return <article className={styles.slip}>
+      <header className={styles.slipHeader}>
+        <div className={styles.slipMark} aria-hidden="true">{logo ? <img src={logo} alt=""/> : <span>R/</span>}</div>
+        <div className={styles.slipCompany}><span>RIPITAX · DOKUMEN INTERNAL</span><strong>{state.company.name || "Perusahaan belum diisi"}</strong><small>Payroll & PPh 21 Studio · Data diproses di perangkatmu</small></div>
+      </header>
+      <div className={styles.slipTitleRow}><div><h2>{title}</h2><p>Masa pajak {MONTHS[m - 1]} {state.company.year}</p></div><div className={styles.slipDocument}><span>No. dokumen</span><strong>{documentNo}</strong><small>Tanggal potong {state.company.withholdingDate || "—"}</small></div></div>
+      <section className={styles.slipPerson} aria-label="Identitas penerima">{[["Nama penerima", recipient.name || "—"], ["ID pegawai", recipient.employeeId || recipient.id], [identifier, (recipient.residency === "SPLN" ? recipient.foreignTin : recipient.tin) || "—"], ["Jabatan / profesi", recipient.position || "—"], ["Kategori", KINDS[recipient.kind as keyof typeof KINDS] || "—"], ["Status PTKP", recipient.ptkp || "—"]].map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</section>
+      <section className={styles.slipSection}><h3>Penghasilan / imbalan</h3><table className={styles.slipTable}><tbody>{earnings.length ? earnings.map(([key, value]) => <tr key={key}><td>{COMPONENTS[key as keyof typeof COMPONENTS]?.label || key}</td><td>{rupi(value)}</td></tr>) : <tr><td colSpan={2}>Belum ada komponen penghasilan pada masa ini.</td></tr>}<tr className={styles.slipSubtotal}><td>Penghasilan tunai</td><td>{rupi(result.cash)}</td></tr></tbody></table></section>
+      <section className={styles.slipSection}><h3>Potongan & pajak</h3><table className={styles.slipTable}><tbody>{deductions.map(([key, value]) => <tr key={key}><td>{COMPONENTS[key as keyof typeof COMPONENTS]?.label || key}</td><td>− {rupi(value)}</td></tr>)}<tr><td>PPh 21/26 <small>{taxMethod ? `· ${taxMethod}` : ""}</small></td><td>− {rupi(result.tax)}</td></tr><tr className={styles.slipSubtotal}><td>Total potongan</td><td>− {rupi(result.deductions + result.tax)}</td></tr></tbody></table></section>
+      <section className={styles.slipTakeHome}><span>Bersih dibayarkan</span><strong>{rupi(result.netCash)}</strong><small>Setelah potongan PPh dan potongan pegawai pada masa ini.</small></section>
+      <section className={styles.slipTax}><h3>Ringkasan pajak</h3><dl><div><dt>Bruto pajak</dt><dd>{rupi(result.gross)}</dd></div><div><dt>Metode perhitungan</dt><dd>{taxMethod || "Belum tersedia"}</dd></div><div><dt>PPh 21/26 dipotong</dt><dd>{rupi(result.tax)}</dd></div></dl></section>
+      <footer className={styles.slipFooter}><span>Dokumen internal dari data pengguna. Bukan bukti potong resmi atau bukti pembayaran bank.</span><span>RIPITAX · PuspitaCore</span></footer>
+    </article>;
 }

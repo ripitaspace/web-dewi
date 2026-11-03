@@ -5,6 +5,7 @@ import { COMPONENTS, DOCUMENT_TYPES, KINDS, MONTHS, OBJECT_OPTIONS, PTKP, XML_ME
 import { createEngine, rupi } from "@/modules/payroll/studio/engine.js";
 import { adaptEntry, checkBackup, componentsFor, copySalary, dateFor, demo, entryDefault, fresh, nextId, recipientDefault } from "@/modules/payroll/studio/data";
 import { exportCSV, importCSV } from "@/modules/payroll/studio/csv";
+import { importPayrollWorkbook } from "@/modules/payroll/studio/xlsx";
 import { zipStore } from "@/modules/payroll/studio/zip.js";
 import type { Entry, Recipient, Studio } from "@/modules/payroll/studio/model";
 import { Drawer, Field, Slip, Table, type Options } from "./pph21-studio-parts";
@@ -31,12 +32,12 @@ function ToolbarIcon({ name }: { name: "download" | "upload" | "database" | "set
 }
 export function Pph21PayrollStudio() {
     const [state, setState] = useState<Studio>(fresh), [ready, setReady] = useState(false), [tab, setTab] = useState(0), [notice, setNotice] = useState("");
-    const [settings, setSettings] = useState(false), [filter, setFilter] = useState("period"), [personFilter, setPersonFilter] = useState(""), [chosenCalc, setChosenCalc] = useState(""), [xmlType, setXmlType] = useState("BPMP"), [slipId, setSlipId] = useState("");
+    const [settings, setSettings] = useState(false), [filter, setFilter] = useState("period"), [personFilter, setPersonFilter] = useState(""), [chosenCalc, setChosenCalc] = useState(""), [xmlType, setXmlType] = useState("BPMP"), [slipId, setSlipId] = useState(""), [logo, setLogo] = useState(""), [payrollDragging, setPayrollDragging] = useState(false);
     const [drawer, setDrawer] = useState<{
         mode: "recipient" | "entry" | "slip";
         id: string;
     } | null>(null), [printId, setPrintId] = useState(""), [importErrors, setImportErrors] = useState<string[]>([]);
-    const restoreRef = useRef<HTMLInputElement>(null), csvRef = useRef<HTMLInputElement>(null);
+    const restoreRef = useRef<HTMLInputElement>(null), csvRef = useRef<HTMLInputElement>(null), payrollRef = useRef<HTMLInputElement>(null), logoRef = useRef<HTMLInputElement>(null);
     useEffect(() => { let active = true; queueMicrotask(() => { if (!active)
         return;
         localStorage.removeItem("ripitax-payroll-v1");
@@ -93,6 +94,33 @@ export function Pph21PayrollStudio() {
     catch (e) {
         setNotice(e instanceof Error ? e.message : "CSV tidak dapat dibaca.");
     } }
+    async function payroll(file?: File) { if (!file)
+        return; if (!file.name.toLowerCase().endsWith(".xlsx")) {
+        setNotice("Gunakan file .xlsx dari Template payroll.");
+        return;
+    } try {
+        const imported = await importPayrollWorkbook(file);
+        if (!confirmReplace("Impor Template payroll mengganti seluruh data sesi ini. Lanjutkan?"))
+            return;
+        replace(imported.studio);
+        setDrawer(null);
+        setImportErrors(imported.errors);
+        setNotice(imported.recipients + " penerima dan " + imported.entries + " komponen diimpor; " + imported.errors.length + " baris ditolak.");
+    }
+    catch (e) {
+        setNotice("Impor Template payroll gagal: " + (e instanceof Error ? e.message : "berkas tidak valid."));
+    } }
+    function uploadLogo(file?: File) { if (!file)
+        return; if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
+        setNotice("Logo harus berupa PNG, JPG, atau WEBP.");
+        return;
+    } if (file.size > 800000) {
+        setNotice("Ukuran logo maksimal 800 KB.");
+        return;
+    } const reader = new FileReader();
+    reader.onload = () => { setLogo(String(reader.result || "")); setNotice("Logo perusahaan siap dipakai pada slip sesi ini."); };
+    reader.onerror = () => setNotice("Logo tidak dapat dibaca.");
+    reader.readAsDataURL(file); }
     function exportXml(all = false) { if (all ? !zipReady : !batch.ready)
         return; const files = (all ? Object.keys(XML_META) : [xmlType]).flatMap(t => { const b = engine.xmlBatchStatus(docs, t); return b.count ? [{ name: engine.fileName(t), content: engine.makeXml(t, b.list) }] : []; }); if (files.some(f => new DOMParser().parseFromString(f.content, "application/xml").querySelector("parsererror"))) {
         setNotice("Struktur XML gagal diperiksa.");
@@ -155,9 +183,9 @@ export function Pph21PayrollStudio() {
         setDrawer(null);
         setNotice("");
     } }}><ToolbarIcon name="database"/></button><button type="button" className={styles.iconButton} aria-label="Pengaturan" title="Pengaturan" data-tooltip="Pengaturan" aria-expanded={settings} onClick={() => setSettings(!settings)}><ToolbarIcon name="settings-2"/></button></div></header>
-  <input hidden ref={restoreRef} type="file" accept=".json,application/json" onChange={e => { void restore(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={csvRef} type="file" accept=".csv,text/csv" onChange={e => { void csv(e.target.files?.[0]); e.target.value = ""; }}/>
+  <input hidden ref={restoreRef} type="file" accept=".json,application/json" onChange={e => { void restore(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={csvRef} type="file" accept=".csv,text/csv" onChange={e => { void csv(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={payrollRef} type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={e => { void payroll(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={logoRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={e => { uploadLogo(e.target.files?.[0]); e.target.value = ""; }}/>
   {notice && <p className={styles.notice} role="status">{notice}</p>}
-  <section className={styles.config} aria-label="Perusahaan dan masa pajak">{([["name", "Pemotong / Perusahaan"], ["tin", "NPWP 16 digit pemotong"], ["tku", "ID TKU pemotong (22 digit)"]] as const).map(([k, l]) => <Field key={k} label={l} value={state.company[k]} onChange={v => company(k, v)}/>)}<Field label="Tahun pajak" value={state.company.year} options={["2024", "2025", "2026", "2027", "2028"]} onChange={v => company("year", v)}/><Field label="Masa pajak" value={state.company.month} options={months} onChange={v => company("month", v)}/><Field label="Tanggal pemotongan" type="date" value={state.company.withholdingDate} onChange={v => company("withholdingDate", v)}/></section>
+  <section className={styles.config} aria-label="Perusahaan dan masa pajak">{([["name", "Pemotong / Perusahaan"], ["tin", "NPWP 16 digit pemotong"], ["tku", "ID TKU pemotong (22 digit)"]] as const).map(([k, l]) => <Field key={k} label={l} value={state.company[k]} onChange={v => company(k, v)}/>)}<Field label="Tahun pajak" value={state.company.year} options={["2024", "2025", "2026", "2027", "2028"]} onChange={v => company("year", v)}/><Field label="Masa pajak" value={state.company.month} options={months} onChange={v => company("month", v)}/><Field label="Tanggal pemotongan" type="date" value={state.company.withholdingDate} onChange={v => company("withholdingDate", v)}/><section className={styles.payrollTools} aria-label="RIPITAX PAYROLL"><div><span className={styles.eyebrow}>RIPITAX PAYROLL</span><h3>Template payroll</h3><p>Unduh format kerja, isi datanya, lalu impor kembali ke studio.</p><a className={styles.templateDownload} href="/tools/payroll/RIPITAX_PAYROLL.xlsx" download="RIPITAX_PAYROLL.xlsx">Unduh RIPITAX PAYROLL</a></div><button type="button" className={[styles.payrollDropzone, payrollDragging && styles.payrollDropzoneActive].filter(Boolean).join(" ")} onClick={() => payrollRef.current?.click()} onDragOver={e => { e.preventDefault(); setPayrollDragging(true); }} onDragLeave={() => setPayrollDragging(false)} onDrop={e => { e.preventDefault(); setPayrollDragging(false); void payroll(e.dataTransfer.files?.[0]); }}><strong>Seret Template payroll ke sini</strong><span>atau klik untuk memilih file .xlsx</span></button><div className={styles.logoUpload}><div className={styles.logoPreview}>{logo ? <img src={logo} alt="Logo perusahaan"/> : <span>LOGO<br/>PERUSAHAAN</span>}</div><div><strong>Logo perusahaan</strong><p>PNG, JPG, atau WEBP · maks. 800 KB · hanya sesi ini.</p><button type="button" onClick={() => logoRef.current?.click()}>Unggah logo</button>{logo && <button type="button" className={styles.logoRemove} onClick={() => setLogo("")}>Hapus</button>}</div></div></section></section>
   {settings && <section className={styles.card}><h3>Pengaturan sesi</h3><p className={styles.help}>Data tidak disimpan di browser dan hilang saat halaman dimuat ulang. Gunakan Backup JSON untuk memindahkan data; CSV hanya berisi penghasilan dan memerlukan penerima terlebih dahulu.</p><div className={styles.actions}><button onClick={() => tku()}>Usulkan ID TKU dari NPWP</button><button onClick={() => download("RIPITAX_penghasilan.csv", exportCSV(state), "text/csv;charset=utf-8")}>Unduh CSV penghasilan</button><button onClick={() => csvRef.current?.click()}>Impor CSV penghasilan</button></div><p className={styles.help}>PP 58/2023 · PMK 168/2023. Gross-up otomatis, fasilitas khusus, dan kondisi disetahunkan memerlukan review. <a href="https://www.pajak.go.id/reformdjp/coretax/template-xml-dan-converter-excel-ke-xml" target="_blank" rel="noreferrer">Referensi template XML DJP ↗</a></p></section>}
   {importErrors.length > 0 && <details className={styles.warning}><summary>{importErrors.length} baris CSV ditolak</summary>{importErrors.map((e, i) => <p key={i}>{e}</p>)}</details>}
   <div className={styles.tabs} role="tablist" aria-label="Tahap payroll">{TABS.map((t, i) => <button key={t} id={"studio-tab-" + i} role="tab" aria-selected={tab === i} aria-controls={"studio-panel-" + i} tabIndex={tab === i ? 0 : -1} onClick={() => setTab(i)} onKeyDown={e => { let n = i; if (e.key === "ArrowRight")
@@ -207,8 +235,8 @@ export function Pph21PayrollStudio() {
     {([["nip", "NIP / NRP (A2)"], ["rank", "Pangkat / golongan (A2)"], ["passport", "Paspor"], ["kitas", "KITAS"], ["foreignTin", "TIN luar negeri"], ["receiptNo", "Nomor SKD WPLN"], ["country", "Kode negara ISO-3"], ["dob", "Tanggal lahir"], ["birthCity", "Tempat lahir"], ["address", "Alamat luar negeri"], ["note", "Catatan"]] as const).map(([k, l]) => rf(detailPerson, k, l, undefined, k === "dob" ? "date" : "text"))}
    </div><p className={styles.help}>Gross-up otomatis belum tersedia. Opsi khusus memerlukan review.</p><button className={styles.primary} onClick={() => { setChosenCalc(detailPerson.id); setTab(2); setDrawer(null); }}>Lihat perhitungan</button></>}
    {detailEntry && <div className={styles.detailGrid}>{ef(detailEntry, "documentType", "Jenis dokumen referensi", DOCUMENT_TYPES)}{ef(detailEntry, "documentNo", "Nomor dokumen referensi")}{ef(detailEntry, "documentDate", "Tanggal dokumen referensi", undefined, "date")}{ef(detailEntry, "withholdingDate", "Tanggal pemotongan (kosong = default)", undefined, "date")}{ef(detailEntry, "days", "Jumlah hari upah", undefined, "number")}{ef(detailEntry, "equalDaily", "Upah sama setiap hari", undefined, "checkbox")}{ef(detailEntry, "excludedLabor", "Upah pihak ketiga yang dikecualikan", undefined, "number")}{ef(detailEntry, "excludedMaterial", "Material yang dikecualikan", undefined, "number")}{ef(detailEntry, "proof", "Ada kontrak dan bukti biaya", undefined, "checkbox")}{ef(detailEntry, "description", "Keterangan")}<p className={styles.help}>Transaksi dengan pengecualian biaya memerlukan review pemetaan XML.</p></div>}
-   {drawer.mode === "slip" && engine.person(drawer.id) && <><Slip state={state} recipient={engine.person(drawer.id)!}/><button onClick={() => { setPrintId(drawer.id); setDrawer(null); }}>Cetak / Simpan PDF</button></>}
+   {drawer.mode === "slip" && engine.person(drawer.id) && <><Slip state={state} recipient={engine.person(drawer.id)!} logo={logo}/><button onClick={() => { setPrintId(drawer.id); setDrawer(null); }}>Cetak / Simpan PDF</button></>}
   </Drawer>}
-  {printId && engine.person(printId) && createPortal(<div className={styles.printRoot}><Slip state={state} recipient={engine.person(printId)!}/></div>, document.body)}
+  {printId && engine.person(printId) && createPortal(<div className={styles.printRoot}><Slip state={state} recipient={engine.person(printId)!} logo={logo}/></div>, document.body)}
  </div>;
 }
