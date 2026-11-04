@@ -1,0 +1,46 @@
+'use client';
+import { useState } from 'react';
+import { assets, catalog, field, profileFields, partnerFields, declarationFields, row, type Action, type Draft, type Row } from '@/modules/spt-op/model';
+import { compute, errors, money, numeric, rowValue, sectionStatus, validate } from '@/modules/spt-op/engine';
+import { adapters, xmlGuide } from '@/modules/spt-op/xml';
+import { csv, download } from '@/modules/spt-op/import-export';
+import { Fields } from './fields';
+import { Dialog } from './dialog';
+export function Editor({ draft, section, dispatch, onSection }: {
+    draft: Draft;
+    section: string;
+    dispatch: (a: Action) => void;
+    onSection: (s: string) => void;
+}) {
+    const [edit, setEdit] = useState<Row | null>(null), [query, setQuery] = useState(''), [filter, setFilter] = useState('all'), [message, setMessage] = useState('');
+    const table = catalog.tables[section], book = catalog.BOOKS[section];
+    const fields = table?.columns || catalog.bokFields;
+    const rows = (book ? draft.books : draft.tables)[section] || [];
+    const updateRows = (r: Row[]) => dispatch({ type: 'rows', key: section, rows: r, book: !!book });
+    const groups: {
+        [k: string]: {
+            fields: typeof profileFields;
+            group: 'profile' | 'questions' | 'extras' | 'partner' | 'declaration' | 'documentNotes';
+        };
+    } = { profile: { fields: profileFields, group: 'profile' }, questions: { fields: catalog.questionFields, group: 'questions' }, extras: { fields: catalog.extraFields, group: 'extras' }, partner: { fields: partnerFields, group: 'partner' }, declaration: { fields: declarationFields, group: 'declaration' }, documentNotes: { fields: [...Object.keys(draft.documentNotes || {}).map(k => field(k, k)), field('references', 'Referensi dokumen dan catatan')].filter((f, i, a) => a.findIndex(x => x.key === f.key) === i), group: 'documentNotes' } };
+    if (groups[section]) {
+        const g = groups[section];
+        return <><Fields fields={g.fields} values={draft[g.group]} onChange={(key, value) => dispatch({ type: 'field', group: g.group, key, value })}/>{section === 'extras' && <p className="spt-warning">Penyesuaian ini disimpan sebagai data pendukung. Pengganti nilai rekap diatur melalui Ikhtisar.</p>}{section === 'partner' && <p className="spt-warning">Perhitungan PH/MT menunggu verifikasi ruleset dan contoh acuan.</p>}</>;
+    }
+    if (section === 'summary')
+        return <>{compute(draft).map(r => <section className="spt-record" key={r.key}><strong>{r.label}</strong><b>{money(r.value)}</b><p>{r.note}</p><small>{r.verification === 'pending' ? 'Perlu Verifikasi' : 'Rekap input, belum disahkan'} · {r.ruleVersion}</small><small>Sumber: {r.source}</small><div className="spt-actions">{r.sections.map(s => <button key={s} onClick={() => onSection(s)}>Lihat {catalog.tables[s]?.title || catalog.BOOKS[s]?.title || s}</button>)}</div></section>)}{['business', 'deductions'].map(key => { const o = draft.overrides[key] || { value: '', reason: '', enabled: false }; return <section className="spt-record" key={key}><label><input type="checkbox" checked={o.enabled} onChange={e => dispatch({ type: 'override', key, value: { ...o, enabled: e.target.checked } })}/> Override {key === 'business' ? 'neto usaha' : 'pengurang'}</label><Fields fields={[field('value', 'Nilai pengganti', 'money'), field('reason', 'Alasan dan dokumen sumber')]} values={{ value: o.value, reason: o.reason }} onChange={(k, v) => dispatch({ type: 'override', key, value: { ...o, [k]: v } })}/>{o.enabled && !o.reason && <p className="spt-error">Alasan wajib diisi sebelum override digunakan.</p>}</section>; })}</>;
+    if (section === 'validation')
+        return <><h3>Pemeriksaan data</h3>{validate(draft).map((v, i) => <p className="spt-warning" key={i}>{v}</p>)}</>;
+    if (section === 'xml')
+        return <><h3>XML per lampiran</h3><p>Ekspor belum aktif sampai sampel dan pemetaan resmi lolos pengujian.</p>{adapters.map(a => <section className="spt-record" key={a.id}><strong>{a.label}</strong><p>{a.reason}</p><button disabled>Preview / ekspor XML · belum terverifikasi</button></section>)}<a href={xmlGuide} target="_blank" rel="noreferrer">Panduan DJP versi 20260310 ↗</a><p>Gunakan converter resmi untuk menyiapkan XML, unggah manual pada tabel terkait, lalu periksa hasil proses pada XML Monitoring.</p></>;
+    if (!table && !book)
+        return null;
+    const status = sectionStatus(draft, section);
+    const shown = rows.filter(r => JSON.stringify(r.values).toLowerCase().includes(query.toLowerCase()) && (filter === 'all' || (filter === 'disposed' ? r.disposed : !r.disposed)));
+    return <><p className="spt-warning">{status.applicability} · {status.progress}</p><label>Cari baris<input value={query} onChange={e => setQuery(e.target.value)}/></label>{assets.includes(section) && <label>Status harta<select value={filter} onChange={e => setFilter(e.target.value)}><option value="all">Semua</option><option value="active">Aktif</option><option value="disposed">Dilepas</option></select></label>}{book ? <div className="spt-actions">{[...catalog.bookAccounts[section], ...catalog.bookCommon].map(([code, label]) => <button key={code} onClick={() => { setEdit(rows.find(r => r.values.code === code) || row({ code, label })); setMessage(''); }}>{code} · {label}</button>)}</div> : <button className="primary" onClick={() => { setEdit(row({})); setMessage(''); }}>＋ Tambah baris</button>}{shown.map((r, i) => <article className="spt-record" key={r.id}><strong>{r.values.name || r.values.owner || r.values.employer || r.values.label || r.values.description || r.values.code || `Baris ${i + 1}`}</strong><small>{r.origin}{r.review ? ' · Perlu pembaruan nilai' : ''}{r.disposed ? ' · Dilepas' : ''}</small>{table?.sum && <b>{money(numeric(rowValue(section, r, table.sum)))}</b>}<div className="spt-actions"><button onClick={() => { setEdit(r); setMessage(''); }}>Edit</button>{!book && <button onClick={() => updateRows([...rows, row({ ...r.values }, 'duplicate:' + r.id)])}>Duplikasi</button>}<button onClick={() => { if (window.confirm('Hapus baris ini?'))
+        updateRows(rows.filter(x => x.id !== r.id)); }}>Hapus</button></div></article>)}{!rows.length && <p>Belum ada data.</p>}{table && <button disabled={!rows.length} onClick={() => download(`SPT_${section}_${draft.profile.year}.csv`, csv(draft, section), 'text/csv;charset=utf-8')}>Ekspor tabel CSV</button>}{table?.sum && <p>Total {table.summary || table.columns.find(f => f.key === table.sum)?.label || table.sum}: {money(rows.filter(r => !r.disposed).reduce((s, r) => s + numeric(rowValue(section, r, table.sum!)), 0))}</p>}{section === 'umkm' && <><h3>Setoran / pemotongan per bulan</h3><Fields fields={Array.from({ length: 12 }, (_, i) => [field('umkmPaid' + i, `Bulan ${i + 1} · Setoran`, 'money'), field('umkmWithheld' + i, `Bulan ${i + 1} · Pemotongan`, 'money')]).flat()} values={draft.extras} onChange={(key, value) => dispatch({ type: 'field', group: 'extras', key, value })}/><p className="spt-warning">Perhitungan fasilitas UMKM menunggu verifikasi syarat penggunaan.</p></>}{edit && <Dialog title={table?.title || book.title} onClose={() => setEdit(null)}><Fields prefix="row" fields={fields} values={{ ...edit.values, ...Object.fromEntries(fields.filter(f => f.type === 'computed').map(f => [f.key, rowValue(section, edit, f.key)])) }} onChange={(k, v) => setEdit({ ...edit, values: { ...edit.values, [k]: v } })}/>{assets.includes(section) && <label><input type="checkbox" checked={!!edit.disposed} onChange={e => setEdit({ ...edit, disposed: e.target.checked })}/> Harta telah dilepas</label>}{edit.review && <label><input type="checkbox" onChange={e => { if (e.target.checked)
+        setEdit({ ...edit, review: false }); }}/> Nilai akhir tahun sudah diperbarui</label>}<p className="spt-error">{message}</p><div className="spt-actions"><button onClick={() => setEdit(null)}>Batal</button><button className="primary" onClick={() => { const err = errors(fields, edit); if (err.length) {
+        setMessage(err.join('; '));
+        return;
+    } updateRows(rows.some(r => r.id === edit.id) ? rows.map(r => r.id === edit.id ? edit : r) : [...rows, edit]); setEdit(null); }}>Simpan baris</button></div></Dialog>}</>;
+}

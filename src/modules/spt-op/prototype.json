@@ -1,0 +1,3911 @@
+{
+  "PAGES": [
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-1.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-2.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-3.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-4.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-5.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-6.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-7.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-8.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-9.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-10.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-11.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-12.svg"
+    },
+    {
+      "w": 936,
+      "h": 612,
+      "src": "/tools/spt-op/forms/page-13.svg"
+    },
+    {
+      "w": 936,
+      "h": 612,
+      "src": "/tools/spt-op/forms/page-14.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-15.svg"
+    },
+    {
+      "w": 612,
+      "h": 936,
+      "src": "/tools/spt-op/forms/page-16.svg"
+    },
+    {
+      "w": 936,
+      "h": 612,
+      "src": "/tools/spt-op/forms/page-17.svg"
+    }
+  ],
+  "PAGE_NAMES": [
+    "Petunjuk & Persyaratan",
+    "Petunjuk Umum",
+    "Induk — Identitas & Perhitungan",
+    "Induk — Pembetulan & Transaksi",
+    "L1 — Harta (1–4)",
+    "L1 — Harta (5–7) & Utang",
+    "L1 — Keluarga, Pekerjaan & Bupot",
+    "L2 — Final, Nonobjek & Luar Negeri",
+    "L3A-1 — Rekonsiliasi Dagang",
+    "L3A-2 — Rekonsiliasi Jasa",
+    "L3A-3 — Rekonsiliasi Industri",
+    "L3A-4 — Norma & Penghasilan Lain",
+    "L3B — Rekapitulasi Peredaran Bruto",
+    "L3C — Penyusutan & Amortisasi",
+    "L3D — Rincian Biaya Tertentu",
+    "L4 — Angsuran PPh 25 & PH/MT",
+    "L5 — Pengurang Penghasilan/PPh"
+  ],
+  "tables": {
+    "cash": {
+      "title": "Lampiran 1A · Kas dan Setara Kas",
+      "page": 5,
+      "columns": [
+        {
+          "label": "Kode harta",
+          "key": "code",
+          "type": "select",
+          "options": [
+            "0101|Uang tunai / bank notes",
+            "0102|Tabungan bank/lembaga keuangan",
+            "0103|Giro",
+            "0104|Deposito",
+            "0105|Uang elektronik",
+            "0106|Cek",
+            "0107|Wesel",
+            "0108|Commercial paper",
+            "0109|Setara kas lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Nomor akun",
+          "key": "account",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Atas nama",
+          "key": "owner",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Bank / institusi",
+          "key": "bank",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Lokasi harta (kode negara)",
+          "key": "country",
+          "type": "select",
+          "options": [
+            "IDN|Indonesia",
+            "AUS|Australia",
+            "SGP|Singapura",
+            "USA|Amerika Serikat",
+            "MYS|Malaysia",
+            "GBR|Inggris",
+            "JPN|Jepang",
+            "DEU|Jerman",
+            "OTHER|Lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Saldo akhir tahun",
+          "key": "balance",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan PPS",
+          "key": "pps",
+          "type": "select",
+          "options": [
+            "|Tidak terkait",
+            "01|Harta PPS",
+            "02|Harta Investasi PPS"
+          ],
+          "required": false
+        }
+      ],
+      "sum": "balance",
+      "summary": "Saldo"
+    },
+    "receivables": {
+      "title": "Lampiran 1A · Piutang",
+      "page": 5,
+      "columns": [
+        {
+          "label": "Kode",
+          "key": "code",
+          "type": "select",
+          "options": [
+            "0201|Piutang Usaha",
+            "0202|Piutang Afiliasi",
+            "0299|Piutang Lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Deskripsi",
+          "key": "description",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Negara penerima pinjaman",
+          "key": "country",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "NIK/NPWP penerima",
+          "key": "debtorTin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama penerima pinjaman",
+          "key": "debtor",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai piutang",
+          "key": "principal",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun dimulai",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Saldo piutang",
+          "key": "balance",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan PPS",
+          "key": "pps",
+          "type": "select",
+          "options": [
+            "|Tidak terkait",
+            "01|Harta PPS",
+            "02|Harta Investasi PPS"
+          ],
+          "required": false
+        }
+      ],
+      "sum": "principal"
+    },
+    "investments": {
+      "title": "Lampiran 1A · Investasi/Sekuritas",
+      "page": 5,
+      "columns": [
+        {
+          "label": "Kode harta",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Lokasi harta",
+          "key": "country",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "NIK/NPWP institusi",
+          "key": "issuerTin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Bank/institusi/penerima investasi",
+          "key": "issuer",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Bukti kepemilikan / nomor akun",
+          "key": "account",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Harga perolehan",
+          "key": "cost",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai saat ini",
+          "key": "current",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan PPS",
+          "key": "pps",
+          "type": "select",
+          "options": [
+            "|Tidak terkait",
+            "01|Harta PPS",
+            "02|Harta Investasi PPS"
+          ],
+          "required": false
+        }
+      ],
+      "sum": "cost"
+    },
+    "movable": {
+      "title": "Lampiran 1A · Harta Bergerak",
+      "page": 5,
+      "columns": [
+        {
+          "label": "Kode harta",
+          "key": "code",
+          "type": "select",
+          "options": [
+            "0401|Sepeda",
+            "0402|Sepeda motor",
+            "0403|Mobil penumpang",
+            "0404|Bus",
+            "0405|Kendaraan angkutan",
+            "0406|Kendaraan khusus",
+            "0407|Kereta",
+            "0408|Pesawat",
+            "0409|Kapal",
+            "0410|Mesin",
+            "0411|Gerobak",
+            "0412|Kapal pesiar",
+            "0499|Harta bergerak lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Tipe",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Merek/model",
+          "key": "model",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nomor polisi/registrasi",
+          "key": "registration",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Kepemilikan",
+          "key": "ownership",
+          "type": "select",
+          "options": [
+            "Taxpayer|Atas nama sendiri",
+            "Other|Atas nama pihak lain"
+          ],
+          "required": true
+        },
+        {
+          "label": "NPWP pemilik",
+          "key": "ownerTin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama pemilik",
+          "key": "ownerName",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Harga perolehan",
+          "key": "cost",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai saat ini",
+          "key": "current",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan PPS",
+          "key": "pps",
+          "type": "select",
+          "options": [
+            "|Tidak terkait",
+            "01|Harta PPS",
+            "02|Harta Investasi PPS"
+          ],
+          "required": false
+        }
+      ],
+      "sum": "cost"
+    },
+    "immovable": {
+      "title": "Lampiran 1A · Harta Tidak Bergerak",
+      "page": 6,
+      "columns": [
+        {
+          "label": "Kode harta",
+          "key": "code",
+          "type": "select",
+          "options": [
+            "0501|Tanah kosong",
+            "0502|Tanah/bangunan tempat tinggal",
+            "0503|Apartemen",
+            "0504|Vessel",
+            "0505|Tanah/lahan untuk usaha",
+            "0506|Tanah/bangunan usaha",
+            "0507|Tanah/bangunan disewakan",
+            "0599|Harta tidak bergerak lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Deskripsi",
+          "key": "description",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Alamat harta",
+          "key": "address",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Luas tanah m²",
+          "key": "landArea",
+          "type": "number",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Luas bangunan m²",
+          "key": "buildingArea",
+          "type": "number",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Sumber kepemilikan",
+          "key": "source",
+          "type": "select",
+          "options": [
+            "Own Income|Hasil sendiri",
+            "Debt|Utang",
+            "Gift|Hadiah",
+            "Grant|Hibah",
+            "Inheritance|Warisan",
+            "Other sources|Lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Nomor sertifikat",
+          "key": "certificate",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Harga perolehan",
+          "key": "cost",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai saat ini",
+          "key": "current",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan PPS",
+          "key": "pps",
+          "type": "select",
+          "options": [
+            "|Tidak terkait",
+            "01|Harta PPS",
+            "02|Harta Investasi PPS"
+          ],
+          "required": false
+        }
+      ],
+      "sum": "cost"
+    },
+    "otherassets": {
+      "title": "Lampiran 1A · Harta Lainnya",
+      "page": 6,
+      "columns": [
+        {
+          "label": "Kode harta",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Deskripsi",
+          "key": "description",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Bukti kepemilikan / nomor akun",
+          "key": "proof",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Informasi tambahan",
+          "key": "notes",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Harga perolehan",
+          "key": "cost",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai saat ini",
+          "key": "current",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan PPS",
+          "key": "pps",
+          "type": "select",
+          "options": [
+            "|Tidak terkait",
+            "01|Harta PPS",
+            "02|Harta Investasi PPS"
+          ],
+          "required": false
+        }
+      ],
+      "sum": "cost"
+    },
+    "debts": {
+      "title": "Lampiran 1B · Utang Akhir Tahun",
+      "page": 6,
+      "columns": [
+        {
+          "label": "Kode",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Deskripsi utang",
+          "key": "description",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "NPWP kreditur",
+          "key": "creditorTin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama kreditur",
+          "key": "creditor",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Negara kreditur",
+          "key": "country",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun pinjaman",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Saldo utang akhir tahun",
+          "key": "balance",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan",
+          "key": "notes",
+          "type": "text",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "balance"
+    },
+    "family": {
+      "title": "Lampiran 1C · Anggota Keluarga",
+      "page": 7,
+      "columns": [
+        {
+          "label": "Nama",
+          "key": "name",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "NIK",
+          "key": "tin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tanggal lahir",
+          "key": "birth",
+          "type": "date",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Hubungan",
+          "key": "relation",
+          "type": "select",
+          "options": [
+            "Suami|Suami",
+            "Istri|Istri",
+            "Anak|Anak",
+            "Orang Tua|Orang tua",
+            "Lainnya|Lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Pekerjaan",
+          "key": "occupation",
+          "type": "text",
+          "options": [],
+          "required": true
+        }
+      ]
+    },
+    "jobs": {
+      "title": "Lampiran 1D · Penghasilan Pekerjaan",
+      "page": 7,
+      "columns": [
+        {
+          "label": "Nama pemberi kerja",
+          "key": "employer",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "NPWP pemberi kerja",
+          "key": "employerTin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Penghasilan bruto",
+          "key": "gross",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Pengurang penghasilan bruto",
+          "key": "expense",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Penghasilan neto (otomatis)",
+          "key": "net",
+          "type": "computed",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "net"
+    },
+    "withholding": {
+      "title": "Lampiran 1E · Daftar Bukti Potong",
+      "page": 7,
+      "columns": [
+        {
+          "label": "NPWP pemotong",
+          "key": "payerTin",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama pemotong",
+          "key": "payerName",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nomor bukti potong",
+          "key": "slipNo",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tanggal bukti potong",
+          "key": "slipDate",
+          "type": "date",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis pajak",
+          "key": "taxType",
+          "type": "select",
+          "options": [
+            "PPh Pasal 21|PPh Pasal 21",
+            "PPh Pasal 22|PPh Pasal 22",
+            "PPh Pasal 23|PPh Pasal 23",
+            "PPh Pasal 24|PPh Pasal 24",
+            "PPh Pasal 26|PPh Pasal 26"
+          ],
+          "required": true
+        },
+        {
+          "label": "Penghasilan bruto",
+          "key": "gross",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "PPh dipotong/dipungut",
+          "key": "withheld",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "withheld"
+    },
+    "finalincome": {
+      "title": "Lampiran 2A · Penghasilan Final",
+      "page": 8,
+      "columns": [
+        {
+          "label": "NPWP pemotong",
+          "key": "payerTin",
+          "type": "text",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Nama pemotong",
+          "key": "payerName",
+          "type": "text",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Kode penghasilan",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis penghasilan",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Dasar pengenaan pajak",
+          "key": "base",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "PPh terutang",
+          "key": "tax",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "base"
+    },
+    "exempt": {
+      "title": "Lampiran 2B · Bukan Objek Pajak",
+      "page": 8,
+      "columns": [
+        {
+          "label": "Kode",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis penghasilan",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "NPWP sumber",
+          "key": "sourceTin",
+          "type": "text",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Nama sumber",
+          "key": "sourceName",
+          "type": "text",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Penghasilan bruto",
+          "key": "gross",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "gross"
+    },
+    "foreign": {
+      "title": "Lampiran 2C · Penghasilan Luar Negeri",
+      "page": 8,
+      "columns": [
+        {
+          "label": "Nama sumber",
+          "key": "source",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Negara",
+          "key": "country",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tanggal transaksi",
+          "key": "date",
+          "type": "date",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis penghasilan",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Penghasilan neto rupiah",
+          "key": "net",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai pajak dalam valas",
+          "key": "taxForex",
+          "type": "number",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Pajak valas dalam rupiah",
+          "key": "taxIDR",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Mata uang",
+          "key": "currency",
+          "type": "text",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Kredit pajak diperhitungkan",
+          "key": "credit",
+          "type": "money",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "net"
+    },
+    "nppn": {
+      "title": "Lampiran 3A-4A · Pencatatan dan Norma",
+      "page": 12,
+      "columns": [
+        {
+          "label": "Nama TKU",
+          "key": "tku",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis usaha/pekerjaan bebas",
+          "key": "business",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Peredaran bruto",
+          "key": "gross",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Norma (%)",
+          "key": "norm",
+          "type": "number",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Penghasilan neto",
+          "key": "net",
+          "type": "computed",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "net"
+    },
+    "otherdomestic": {
+      "title": "Lampiran 3A-4B · Penghasilan Lainnya",
+      "page": 12,
+      "columns": [
+        {
+          "label": "Kode",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis penghasilan",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Penghasilan neto",
+          "key": "net",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "net"
+    },
+    "umkm": {
+      "title": "Lampiran 3B-A · Peredaran Bruto UMKM per TKU",
+      "page": 13,
+      "columns": [
+        {
+          "label": "Nama TKU",
+          "key": "tku",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Januari",
+          "key": "m1",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Februari",
+          "key": "m2",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Maret",
+          "key": "m3",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "April",
+          "key": "m4",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Mei",
+          "key": "m5",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Juni",
+          "key": "m6",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Juli",
+          "key": "m7",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Agustus",
+          "key": "m8",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "September",
+          "key": "m9",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Oktober",
+          "key": "m10",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "November",
+          "key": "m11",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Desember",
+          "key": "m12",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": null
+    },
+    "opent": {
+      "title": "Lampiran 3B-B · Orang Pribadi Pengusaha Tertentu",
+      "page": 13,
+      "columns": [
+        {
+          "label": "Nama TKU",
+          "key": "tku",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Metode pembukuan",
+          "key": "method",
+          "type": "select",
+          "options": [
+            "1|Pencatatan",
+            "2|Pembukuan"
+          ],
+          "required": false
+        },
+        {
+          "label": "Januari",
+          "key": "m1",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Februari",
+          "key": "m2",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Maret",
+          "key": "m3",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "April",
+          "key": "m4",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Mei",
+          "key": "m5",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Juni",
+          "key": "m6",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Juli",
+          "key": "m7",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Agustus",
+          "key": "m8",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "September",
+          "key": "m9",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Oktober",
+          "key": "m10",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "November",
+          "key": "m11",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Desember",
+          "key": "m12",
+          "type": "money",
+          "options": [],
+          "required": false
+        }
+      ]
+    },
+    "normmonths": {
+      "title": "Lampiran 3B-C · Peredaran Bruto Pengguna Norma",
+      "page": 13,
+      "columns": [
+        {
+          "label": "Nama TKU",
+          "key": "tku",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Usaha/pekerjaan bebas",
+          "key": "business",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Januari",
+          "key": "m1",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Februari",
+          "key": "m2",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Maret",
+          "key": "m3",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "April",
+          "key": "m4",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Mei",
+          "key": "m5",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Juni",
+          "key": "m6",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Juli",
+          "key": "m7",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Agustus",
+          "key": "m8",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "September",
+          "key": "m9",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Oktober",
+          "key": "m10",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "November",
+          "key": "m11",
+          "type": "money",
+          "options": [],
+          "required": false
+        },
+        {
+          "label": "Desember",
+          "key": "m12",
+          "type": "money",
+          "options": [],
+          "required": false
+        }
+      ]
+    },
+    "depreciation": {
+      "title": "Lampiran 3C · Penyusutan Fiskal",
+      "page": 14,
+      "columns": [
+        {
+          "label": "Kode aset",
+          "key": "CodeOfAsset",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Kelompok aset",
+          "key": "GroupOfAsset",
+          "type": "select",
+          "options": [
+            "Group 1|Kelompok 1",
+            "Group 2|Kelompok 2",
+            "Group 3|Kelompok 3",
+            "Group 4|Kelompok 4",
+            "Other Group|Lainnya",
+            "Permanent|Bangunan permanen",
+            "Non-permanent|Bangunan tidak permanen"
+          ],
+          "required": true
+        },
+        {
+          "label": "Bulan perolehan",
+          "key": "MonthOfAcquisition",
+          "type": "number",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "YearOfAcquisition",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Harga perolehan",
+          "key": "AcquisitionPrice",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai sisa buku awal",
+          "key": "RemainingValue",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Metode komersial",
+          "key": "CommercialMethode",
+          "type": "select",
+          "options": [
+            "GL|Garis lurus",
+            "JAT|Jumlah angka tahun",
+            "JJJ|Jumlah jam jasa",
+            "JSP|Satuan produksi",
+            "ML|Lainnya",
+            "SM|Saldo menurun",
+            "SMG|Saldo menurun ganda"
+          ],
+          "required": true
+        },
+        {
+          "label": "Metode fiskal",
+          "key": "FiscalMethode",
+          "type": "select",
+          "options": [
+            "GL|Garis lurus",
+            "JSP|Satuan produksi",
+            "SM|Saldo menurun"
+          ],
+          "required": true
+        },
+        {
+          "label": "Penyusutan fiskal tahun ini",
+          "key": "FiscalDepretiationThisYear",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan",
+          "key": "Notes",
+          "type": "text",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "FiscalDepretiationThisYear",
+      "xml": true
+    },
+    "amortization": {
+      "title": "Lampiran 3C · Amortisasi Fiskal",
+      "page": 14,
+      "columns": [
+        {
+          "label": "Kode aset",
+          "key": "CodeOfAsset",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Kelompok aset",
+          "key": "GroupOfAsset",
+          "type": "select",
+          "options": [
+            "Group 1|Kelompok 1",
+            "Group 2|Kelompok 2",
+            "Group 3|Kelompok 3",
+            "Group 4|Kelompok 4",
+            "Other Group|Lainnya"
+          ],
+          "required": true
+        },
+        {
+          "label": "Bulan perolehan",
+          "key": "MonthOfAcquisition",
+          "type": "number",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tahun perolehan",
+          "key": "YearOfAcquisition",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Harga perolehan",
+          "key": "AcquisitionPrice",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai sisa buku awal",
+          "key": "RemainingValue",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Metode komersial",
+          "key": "CommercialMethode",
+          "type": "select",
+          "options": [
+            "GL|Garis lurus",
+            "JAT|Jumlah angka tahun",
+            "JJJ|Jumlah jam jasa",
+            "JSP|Satuan produksi",
+            "ML|Lainnya",
+            "SM|Saldo menurun",
+            "SMG|Saldo menurun ganda"
+          ],
+          "required": true
+        },
+        {
+          "label": "Metode fiskal",
+          "key": "FiscalMethode",
+          "type": "select",
+          "options": [
+            "GL|Garis lurus",
+            "JSP|Satuan produksi",
+            "SM|Saldo menurun"
+          ],
+          "required": true
+        },
+        {
+          "label": "Amortisasi fiskal tahun ini",
+          "key": "FiscalDepretiationThisYear",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan",
+          "key": "Notes",
+          "type": "text",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "FiscalDepretiationThisYear",
+      "xml": true
+    },
+    "entertainment": {
+      "title": "Lampiran 3D-A · Biaya Entertainment",
+      "page": 15,
+      "columns": [
+        {
+          "label": "Tanggal",
+          "key": "Date",
+          "type": "date",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tempat",
+          "key": "Location",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Alamat",
+          "key": "Address",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis",
+          "key": "Type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nilai biaya",
+          "key": "Amount",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama relasi",
+          "key": "Name",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Posisi relasi",
+          "key": "Position",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama perusahaan",
+          "key": "CompanyName",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis usaha",
+          "key": "BusinessType",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Keterangan",
+          "key": "Notes",
+          "type": "text",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "Amount",
+      "xml": true
+    },
+    "promotion": {
+      "title": "Lampiran 3D-B · Promosi & Natura",
+      "page": 15,
+      "columns": [
+        {
+          "label": "NPWP penerima",
+          "key": "TINCode",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama penerima",
+          "key": "NameOfRecipient",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Alamat",
+          "key": "Address",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Tanggal",
+          "key": "DateOfPromotion",
+          "type": "date",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Bentuk/jenis biaya",
+          "key": "TypeOfCost",
+          "type": "select",
+          "options": [
+            "ADVERTISING|Advertising",
+            "BENEFIT|Natura/kenikmatan",
+            "EXHIBITION|Pameran",
+            "INTRODUCTION|Pengenalan produk",
+            "SPONSORSHIP|Sponsor"
+          ],
+          "required": true
+        },
+        {
+          "label": "Nilai biaya",
+          "key": "AmountOfPromotionCost",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "PPh dipotong",
+          "key": "AmountOfWithholdingTax",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nomor Bupot",
+          "key": "WithholdingSlipNumber",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Catatan",
+          "key": "Notes",
+          "type": "text",
+          "options": [],
+          "required": false
+        }
+      ],
+      "sum": "AmountOfPromotionCost",
+      "xml": true
+    },
+    "baddebt": {
+      "title": "Lampiran 3D-C · Piutang Tak Tertagih",
+      "page": 15,
+      "columns": [
+        {
+          "label": "NPWP debitur",
+          "key": "TINCode",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Nama debitur",
+          "key": "DebtorName",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Alamat",
+          "key": "DebtorAddress",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jumlah plafon piutang",
+          "key": "AmountOfDebt",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Piutang tidak dapat ditagih",
+          "key": "AmountBadDebt",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Metode pembebanan",
+          "key": "DeductionMethod",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Bukti pemenuhan syarat",
+          "key": "TypeOfFulfillment",
+          "type": "text",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "AmountBadDebt",
+      "xml": true
+    },
+    "deductions": {
+      "title": "Lampiran 5B · Pengurang Penghasilan Neto",
+      "page": 17,
+      "columns": [
+        {
+          "label": "Kode pengurang",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis pengurang",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jumlah pengurang",
+          "key": "amount",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "amount"
+    },
+    "taxrelief": {
+      "title": "Lampiran 5C · Pengurang PPh Terutang",
+      "page": 17,
+      "columns": [
+        {
+          "label": "Kode",
+          "key": "code",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jenis pengurang PPh",
+          "key": "type",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Jumlah pengurang",
+          "key": "amount",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "amount"
+    },
+    "taxloss": {
+      "title": "Lampiran 5A · Kompensasi Kerugian Fiskal",
+      "page": 17,
+      "columns": [
+        {
+          "label": "Tahun pajak asal rugi",
+          "key": "year",
+          "type": "year",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Laba/rugi neto fiskal",
+          "key": "loss",
+          "type": "money",
+          "options": [],
+          "required": true
+        },
+        {
+          "label": "Kompensasi tahun berjalan",
+          "key": "compensated",
+          "type": "money",
+          "options": [],
+          "required": true
+        }
+      ],
+      "sum": "compensated"
+    }
+  },
+  "BOOKS": {
+    "dagangan": {
+      "title": "Lampiran 3A-1 · Dagang",
+      "page": 9
+    },
+    "jasa": {
+      "title": "Lampiran 3A-2 · Jasa",
+      "page": 10
+    },
+    "industri": {
+      "title": "Lampiran 3A-3 · Industri",
+      "page": 11
+    }
+  },
+  "bookAccounts": {
+    "dagangan": [
+      [
+        "4002",
+        "Penjualan domestik"
+      ],
+      [
+        "4003",
+        "Penjualan ekspor"
+      ],
+      [
+        "4004",
+        "Penjualan bruto"
+      ],
+      [
+        "4011",
+        "Retur"
+      ],
+      [
+        "4012",
+        "Potongan penjualan"
+      ],
+      [
+        "4020",
+        "Penjualan bersih"
+      ],
+      [
+        "5001",
+        "Pembelian"
+      ],
+      [
+        "5008",
+        "Persediaan awal"
+      ],
+      [
+        "5009",
+        "Persediaan akhir"
+      ],
+      [
+        "5020",
+        "Jumlah HPP"
+      ],
+      [
+        "4300",
+        "Laba kotor"
+      ]
+    ],
+    "jasa": [
+      [
+        "4021",
+        "Pendapatan jasa"
+      ],
+      [
+        "5020",
+        "Biaya pokok jasa"
+      ],
+      [
+        "4300",
+        "Laba kotor"
+      ]
+    ],
+    "industri": [
+      [
+        "4002",
+        "Penjualan domestik"
+      ],
+      [
+        "4003",
+        "Penjualan ekspor"
+      ],
+      [
+        "4004",
+        "Penjualan bruto"
+      ],
+      [
+        "4011",
+        "Retur"
+      ],
+      [
+        "4012",
+        "Potongan penjualan"
+      ],
+      [
+        "4020",
+        "Penjualan bersih"
+      ],
+      [
+        "5040",
+        "Biaya bahan baku"
+      ],
+      [
+        "5050",
+        "Biaya tenaga kerja langsung"
+      ],
+      [
+        "5051",
+        "Tenaga kerja tidak langsung"
+      ],
+      [
+        "5052",
+        "Pemeliharaan mesin"
+      ],
+      [
+        "5058",
+        "Penyusutan pabrikasi"
+      ],
+      [
+        "5059",
+        "Utilitas"
+      ],
+      [
+        "5069",
+        "Biaya pabrikasi lainnya"
+      ],
+      [
+        "5070",
+        "Jumlah biaya pabrikasi"
+      ],
+      [
+        "5080",
+        "Jumlah biaya produksi"
+      ],
+      [
+        "5090",
+        "Persediaan awal barang dalam proses"
+      ],
+      [
+        "5099",
+        "Persediaan akhir barang dalam proses"
+      ],
+      [
+        "5100",
+        "Harga pokok produksi"
+      ],
+      [
+        "5008",
+        "Persediaan awal barang jadi"
+      ],
+      [
+        "5009",
+        "Persediaan akhir barang jadi"
+      ],
+      [
+        "5020",
+        "Harga pokok penjualan"
+      ],
+      [
+        "4300",
+        "Laba kotor"
+      ]
+    ]
+  },
+  "bookCommon": [
+    [
+      "5311",
+      "Gaji, tunjangan, bonus, THR, honorarium"
+    ],
+    [
+      "5313",
+      "Transportasi"
+    ],
+    [
+      "5314",
+      "Penyusutan & amortisasi"
+    ],
+    [
+      "5315",
+      "Sewa"
+    ],
+    [
+      "5316",
+      "Bunga"
+    ],
+    [
+      "5317",
+      "Beban jasa"
+    ],
+    [
+      "5318",
+      "Piutang tak tertagih"
+    ],
+    [
+      "5320",
+      "Promosi/marketing"
+    ],
+    [
+      "5321",
+      "Entertainment"
+    ],
+    [
+      "5322",
+      "Umum & administrasi"
+    ],
+    [
+      "5399",
+      "Beban lain"
+    ],
+    [
+      "5400",
+      "Jumlah beban usaha"
+    ],
+    [
+      "4800",
+      "Laba/rugi sebelum pajak"
+    ]
+  ],
+  "bokFields": [
+    {
+      "label": "Nilai komersial",
+      "key": "commercial",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Bukan objek",
+      "key": "nonobject",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Dikenakan PPh final",
+      "key": "final",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Objek tidak final",
+      "key": "nonfinal",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Koreksi fiskal positif",
+      "key": "positive",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Koreksi fiskal negatif",
+      "key": "negative",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Kode koreksi fiskal",
+      "key": "fiscalCode",
+      "type": "text",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Nilai fiskal",
+      "key": "fiscal",
+      "type": "computed",
+      "options": [],
+      "required": false
+    }
+  ],
+  "profileFields": [
+    {
+      "label": "Tahun pajak",
+      "key": "year",
+      "type": "year",
+      "options": [],
+      "required": true
+    },
+    {
+      "label": "Status SPT",
+      "key": "sptStatus",
+      "type": "select",
+      "options": [
+        "Normal|Normal",
+        "Pembetulan|Pembetulan"
+      ],
+      "required": true
+    },
+    {
+      "label": "Periode mulai (bulan)",
+      "key": "fromMonth",
+      "type": "number",
+      "options": [],
+      "required": true
+    },
+    {
+      "label": "Periode akhir (bulan)",
+      "key": "toMonth",
+      "type": "number",
+      "options": [],
+      "required": true
+    },
+    {
+      "label": "NIK/NPWP 16 digit",
+      "key": "tin",
+      "type": "text",
+      "options": [],
+      "required": true
+    },
+    {
+      "label": "Nama WP",
+      "key": "name",
+      "type": "text",
+      "options": [],
+      "required": true
+    },
+    {
+      "label": "Jenis identitas",
+      "key": "idType",
+      "type": "select",
+      "options": [
+        "KTP|KTP",
+        "KITAS|KITAS",
+        "PASPOR|PASPOR"
+      ],
+      "required": false
+    },
+    {
+      "label": "Nomor ID",
+      "key": "idNumber",
+      "type": "text",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Nomor telepon",
+      "key": "phone",
+      "type": "text",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Email",
+      "key": "email",
+      "type": "text",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Sumber penghasilan",
+      "key": "incomeSource",
+      "type": "select",
+      "options": [
+        "Pekerjaan|Pekerjaan",
+        "Kegiatan Usaha|Kegiatan Usaha",
+        "Pekerjaan Bebas|Pekerjaan Bebas"
+      ],
+      "required": false
+    },
+    {
+      "label": "Metode pembukuan",
+      "key": "bookMethod",
+      "type": "select",
+      "options": [
+        "Pencatatan|Pencatatan",
+        "Pembukuan Stelsel Kas|Pembukuan Stelsel Kas",
+        "Pembukuan Stelsel Akrual|Pembukuan Stelsel Akrual"
+      ],
+      "required": false
+    },
+    {
+      "label": "Status PTKP",
+      "key": "ptkp",
+      "type": "select",
+      "options": [
+        "TK/0|TK/0",
+        "TK/1|TK/1",
+        "TK/2|TK/2",
+        "TK/3|TK/3",
+        "K/0|K/0",
+        "K/1|K/1",
+        "K/2|K/2",
+        "K/3|K/3",
+        "K/I/0|K/I/0 (perlu verifikasi pasangan)",
+        "K/I/1|K/I/1 (perlu verifikasi pasangan)",
+        "K/I/2|K/I/2 (perlu verifikasi pasangan)",
+        "K/I/3|K/I/3 (perlu verifikasi pasangan)"
+      ],
+      "required": false
+    },
+    {
+      "label": "Status pajak suami–istri",
+      "key": "maritalTax",
+      "type": "select",
+      "options": [
+        "Gabung|Gabung",
+        "PH|Pisah harta (PH)",
+        "MT|Memilih terpisah (MT)"
+      ],
+      "required": false
+    },
+    {
+      "label": "NIK/NPWP pasangan",
+      "key": "spouseTin",
+      "type": "text",
+      "options": [],
+      "required": false
+    }
+  ],
+  "questionFields": [
+    {
+      "label": "1a · Penghasilan dari pekerjaan?",
+      "key": "hasJobs",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "1b · Penghasilan usaha/pekerjaan bebas?",
+      "key": "hasBusiness",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "1b-2 · Peredaran bruto tertentu (final UMKM)?",
+      "key": "hasUMKM",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "1b-2 · OPPT?",
+      "key": "hasOPPT",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "1b-3 · Menggunakan Norma?",
+      "key": "hasNorm",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "1b-4 · Sektor usaha",
+      "key": "sector",
+      "type": "select",
+      "options": [
+        "|Tidak ada",
+        "dagangan|Dagang",
+        "jasa|Jasa",
+        "industri|Industri"
+      ],
+      "required": false
+    },
+    {
+      "label": "1c · Penghasilan dalam negeri lainnya?",
+      "key": "hasOtherDomestic",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "1d · Penghasilan luar negeri?",
+      "key": "hasForeign",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "3 · Pengurang penghasilan neto?",
+      "key": "hasDeductions",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "8 · Pengurang PPh terutang?",
+      "key": "hasTaxRelief",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "10a · Ada bukti potong/pungut?",
+      "key": "hasWithholding",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "10d · Pengembalian kredit pajak LN?",
+      "key": "hasForeignRefund",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "11b · Surat penundaan/angsuran?",
+      "key": "hasDeferral",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "13a · Angsuran PPh 25 regular?",
+      "key": "hasP25",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "13b · Perhitungan PPh 25 tersendiri?",
+      "key": "hasCustomP25",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "13c · Angsuran PPh 25 OPPT?",
+      "key": "hasOPPTP25",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "14b · Ada utang?",
+      "key": "hasDebt",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "14c · Ada penghasilan final?",
+      "key": "hasFinal",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "14d · Ada penghasilan nonobjek?",
+      "key": "hasExempt",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "14e · Penyusutan/amortisasi fiskal?",
+      "key": "hasDepreciation",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "14f · Rincian biaya tertentu?",
+      "key": "hasSpecialCosts",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "14g · Dividen/luar negeri nonobjek?",
+      "key": "hasForeignDividend",
+      "type": "yesno",
+      "options": [],
+      "required": false
+    }
+  ],
+  "extraFields": [
+    {
+      "label": "Penghasilan neto usaha pembukuan (jika tidak diambil dari rekonsiliasi)",
+      "key": "businessNeto",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "PPh 25 dibayar tahun ini",
+      "key": "p25Paid",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "STP PPh 25: pokok",
+      "key": "p25STP",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Pengembalian/pengurangan kredit PPh LN",
+      "key": "foreignRefund",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Persetujuan angsuran/penundaan",
+      "key": "deferral",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "PPh kurang/lebih bayar SPT sebelumnya",
+      "key": "previousBalance",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Kompensasi kerugian fiskal (yang didukung bukti)",
+      "key": "compLoss",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Pengurang khusus lain (dengan dasar)",
+      "key": "otherDeduction",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Pengurang PPh khusus lain (dengan dasar)",
+      "key": "otherTaxRelief",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "Angsuran PPh 25 tahun berikutnya (jika dihitung tersendiri)",
+      "key": "nextP25",
+      "type": "money",
+      "options": [],
+      "required": false
+    },
+    {
+      "label": "PPh terutang PH/MT sesuai Lampiran 4B (manual terverifikasi)",
+      "key": "phmtTax",
+      "type": "money",
+      "options": [],
+      "required": false
+    }
+  ],
+  "propsDefault": {
+    "year": "2025",
+    "sptStatus": "Normal",
+    "fromMonth": "1",
+    "toMonth": "12",
+    "tin": "",
+    "name": "",
+    "idType": "KTP",
+    "idNumber": "",
+    "phone": "",
+    "email": "",
+    "incomeSource": "Pekerjaan",
+    "bookMethod": "Pencatatan",
+    "ptkp": "TK/0",
+    "maritalTax": "Gabung",
+    "spouseTin": ""
+  },
+  "NAV": [
+    [
+      "01 · SPT",
+      "profile",
+      "Identitas & tahun pajak",
+      3
+    ],
+    [
+      "01 · SPT",
+      "questions",
+      "Pertanyaan Induk A–K",
+      3
+    ],
+    [
+      "01 · SPT",
+      "extras",
+      "Perhitungan & penyesuaian",
+      3
+    ],
+    [
+      "01 · SPT",
+      "summary",
+      "Ikhtisar & validasi",
+      4
+    ],
+    [
+      "02 · Lampiran 1",
+      "cash",
+      "Kas dan setara kas",
+      5
+    ],
+    [
+      "02 · Lampiran 1",
+      "receivables",
+      "Piutang",
+      5
+    ],
+    [
+      "02 · Lampiran 1",
+      "investments",
+      "Investasi & sekuritas",
+      5
+    ],
+    [
+      "02 · Lampiran 1",
+      "movable",
+      "Harta bergerak",
+      5
+    ],
+    [
+      "02 · Lampiran 1",
+      "immovable",
+      "Harta tidak bergerak",
+      6
+    ],
+    [
+      "02 · Lampiran 1",
+      "otherassets",
+      "Harta lainnya",
+      6
+    ],
+    [
+      "02 · Lampiran 1",
+      "debts",
+      "Utang",
+      6
+    ],
+    [
+      "02 · Lampiran 1",
+      "family",
+      "Daftar keluarga",
+      7
+    ],
+    [
+      "02 · Lampiran 1",
+      "jobs",
+      "Penghasilan pekerjaan",
+      7
+    ],
+    [
+      "02 · Lampiran 1",
+      "withholding",
+      "Bukti potong",
+      7
+    ],
+    [
+      "03 · Lampiran 2",
+      "finalincome",
+      "Penghasilan PPh final",
+      8
+    ],
+    [
+      "03 · Lampiran 2",
+      "exempt",
+      "Nonobjek pajak",
+      8
+    ],
+    [
+      "03 · Lampiran 2",
+      "foreign",
+      "Penghasilan luar negeri",
+      8
+    ],
+    [
+      "04 · Lampiran 3",
+      "dagangan",
+      "Rekonsiliasi dagang",
+      9
+    ],
+    [
+      "04 · Lampiran 3",
+      "jasa",
+      "Rekonsiliasi jasa",
+      10
+    ],
+    [
+      "04 · Lampiran 3",
+      "industri",
+      "Rekonsiliasi industri",
+      11
+    ],
+    [
+      "04 · Lampiran 3",
+      "nppn",
+      "NPPN/Pencatatan",
+      12
+    ],
+    [
+      "04 · Lampiran 3",
+      "otherdomestic",
+      "Penghasilan lainnya",
+      12
+    ],
+    [
+      "04 · Lampiran 3",
+      "umkm",
+      "Peredaran bruto UMKM",
+      13
+    ],
+    [
+      "04 · Lampiran 3",
+      "opent",
+      "Peredaran bruto OPPT",
+      13
+    ],
+    [
+      "04 · Lampiran 3",
+      "normmonths",
+      "Peredaran bruto NPPN",
+      13
+    ],
+    [
+      "04 · Lampiran 3",
+      "depreciation",
+      "Penyusutan fiskal",
+      14
+    ],
+    [
+      "04 · Lampiran 3",
+      "amortization",
+      "Amortisasi fiskal",
+      14
+    ],
+    [
+      "04 · Lampiran 3",
+      "entertainment",
+      "Biaya entertainment",
+      15
+    ],
+    [
+      "04 · Lampiran 3",
+      "promotion",
+      "Promosi/natura",
+      15
+    ],
+    [
+      "04 · Lampiran 3",
+      "baddebt",
+      "Piutang tidak tertagih",
+      15
+    ],
+    [
+      "05 · Lampiran 4/5",
+      "partner",
+      "PH/MT & PPh 25",
+      16
+    ],
+    [
+      "05 · Lampiran 4/5",
+      "taxloss",
+      "Kompensasi kerugian",
+      17
+    ],
+    [
+      "05 · Lampiran 4/5",
+      "deductions",
+      "Pengurang penghasilan",
+      17
+    ],
+    [
+      "05 · Lampiran 4/5",
+      "taxrelief",
+      "Pengurang PPh terutang",
+      17
+    ],
+    [
+      "06 · Data & XML",
+      "xml",
+      "Ekspor XML Coretax",
+      14
+    ],
+    [
+      "06 · Data & XML",
+      "validation",
+      "Pemeriksaan data",
+      3
+    ]
+  ],
+  "LAYOUTS": {
+    "cash": {
+      "y": 162,
+      "dy": 17.1,
+      "n": 5,
+      "cols": [
+        [
+          "code",
+          26,
+          35
+        ],
+        [
+          "@description",
+          62,
+          53
+        ],
+        [
+          "account",
+          116,
+          72
+        ],
+        [
+          "owner",
+          189,
+          49
+        ],
+        [
+          "bank",
+          239,
+          87
+        ],
+        [
+          "country",
+          326,
+          57
+        ],
+        [
+          "year",
+          385,
+          68
+        ],
+        [
+          "balance",
+          455,
+          66
+        ],
+        [
+          "pps",
+          521,
+          59
+        ]
+      ]
+    },
+    "receivables": {
+      "y": 310.8,
+      "dy": 17.05,
+      "n": 5,
+      "cols": [
+        [
+          "code",
+          26,
+          35
+        ],
+        [
+          "description",
+          62,
+          53
+        ],
+        [
+          "country",
+          116,
+          72
+        ],
+        [
+          "debtor",
+          189,
+          115
+        ],
+        [
+          "principal",
+          304,
+          79
+        ],
+        [
+          "year",
+          385,
+          52
+        ],
+        [
+          "balance",
+          441,
+          79
+        ],
+        [
+          "pps",
+          521,
+          59
+        ]
+      ]
+    },
+    "investments": {
+      "y": 458.6,
+      "dy": 21.55,
+      "n": 5,
+      "cols": [
+        [
+          "code",
+          26,
+          35
+        ],
+        [
+          "@description",
+          62,
+          52
+        ],
+        [
+          "country",
+          115,
+          54
+        ],
+        [
+          "issuer",
+          170,
+          80
+        ],
+        [
+          "account",
+          251,
+          73
+        ],
+        [
+          "cost",
+          327,
+          68
+        ],
+        [
+          "year",
+          396,
+          57
+        ],
+        [
+          "current",
+          456,
+          64
+        ],
+        [
+          "pps",
+          521,
+          60
+        ]
+      ]
+    },
+    "movable": {
+      "y": 627.5,
+      "dy": 42.5,
+      "n": 5,
+      "cols": [
+        [
+          "code",
+          25,
+          36
+        ],
+        [
+          "@movable",
+          62,
+          81
+        ],
+        [
+          "registration",
+          144,
+          65
+        ],
+        [
+          "@ownership",
+          210,
+          93
+        ],
+        [
+          "year",
+          305,
+          52
+        ],
+        [
+          "cost",
+          358,
+          79
+        ],
+        [
+          "current",
+          438,
+          83
+        ],
+        [
+          "pps",
+          521,
+          58
+        ]
+      ]
+    },
+    "immovable": {
+      "y": 169.9,
+      "dy": 16.55,
+      "n": 6,
+      "cols": [
+        [
+          "code",
+          27,
+          31
+        ],
+        [
+          "description",
+          58,
+          51
+        ],
+        [
+          "address",
+          110,
+          44
+        ],
+        [
+          "@area",
+          155,
+          55
+        ],
+        [
+          "source",
+          211,
+          46
+        ],
+        [
+          "certificate",
+          259,
+          65
+        ],
+        [
+          "year",
+          325,
+          53
+        ],
+        [
+          "cost",
+          380,
+          72
+        ],
+        [
+          "current",
+          453,
+          68
+        ],
+        [
+          "pps",
+          521,
+          56
+        ]
+      ]
+    },
+    "otherassets": {
+      "y": 333.4,
+      "dy": 11.06,
+      "n": 17,
+      "cols": [
+        [
+          "code",
+          28,
+          32
+        ],
+        [
+          "description",
+          61,
+          49
+        ],
+        [
+          "year",
+          111,
+          50
+        ],
+        [
+          "proof",
+          162,
+          89
+        ],
+        [
+          "notes",
+          252,
+          103
+        ],
+        [
+          "cost",
+          357,
+          88
+        ],
+        [
+          "current",
+          447,
+          73
+        ],
+        [
+          "pps",
+          521,
+          57
+        ]
+      ]
+    },
+    "debts": {
+      "y": 641.6,
+      "dy": 25.85,
+      "n": 7,
+      "cols": [
+        [
+          "code",
+          29,
+          32
+        ],
+        [
+          "description",
+          62,
+          69
+        ],
+        [
+          "@creditor",
+          132,
+          109
+        ],
+        [
+          "country",
+          242,
+          74
+        ],
+        [
+          "year",
+          317,
+          84
+        ],
+        [
+          "balance",
+          402,
+          119
+        ],
+        [
+          "notes",
+          521,
+          57
+        ]
+      ]
+    },
+    "family": {
+      "y": 149.6,
+      "dy": 15.6,
+      "n": 8,
+      "cols": [
+        [
+          "name",
+          27,
+          149
+        ],
+        [
+          "tin",
+          178,
+          77
+        ],
+        [
+          "birth",
+          256,
+          79
+        ],
+        [
+          "relation",
+          336,
+          155
+        ],
+        [
+          "occupation",
+          492,
+          86
+        ]
+      ]
+    },
+    "jobs": {
+      "y": 322.9,
+      "dy": 15.6,
+      "n": 5,
+      "cols": [
+        [
+          "employer",
+          61,
+          72
+        ],
+        [
+          "employerTin",
+          134,
+          82
+        ],
+        [
+          "gross",
+          217,
+          108
+        ],
+        [
+          "expense",
+          326,
+          126
+        ],
+        [
+          "net",
+          454,
+          122
+        ]
+      ]
+    },
+    "withholding": {
+      "y": 469.3,
+      "dy": 20.28,
+      "n": 15,
+      "cols": [
+        [
+          "@payer",
+          61,
+          108
+        ],
+        [
+          "@bupot",
+          170,
+          110
+        ],
+        [
+          "taxType",
+          281,
+          52
+        ],
+        [
+          "gross",
+          334,
+          108
+        ],
+        [
+          "withheld",
+          444,
+          128
+        ]
+      ]
+    },
+    "finalincome": {
+      "y": 127.8,
+      "dy": 21.6,
+      "n": 16,
+      "cols": [
+        [
+          "@payer",
+          58,
+          105
+        ],
+        [
+          "code",
+          165,
+          55
+        ],
+        [
+          "type",
+          222,
+          150
+        ],
+        [
+          "base",
+          374,
+          103
+        ],
+        [
+          "tax",
+          479,
+          97
+        ]
+      ]
+    },
+    "exempt": {
+      "y": 536.9,
+      "dy": 14.4,
+      "n": 6,
+      "cols": [
+        [
+          "code",
+          60,
+          115
+        ],
+        [
+          "type",
+          177,
+          156
+        ],
+        [
+          "sourceTin",
+          335,
+          83
+        ],
+        [
+          "sourceName",
+          421,
+          68
+        ],
+        [
+          "gross",
+          490,
+          85
+        ]
+      ]
+    },
+    "foreign": {
+      "y": 678.2,
+      "dy": 25.95,
+      "n": 5,
+      "cols": [
+        [
+          "source",
+          54,
+          79
+        ],
+        [
+          "country",
+          134,
+          30
+        ],
+        [
+          "date",
+          165,
+          54
+        ],
+        [
+          "type",
+          221,
+          65
+        ],
+        [
+          "net",
+          289,
+          95
+        ],
+        [
+          "taxIDR",
+          386,
+          96
+        ],
+        [
+          "currency",
+          484,
+          29
+        ],
+        [
+          "credit",
+          514,
+          60
+        ]
+      ]
+    },
+    "nppn": {
+      "y": 132.1,
+      "dy": 15.83,
+      "n": 12,
+      "cols": [
+        [
+          "tku",
+          53,
+          118
+        ],
+        [
+          "business",
+          171,
+          93
+        ],
+        [
+          "gross",
+          266,
+          122
+        ],
+        [
+          "norm",
+          390,
+          91
+        ],
+        [
+          "net",
+          483,
+          92
+        ]
+      ]
+    },
+    "otherdomestic": {
+      "y": 379.7,
+      "dy": 15.83,
+      "n": 17,
+      "cols": [
+        [
+          "code",
+          55,
+          102
+        ],
+        [
+          "type",
+          158,
+          287
+        ],
+        [
+          "net",
+          446,
+          128
+        ]
+      ]
+    },
+    "umkm": {
+      "y": 125.9,
+      "dy": 9.95,
+      "n": 3,
+      "cols": [
+        [
+          "tku",
+          37,
+          117
+        ],
+        [
+          "m1",
+          155,
+          56
+        ],
+        [
+          "m2",
+          213.4,
+          56
+        ],
+        [
+          "m3",
+          271.8,
+          56
+        ],
+        [
+          "m4",
+          330.2,
+          56
+        ],
+        [
+          "m5",
+          388.6,
+          56
+        ],
+        [
+          "m6",
+          447,
+          56
+        ],
+        [
+          "m7",
+          505.4,
+          56
+        ],
+        [
+          "m8",
+          563.8,
+          56
+        ],
+        [
+          "m9",
+          622.2,
+          56
+        ],
+        [
+          "m10",
+          680.6,
+          56
+        ],
+        [
+          "m11",
+          739,
+          56
+        ],
+        [
+          "m12",
+          797.4,
+          56
+        ]
+      ]
+    },
+    "opent": {
+      "y": 417,
+      "dy": 9.95,
+      "n": 3,
+      "cols": [
+        [
+          "tku",
+          38,
+          58
+        ],
+        [
+          "method",
+          97,
+          57
+        ],
+        [
+          "m1",
+          155,
+          56
+        ],
+        [
+          "m2",
+          213.4,
+          56
+        ],
+        [
+          "m3",
+          271.8,
+          56
+        ],
+        [
+          "m4",
+          330.2,
+          56
+        ],
+        [
+          "m5",
+          388.6,
+          56
+        ],
+        [
+          "m6",
+          447,
+          56
+        ],
+        [
+          "m7",
+          505.4,
+          56
+        ],
+        [
+          "m8",
+          563.8,
+          56
+        ],
+        [
+          "m9",
+          622.2,
+          56
+        ],
+        [
+          "m10",
+          680.6,
+          56
+        ],
+        [
+          "m11",
+          739,
+          56
+        ],
+        [
+          "m12",
+          797.4,
+          56
+        ]
+      ]
+    },
+    "normmonths": {
+      "y": 541.8,
+      "dy": 9.95,
+      "n": 3,
+      "cols": [
+        [
+          "tku",
+          38,
+          58
+        ],
+        [
+          "business",
+          97,
+          57
+        ],
+        [
+          "m1",
+          155,
+          56
+        ],
+        [
+          "m2",
+          213.4,
+          56
+        ],
+        [
+          "m3",
+          271.8,
+          56
+        ],
+        [
+          "m4",
+          330.2,
+          56
+        ],
+        [
+          "m5",
+          388.6,
+          56
+        ],
+        [
+          "m6",
+          447,
+          56
+        ],
+        [
+          "m7",
+          505.4,
+          56
+        ],
+        [
+          "m8",
+          563.8,
+          56
+        ],
+        [
+          "m9",
+          622.2,
+          56
+        ],
+        [
+          "m10",
+          680.6,
+          56
+        ],
+        [
+          "m11",
+          739,
+          56
+        ],
+        [
+          "m12",
+          797.4,
+          56
+        ]
+      ]
+    },
+    "depreciation": {
+      "y": 140.4,
+      "dy": 10.32,
+      "n": 28,
+      "cols": [
+        [
+          "CodeOfAsset",
+          25,
+          43
+        ],
+        [
+          "GroupOfAsset",
+          69,
+          131
+        ],
+        [
+          "@period",
+          202,
+          78
+        ],
+        [
+          "AcquisitionPrice",
+          282,
+          109
+        ],
+        [
+          "RemainingValue",
+          392,
+          112
+        ],
+        [
+          "CommercialMethode",
+          505,
+          66
+        ],
+        [
+          "FiscalMethode",
+          573,
+          72
+        ],
+        [
+          "FiscalDepretiationThisYear",
+          647,
+          148
+        ],
+        [
+          "Notes",
+          797,
+          103
+        ]
+      ]
+    },
+    "amortization": {
+      "y": 469,
+      "dy": 10.32,
+      "n": 10,
+      "cols": [
+        [
+          "CodeOfAsset",
+          25,
+          43
+        ],
+        [
+          "GroupOfAsset",
+          69,
+          131
+        ],
+        [
+          "@period",
+          202,
+          78
+        ],
+        [
+          "AcquisitionPrice",
+          282,
+          109
+        ],
+        [
+          "RemainingValue",
+          392,
+          112
+        ],
+        [
+          "CommercialMethode",
+          505,
+          66
+        ],
+        [
+          "FiscalMethode",
+          573,
+          72
+        ],
+        [
+          "FiscalDepretiationThisYear",
+          647,
+          148
+        ],
+        [
+          "Notes",
+          797,
+          103
+        ]
+      ]
+    },
+    "entertainment": {
+      "y": 162,
+      "dy": 15.24,
+      "n": 7,
+      "cols": [
+        [
+          "Date",
+          54,
+          51
+        ],
+        [
+          "Location",
+          106,
+          40
+        ],
+        [
+          "Address",
+          148,
+          46
+        ],
+        [
+          "Type",
+          195,
+          40
+        ],
+        [
+          "Amount",
+          237,
+          71
+        ],
+        [
+          "Name",
+          309,
+          52
+        ],
+        [
+          "Position",
+          362,
+          51
+        ],
+        [
+          "CompanyName",
+          415,
+          51
+        ],
+        [
+          "BusinessType",
+          467,
+          54
+        ],
+        [
+          "Notes",
+          522,
+          61
+        ]
+      ]
+    },
+    "promotion": {
+      "y": 339.7,
+      "dy": 30.5,
+      "n": 8,
+      "cols": [
+        [
+          "TINCode",
+          59,
+          88
+        ],
+        [
+          "NameOfRecipient",
+          148,
+          70
+        ],
+        [
+          "Address",
+          219,
+          55
+        ],
+        [
+          "@promo",
+          276,
+          75
+        ],
+        [
+          "AmountOfPromotionCost",
+          353,
+          56
+        ],
+        [
+          "Notes",
+          410,
+          62
+        ],
+        [
+          "AmountOfWithholdingTax",
+          474,
+          51
+        ],
+        [
+          "WithholdingSlipNumber",
+          527,
+          54
+        ]
+      ]
+    },
+    "baddebt": {
+      "y": 652.3,
+      "dy": 31.08,
+      "n": 5,
+      "cols": [
+        [
+          "TINCode",
+          58,
+          90
+        ],
+        [
+          "DebtorName",
+          149,
+          70
+        ],
+        [
+          "DebtorAddress",
+          220,
+          54
+        ],
+        [
+          "AmountOfDebt",
+          276,
+          64
+        ],
+        [
+          "AmountBadDebt",
+          341,
+          80
+        ],
+        [
+          "DeductionMethod",
+          423,
+          71
+        ],
+        [
+          "TypeOfFulfillment",
+          495,
+          83
+        ]
+      ]
+    },
+    "deductions": {
+      "y": 390.3,
+      "dy": 13.34,
+      "n": 4,
+      "cols": [
+        [
+          "code",
+          60,
+          92
+        ],
+        [
+          "type",
+          154,
+          159
+        ],
+        [
+          "amount",
+          315,
+          133
+        ]
+      ]
+    },
+    "taxrelief": {
+      "y": 390.3,
+      "dy": 13.34,
+      "n": 4,
+      "cols": [
+        [
+          "code",
+          506,
+          109
+        ],
+        [
+          "type",
+          617,
+          165
+        ],
+        [
+          "amount",
+          784,
+          129
+        ]
+      ]
+    },
+    "taxloss": {
+      "y": 174.5,
+      "dy": 36.2,
+      "n": 4,
+      "cols": [
+        [
+          "year",
+          46,
+          102
+        ],
+        [
+          "loss",
+          150,
+          88
+        ],
+        [
+          "compensated",
+          730,
+          159
+        ]
+      ]
+    }
+  }
+}
