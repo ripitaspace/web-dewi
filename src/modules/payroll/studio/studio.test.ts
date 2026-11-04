@@ -195,19 +195,23 @@ describe("RIPITAX PAYROLL workbook import", () => {
         expect(recipient).toMatchObject({ employeeId: "EMP-DAILY", whStatus: "PartialYear", subject: "changed", annualComplete: true, workForSecondEmployer: "Yes", previousSlip: "BP-001", rank: "III/a", passport: "A123", kitas: "K123", dob: "1990-01-01", birthCity: "Jakarta" });
         expect(entry).toMatchObject({ id: "TRX-001-fee", comp: "fee", amount: 1800000, days: 3, equalDaily: true, excludedLabor: 200000, excludedMaterial: 100000, proof: true });
     });
-    it("parses Excel serial end dates, normalizes methods, and reports out-of-period rows", async () => {
-        const book = XLSX.utils.book_new(), rows: (string | number)[][] = Array.from({ length: 13 }, () => []);
+    it("validates full work periods across years and reports truly out-of-period rows", async () => {
+        const book = XLSX.utils.book_new(), rows: (string | number)[][] = Array.from({ length: 15 }, () => []);
         rows[4][2] = "PT TEST"; rows[4][10] = "0000000000000000"; rows[4][18] = "0000000000000000000000"; rows[4][26] = 2026; rows[4][30] = "Oktober"; rows[4][34] = "2026-10-31";
         rows[10] = [...PAYROLL_HEADERS];
         rows[11] = ["TRX-383", "P0383", "Laras", "0000000000000001", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Masa terakhir", "2026-10-01", 46326, 130000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, " GROSS UP ", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-383", "2026-10-31", "", "", "Staf", "", "", "serial date"];
-        rows[12] = ["TRX-384", "P0384", "Adi", "0000000000000002", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Normal", "2025-12-01", "", 12000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Ditanggung perusahaan", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-384", "2026-10-31", "", "", "Staf", "", "", "outside period"];
+        rows[12] = ["TRX-384", "P0384", "Adi", "0000000000000002", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Normal", "2025-12-01", "", 12000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Ditanggung perusahaan", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-384", "2026-10-31", "", "", "Staf", "", "", "cross-year valid"];
+        rows[13] = ["TRX-385", "P0385", "Bima", "0000000000000003", "Pegawai tetap", "SPDN", "TK/0", "Swasta", "Oktober", "Normal", "2026-11-01", "", 12000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Gross", "Normal", "21-100-01", "2026-10-31", "Bukti pembayaran", "PAY-385", "2026-10-31", "", "", "Staf", "", "", "before work starts"];
+        rows[14] = ["TRX-404", "P0404", "Vina", "0000000000000004", "Mantan pegawai", "SPDN", "TK/0", "Swasta", "Oktober", "Normal", "2015-02-01", "2025-12-31", 40000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Gross", "Normal", "21-100-11", "2026-10-31", "Bukti pembayaran", "PAY-404", "2026-10-31", "", "", "Staf", "", "", "post-employment payment"];
         XLSX.utils.book_append_sheet(book, XLSX.utils.aoa_to_sheet(rows), "PAYROLL");
         const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => XLSX.write(book, { type: "array", bookType: "xlsx" }) } as File);
-        const laras = imported.studio.recipients.find(r => r.employeeId === "P0383")!, adi = imported.studio.recipients.find(r => r.employeeId === "P0384")!;
+        const laras = imported.studio.recipients.find(r => r.employeeId === "P0383")!, adi = imported.studio.recipients.find(r => r.employeeId === "P0384")!, bima = imported.studio.recipients.find(r => r.employeeId === "P0385")!, vina = imported.studio.recipients.find(r => r.employeeId === "P0404")!;
         expect(laras).toMatchObject({ endMonth: 10, taxMethod: "gross_up", grossUp: "Yes" });
         expect(createEngine(imported.studio).payrollResult(laras, 10)).toMatchObject({ docType: "BPA1", tax: 6264600 });
         expect(adi).toMatchObject({ taxMethod: "employer_borne", startMonth: 12, endMonth: 12 });
-        expect(imported.studio.entries.some(e => e.recipientId === adi.id)).toBe(false);
-        expect(imported.errors.join(" ")).toContain("di luar masa kerja penerima P0384");
+        expect(imported.studio.entries.some(e => e.recipientId === adi.id)).toBe(true);
+        expect(imported.studio.entries.some(e => e.recipientId === vina.id)).toBe(true);
+        expect(imported.studio.entries.some(e => e.recipientId === bima.id)).toBe(false);
+        expect(imported.errors).toEqual(["Baris 14: periode transaksi 2026-10 berada di luar masa kerja 2026-11 s.d. aktif untuk penerima P0385."]);
     });
 });

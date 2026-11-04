@@ -50,6 +50,12 @@ function month(value: Cell, fallback: number) {
         return Number(value);
     return dateParts(value)?.month || fallback;
 }
+function period(value: Cell, fallbackYear: number, fallbackMonth?: number) {
+    const parsed = dateParts(value);
+    if (parsed) return `${parsed.year}-${String(parsed.month).padStart(2, "0")}`;
+    const parsedMonth = month(value, fallbackMonth || 0);
+    return parsedMonth ? `${fallbackYear}-${String(parsedMonth).padStart(2, "0")}` : "";
+}
 function date(sheet: XLSX.WorkSheet, address: string, fallback = "") { const cell = sheet[address]; return cell ? XLSX.utils.format_cell(cell).trim() : fallback; }
 function yes(value: Cell) { return ["ya", "yes", "true", "1"].includes(text(value).toLocaleLowerCase("id-ID")); }
 function whStatus(value: Cell) { return ({ "penuh tahun": "FullYear", "masa sebagian": "PartialYear", disetahunkan: "Annualized" }[text(value).toLocaleLowerCase("id-ID")] || "auto") as Recipient["whStatus"]; }
@@ -83,7 +89,7 @@ export async function importPayrollWorkbook(file: File) {
     const defaultMonth = month(sheet.AE5?.v, new Date().getMonth() + 1);
     const draft = fresh();
     draft.company = { name: text(sheet.C5?.v), tin: text(sheet.K5?.v), tku: text(sheet.S5?.v), year, month: defaultMonth, withholdingDate: date(sheet, "AI5", dateFor(year, defaultMonth)) };
-    const people = new Map<string, Recipient>(), errors: string[] = [];
+    const people = new Map<string, Recipient>(), workPeriods = new Map<string, { start: string; end: string }>(), errors: string[] = [];
     let entries = 0;
     const usedEntryIds = new Set<string>();
     rows.forEach((row, index) => {
@@ -92,15 +98,24 @@ export async function importPayrollWorkbook(file: File) {
         const kind = kinds[text(row["Jenis Penerima"])], method = taxMethod(row["Metode Pajak"]);
         if (!employeeId || !name || !kind) { errors.push(`Baris ${line}: ID penerima, nama, atau jenis penerima belum valid.`); return; }
         if (!method) { errors.push(`Baris ${line}: Metode Pajak tidak dikenali.`); return; }
-        const rowMonth = month(row.Bulan, draft.company.month), startMonth = month(row["Mulai Kerja"], 1), endMonth = month(row["Akhir Kerja"], 12);
+        const rowMonth = month(row.Bulan, draft.company.month), rowPeriod = period(row.Bulan, draft.company.year, draft.company.month), startMonth = month(row["Mulai Kerja"], 1), endMonth = month(row["Akhir Kerja"], 12);
         let person = people.get(employeeId);
         if (!person) {
             person = recipientDefault(draft);
             Object.assign(person, { employeeId, name, tin: text(row["Subjek Pajak"]) === "SPLN" ? "" : tin, foreignTin: text(row["Subjek Pajak"]) === "SPLN" ? tin : "", kind, residency: text(row["Subjek Pajak"]) === "SPLN" ? "SPLN" : "SPDN", citizenship: text(row["Subjek Pajak"]) === "SPLN" ? "Foreign" : "Resident", ptkp: text(row.PTKP) || "TK/0", sector: text(row.Sektor) === "Pemerintah" ? "government" : "private", startMonth, endMonth, tku: text(row["ID TKU Penerima"]), country: text(row["Negara Penerima"]), position: text(row.Jabatan), rank: text(row["Pangkat / Golongan"]), passport: text(row.Paspor), kitas: text(row.KITAS), address: text(row["Alamat SPLN"]), dob: isoDate(row["Tanggal Lahir"]) || text(row["Tanggal Lahir"]), birthCity: text(row["Tempat Lahir"]), subject: text(row["Status Kewajiban Subjek"]) === "Berubah" ? "changed" : "existing", annualComplete: yes(row["Riwayat Tahunan Lengkap"]), workForSecondEmployer: yes(row["Pemberi Kerja Kedua"]) ? "Yes" : "No", previousSlip: text(row["Bukti Potong Sebelumnya"]), whStatus: whStatus(row["Status Masa"]), nip: text(row["NIP / NRP"]), receiptNo: text(row["Nomor SKD"]), note: text(row.Catatan), taxObject: text(row["Kode Objek"]), facility: text(row["Fasilitas Pajak"]) === "DTP" ? "DTP" : text(row["Fasilitas Pajak"]) === "SKD/P3B" ? "COD" : text(row["Fasilitas Pajak"]) === "Normal" || !text(row["Fasilitas Pajak"]) ? "N/A" : "ETC", taxMethod: method, grossUp: method === "gross_up" ? "Yes" : "No" });
             draft.recipients.push(person); people.set(employeeId, person);
+            workPeriods.set(employeeId, { start: period(row["Mulai Kerja"], draft.company.year), end: period(row["Akhir Kerja"], draft.company.year) });
         }
         else if (person.taxMethod !== method) { errors.push(`Baris ${line}: Metode Pajak tidak konsisten untuk penerima ${employeeId}.`); return; }
-        if (rowMonth < person.startMonth || rowMonth > person.endMonth) { errors.push(`Baris ${line}: masa transaksi di luar masa kerja penerima ${employeeId}.`); return; }
+        const workPeriod = workPeriods.get(employeeId)!;
+        // Mantan pegawai can receive a post-employment payment (for example a bonus
+        // or jasa produksi) after their employment end date. Their start date still
+        // prevents a transaction before the employment relationship ever began.
+        if ((workPeriod.start && rowPeriod < workPeriod.start) || (kind !== "former" && workPeriod.end && rowPeriod > workPeriod.end)) {
+            const range = `${workPeriod.start || "awal tidak diisi"} s.d. ${workPeriod.end || "aktif"}`;
+            errors.push(`Baris ${line}: periode transaksi ${rowPeriod} berada di luar masa kerja ${range} untuk penerima ${employeeId}.`);
+            return;
+        }
         for (const [header, comp] of components) {
             const value = amount(row[header]);
             if (value <= 0) continue;
