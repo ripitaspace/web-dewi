@@ -9,6 +9,7 @@ import { MakalahGeneratorClient } from "@/components/tools/makalah-generator-cli
 import { QuotationGeneratorClient } from "@/components/tools/quotation-generator-client";
 import { BeaCukaiCalculatorClient } from "@/components/tools/bea-cukai-calculator-client";
 import { Pph21PayrollStudio } from "@/components/tools/pph21-payroll-studio";
+import { SptInfo } from "@/components/tools/spt-info";
 import { MINI_TOOLS } from "@/lib/mini-tools";
 
 interface MiniToolPageProps {
@@ -51,7 +52,7 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
 
         <section className={`section-tight${slug === "pph-21-calculator" ? " payroll-workspace" : ""}`} style={{ borderTop: "1px solid var(--line)" }}>
           <div className={slug === "pph-21-calculator" ? "payroll-container" : "container"}>
-            {slug === "kalkulator-bea-cukai" ? <BeaCukaiCalculatorClient /> : slug === "pph-21-calculator" ? <Pph21PayrollStudio /> : slug === "extension-download-faktur-otomatis" || slug === "download-faktur-laptop-kentang" || slug === "download-bukti-potong-otomatis" ? <InvoiceExtensionInfo laptopKentang={slug === "download-faktur-laptop-kentang"} kind={slug === "download-bukti-potong-otomatis" ? "withholding-slip" : "invoice"} /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : slug === "makalah-generator" ? <MakalahGeneratorClient /> : slug === "quotation-generator" ? <QuotationGeneratorClient /> : (
+            {slug === "kalkulator-bea-cukai" ? <BeaCukaiCalculatorClient /> : slug === "pph-21-calculator" ? <Pph21PayrollStudio /> : slug === "spt-op" ? <SptInfo kind="op" /> : slug === "spt-badan" ? <SptInfo kind="badan" /> : slug === "extension-download-faktur-otomatis" || slug === "download-faktur-laptop-kentang" || slug === "download-bukti-potong-otomatis" ? <InvoiceExtensionInfo laptopKentang={slug === "download-faktur-laptop-kentang"} kind={slug === "download-bukti-potong-otomatis" ? "withholding-slip" : "invoice"} /> : slug === "compile-dokumen" ? <CompileDocumentClient /> : slug === "makalah-generator" ? <MakalahGeneratorClient /> : slug === "quotation-generator" ? <QuotationGeneratorClient /> : (
             <div className="tool-placeholder card">
               <span className="tool-placeholder__icon" aria-hidden="true">{tool.icon}</span>
               <div>
