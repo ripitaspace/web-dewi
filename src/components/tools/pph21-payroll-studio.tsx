@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { COMPONENTS, DOCUMENT_TYPES, KINDS, MONTHS, OBJECT_OPTIONS, PTKP } from "@/modules/payroll/studio/catalog.js";
 import { createEngine, rupi } from "@/modules/payroll/studio/engine.js";
-import { adaptEntry, checkBackup, componentsFor, copySalary, dateFor, demo, entryDefault, fresh, nextId, recipientDefault } from "@/modules/payroll/studio/data";
+import { adaptEntry, checkBackup, componentsFor, copySalary, dateFor, entryDefault, fresh, nextId, recipientDefault } from "@/modules/payroll/studio/data";
 import { exportCSV, importCSV } from "@/modules/payroll/studio/csv";
 import { importPayrollWorkbook } from "@/modules/payroll/studio/xlsx";
 import type { Entry, Recipient, Studio } from "@/modules/payroll/studio/model";
@@ -31,7 +31,7 @@ function ToolbarIcon({ name }: { name: "download" | "upload" | "database" | "set
     return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
 export function Pph21PayrollStudio() {
-    const [state, setState] = useState<Studio>(fresh), [ready, setReady] = useState(false), [tab, setTab] = useState(0), [notice, setNotice] = useState("");
+    const [state, setState] = useState<Studio>(fresh), [ready, setReady] = useState(false), [tab, setTab] = useState(0), [notice, setNotice] = useState(""), [loadingExample, setLoadingExample] = useState(false);
     const [settings, setSettings] = useState(false), [filter, setFilter] = useState("period"), [personFilter, setPersonFilter] = useState(""), [chosenCalc, setChosenCalc] = useState(""), [logo, setLogo] = useState(""), [payrollDragging, setPayrollDragging] = useState(false);
     const [drawer, setDrawer] = useState<{
         mode: "recipient" | "entry";
@@ -109,6 +109,28 @@ export function Pph21PayrollStudio() {
     catch (e) {
         setNotice("Impor Excel payroll gagal: " + (e instanceof Error ? e.message : "berkas tidak valid."));
     } }
+    async function loadExample() {
+        if (!confirmReplace("Muat contoh mengganti seluruh data sesi ini. Lanjutkan?"))
+            return;
+        setLoadingExample(true);
+        try {
+            const response = await fetch("/tools/payroll/RIPITAX_PAYROLL.xlsx");
+            if (!response.ok)
+                throw Error("berkas contoh tidak tersedia.");
+            const file = new File([await response.blob()], "RIPITAX_PAYROLL.xlsx", { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            const imported = await importPayrollWorkbook(file);
+            replace(imported.studio, true);
+            setDrawer(null);
+            setImportErrors(imported.errors);
+            setNotice(`${imported.recipients} penerima dan ${imported.entries} komponen contoh dimuat.`);
+        }
+        catch (e) {
+            setNotice("Contoh payroll gagal dimuat: " + (e instanceof Error ? e.message : "berkas tidak valid."));
+        }
+        finally {
+            setLoadingExample(false);
+        }
+    }
     function uploadLogo(file?: File) { if (!file)
         return; if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
         setNotice("Logo harus berupa PNG, JPG, atau WEBP.");
@@ -162,11 +184,7 @@ export function Pph21PayrollStudio() {
     if (!ready)
         return <div className={styles.studio}>Memuat ruang kerja lokal…</div>;
     return <div className={styles.studio}>
-  <header className={styles.topbar}><div><span className={styles.eyebrow}>RIPITAX · STUDIO V2</span><h2>Satu ruang untuk payroll-mu.</h2><p>Penerima, penghasilan, perhitungan, sampai dokumen.</p><span className={styles.localBadge}>● Data hanya ada selama sesi ini</span></div><div className={styles.toolbar} role="group" aria-label="Aksi data RIPITAX"><button type="button" className={styles.iconButton} aria-label="Backup JSON" title="Backup JSON" data-tooltip="Backup JSON" onClick={() => download(`RIPITAX_BACKUP_${state.company.year}.json`, JSON.stringify(state, null, 2))}><ToolbarIcon name="download"/></button><button type="button" className={styles.iconButton} aria-label="Restore JSON" title="Restore JSON" data-tooltip="Restore JSON" onClick={() => restoreRef.current?.click()}><ToolbarIcon name="upload"/></button><button type="button" className={styles.iconButton} aria-label="Muat contoh" title="Muat contoh" data-tooltip="Muat contoh" onClick={() => { if (confirmReplace("Muat contoh mengganti seluruh data sesi ini. Lanjutkan?")) {
-        replace(demo(), true);
-        setDrawer(null);
-        setNotice("");
-    } }}><ToolbarIcon name="database"/></button><button type="button" className={styles.iconButton} aria-label="Pengaturan" title="Pengaturan" data-tooltip="Pengaturan" aria-expanded={settings} onClick={() => setSettings(!settings)}><ToolbarIcon name="settings-2"/></button></div></header>
+  <header className={styles.topbar}><div><span className={styles.eyebrow}>RIPITAX · STUDIO V2</span><h2>Satu ruang untuk payroll-mu.</h2><p>Penerima, penghasilan, perhitungan, sampai dokumen.</p><span className={styles.localBadge}>● Data hanya ada selama sesi ini</span></div><div className={styles.toolbar} role="group" aria-label="Aksi data RIPITAX"><button type="button" className={styles.iconButton} aria-label="Backup JSON" title="Backup JSON" data-tooltip="Backup JSON" onClick={() => download(`RIPITAX_BACKUP_${state.company.year}.json`, JSON.stringify(state, null, 2))}><ToolbarIcon name="download"/></button><button type="button" className={styles.iconButton} aria-label="Restore JSON" title="Restore JSON" data-tooltip="Restore JSON" onClick={() => restoreRef.current?.click()}><ToolbarIcon name="upload"/></button><button type="button" className={styles.iconButton} aria-label="Muat contoh" title="Muat contoh" data-tooltip="Muat contoh" disabled={loadingExample} onClick={() => { void loadExample(); }}><ToolbarIcon name="database"/></button><button type="button" className={styles.iconButton} aria-label="Pengaturan" title="Pengaturan" data-tooltip="Pengaturan" aria-expanded={settings} onClick={() => setSettings(!settings)}><ToolbarIcon name="settings-2"/></button></div></header>
   <input hidden ref={restoreRef} type="file" accept=".json,application/json" onChange={e => { void restore(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={csvRef} type="file" accept=".csv,text/csv" onChange={e => { void csv(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={payrollRef} type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={e => { void payroll(e.target.files?.[0]); e.target.value = ""; }}/><input hidden ref={logoRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={e => { uploadLogo(e.target.files?.[0]); e.target.value = ""; }}/>
   {notice && <p className={styles.notice} role="status">{notice}</p>}
   <section className={styles.config} aria-label="Perusahaan dan masa pajak">{([["name", "Pemotong / Perusahaan"], ["tin", "NPWP 16 digit pemotong"], ["tku", "ID TKU pemotong (22 digit)"]] as const).map(([k, l]) => <Field key={k} label={l} value={state.company[k]} onChange={v => company(k, v)}/>)}<Field label="Tahun pajak" value={state.company.year} options={["2024", "2025", "2026", "2027", "2028"]} onChange={v => company("year", v)}/><Field label="Masa pajak" value={state.company.month} options={months} onChange={v => company("month", v)}/><Field label="Tanggal pemotongan" type="date" value={state.company.withholdingDate} onChange={v => company("withholdingDate", v)}/><section className={styles.payrollTools} aria-label="RIPITAX PAYROLL"><div><span className={styles.eyebrow}>RIPITAX PAYROLL</span><h3>Template payroll</h3><p>Unduh format kerja, isi datanya, lalu seret berkas yang sama kembali ke studio.</p><a className={styles.templateDownload} href="/tools/payroll/RIPITAX_PAYROLL.xlsx" download="RIPITAX_PAYROLL.xlsx">Unduh RIPITAX PAYROLL</a></div><button type="button" className={[styles.payrollDropzone, payrollDragging && styles.payrollDropzoneActive].filter(Boolean).join(" ")} onClick={() => payrollRef.current?.click()} onDragOver={e => { e.preventDefault(); setPayrollDragging(true); }} onDragLeave={() => setPayrollDragging(false)} onDrop={e => { e.preventDefault(); setPayrollDragging(false); void payroll(e.dataTransfer.files?.[0]); }}><strong>Seret Excel payroll ke sini</strong><span>atau klik untuk memilih file .xlsx</span></button><div className={styles.logoUpload}><div className={styles.logoPreview}>{logo ? <img src={logo} alt="Logo perusahaan"/> : <span>LOGO<br/>PERUSAHAAN</span>}</div><div><strong>Logo perusahaan</strong><p>PNG, JPG, atau WEBP · maks. 800 KB · hanya sesi ini.</p><button type="button" onClick={() => logoRef.current?.click()}>Unggah logo</button>{logo && <button type="button" className={styles.logoRemove} onClick={() => setLogo("")}>Hapus</button>}</div></div></section></section>

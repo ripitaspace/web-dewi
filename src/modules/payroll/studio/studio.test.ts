@@ -182,18 +182,11 @@ describe("RIPITAX PAYROLL workbook import", () => {
         expect(imported.studio.recipients[0]).toMatchObject({ employeeId: "EMP-LEGACY", startMonth: 3, endMonth: 12 });
         expect(imported.studio.entries).toEqual(expect.arrayContaining([expect.objectContaining({ id: "TRX-LEGACY-salary", amount: 10000000 }), expect.objectContaining({ comp: "employerInsurance", amount: 590700 }), expect.objectContaining({ comp: "pensionContribution", amount: 515474 }), expect.objectContaining({ comp: "bpjsDeduction", amount: 120000 })]));
     });
-    it("imports a filled copy of the public drag-and-drop template", async () => {
-        const book = XLSX.read(await readFile("public/tools/payroll/RIPITAX_PAYROLL.xlsx"), { type: "buffer", cellDates: true });
-        const sheet = book.Sheets.PAYROLL, row = Object.fromEntries(PAYROLL_HEADERS.map(header => [header, ""]));
-        Object.assign(row, { "ID Transaksi": "TRX-001", "ID Penerima": "EMP-DAILY", "Nama Penerima": "Maya", "NIK / NPWP / TIN": "0000000000000001", "Jenis Penerima": "Tidak tetap / harian", "Subjek Pajak": "SPDN", PTKP: "TK/0", Sektor: "Swasta", Bulan: "Oktober", "Status Masa": "Masa Sebagian", "Mulai Kerja": "Februari", "Akhir Kerja": "November", "Honorarium / Jasa": 1800000, "Tanggal Potong": "2026-10-31", "Jumlah Hari Upah": 3, "Upah Harian Sama": "Ya", "Pengurang Upah Tenaga Kerja": 200000, "Pengurang Material": 100000, "Bukti Biaya / Kontrak": "Ya", "Status Kewajiban Subjek": "Berubah", "Riwayat Tahunan Lengkap": "Ya", "Pemberi Kerja Kedua": "Ya", "Bukti Potong Sebelumnya": "BP-001", "Pangkat / Golongan": "III/a", Paspor: "A123", KITAS: "K123", "Alamat SPLN": "Tidak dipakai", "Tanggal Lahir": "1990-01-01", "Tempat Lahir": "Jakarta" });
-        XLSX.utils.sheet_add_json(sheet, [row], { header: [...PAYROLL_HEADERS], skipHeader: true, origin: "A12" });
-        sheet.C5 = { t: "s", v: "PT DRAG DROP" }; sheet.K5 = { t: "s", v: "0000000000000000" }; sheet.S5 = { t: "s", v: "0000000000000000000000" }; sheet.AA5 = { t: "n", v: 2026 }; sheet.AE5 = { t: "s", v: "Oktober" }; sheet.AI5 = { t: "s", v: "2026-10-31" };
-        const bytes = XLSX.write(book, { type: "array", bookType: "xlsx" });
-        const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => bytes } as File);
-        const recipient = imported.studio.recipients[0], entry = imported.studio.entries[0];
-        expect(imported.studio.company.name).toBe("PT DRAG DROP");
-        expect(recipient).toMatchObject({ employeeId: "EMP-DAILY", whStatus: "PartialYear", subject: "changed", annualComplete: true, workForSecondEmployer: "Yes", previousSlip: "BP-001", rank: "III/a", passport: "A123", kitas: "K123", dob: "1990-01-01", birthCity: "Jakarta" });
-        expect(entry).toMatchObject({ id: "TRX-001-fee", comp: "fee", amount: 1800000, days: 3, equalDaily: true, excludedLabor: 200000, excludedMaterial: 100000, proof: true });
+    it("imports the public template used by drag-and-drop and Muat Contoh without rejected rows", async () => {
+        const bytes = await readFile("public/tools/payroll/RIPITAX_PAYROLL.xlsx");
+        const imported = await importPayrollWorkbook({ name: "RIPITAX_PAYROLL.xlsx", arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } as File);
+        expect(imported).toMatchObject({ recipients: 421, entries: 947, errors: [] });
+        expect(imported.studio.company).toMatchObject({ name: "PT Uji Coba Ripitax Nusantara (DUMMY)", year: 2026, month: 10 });
     });
     it("validates full work periods across years and reports truly out-of-period rows", async () => {
         const book = XLSX.utils.book_new(), rows: (string | number)[][] = Array.from({ length: 15 }, () => []);
