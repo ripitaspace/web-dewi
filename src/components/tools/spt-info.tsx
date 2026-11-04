@@ -1,35 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 
-type SptKind = "op" | "badan";
+const guide = {
+  title: "SPT Orang Pribadi",
+  description: "Mulai dari data penghasilan sampai dokumen pendukung, siapkan pelaporan SPT Tahunan orang pribadi dengan urutan yang lebih tenang.",
+  image: "/images/artworks/tool-spt-orang-pribadi.png",
+  checklist: [
+    "Kumpulkan bukti potong, rekap penghasilan, serta data pajak yang telah dibayar selama tahun pajak.",
+    "Siapkan daftar harta, utang, dan tanggungan keluarga sesuai kondisi pada akhir tahun.",
+    "Periksa kembali identitas, NPWP atau NIK, dan kontak aktif sebelum mengisi kanal pelaporan resmi.",
+  ],
+};
 
-const content = {
-  op: {
-    title: "SPT Orang Pribadi",
-    description: "Mulai dari data penghasilan sampai dokumen pendukung, siapkan pelaporan SPT Tahunan orang pribadi dengan urutan yang lebih tenang.",
-    image: "/images/artworks/tool-spt-orang-pribadi.png",
-    imageAlt: "Ilustrasi dokumen SPT orang pribadi",
-    checklist: [
-      "Kumpulkan bukti potong, rekap penghasilan, serta data pajak yang telah dibayar selama tahun pajak.",
-      "Siapkan daftar harta, utang, dan tanggungan keluarga sesuai kondisi pada akhir tahun.",
-      "Periksa kembali identitas, NPWP atau NIK, dan kontak aktif sebelum mengisi kanal pelaporan resmi.",
-    ],
-  },
-  badan: {
-    title: "SPT Badan",
-    description: "Rapikan dokumen dan data perusahaan sebelum memasuki proses pelaporan SPT Tahunan badan usaha.",
-    image: "/images/artworks/tool-spt-badan.png",
-    imageAlt: "Ilustrasi dokumen SPT badan usaha",
-    checklist: [
-      "Siapkan laporan keuangan, rekonsiliasi fiskal, dan dokumen pendukung transaksi selama tahun pajak.",
-      "Pastikan identitas badan, pengurus, serta data pemotongan dan pemungutan pajak telah diperbarui.",
-      "Tinjau kembali kewajiban pajak dan lampiran yang relevan sebelum mengisi kanal pelaporan resmi.",
-    ],
-  },
-} as const;
-
-export function SptInfo({ kind }: { kind: SptKind }) {
-  const guide = content[kind];
+export function SptInfo() {
 
   return (
     <div className="tool-placeholder card">
