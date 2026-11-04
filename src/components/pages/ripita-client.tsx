@@ -36,22 +36,22 @@ export function RipitaClient() {
           <div className="container page-hero-grid">
             <div>
               <span className="eyebrow" style={{ color: "var(--kunyit)" }}>
-                RIPITA Ecosystem
+                RIPINTAR
               </span>
-              <h1 className="display-lg">Pengetahuan seharusnya tidak berhenti sebagai teori.</h1>
+              <h1 className="display-lg">Materi yang layak dipahami sampai tuntas.</h1>
               <p className="lead" style={{ color: "rgba(243,231,211,.78)" }}>
-                RIPITA mengubah pengalaman kerja, proses bisnis, dan cara berpikir menjadi alat, produk, transaksi, dan ekosistem yang dapat digunakan serta dikembangkan.
+                RIPINTAR adalah ruang buku digital untuk mengupas satu materi dengan konteks, contoh penerapan, dan coding lengkap—bukan sekadar kuis atau latihan singkat.
               </p>
             </div>
             <div className="art-placeholder art-lg art-dark" style={{ marginInline: "auto", overflow: "hidden", padding: 0 }}>
               <img
                 src="/images/artworks/octopus-system-gouache.png"
-                alt="RIPITA Ecosystem Artwork"
+                alt="RIPINTAR Artwork"
                 onError={(e) => { e.currentTarget.style.display = "none"; }}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
               <strong>?</strong>
-              <span style={{ color: "rgba(243,231,211,.72)" }}>RIPITA Ecosystem</span>
+              <span style={{ color: "rgba(243,231,211,.72)" }}>RIPINTAR</span>
             </div>
           </div>
         </section>

@@ -19,7 +19,7 @@ export const FOOTER_CONTENT = {
     ] },
     { title: "Kenalan", links: [
       { label: "Tentang PuspitaCore", href: "/tentang" },
-      { label: "Ekosistem RIPITA", href: "/ripita" },
+      { label: "RIPINTAR", href: "/ripintar" },
     ] },
   ],
   contact: {
