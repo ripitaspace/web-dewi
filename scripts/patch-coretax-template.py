@@ -245,6 +245,7 @@ def tag_refs(sec):
     sec = re.sub(r'<div class="section">([A-K])\.', lambda m: '<div class="section" data-sec="%s">%s.' % (m.group(1), m.group(1)), sec)
     return sec
 new[2] = tag_refs(new[2]); new[3] = tag_refs(new[3])
+new[2] = new[2].replace('<p>BULAN MULAI &nbsp; BULAN AKHIR</p>', '<p class="pl a">BULAN<br>MULAI</p><p class="pl b">BULAN<br>AKHIR</p>').replace('</span> s.d. <span class="digitrow', '</span><span class="sd">S.D.</span><span class="digitrow')
 new[3] = new[3].replace('<div style="background:var(--yellow);padding:2mm 4mm;', '<div class="kbanner" style="background:var(--yellow);padding:2mm 4mm;').replace('<div style="border:1px solid #3775bd;height:10mm;', '<div class="kbox" style="border:1px solid #3775bd;height:10mm;')
 # PTKP status box next to row 5 (PENGHASILAN TIDAK KENA PAJAK)
 new[2] = new[2].replace('<span style="min-width:0;flex:1">PENGHASILAN TIDAK KENA PAJAK</span>', '<span style="min-width:0;flex:1">PENGHASILAN TIDAK KENA PAJAK</span><span class="emptybox ptkpbox" style="width:26mm"></span>')
@@ -338,8 +339,8 @@ ratio_css = """
 .sheet:is([data-sheet="3"],[data-sheet="4"]){--pw:215.9mm}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .form-body{padding-left:%(pl)s;padding-right:%(pr)s}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .question{grid-template-columns:%(b)s %(b)s minmax(0,1fr) %(a)s;column-gap:%(g)s}
-.sheet:is([data-sheet="3"],[data-sheet="4"]) .question .badge{height:%(bh)s;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;margin-top:.3mm}
-.sheet:is([data-sheet="3"],[data-sheet="4"]) .question .badge:empty{background:transparent}
+.sheet:is([data-sheet="3"],[data-sheet="4"]) .question .badge{box-sizing:border-box;justify-self:stretch;align-self:start;width:100%%;height:%(bh)s;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;font-size:7pt;font-weight:700;margin-top:%(bm)s}
+.sheet:is([data-sheet="3"],[data-sheet="4"]) .question .badge:empty{background:transparent;border:0}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .question .qval{width:%(a)s;height:%(ah)s;min-height:0}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .line-row b{min-width:0;width:%(b)s;height:%(bh)s;padding:0;display:flex;align-items:center;justify-content:center;line-height:1}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .line-row b.l{margin-left:%(b2)s}
@@ -366,12 +367,49 @@ ratio_css = """
 .sheet[data-sheet="4"] .qtext{line-height:%(L4)s}
 """ % dict(pl=R(.0282), pr=R(.0270), b=R(.0204), b2=R(.0217), bh=R(.0143), g=R(.0013), a=R(.2570), ah=R(.0150),
            rw=R(.0200), rh=R(.0139), om=R(.0429), tw=R(.0208), th=R(.0155), tg=R(.0092), ib=R(.1789), ibh=R(.0666), ibm=R(.0078),
-           e1=R(.1340), e2=R(.1479), e3=R(.4085), e4=R(.3386), eh=R(.0151), kl=R(.0061), kw=R(.9171), kh=R(.0441), kbw=R(.2537), kbh=R(.0364), fp=R(.0023), lr=R(.0195), lg=R(.0065), L=R(.0157), qm=R(.0019), L4=R(.0153), or4=R(.2150), **{'or': R(.2750)})
+           e1=R(.1340), e2=R(.1479), e3=R(.4085), e4=R(.3386), eh=R(.0151), kl=R(.0061), kw=R(.9171), kh=R(.0441), kbw=R(.2537), kbh=R(.0364), fp=R(.0023), bm=R(.0007), lr=R(.0195), lg=R(.0065), L=R(.0157), qm=R(.0019), L4=R(.0153), or4=R(.2150), **{'or': R(.2750)})
 def datasheet(css_text):
     css_text = css_text.replace('.sheet:nth-child(n+3):nth-child(-n+4)', '.sheet:is([data-sheet="3"],[data-sheet="4"])')
     css_text = css_text.replace('.sheet:nth-child(n+5):nth-child(-n+7)', '.sheet:is([data-sheet="5"],[data-sheet="6"],[data-sheet="7"])')
     return re.sub(r'\.sheet:nth-child\((\d+)\)', lambda m: '.sheet[data-sheet="%s"]' % m.group(1), css_text)
 css += ratio_css
+
+# Header band of Induk page 1 (TAHUN PAJAK / PERIODE / STATUS / ...): positions are ratios of page width taken from the PDF.
+band = dict(h=R(.1118), mb='1.6mm', ml=R(.0058), mr=R(.0032), tt=R(.0045), sh=R(.0358), lh=R(.0179), sep=R(.0050), sw=R(.0014),
+            pl=R(.0224), th=R(.0167), tw=R(.0217), tg=R(.0075), r1=R(.0432), r2=R(.0628), r3=R(.0824),
+            yl=R(.0224), yw=R(.0443), yh=R(.0253), mw=R(.0217), m1=R(.0214), m2=R(.0868), pw=R(.0433), plt=R(.0424), sdl=R(.0755), sdt=R(.0895),
+            c2=R(.2220), c3=R(.3747), c4=R(.5111), c5=R(.6825), w1=R(.2220), w2=R(.1527), w3=R(.1364), w4=R(.1714), w5=R(.2391))
+top_css = """
+.sheet[data-sheet="3"]{--pw:215.9mm}
+.sheet[data-sheet="3"] .top-fields{display:block!important;position:relative;height:%(h)s!important;margin:0 %(mr)s %(mb)s %(ml)s!important;padding:0!important}
+.sheet[data-sheet="3"] .tf{position:absolute;top:0;bottom:0;border:0!important;padding:0!important;font-size:6.4pt}
+.sheet[data-sheet="3"] .tf:nth-child(1){left:0;width:%(w1)s}
+.sheet[data-sheet="3"] .tf:nth-child(2){left:%(c2)s;width:%(w2)s}
+.sheet[data-sheet="3"] .tf:nth-child(3){left:%(c3)s;width:%(w3)s}
+.sheet[data-sheet="3"] .tf:nth-child(4){left:%(c4)s;width:%(w4)s}
+.sheet[data-sheet="3"] .tf:nth-child(5){left:%(c5)s;width:%(w5)s}
+.sheet[data-sheet="3"] .tf:not(:first-child)::before{content:"";position:absolute;left:0;top:%(sep)s;bottom:%(sep)s;width:%(sw)s;background:var(--yellow)}
+.sheet[data-sheet="3"] .tf>strong{position:absolute;left:0;right:0;top:%(tt)s;height:%(sh)s;display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.2pt;line-height:%(lh)s;margin:0!important}
+.sheet[data-sheet="3"] .tf p:not(.pl){position:absolute;left:%(pl)s;margin:0!important;height:%(th)s;display:flex;align-items:center;font-size:6.4pt;line-height:1;white-space:nowrap}
+.sheet[data-sheet="3"] .tf p:not(.pl):nth-of-type(1){top:%(r1)s}
+.sheet[data-sheet="3"] .tf p:not(.pl):nth-of-type(2){top:%(r2)s}
+.sheet[data-sheet="3"] .tf p:not(.pl):nth-of-type(3){top:%(r3)s}
+.sheet[data-sheet="3"] .tf .tick{flex:none;width:%(tw)s;height:%(th)s;margin:0 %(tg)s 0 0}
+.sheet[data-sheet="3"] .tf:nth-child(1) .digitrow{position:absolute;left:%(yl)s;top:%(r3)s}
+.sheet[data-sheet="3"] .tf:nth-child(1) .digitrow i{width:%(yw)s;height:%(yh)s}
+.sheet[data-sheet="3"] .tf:nth-child(2) .digitrow{position:absolute;top:%(r3)s}
+.sheet[data-sheet="3"] .tf:nth-child(2) .digitrow:nth-of-type(1){left:%(m1)s}
+.sheet[data-sheet="3"] .tf:nth-child(2) .digitrow:nth-of-type(3){left:%(m2)s}
+.sheet[data-sheet="3"] .tf:nth-child(2) .digitrow i{width:%(mw)s;height:%(yh)s}
+.sheet[data-sheet="3"] .tf .pl{position:absolute;margin:0!important;width:%(pw)s;top:%(plt)s;text-align:center;font-size:6.4pt;line-height:%(lh)s}
+.sheet[data-sheet="3"] .tf .pl.a{left:%(m1)s}
+.sheet[data-sheet="3"] .tf .pl.b{left:%(m2)s}
+.sheet[data-sheet="3"] .tf .digitrow i{border-color:#2e6fc4;background:#fff}
+.sheet[data-sheet="3"] .top-fields::before{content:"";position:absolute;left:0;right:0;bottom:calc(var(--pw) * -.0062);height:calc(var(--pw) * .0020);background:#0e0e0e}
+.sheet[data-sheet="3"] .top-fields::after{content:"";position:absolute;left:0;right:0;bottom:calc(var(--pw) * -.0096);height:calc(var(--pw) * .0009);background:#0e0e0e}
+.sheet[data-sheet="3"] .tf .sd{position:absolute;left:%(sdl)s;top:%(sdt)s;transform:translateX(-50%%);font-size:5.2pt}
+""" % band
+css += top_css
 head2 = datasheet(head2); css = datasheet(css)
 head2 = chr(10).join(l for l in head2.split(chr(10)) if not (l.startswith('.sheet:is([data-sheet="3"],[data-sheet="4"])') or l.startswith('.sheet[data-sheet="4"] .')))
 out = head2 + css + '</style>' + ''.join(new) + '</body></html>'
