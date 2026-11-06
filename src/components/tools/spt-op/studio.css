@@ -21,3 +21,31 @@ body.spt-workspace-maximized{overflow:hidden}body.spt-workspace-maximized .spt-p
 @media(max-width:560px){.spt-formgrid{grid-template-columns:1fr}.spt-root h1{font-size:21px}.spt-topbar .spt-pill{max-width:100%;overflow-wrap:anywhere}.spt-toolbar label{max-width:190px}.spt-dialog{padding:15px}}
 @page sptPortrait{size:210mm 330mm;margin:0}@page sptLandscape{size:330mm 210mm;margin:0}
 @media print{body.spt-printing{margin:0!important;background:white!important}body.spt-printing> :not([data-ripita-page-content]){display:none!important}body.spt-printing .spt-screen,body.spt-printing dialog,body.spt-printing .spt-page .site-nav,body.spt-printing .spt-site-hero,body.spt-printing .spt-page footer{display:none!important}body.spt-printing .spt-page #main-content{padding:0!important}body.spt-printing .spt-root{background:white;min-height:0}body.spt-printing .spt-print{display:block}body.spt-printing .spt-sheet{page:sptPortrait;width:210mm!important;height:321.176mm!important;margin:4mm auto;box-shadow:none;break-after:page;print-color-adjust:exact;-webkit-print-color-adjust:exact}body.spt-printing .spt-landscape{page:sptLandscape;width:321.176mm!important;height:210mm!important;margin:0 auto}body.spt-printing .spt-print-details{page:sptPortrait}body.spt-printing .spt-root .spt-cell{background:white!important}body.spt-printing .spt-result{pointer-events:none}}
+/* Peta SPT: tidier tree (tighter indent, aligned chevrons, clear hierarchy) */
+.spt-app{grid-template-columns:300px minmax(360px,1fr) 350px}
+.spt-nav{padding:14px 12px}
+.spt-nav-header{margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid #e3e9f0}
+.spt-nav-title{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#13294a;white-space:nowrap}
+.spt-nav-header>button{width:28px!important;height:28px;padding:0!important;display:grid;place-items:center;flex:none;border-radius:6px;font-size:14px;line-height:1}
+.spt-nav-actions{gap:6px;margin-bottom:12px}
+.spt-nav-actions button{flex:1;width:auto!important;padding:6px 8px!important;font-size:11px!important;font-weight:600;text-align:center!important;border-radius:6px!important}
+.spt-tree{display:flex;flex-direction:column;gap:2px}
+.spt-tree-row{align-items:flex-start;gap:0;border-radius:6px}
+.spt-tree-toggle{flex:none;width:20px!important;min-width:20px;height:26px;padding:0!important;display:grid!important;place-items:center;font-size:12px!important;line-height:1;transform:none!important}
+.spt-tree-spacer{flex:none;width:20px;min-width:20px}
+.spt-tree-link{padding:5px 8px 5px 4px!important;font-size:12px!important;line-height:1.35;white-space:normal;align-items:flex-start;word-break:normal;overflow-wrap:anywhere}
+.spt-tree-label{padding:5px 8px 5px 4px;font-size:12px;line-height:1.35}
+.spt-tree-children{margin:0 0 0 10px!important;padding-left:0!important;border-left:1px solid #e1e8f0}
+.spt-tree-children>.spt-tree-node{position:relative}
+.spt-tree-children .spt-tree-row{padding-left:4px}
+.spt-tree-node.depth-0>.spt-tree-row{background:#f4f7fb;margin-top:6px}
+.spt-tree-node.depth-0>.spt-tree-row .spt-tree-label,.spt-tree-node.depth-0>.spt-tree-row .spt-tree-link{font-size:12.5px!important;font-weight:800;color:#13294a!important;padding-top:7px!important;padding-bottom:7px!important}
+.spt-tree-node.depth-0>.spt-tree-row .spt-tree-toggle{height:32px}
+.spt-tree-node.depth-1>.spt-tree-row .spt-tree-label,.spt-tree-node.depth-1>.spt-tree-row .spt-tree-link{font-weight:700;color:#1f3a5f!important}
+.spt-tree-node.depth-2>.spt-tree-row .spt-tree-label,.spt-tree-node.depth-2>.spt-tree-row .spt-tree-link{font-weight:600}
+.spt-tree-node.depth-3>.spt-tree-row .spt-tree-link,.spt-tree-node.depth-4>.spt-tree-row .spt-tree-link{font-weight:400;color:#4a5b71!important;font-size:11.5px!important}
+.spt-tree-row:hover{background:#eef3f9}
+
+.spt-tree-link:hover,.spt-tree-link:focus-visible,.spt-tree-link-active{background:transparent!important}
+.spt-nav>p{margin-top:18px;padding-top:12px;border-top:1px solid #e3e9f0}
+@media(max-width:1250px){.spt-app{grid-template-columns:270px minmax(350px,1fr) 310px}}
