@@ -45,7 +45,7 @@
 .spt-coretax .r-formula{font-weight:700;font-size:6.3pt}
 .spt-coretax .form-body{background:var(--light);padding:1mm 2mm;margin-bottom:1mm}
 .spt-coretax .question{display:grid;grid-template-columns:6mm 6mm minmax(0,1fr) 31%;font-size:6.9pt;gap:.3mm;align-items:start}
-.spt-coretax .question .badge{background:var(--yellow);font-weight:bold;text-align:center;padding:1mm 0;margin-top:.4mm}
+.spt-coretax .question .nb{background:var(--yellow);font-weight:bold;text-align:center;padding:1mm 0;margin-top:.4mm}
 .spt-coretax .question .qtext{background:var(--blue);font-weight:bold;padding:.8mm}
 .spt-coretax .question .qval{border:.3mm solid #2c71c7;background:white;min-height:4.4mm;margin-top:.4mm}
 .spt-coretax .opts{margin-left:12.2mm;margin-bottom:.7mm}
@@ -91,6 +91,8 @@
 .spt-coretax .sheet[data-sheet="8"] .reg.compact td.empty{height:6.8mm}
 /* Compact only the two dense Induk pages to remain entirely within one F4 sheet each. */
 
+.spt-coretax .note2{display:flex;justify-content:space-between;gap:4mm;font-size:5.4pt;margin:.6mm 0 1.8mm}
+.spt-coretax .note2 span{flex:1}.spt-coretax .note2 span:last-child{text-align:right}
 .spt-coretax .ref{font-style:normal;display:inline-block;background:var(--yellow);color:#111;font-weight:500;font-size:6.2pt;line-height:1;padding:.7mm 1.1mm;margin:0 .5mm}
 .spt-coretax .r-formula{font-weight:400}
 
@@ -170,8 +172,8 @@
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]){--pw:215.9mm}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .form-body{padding-left:calc(var(--pw) * 0.0282);padding-right:calc(var(--pw) * 0.027)}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question{grid-template-columns:calc(var(--pw) * 0.0204) calc(var(--pw) * 0.0204) minmax(0,1fr) calc(var(--pw) * 0.257);column-gap:calc(var(--pw) * 0.0013)}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question .badge{box-sizing:border-box;justify-self:stretch;align-self:start;width:100%;height:calc(var(--pw) * 0.0143);padding:0;display:flex;align-items:center;justify-content:center;line-height:1;font-size:7pt;font-weight:700;margin-top:calc(var(--pw) * 0.0007)}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question .badge:empty{background:transparent;border:0}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question .nb{box-sizing:border-box;justify-self:stretch;align-self:start;width:100%;height:calc(var(--pw) * 0.0143);padding:0;display:flex;align-items:center;justify-content:center;line-height:1;font-size:7pt;font-weight:700;margin-top:calc(var(--pw) * 0.0007)}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question .nb:empty{background:transparent;border:0}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question .qval{width:calc(var(--pw) * 0.257);height:calc(var(--pw) * 0.015);min-height:0}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .line-row b{min-width:0;width:calc(var(--pw) * 0.0204);height:calc(var(--pw) * 0.0143);padding:0;display:flex;align-items:center;justify-content:center;line-height:1}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .line-row b.l{margin-left:calc(var(--pw) * 0.0217)}
@@ -191,11 +193,35 @@
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .question{font-size:7.2pt;margin-top:calc(var(--pw) * 0.0019)}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .qtext{line-height:calc(var(--pw) * 0.0157);padding:0 .8mm;font-weight:500}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .opts{margin-top:0;margin-bottom:calc(var(--pw) * 0.0019);margin-right:calc(var(--pw) * 0.275)}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .opts p{line-height:calc(var(--pw) * 0.0157);margin:0;font-size:7.2pt}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .opts p{line-height:calc(var(--pw) * 0.0157);margin:0;font-size:7.2pt;padding-left:calc(calc(var(--pw) * 0.0208) + calc(var(--pw) * 0.0092));text-indent:calc(-1 * (calc(var(--pw) * 0.0208) + calc(var(--pw) * 0.0092)))}
 .spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .opts .tick{vertical-align:middle;margin-top:-.3mm}
 .spt-coretax .sheet[data-sheet="4"] .opts{margin-right:calc(var(--pw) * 0.215)}
 .spt-coretax .sheet[data-sheet="4"] .opts p{font-size:6.2pt;line-height:calc(var(--pw) * 0.0153)}
 .spt-coretax .sheet[data-sheet="4"] .qtext{line-height:calc(var(--pw) * 0.0153)}
+
+.spt-coretax .sheet{--pw:215.9mm;--tw:.034;--th:.0135}
+.spt-coretax .sheet.landscape{--pw:330.2mm;--tw:.022;--th:.0097}
+.spt-coretax .reg td.sumtag{overflow:visible!important;position:relative}
+.spt-coretax .reg td.sumtag[data-tag]::before{content:attr(data-tag);position:absolute;left:auto;right:calc(100% + var(--pw) * .0035);top:50%;transform:translateY(-50%);width:calc(var(--pw) * var(--tw));height:calc(var(--pw) * var(--th));display:flex;align-items:center;justify-content:center;padding:0 calc(var(--pw) * .004) 0 0;box-sizing:border-box;background:var(--yellow);clip-path:polygon(0 0,86% 0,100% 50%,86% 100%,0 100%);font-size:6pt;font-weight:700;line-height:1;color:#111;z-index:2}
+.spt-coretax .sheet:is([data-sheet="9"],[data-sheet="10"],[data-sheet="11"]) :is(.reg.account,.reg.balance) td{font-size:5.6pt;line-height:1.08;padding:.3mm .55mm}
+.spt-coretax .sheet:is([data-sheet="9"],[data-sheet="10"],[data-sheet="11"]) :is(.reg.account,.reg.balance) td.label-cell{font-size:5.6pt}
+.spt-coretax .sheet[data-sheet="13"] .reg td{padding-top:.35mm;padding-bottom:.35mm}
+.spt-coretax .sheet.landscape .suptop{min-height:19mm}
+.spt-coretax .sheet.landscape .supmain{grid-template-rows:12mm 6mm}
+.spt-coretax .sheet[data-sheet="13"] .section{margin-top:.6mm}
+.spt-coretax .sheet[data-sheet="17"] .halfcolumns{display:block}
+.spt-coretax .sheet[data-sheet="17"] > table.reg td.empty{height:calc(var(--pw) * .0197)}
+.spt-coretax .sheet[data-sheet="17"] .two-col .reg td.empty{height:calc(var(--pw) * .0182)}
+.spt-coretax .sheet[data-sheet="17"] .two-col .reg tr.sum td{height:calc(var(--pw) * .0152)}
+.spt-coretax .sheet[data-sheet="17"] .reg td{vertical-align:middle}
+.spt-coretax .sheet[data-sheet="17"] > table.reg thead tr:first-child th{height:calc(var(--pw) * .0727)}
+.spt-coretax .sheet[data-sheet="17"] .two-col .reg thead tr:first-child th{height:calc(var(--pw) * .0364)}
+.spt-coretax .sheet[data-sheet="17"] > .note{margin-bottom:calc(var(--pw) * .0297)}
+.spt-coretax .sheet[data-sheet="17"] .halfcolumns>div{width:100%}
+.spt-coretax .sheet[data-sheet="17"] .two-col{width:100%}
+.spt-coretax .sheet[data-sheet="13"] .suptop{min-height:0;height:23mm;margin-bottom:0}
+.spt-coretax .sheet[data-sheet="13"] .suptop .notice{padding-top:1.4mm;font-size:5.6pt;line-height:1.2}
+.spt-coretax .sheet[data-sheet="13"] .note{margin:.2mm 0 .5mm;font-size:4pt;line-height:1.15;white-space:normal;overflow-wrap:anywhere}
 
 .spt-coretax .sheet[data-sheet="3"]{--pw:215.9mm}
 .spt-coretax .sheet[data-sheet="3"] .top-fields{display:block!important;position:relative;height:calc(var(--pw) * 0.1118)!important;margin:0 calc(var(--pw) * 0.0032) 1.6mm calc(var(--pw) * 0.0058)!important;padding:0!important}

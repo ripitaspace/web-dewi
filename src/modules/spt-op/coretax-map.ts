@@ -162,3 +162,22 @@ export function sheetLabel(page: number) {
   const sheets = pageSheets[page] || [];
   return sheets.length > 1 ? `${sheets[0]}–${sheets[sheets.length - 1]}` : String(sheets[0] ?? page);
 }
+
+const tableTotal = (draft: Draft, key: string, column: string) => (draft.tables[key] || []).filter(row => !row.disposed).reduce((total, row) => total + numeric(rowValue(key, row, column)), 0);
+const sumSpecs: Record<string, (draft: Draft) => number> = {
+  '5.1|2': draft => tableTotal(draft, 'receivables', 'balance'),
+  '5.2|3.6': draft => tableTotal(draft, 'investments', 'cost'),
+  '5.2|3.8': draft => tableTotal(draft, 'investments', 'current'),
+  '6.2|7': draft => assetTotal(draft, 'cost'),
+  '8.2|C.6': draft => tableTotal(draft, 'foreign', 'net'),
+  '8.2|C.8': draft => tableTotal(draft, 'foreign', 'taxIDR'),
+  '8.2|C.10': draft => tableTotal(draft, 'foreign', 'credit'),
+  '17.1|B.5': draft => tableTotal(draft, 'deductions', 'amount'),
+  '17.1|B.6': draft => tableTotal(draft, 'taxloss', 'compensated'),
+  '17.1|B.7': draft => tableTotal(draft, 'deductions', 'amount') + tableTotal(draft, 'taxloss', 'compensated'),
+};
+/** Total printed in a tagged total cell when the official form has more than one total per table. */
+export function taggedSum(draft: Draft, id: string, tag?: string): number | null {
+  const spec = tag ? sumSpecs[`${id}|${tag}`] : undefined;
+  return spec ? spec(draft) : null;
+}

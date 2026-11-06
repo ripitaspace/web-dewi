@@ -250,9 +250,117 @@ new[3] = new[3].replace('<div style="background:var(--yellow);padding:2mm 4mm;',
 # PTKP status box next to row 5 (PENGHASILAN TIDAK KENA PAJAK)
 new[2] = new[2].replace('<span style="min-width:0;flex:1">PENGHASILAN TIDAK KENA PAJAK</span>', '<span style="min-width:0;flex:1">PENGHASILAN TIDAK KENA PAJAK</span><span class="emptybox ptkpbox" style="width:26mm"></span>')
 
+# ---------------------------------------------------------------- content fixes taken from the official PDF text
+def must(text, a, b, count=1):
+    assert text.count(a) >= 1, 'missing: ' + a[:60]
+    return text.replace(a, b) if count == 0 else text.replace(a, b, count)
+
+# page 4 (Induk 2): 14g answer
+i = new[3].index('APAKAH ANDA MENERIMA DIVIDEN')
+j = new[3].index('Ya. (Isi Lampiran 2 Bagian B, lalu ke pertanyaan selanjutnya)', i)
+new[3] = new[3][:j] + 'Ya. (Pastikan Anda sudah menyampaikan laporan realisasi investasi secara terpisah)' + new[3][j + len('Ya. (Isi Lampiran 2 Bagian B, lalu ke pertanyaan selanjutnya)'):]
+
+# page 6 (Lampiran 1 hal. 2)
+new[5] = must(new[5], 'TAHUN PINJAMAN', 'TAHUN PEMINJAMAN')
+new[5] = re.sub(r'<div class="note">JUMLAHKAN HARTA PADA TABEL 1 SAMPAI DENGAN TABEL 6 · PINDAHKAN JUMLAH HARTA KE INDUK BAGIAN I ANGKA 14 HURUF a\.</div>',
+                '<div class="note">JUMLAHKAN HARTA PADA TABEL 1 SAMPAI DENGAN TABEL 6 DI TABEL 7 KOLOM (2)<br>PINDAHKAN JUMLAH HARTA TABEL 7 KOLOM (2) KE INDUK BAGIAN I ANGKA 14 HURUF a.</div>', new[5])
+assert 'DI TABEL 7 KOLOM' in new[5]
+
+# page 8 (Lampiran 2): table C two-level header, three total tags, notes
+head8 = ('<thead><tr><th rowspan="2">NO</th><th colspan="2">SUMBER/PEMBERI PENGHASILAN</th><th rowspan="2">TANGGAL TRANSAKSI</th><th rowspan="2">JENIS PENGHASILAN</th><th rowspan="2">PENGHASILAN NETO (RUPIAH)</th>'
+         '<th colspan="3">PAJAK PENGHASILAN YANG TERUTANG/DIBAYAR/DIPOTONG DI LUAR NEGERI</th><th rowspan="2">KREDIT PAJAK YANG DAPAT DIPERHITUNGKAN</th></tr>'
+         '<tr><th>NAMA</th><th>NEGARA</th><th>NILAI DALAM MATA UANG ASING</th><th>NILAI DALAM RUPIAH</th><th>MATA UANG ASING</th></tr>'
+         '<tr class="nums">' + ''.join('<td>(%d)</td>' % k for k in range(1, 11)) + '</tr></thead>')
+c0 = new[7].index('<div class="section">C.')
+th0 = new[7].index('<thead>', c0); th1 = new[7].index('</thead>', th0) + len('</thead>')
+new[7] = new[7][:th0] + head8 + new[7][th1:]
+new[7] = must(new[7], '<tr class="sum"><td colspan="9" style="text-align:center">JUMLAH TABEL C</td><td class="sumtag" data-tag="C.6"></td></tr>',
+              '<tr class="sum"><td colspan="5" style="text-align:center">JUMLAH TABEL C</td><td class="sumtag" data-tag="C.6"></td><td></td><td class="sumtag" data-tag="C.8"></td><td></td><td class="sumtag" data-tag="C.10"></td></tr>')
+new[7] = re.sub(r'(JUMLAH TABEL C.*?</table>)<div class="note">[^<]*</div>', r'\1<div class="note2"><span>PINDAHKAN JUMLAH TABEL C KOLOM (6) KE INDUK BAGIAN B ANGKA 1 HURUF d.</span><span>PINDAHKAN JUMLAH TABEL C KOLOM (10) KE LAMPIRAN 1 BAGIAN E BARIS 17 KOLOM (6).</span></div>', new[7], flags=re.S)
+if 'class="note2"' not in new[7]:
+    new[7] = new[7].replace('</table></section>', '</table><div class="note2"><span>PINDAHKAN JUMLAH TABEL C KOLOM (6) KE INDUK BAGIAN B ANGKA 1 HURUF d.</span><span>PINDAHKAN JUMLAH TABEL C KOLOM (10) KE LAMPIRAN 1 BAGIAN E BARIS 17 KOLOM (6).</span></div></section>')
+
+# pages 9-11: balance-sheet names exactly as printed
+for k in (8, 9, 10):
+    for a, b in [('PIUTANG USAHA - PIHAK HUBUNGAN ISTIMEWA', 'PIUTANG USAHA - PIHAK YANG MEMPUNYAI HUBUNGAN ISTIMEWA'),
+                 ('PIUTANG LAINNYA - PIHAK HUBUNGAN ISTIMEWA', 'PIUTANG LAINNYA - PIHAK YANG MEMPUNYAI HUBUNGAN ISTIMEWA'),
+                 ('UTANG USAHA - PIHAK HUBUNGAN ISTIMEWA', 'UTANG USAHA - PIHAK YANG MEMPUNYAI HUBUNGAN ISTIMEWA'),
+                 ('UTANG JANGKA PANJANG - PIHAK HUBUNGAN ISTIMEWA', 'UTANG JANGKA PANJANG - PIHAK YANG MEMPUNYAI HUBUNGAN ISTIMEWA'),
+                 ('UTANG JANGKA PANJANG JATUH TEMPO<', 'UTANG JANGKA PANJANG YANG JATUH TEMPO DALAM SATU TAHUN<')]:
+        new[k] = must(new[k], a, b)
+new[8] = must(new[8], '>HARGA POKOK PENJUALAN<', '>HARGA POKOK PENJUALAN:<')
+# page 11 (industri)
+hpp = re.search(r'<tr class="group"><td class="code"></td><td class="label-cell">HARGA POKOK PENJUALAN</td>(?:<td></td>)+</tr>', new[10])
+assert hpp
+group_row = hpp.group(0)
+new[10] = new[10].replace(group_row, '')
+new[10] = must(new[10], '>DIKURANGI<', '>DIKURANGI:<')
+r5050 = re.search(r'<tr><td class="code">5050</td>.*?</tr>', new[10]).group(0)
+new[10] = new[10].replace(r5050, r5050 + group_row.replace('HARGA POKOK PENJUALAN', 'BIAYA PABRIKASI'))
+new[10] = new[10].replace('FABRIKASI', 'PABRIKASI')
+def nrow(code, name): return '<tr><td class="code">%s</td><td>%s</td><td></td></tr>' % (code, name)
+new[10] = must(new[10], nrow('1401', 'PERSEDIAAN'), nrow('1402', 'PERSEDIAAN BAHAN BAKU') + nrow('1403', 'PERSEDIAAN BARANG DALAM PROSES') + nrow('1404', 'PERSEDIAAN BARANG JADI'))
+r1524 = nrow('1524', 'DIKURANGI: AKUMULASI PENYUSUTAN')
+new[10] = must(new[10], r1524, r1524 + nrow('1525', 'PERALATAN') + nrow('1526', 'DIKURANGI: AKUMULASI PENYUSUTAN') + nrow('1527', 'MESIN') + nrow('1528', 'DIKURANGI: AKUMULASI PENYUSUTAN'))
+new[10] = must(new[10], 'ASET TAK BERWUJUD - NET', 'ASET TIDAK BERWUJUD - NET')
+
+# page 12
+new[11] = must(new[11], 'LAMPIRAN INI DIISI OLEH WAJIB PAJAK YANG MENYELENGGARAKAN PENCATATAN', 'LAMPIRAN INI HARUS DIISI OLEH WAJIB PAJAK YANG MENYELENGGARAKAN PENCATATAN')
+
+# page 13 (Lampiran 3B): official notes, row labels, fixed amounts
+n13 = new[12]
+n13 = re.sub(r'<div class="note smallnote">PEREDARAN BRUTO TIDAK KENA PAJAK:.*?</div>',
+             '<div class="note smallnote">PINDAHKAN HURUF f. JUMLAH PPh FINAL YANG DISETOR SENDIRI KOLOM (15) KE LAMPIRAN 2 BAGIAN A DENGAN KODE 28-423-99 JENIS PENGHASILAN &quot;PENGHASILAN YANG DIKENAKAN PAJAK BERSIFAT FINAL SESUAI PERATURAN PEMERINTAH NOMOR 55 TAHUN 2022 (DISETOR SENDIRI)&quot;<br>PINDAHKAN HURUF g. JUMLAH PPh FINAL YANG DIPOTONG/DIPUNGUT PIHAK LAIN PADA KOLOM (3) SAMPAI (14) KE LAMPIRAN 2 BAGIAN A SESUAI DENGAN BUKTI PEMOTONGAN/PEMUNGUTAN PPh</div>', n13, flags=re.S)
+n13 = re.sub(r'<div class="note smallnote">Pindahkan jumlah peredaran bruto dan PPh sesuai metode pembukuan yang digunakan\.</div>',
+             '<div class="note smallnote">JIKA METODE PEMBUKUAN ADALAH 1. PENCATATAN, PINDAHKAN SELURUH DATA PADA MASING-MASING TKU DARI KOLOM (1) SAMPAI KOLOM (16) PADA TABEL B KE TABEL C LAMPIRAN INI. BARIS JUMLAH PPh PADA KOLOM (4) SAMPAI KOLOM (16) DIGABUNGKAN DENGAN JUMLAH PPh PADA TABEL C BARIS JUMLAH PPh SESUAI DENGAN KOLOM MASING-MASING.<br>JIKA METODE PEMBUKUAN ADALAH 2. PEMBUKUAN STELSEL KAS ATAU PEMBUKUAN STELSEL AKRUAL, PINDAHKAN JUMLAH PEREDARAN BRUTO KOLOM (16) KE LAMPIRAN 3A-1/3A-2/3A-3 BAGIAN A.1. DAN JUMLAH PPh KOLOM (16) KE INDUK BAGIAN D ANGKA 10 HURUF b</div>', n13)
+n13 = must(n13, 'PINDAHKAN NAMA TKU, JENIS USAHA/PEKERJAAN BEBAS, DAN JUMLAH PEREDARAN BRUTO KE LAMPIRAN 3A-4 BAGIAN A.', 'PINDAHKAN NAMA TKU KOLOM (2), JENIS USAHA/PEKERJAAN BEBAS KOLOM (3), DAN JUMLAH PEREDARAN BRUTO KOLOM (16) KE LAMPIRAN 3A-4 BAGIAN A DAN JUMLAH PPh KOLOM (16) KE INDUK BAGIAN D ANGKA 10 HURUF b')
+n13 = must(n13, 'e. JUMLAH PPh FINAL TERUTANG<', 'e. JUMLAH PPh FINAL TERUTANG (0.5% x d)<')
+# row c: printed limit across the merged months and in the total column
+n13 = re.sub(r'(c\. PEREDARAN BRUTO TIDAK KENA PAJAK</td>)(?:<td></td>){13}',
+             r'\1<td colspan="12" style="text-align:center;font-size:7pt">500,000,000</td><td style="text-align:right;font-size:7pt">500,000,000</td>', n13)
+assert '500,000,000' in n13
+# table C header: third column is the type of business, not the bookkeeping method
+c0 = n13.index('C. REKAPITULASI')
+n13 = n13[:c0] + n13[c0:].replace('<th>METODE PEMBUKUAN</th>', '<th>JENIS USAHA/ PEKERJAAN BEBAS</th>', 1)
+new[12] = n13
+
+# page 15
+new[14] = must(new[14], 'METODE PEMBERITAHUAN', 'METODE PEMBEBANAN')
+
+# page 17 (Lampiran 5): table B summary rows 5-7
+new[16] = must(new[16], '</div><div></div><div class="col">', '</div><div class="col">')
+new[16] = must(new[16], '<tr class="sum"><td colspan="3" style="text-align:center">JUMLAH PENGURANG PENGHASILAN NETO</td><td class="sumtag"></td></tr>',
+               '<tr class="sum"><td>5</td><td colspan="2" style="text-align:center">JUMLAH TABEL B</td><td class="sumtag" data-tag="B.5"></td></tr>'
+               '<tr class="sum"><td>6</td><td colspan="2" style="text-align:center">JUMLAH KOMPENSASI KERUGIAN FISKAL</td><td class="sumtag" data-tag="B.6"></td></tr>'
+               '<tr class="sum"><td>7</td><td colspan="2" style="text-align:center">JUMLAH PENGURANG PENGHASILAN NETO (B.5+B.6)</td><td class="sumtag" data-tag="B.7"></td></tr>')
+new[16] = must(new[16], '<td class="sumtag"></td></tr></tbody></table></div></div><div class="note">', '<td class="sumtag" data-tag="C"></td></tr></tbody></table></div></div><div class="note">')
+new[16] = must(new[16], 'JUMLAH TABEL A</td><td class="sumtag"></td>', 'JUMLAH TABEL A</td><td class="sumtag" data-tag="A"></td>')
+new[16] = must(new[16], '<div class="note">PINDAHKAN JUMLAH TABEL A KE LAMPIRAN INI BAGIAN B BARIS 6 KOLOM (4).</div>', '<div class="note">PINDAHKAN JUMLAH TABEL A KOLOM (8) KE LAMPIRAN INI BAGIAN B BARIS 6 KOLOM (4)</div>')
+new[16] = must(new[16], '<div class="note">PINDAHKAN JUMLAH PENGURANG PENGHASILAN NETO KE INDUK BAGIAN C ANGKA 3. PINDAHKAN JUMLAH PENGURANG PPh TERUTANG KE INDUK BAGIAN C ANGKA 8.</div>',
+               '<div class="note2"><span>PINDAHKAN JUMLAH PENGURANG PENGHASILAN NETO (B.7) DI BARIS 7 KOLOM (4) KE INDUK BAGIAN C ANGKA 3</span><span>PINDAHKAN JUMLAH TABEL C KE INDUK BAGIAN C ANGKA 8</span></div>')
+
+# arrow tags sit directly before the amount they belong to (positions taken from the PDF)
+def sumrow(sec, old, new_):
+    assert old in sec, old[:70]
+    return sec.replace(old, new_)
+SUM = lambda c, label, tag, tail: '<tr class="sum"><td colspan="%d" style="text-align:center">%s</td><td class="sumtag" data-tag="%s"></td>%s</tr>' % (c, label, tag, tail)
+b = '<td></td>'
+new[4] = sumrow(new[4], SUM(8, 'JUMLAH TABEL 1', '1', ''), SUM(7, 'JUMLAH TABEL 1', '1', b))
+new[4] = sumrow(new[4], SUM(7, 'JUMLAH TABEL 2', '2', ''), SUM(6, 'JUMLAH TABEL 2', '2', b))
+new[4] = sumrow(new[4], SUM(8, 'JUMLAH TABEL 3', '3.6', ''), SUM(5, 'JUMLAH TABEL 3', '3.6', b + '<td class="sumtag" data-tag="3.8"></td>' + b))
+new[4] = sumrow(new[4], SUM(7, 'JUMLAH TABEL 4', '3.8', ''), SUM(5, 'JUMLAH TABEL 4', '4', b + b))
+new[5] = sumrow(new[5], SUM(9, 'JUMLAH TABEL 5', '5', ''), SUM(7, 'JUMLAH TABEL 5', '5', b + b))
+new[5] = sumrow(new[5], SUM(7, 'JUMLAH TABEL 6', '6', ''), SUM(5, 'JUMLAH TABEL 6', '6', b + b))
+new[5] = sumrow(new[5], '<tr class="sum"><td colspan="2" style="text-align:center">JUMLAH HARTA PADA AKHIR TAHUN PAJAK</td><td class="sumtag" data-tag="7"></td></tr>',
+                '<tr class="sum"><td>JUMLAH HARTA PADA AKHIR TAHUN PAJAK</td><td class="sumtag" data-tag="7"></td>' + b + '</tr>')
+new[5] = sumrow(new[5], SUM(6, 'JUMLAH TABEL B', 'B', ''), SUM(5, 'JUMLAH TABEL B', 'B', b))
+new[7] = sumrow(new[7], SUM(5, 'JUMLAH TABEL A', 'A', ''), SUM(4, 'JUMLAH TABEL A', 'A', b))
+
 assert len(new) == 17, len(new)
 
 css = '''
+.note2{display:flex;justify-content:space-between;gap:4mm;font-size:5.4pt;margin:.6mm 0 1.8mm}
+.note2 span{flex:1}.note2 span:last-child{text-align:right}
 .ref{font-style:normal;display:inline-block;background:var(--yellow);color:#111;font-weight:500;font-size:6.2pt;line-height:1;padding:.7mm 1.1mm;margin:0 .5mm}
 .r-formula{font-weight:400}
 
@@ -360,7 +468,7 @@ ratio_css = """
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .question{font-size:7.2pt;margin-top:%(qm)s}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .qtext{line-height:%(L)s;padding:0 .8mm;font-weight:500}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .opts{margin-top:0;margin-bottom:%(qm)s;margin-right:%(or)s}
-.sheet:is([data-sheet="3"],[data-sheet="4"]) .opts p{line-height:%(L)s;margin:0;font-size:7.2pt}
+.sheet:is([data-sheet="3"],[data-sheet="4"]) .opts p{line-height:%(L)s;margin:0;font-size:7.2pt;padding-left:calc(%(tw)s + %(tg)s);text-indent:calc(-1 * (%(tw)s + %(tg)s))}
 .sheet:is([data-sheet="3"],[data-sheet="4"]) .opts .tick{vertical-align:middle;margin-top:-.3mm}
 .sheet[data-sheet="4"] .opts{margin-right:%(or4)s}
 .sheet[data-sheet="4"] .opts p{font-size:6.2pt;line-height:%(L4)s}
@@ -373,6 +481,31 @@ def datasheet(css_text):
     css_text = css_text.replace('.sheet:nth-child(n+5):nth-child(-n+7)', '.sheet:is([data-sheet="5"],[data-sheet="6"],[data-sheet="7"])')
     return re.sub(r'\.sheet:nth-child\((\d+)\)', lambda m: '.sheet[data-sheet="%s"]' % m.group(1), css_text)
 css += ratio_css
+css += '''
+.sheet{--pw:215.9mm;--tw:.034;--th:.0135}
+.sheet.landscape{--pw:330.2mm;--tw:.022;--th:.0097}
+.reg td.sumtag{overflow:visible!important;position:relative}
+.reg td.sumtag[data-tag]::before{content:attr(data-tag);position:absolute;left:auto;right:calc(100% + var(--pw) * .0035);top:50%;transform:translateY(-50%);width:calc(var(--pw) * var(--tw));height:calc(var(--pw) * var(--th));display:flex;align-items:center;justify-content:center;padding:0 calc(var(--pw) * .004) 0 0;box-sizing:border-box;background:var(--yellow);clip-path:polygon(0 0,86% 0,100% 50%,86% 100%,0 100%);font-size:6pt;font-weight:700;line-height:1;color:#111;z-index:2}
+.sheet:is([data-sheet="9"],[data-sheet="10"],[data-sheet="11"]) :is(.reg.account,.reg.balance) td{font-size:5.6pt;line-height:1.08;padding:.3mm .55mm}
+.sheet:is([data-sheet="9"],[data-sheet="10"],[data-sheet="11"]) :is(.reg.account,.reg.balance) td.label-cell{font-size:5.6pt}
+.sheet[data-sheet="13"] .reg td{padding-top:.35mm;padding-bottom:.35mm}
+.sheet.landscape .suptop{min-height:19mm}
+.sheet.landscape .supmain{grid-template-rows:12mm 6mm}
+.sheet[data-sheet="13"] .section{margin-top:.6mm}
+.sheet[data-sheet="17"] .halfcolumns{display:block}
+.sheet[data-sheet="17"] > table.reg td.empty{height:calc(var(--pw) * .0197)}
+.sheet[data-sheet="17"] .two-col .reg td.empty{height:calc(var(--pw) * .0182)}
+.sheet[data-sheet="17"] .two-col .reg tr.sum td{height:calc(var(--pw) * .0152)}
+.sheet[data-sheet="17"] .reg td{vertical-align:middle}
+.sheet[data-sheet="17"] > table.reg thead tr:first-child th{height:calc(var(--pw) * .0727)}
+.sheet[data-sheet="17"] .two-col .reg thead tr:first-child th{height:calc(var(--pw) * .0364)}
+.sheet[data-sheet="17"] > .note{margin-bottom:calc(var(--pw) * .0297)}
+.sheet[data-sheet="17"] .halfcolumns>div{width:100%}
+.sheet[data-sheet="17"] .two-col{width:100%}
+.sheet[data-sheet="13"] .suptop{min-height:0;height:23mm;margin-bottom:0}
+.sheet[data-sheet="13"] .suptop .notice{padding-top:1.4mm;font-size:5.6pt;line-height:1.2}
+.sheet[data-sheet="13"] .note{margin:.2mm 0 .5mm;font-size:4pt;line-height:1.15;white-space:normal;overflow-wrap:anywhere}
+'''
 
 # Header band of Induk page 1 (TAHUN PAJAK / PERIODE / STATUS / ...): positions are ratios of page width taken from the PDF.
 band = dict(h=R(.1118), mb='1.6mm', ml=R(.0058), mr=R(.0032), tt=R(.0045), sh=R(.0358), lh=R(.0179), sep=R(.0050), sw=R(.0014),
@@ -413,5 +546,7 @@ css += top_css
 head2 = datasheet(head2); css = datasheet(css)
 head2 = chr(10).join(l for l in head2.split(chr(10)) if not (l.startswith('.sheet:is([data-sheet="3"],[data-sheet="4"])') or l.startswith('.sheet[data-sheet="4"] .')))
 out = head2 + css + '</style>' + ''.join(new) + '</body></html>'
+# the site-wide stylesheet already styles `.badge` as a rounded pill; use a private class name
+out = out.replace('class="badge"', 'class="nb"').replace('.badge', '.nb')
 open(OUT, 'w').write(out)
 print('wrote', OUT, len(out))

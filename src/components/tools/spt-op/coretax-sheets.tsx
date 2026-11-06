@@ -3,7 +3,7 @@ import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, 
 import { catalog, type Draft } from '@/modules/spt-op/model';
 import { compute, money, numeric, rowValue } from '@/modules/spt-op/engine';
 import { pageRows } from '@/modules/spt-op/form-layout';
-import { answerTicks, assetTotal, bookCell, boxSlots, capacityOf, cellParts, cellText, digitBinding, landscapePages, pageSheets, regionOrdinal, resultSlots, tableBindings, ticks } from '@/modules/spt-op/coretax-map';
+import { answerTicks, assetTotal, bookCell, taggedSum, boxSlots, capacityOf, cellParts, cellText, digitBinding, landscapePages, pageSheets, regionOrdinal, resultSlots, tableBindings, ticks } from '@/modules/spt-op/coretax-map';
 import { sheetComponents, type SlotComponents } from './coretax-sheets.generated';
 import './coretax-sheets.css';
 
@@ -59,12 +59,15 @@ function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { 
   let content = '', section = binding.section, parts: string[] = [];
   if (binding.book) content = bookCell(draft, binding.book, code, c, t > 0);
   else if (sum) {
-    if (section) { const column = catalog.tables[section].sum; if (column) content = money((draft.tables[section] || []).filter(row => !row.disposed).reduce((total, row) => total + numeric(rowValue(section!, row, column)), 0)); }
-    else if (id === '4.2') content = money(assetTotal(draft, 'current'));
+    const tagged = taggedSum(draft, id, tag);
+    if (tagged !== null) content = money(tagged);
+    else if (section) { const column = catalog.tables[section].sum; if (column) content = money((draft.tables[section] || []).filter(row => !row.disposed).reduce((total, row) => total + numeric(rowValue(section!, row, column)), 0)); }
+    else if (id === '6.2') content = money(assetTotal(draft, 'current'));
   } else if (section) {
     let ordinal = r;
     if (binding.regions) { const ro = regionOrdinal(binding, id, g || '', k || 0); if (!ro) return <td className={className} style={style} data-lead={lead} />; section = ro.section; ordinal = ro.ordinal; }
     const row = pageRows(draft, section, part)[ordinal], column = binding.cols[c];
+    if (!row && column === '#no' && s === 17) content = String(part * capacityOf(section) + ordinal + 1);
     if (row && column) {
       content = column === '#no' ? String(part * capacityOf(section) + ordinal + 1) : cellText(section, row, column);
       if (sub) parts = cellParts(section, row, column);
