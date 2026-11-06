@@ -1,5 +1,6 @@
 import { catalog, type Draft, type Field, type Row } from './model';
 import { rules2025 } from './rules-2025';
+import { isHidden, isRequired, rangeIssue } from './field-rules';
 export function numeric(v: string | number | undefined): number { if (typeof v === 'number')
     return v; let s = (v || '').trim().replace(/\s/g, ''); if (!s)
     return 0; if (!/^-?[\d.,]+$/.test(s))
@@ -14,13 +15,16 @@ export function rowValue(k: string, r: Row, key: string): string { if (key === '
     return String(numeric(r.values.gross) - numeric(r.values.expense)); if (key === 'net' && k === 'nppn')
     return String(numeric(r.values.gross) * numeric(r.values.norm) / 100); if (key === 'fiscal')
     return String(numeric(r.values.commercial) - numeric(r.values.nonobject) - numeric(r.values.final) + numeric(r.values.positive) - numeric(r.values.negative)); return r.values[key] || ''; }
-export function errors(fields: Field[], r: Row): string[] { return fields.flatMap(f => { const v = r.values[f.key] || ''; if (f.type === 'computed')
-    return []; if (f.required && !v.trim())
-    return [f.label + ': wajib diisi']; if (v && ['money', 'number', 'year'].includes(f.type) && !Number.isFinite(numeric(v)))
-    return [f.label + ': angka tidak valid']; if (v && f.type === 'year' && !/^\d{4}$/.test(v))
-    return [f.label + ': gunakan 4 digit']; if (v && f.type === 'date' && (!/^\d{4}-\d{2}-\d{2}$/.test(v) || Number.isNaN(Date.parse(v)) || new Date(v).toISOString().slice(0, 10) !== v))
-    return [f.label + ': tanggal tidak valid']; if (v && ['select', 'yesno'].includes(f.type) && f.options.length && !f.options.some(o => o.split('|')[0] === v))
-    return [f.label + ': kode tidak dikenal']; return []; }); }
+export function fieldError(f: Field, v: string, values?: Record<string, string>): string | null {
+    if (f.type === 'computed') return null;
+    if ((values ? isRequired(f, values) : f.required) && !v.trim()) return 'wajib diisi';
+    if (v && ['money', 'number', 'year'].includes(f.type) && !Number.isFinite(numeric(v))) return 'angka tidak valid';
+    if (v && f.type === 'year' && !/^\d{4}$/.test(v)) return 'gunakan 4 digit';
+    if (v && f.type === 'date' && (!/^\d{4}-\d{2}-\d{2}$/.test(v) || Number.isNaN(Date.parse(v)) || new Date(v).toISOString().slice(0, 10) !== v)) return 'tanggal tidak valid';
+    if (v && ['select', 'yesno'].includes(f.type) && f.options.length && !f.options.some(o => o.split('|')[0] === v)) return 'kode tidak dikenal';
+    return rangeIssue(f, v);
+}
+export function errors(fields: Field[], r: Row): string[] { return fields.flatMap(f => { if (isHidden(f, r.values)) return []; const issue = fieldError(f, r.values[f.key] || '', r.values); return issue ? [f.label + ': ' + issue] : []; }); }
 export const ruleVersion = rules2025.version;
 export interface Result {
     key: string;

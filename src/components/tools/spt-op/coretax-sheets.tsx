@@ -3,11 +3,12 @@ import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, 
 import { catalog, type Draft } from '@/modules/spt-op/model';
 import { compute, money, numeric, rowValue } from '@/modules/spt-op/engine';
 import { pageRows } from '@/modules/spt-op/form-layout';
-import { answerTicks, assetTotal, bookCell, taggedSum, boxSlots, capacityOf, cellParts, cellText, digitBinding, landscapePages, pageSheets, regionOrdinal, resultSlots, tableBindings, ticks } from '@/modules/spt-op/coretax-map';
+import { digitsOnly } from '@/modules/spt-op/field-rules';
+import { answerTicks, assetTotal, tickSets, bookCell, taggedSum, boxSlots, capacityOf, cellParts, cellText, digitBinding, landscapePages, pageSheets, regionOrdinal, resultSlots, tableBindings, ticks } from '@/modules/spt-op/coretax-map';
 import { sheetComponents, type SlotComponents } from './coretax-sheets.generated';
 import './coretax-sheets.css';
 
-interface Context { draft: Draft; part: number; print: boolean; onField?: (key: string, value: string) => void; onSection?: (section: string) => void }
+interface Context { draft: Draft; part: number; print: boolean; onField?: (key: string, value: string) => void; onSet?: (group: 'profile' | 'questions' | 'declaration', key: string, value: string) => void; onSection?: (section: string) => void }
 const Ctx = createContext<Context | null>(null);
 const useCtx = () => { const value = useContext(Ctx); if (!value) throw Error('Coretax slot outside a sheet'); return value; };
 const px = (mm: number) => mm * 96 / 25.4;
@@ -17,7 +18,7 @@ function Digits({ s, i, cls, count }: { s: number; i: number; cls: string; count
   const binding = digitBinding(s, i, count);
   const value = binding.read(draft);
   const editable = !print && !!binding.key && !(s >= 7 && s <= 9 && i >= 2) && !(s === 16 && i === 2);
-  return <span className={cls}>{Array.from({ length: count }, (_, n) => <i key={n}>{value[n] || ''}</i>)}{editable && <input id={`field-${binding.key}`} aria-label={`Formulir ${binding.key}`} maxLength={count} value={value} onChange={event => onField?.(binding.key!, event.target.value.slice(0, count))} />}</span>;
+  return <span className={cls}>{Array.from({ length: count }, (_, n) => <i key={n}>{value[n] || ''}</i>)}{editable && <input id={`field-${binding.key}`} aria-label={`Formulir ${binding.key}`} title="Klik untuk mengisi" value={value} inputMode="numeric" onChange={event => onField?.(binding.key!, digitsOnly(event.target.value, count))} />}</span>;
 }
 function Q({ s, i, hidden }: { s: number; i: number; hidden?: boolean }) {
   const { draft } = useCtx();
@@ -27,10 +28,16 @@ function Q({ s, i, hidden }: { s: number; i: number; hidden?: boolean }) {
 }
 function tickSection(s: number, i: number) { return s === 1 && i < 15 ? 'profile' : s === 2 && i >= 22 ? 'declaration' : 'questions'; }
 function Tick({ s, i }: { s: number; i: number }) {
-  const { draft, print, onSection } = useCtx();
+  const { draft, print, onSection, onSet } = useCtx();
   const on = !!ticks[s]?.[i]?.(draft);
   const section = tickSection(s, i);
-  return <span className={`tick${on ? ' on' : ''}`} onClick={print ? undefined : () => onSection?.(section)} title={print ? undefined : 'Ubah di editor data'} />;
+  const set = tickSets[s]?.[i];
+  const act = () => {
+    if (set && onSet) onSet(set.group, set.key, set.clearable && draft[set.group][set.key] === set.value ? '' : set.value);
+    else onSection?.(section);
+  };
+  const title = set && onSet ? (set.clearable && on ? 'Klik lagi untuk mengosongkan jawaban' : 'Klik untuk memilih') : 'Klik untuk membuka isian di editor';
+  return <span className={`tick${on ? ' on' : ''}${print ? '' : ' clickable'}`} onClick={print ? undefined : act} title={print ? undefined : title} {...(print ? {} : { role: set && onSet ? 'checkbox' : 'button', tabIndex: 0, ...(set && onSet ? { 'aria-checked': on } : {}), onKeyDown: (event: React.KeyboardEvent) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); act(); } } })} />;
 }
 function R({ s, i }: { s: number; i: number }) {
   const { draft, onSection, print } = useCtx();
@@ -39,9 +46,9 @@ function R({ s, i }: { s: number; i: number }) {
   if (!slot) return <span className="r-val" />;
   let text = '', pending = false;
   if (slot === '@assets') text = money(assetTotal(draft, 'current'));
-  else if (slot.startsWith('extras.')) text = money(numeric(draft.extras[slot.slice(7)]));
+  else if (slot.startsWith('extras.')) { const raw = draft.extras[slot.slice(7)]; text = raw?.trim() ? money(numeric(raw)) : ''; }
   else { const result = results.find(item => item.key === slot); text = money(result?.value ?? null); pending = result?.value == null; }
-  return <span className={`r-val${pending ? ' pending' : ''}`} onClick={print ? undefined : () => onSection?.('summary')} title={print ? undefined : 'Buka ikhtisar'}>{text}</span>;
+  return <span className={`r-val${pending ? ' pending' : ''}${print ? '' : ' clickable'}`} onClick={print ? undefined : () => onSection?.('summary')} title={print ? undefined : 'Buka ikhtisar'}>{text}</span>;
 }
 function useResults(draft: Draft) { return useMemo(() => compute(draft), [draft]); }
 function Box({ s, i, style }: { s: number; i: number; style?: React.CSSProperties }) {
@@ -50,7 +57,7 @@ function Box({ s, i, style }: { s: number; i: number; style?: React.CSSPropertie
   if (!slot) return <span className="emptybox" style={style} />;
   const [group, key] = slot.split('.') as ['profile' | 'partner' | 'extras' | 'declaration', string];
   const raw = draft[group][key] || '';
-  return <span className="emptybox" style={style} onClick={print ? undefined : () => onSection?.(group)}>{group === 'declaration' || group === 'profile' ? raw : raw ? money(numeric(raw)) : ''}</span>;
+  return <span className={`emptybox${print ? '' : ' clickable'}`} title={print ? undefined : 'Klik untuk mengisi di editor'} style={style} onClick={print ? undefined : () => onSection?.(group)}>{group === 'declaration' || group === 'profile' ? raw : raw ? money(numeric(raw)) : ''}</span>;
 }
 function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { s: number; t: number; r: number; c: number; code?: string; g?: string; k?: number; sum?: boolean; sub?: string; lead?: string; tag?: string; className?: string; style?: React.CSSProperties }) {
   const { draft, part, print, onSection } = useCtx();
@@ -75,7 +82,7 @@ function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { 
     }
   }
   const clickable = !print && !!section && !binding.book;
-  return <td className={[className, /^[\d.,]+$|^-?[\d.,]+$/.test(content) ? 'num' : ''].filter(Boolean).join(' ') || undefined} style={style} onClick={clickable ? () => onSection?.(section!) : undefined} title={clickable ? 'Edit tabel' : undefined} data-tag={tag} data-lead={lead && !content ? lead : undefined}>{sub ? sub.split('|').map((label, index) => <div className="sub-line" key={index}>{label.startsWith('[ ]') ? <><span className={`cb${parts[index] === 'x' ? ' on' : ''}`} />{label.slice(4)}</> : <>{label} {parts[index] || ''}</>}</div>) : content}</td>;
+  return <td className={[className, /^[\d.,]+$|^-?[\d.,]+$/.test(content) ? 'num' : '', clickable ? 'clickable' : ''].filter(Boolean).join(' ') || undefined} style={style} onClick={clickable ? () => onSection?.(section!) : undefined} title={clickable ? 'Klik untuk mengisi / mengedit tabel' : undefined} data-tag={tag} data-lead={lead && !content ? lead : undefined}>{sub ? sub.split('|').map((label, index) => <div className="sub-line" key={index}>{label.startsWith('[ ]') ? <><span className={`cb${parts[index] === 'x' ? ' on' : ''}`} />{label.slice(4)}</> : <>{label} {parts[index] || ''}</>}</div>) : content}</td>;
 }
 const slots: SlotComponents = { Digits, Q, R, Box, Tick, C };
 
@@ -100,11 +107,11 @@ function Fit({ print, landscape, children }: { print: boolean; landscape: boolea
     observer.observe(sheet);
     return () => observer.disconnect();
   }, [print, landscape]);
-  return <div ref={wrapper} className="spt-coretax-fit" style={print ? undefined : { height: fit.height || undefined, overflow: 'hidden' }}><div ref={inner} className="spt-coretax" style={print ? undefined : { transform: `scale(${fit.scale})`, transformOrigin: '0 0' }}>{children}</div></div>;
+  return <div ref={wrapper} className="spt-coretax-fit" style={print ? undefined : { height: fit.height || undefined, overflow: 'hidden' }}><div ref={inner} className={`spt-coretax${print ? '' : ' is-interactive'}`} style={print ? undefined : { transform: `scale(${fit.scale})`, transformOrigin: '0 0' }}>{children}</div></div>;
 }
 
-export function CoretaxPage({ draft, page, part = 0, print = false, onField, onSection }: { draft: Draft; page: number; part?: number; print?: boolean; onField?: Context['onField']; onSection?: Context['onSection'] }) {
+export function CoretaxPage({ draft, page, part = 0, print = false, onField, onSet, onSection }: { draft: Draft; page: number; part?: number; print?: boolean; onField?: Context['onField']; onSet?: Context['onSet']; onSection?: Context['onSection'] }) {
   const sheets = pageSheets[page];
   if (!sheets) return null;
-  return <Ctx.Provider value={{ draft, part, print, onField, onSection }}><Fit print={print} landscape={landscapePages.includes(page)}>{sheets.map(number => { const Sheet = sheetComponents[number - 1]; return <Sheet key={number} slots={slots} />; })}</Fit></Ctx.Provider>;
+  return <Ctx.Provider value={{ draft, part, print, onField, onSet, onSection }}><Fit print={print} landscape={landscapePages.includes(page)}>{sheets.map(number => { const Sheet = sheetComponents[number - 1]; return <Sheet key={number} slots={slots} />; })}</Fit></Ctx.Provider>;
 }

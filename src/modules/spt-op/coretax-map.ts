@@ -86,6 +86,33 @@ export const ticks: Record<number, ((draft: Draft) => boolean)[]> = {
     ...yes('hasP25'), ...yes('hasCustomP25'), ...yes('hasOPPTP25'), ...yes('hasDebt'), ...yes('hasFinal'), ...yes('hasExempt'), ...yes('hasDepreciation'), ...yes('hasSpecialCosts'), ...yes('hasForeignDividend'),
     ...Array.from({ length: 11 }, () => noTick), d => /wajib pajak/i.test(d.declaration.capacity || ''), d => /kuasa|wakil/i.test(d.declaration.capacity || '')],
 };
+/**
+ * Direct-toggle actions for ticks that map 1:1 onto a stored answer. Ticks that are derived from several
+ * answers or from free text (hasNorm "Tidak", UMKM/OPPT "Tidak", refund, capacity) stay out and open the editor.
+ * `clearable` answers (Ya/Tidak) go back to "" (belum dijawab) when the active tick is clicked again.
+ */
+export interface TickSet { group: 'profile' | 'questions' | 'declaration'; key: string; value: string; clearable: boolean }
+const S = (group: TickSet['group'], key: string, value: string): TickSet => ({ group, key, value, clearable: group !== 'profile' });
+const yesSets = (key: string): TickSet[] => [S('questions', key, 'tidak'), S('questions', key, 'ya')];
+export const tickSets: Record<number, Record<number, TickSet>> = {
+  3: Object.fromEntries([
+    [2, S('profile', 'sptStatus', 'Normal')], [3, S('profile', 'sptStatus', 'Pembetulan')],
+    [4, S('profile', 'incomeSource', 'Pekerjaan')], [5, S('profile', 'incomeSource', 'Kegiatan Usaha')], [6, S('profile', 'incomeSource', 'Pekerjaan Bebas')],
+    [7, S('profile', 'bookMethod', 'Pembukuan Stelsel Akrual')], [8, S('profile', 'bookMethod', 'Pembukuan Stelsel Kas')], [9, S('profile', 'bookMethod', 'Pencatatan')],
+    [10, S('profile', 'idType', 'KTP')], [11, S('profile', 'idType', 'KITAS')], [12, S('profile', 'idType', 'PASPOR')],
+    [13, S('profile', 'maritalTax', 'PH')], [14, S('profile', 'maritalTax', 'MT')],
+    ...[...yesSets('hasJobs'), ...yesSets('hasBusiness')].map((set, n) => [15 + n, set]),
+    [20, S('questions', 'hasUMKM', 'ya')], [21, S('questions', 'hasOPPT', 'ya')], [24, S('questions', 'hasNorm', 'ya')],
+    [25, S('questions', 'sector', 'dagangan')], [26, S('questions', 'sector', 'jasa')], [27, S('questions', 'sector', 'industri')],
+    ...['hasOtherDomestic', 'hasForeign', 'hasDeductions', 'hasTaxRelief', 'hasWithholding', 'hasForeignRefund'].flatMap(yesSets).map((set, n) => [28 + n, set]),
+  ]),
+  4: Object.fromEntries([
+    ...yesSets('hasDeferral').map((set, n) => [n, set]),
+    [2, S('declaration', 'refund', 'Pemeriksaan')], [3, S('declaration', 'refund', 'Pendahuluan')],
+    [33, S('declaration', 'capacity', 'Wajib Pajak')], [34, S('declaration', 'capacity', 'Kuasa')],
+    ...['hasP25', 'hasCustomP25', 'hasOPPTP25', 'hasDebt', 'hasFinal', 'hasExempt', 'hasDepreciation', 'hasSpecialCosts', 'hasForeignDividend'].flatMap(yesSets).map((set, n) => [4 + n, set]),
+  ]),
+};
 /** Answer boxes show the 1-based option picked among the listed tick ordinals; unlisted boxes stay blank. */
 export const answerTicks: Record<number, Record<number, number[]>> = {
   3: { 0: [15, 16], 5: [28, 29], 6: [30, 31], 7: [32, 33], 8: [34, 35], 9: [36, 37], 10: [38, 39] },
@@ -136,7 +163,7 @@ export function cellText(section: string, row: Row, field: string): string {
 }
 export function cellParts(section: string, row: Row, field: string): string[] {
   const v = row.values;
-  if (field === '@ownership') return [v.ownership === 'Taxpayer' ? 'x' : '', v.ownership === 'Other' ? 'x' : '', v.ownerTin || '', v.ownerName || ''];
+  if (field === '@ownership') return [v.ownership === 'Taxpayer' ? 'x' : '', v.ownership === 'Other' ? 'x' : '', v.ownership === 'Other' ? v.ownerTin || '' : '', v.ownership === 'Other' ? v.ownerName || '' : ''];
   if (field === '@movable') return [v.type || '', '', v.model || ''];
   if (field === '@area') return [v.landArea || '', v.buildingArea || ''];
   if (field === '@payer') return [v.payerTin || '', v.payerName || ''];

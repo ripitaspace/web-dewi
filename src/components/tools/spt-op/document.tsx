@@ -2,8 +2,8 @@ import { catalog, profileFields, partnerFields, declarationFields, type Draft } 
 import { CoretaxPage } from './coretax-sheets';
 export { pageCount } from '@/modules/spt-op/form-layout';
 
-export function Document({ draft, page, part = 0, onField, onSection, print = false }: { draft: Draft; page: number; part?: number; onField?: (key: string, value: string) => void; onSection?: (section: string) => void; print?: boolean }) {
-  return <CoretaxPage draft={draft} page={page} part={part} print={print} onField={onField} onSection={onSection}/>;
+export function Document({ draft, page, part = 0, onField, onSet, onSection, print = false }: { draft: Draft; page: number; part?: number; onField?: (key: string, value: string) => void; onSet?: (group: 'profile' | 'questions' | 'declaration', key: string, value: string) => void; onSection?: (section: string) => void; print?: boolean }) {
+  return <CoretaxPage draft={draft} page={page} part={part} print={print} onField={onField} onSet={onSet} onSection={onSection}/>;
 }
 
 function PrintScalarDetails({ draft }: { draft: Draft }) { return <section className="spt-print-details"><h1>Rincian data kerja · SPT OP {draft.profile.year}</h1>{(['profile', 'questions', 'extras', 'partner', 'declaration', 'documentNotes'] as const).map(group => <section key={group}><h2>{{ profile: 'Identitas', questions: 'Jawaban Induk', extras: 'Penyesuaian', partner: 'Pasangan', declaration: 'Pernyataan', documentNotes: 'Referensi dokumen' }[group]}</h2><dl>{Object.entries(draft[group]).filter(([, value]) => value).map(([key, value]) => <div key={key}><dt>{[...profileFields, ...partnerFields, ...declarationFields, ...catalog.questionFields, ...catalog.extraFields].find(field => field.key === key)?.label || key}</dt><dd>{value}</dd></div>)}</dl></section>)}</section>; }
