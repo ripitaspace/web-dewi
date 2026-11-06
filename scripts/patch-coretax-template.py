@@ -191,7 +191,57 @@ s15 = replace_table(s15, 1, regroup_b)
 new.append(s15)
 
 # ---------------------------------------------------------------- Lampiran 4 (16)
-new.append(renumber(O(16), 16))
+s16 = renumber(O(16), 16)
+# Rebuild A and B to match the official page: formula chips, PTKP helper boxes, 3a/3b, merged B columns, two-line note.
+def ch(t): return '<span class="ch">%s</span>' % t
+def fx(parts): return ''.join(ch(x[1:]) if x.startswith('#') else x for x in parts)
+def box(w): return '<span class="emptybox" style="width:%s"></span>' % w
+def a_row(n, label, formula='', small=False, last=False):
+    return ('<div class="line-row"><b>%s</b><span style="min-width:0;flex:1">%s</span>'
+            '<span class="fxa">%s%s</span><span class="r-val"></span></div>') % (n, label, box('22mm') if small else '', '<span class="fxt">%s</span>' % formula if formula else '')
+a_rows = ''.join([
+    a_row(1, 'PENGHASILAN NETO'),
+    a_row(2, 'KOMPENSASI KERUGIAN TAHUN PAJAK BERIKUTNYA'),
+    a_row(3, 'ZAKAT/SUMBANGAN KEAGAMAAN YANG BERSIFAT WAJIB'),
+    a_row(4, 'JUMLAH PENGHASILAN NETO', '( %s - %s - %s )' % (ch(1), ch(2), ch(3))),
+    a_row(5, 'PENGHASILAN TIDAK KENA PAJAK', small=True),
+    a_row(6, 'PENGHASILAN KENA PAJAK', '( %s - %s )' % (ch(4), ch(5))),
+    a_row(7, 'PPh TERUTANG'),
+    a_row(8, 'PENGURANG PPh TERUTANG'),
+    a_row(9, 'KREDIT PAJAK'),
+    a_row(10, 'PPh YANG HARUS DIBAYAR', '( %s - %s - %s )' % (ch(7), ch(8), ch(9))),
+    a_row(11, 'ANGSURAN PPh PASAL 25 TAHUN PAJAK BERIKUTNYA', '( 1/ 12 &nbsp;x&nbsp; %s )' % ch(10)),
+])
+def b_row(n, label, kind, formula='', small=False):
+    sp = '<span class="sp"></span>'
+    if kind == 'two':
+        cells = sp + box('27mm') + sp + box('29mm')
+    elif kind == 'ab':
+        cells = ch('3a') + box('27mm') + ch('3b') + box('29mm')
+    else:
+        cells = box('64.6mm')
+    return ('<div class="line-row brow"><b>%s</b><span style="min-width:0;flex:1">%s</span>'
+            '<span class="fxa fxb">%s%s</span><span class="bgrp">%s</span></div>') % (n, label, box('22mm') if small else '', '<span class="fxt">%s</span>' % formula if formula else '', cells)
+b_rows = ''.join([
+    b_row(1, 'PENGHASILAN BRUTO', 'two'),
+    b_row(2, 'PENGHASILAN NETO', 'two'),
+    b_row(3, 'PENGHASILAN NETO SETELAH DIKURANGI ZAKAT/SUMBANGAN KEAGAMAAN WAJIB DAN KOMPENSASI KERUGIAN', 'ab'),
+    b_row(4, 'PENGHASILAN NETO SETELAH DIKURANGI ZAKAT/SUMBANGAN KEAGAMAAN WAJIB DAN KOMPENSASI KERUGIAN GABUNGAN', 'one'),
+    b_row(5, 'PENGHASILAN TIDAK KENA PAJAK GABUNGAN', 'one', small=True),
+    b_row(6, 'PENGHASILAN KENA PAJAK GABUNGAN', 'one', '( %s - %s )' % (ch(4), ch(5))),
+    b_row(7, 'PPh TERUTANG GABUNGAN', 'one'),
+    b_row(8, 'PPh TERUTANG YANG DITANGGUNG OLEH WAJIB PAJAK', 'one', '[( %s : %s ) x %s ]' % (ch('3a'), ch(4), ch(7))),
+    b_row(9, 'PPh TERUTANG YANG DITANGGUNG OLEH SUAMI/ISTRI', 'one', '[( %s : %s ) x %s ]' % (ch('3b'), ch(4), ch(7))),
+])
+b_head = '<div class="bhead"><span class="sp"></span><span class="hd" style="width:27mm">WAJIB PAJAK</span><span class="sp"></span><span class="hd" style="width:29mm">SUAMI/ISTRI</span></div>'
+body16 = ('<div class="section">A. PENGHITUNGAN ANGSURAN PPh PASAL 25 TAHUN PAJAK BERIKUTNYA</div><div class="form-body">' + a_rows + '</div>'
+          '<div class="note">PINDAHKAN JUMLAH ANGSURAN PPh PASAL 25 TAHUN PAJAK BERIKUTNYA PADA NOMOR 11 KE INDUK BAGIAN H ANGKA 13 HURUF b</div>'
+          '<div class="section">B. PENGHITUNGAN PPh TERUTANG WAJIB PAJAK DAN SUAMI/ISTRI</div><div class="form-body">' + b_head + b_rows + '</div>'
+          '<div class="note note-bold">PINDAHKAN JUMLAH PPh TERUTANG YANG DITANGGUNG OLEH WAJIB PAJAK PADA NOMOR 8 KE INDUK BAGIAN C ANGKA 7 SPT WAJIB PAJAK<br>'
+          'PINDAHKAN JUMLAH PPh TERUTANG YANG DITANGGUNG OLEH SUAMI/ISTRI PADA NOMOR 9 KE INDUK BAGIAN C ANGKA 7 SPT SUAMI/ISTRI</div>')
+a0 = s16.index('<div class="section">A.')
+a1 = s16.index('<div class="section">WAJIB PAJAK</div>')
+new.append((s16[:a0] + body16 + s16[a1:]).replace('grid-template-columns:55% 45%', 'grid-template-columns:minmax(0,1fr) 45%'))
 
 # ---------------------------------------------------------------- Lampiran 5 (17) landscape
 s17 = renumber(O(17), 17)
@@ -542,6 +592,25 @@ top_css = """
 .sheet[data-sheet="3"] .top-fields::after{content:"";position:absolute;left:0;right:0;bottom:calc(var(--pw) * -.0096);height:calc(var(--pw) * .0009);background:#0e0e0e}
 .sheet[data-sheet="3"] .tf .sd{position:absolute;left:%(sdl)s;top:%(sdt)s;transform:translateX(-50%%);font-size:5.2pt}
 """ % band
+css += """
+.sheet[data-sheet="16"] .form-body{padding:1.2mm 2mm}
+.sheet[data-sheet="16"] .line-row{min-height:5.6mm;gap:2mm}
+.sheet[data-sheet="16"] .line-row b{min-width:5mm;padding:.8mm 0}
+.sheet[data-sheet="16"] .r-val{width:46.7mm;margin-left:0}
+.sheet[data-sheet="16"] .fxa{display:flex;align-items:center;gap:1.5mm;width:49mm;flex:none;font-size:6.4pt}
+.sheet[data-sheet="16"] .fxb{width:33mm}
+.sheet[data-sheet="16"] .fxa .emptybox{flex:none;min-width:0}
+.sheet[data-sheet="16"] .fxt{white-space:nowrap;letter-spacing:.02em}
+.sheet[data-sheet="16"] .ch{display:inline-block;background:var(--yellow);min-width:4.3mm;text-align:center;font-weight:700;font-size:6.8pt;line-height:4.3mm;height:4.3mm;padding:0 .4mm;box-sizing:border-box;vertical-align:middle}
+.sheet[data-sheet="16"] .bgrp{display:flex;align-items:center;flex:none;width:64.6mm}
+.sheet[data-sheet="16"] .bgrp .ch{flex:none;margin:0}
+.sheet[data-sheet="16"] .bgrp .emptybox{flex:none}
+.sheet[data-sheet="16"] .sp{display:inline-block;width:4.3mm;flex:none}
+.sheet[data-sheet="16"] .bhead{display:flex;justify-content:flex-end;align-items:center;margin-bottom:1.2mm;padding-right:0}
+.sheet[data-sheet="16"] .bhead .hd{display:block;background:var(--navy);color:#fff;text-align:center;font-size:8pt;line-height:5.2mm;height:5.2mm;flex:none}
+.sheet[data-sheet="16"] .bhead{width:64.6mm;margin-left:auto}
+.sheet[data-sheet="16"] .note-bold{font-weight:700;font-size:5.6pt;letter-spacing:-.015em;line-height:1.45;margin:.8mm 0 2mm}
+"""
 css += top_css
 head2 = datasheet(head2); css = datasheet(css)
 head2 = chr(10).join(l for l in head2.split(chr(10)) if not (l.startswith('.sheet:is([data-sheet="3"],[data-sheet="4"])') or l.startswith('.sheet[data-sheet="4"] .')))

@@ -99,7 +99,8 @@ export const resultSlots: Record<number, (string | null)[]> = {
 export const boxSlots: Record<number, Record<number, string>> = {
   3: { 0: 'profile.ptkp' },
   4: { 3: 'declaration.signer' },
-  16: { 2: 'partner.wpNet', 3: 'partner.spouseNet', 4: 'partner.wpDed', 5: 'partner.spouseDed', 8: 'partner.combinedPtkp', 14: 'extras.phmtTax' },
+  // 0 = A.5 helper box; B rows 1-3 have WP/spouse boxes (1-6), rows 4-9 one merged box each (7, 8 = PTKP helper, 9-13).
+  16: { 3: 'partner.wpNet', 4: 'partner.spouseNet', 5: 'partner.wpDed', 6: 'partner.spouseDed', 9: 'partner.combinedPtkp', 12: 'extras.phmtTax' },
 };
 export interface DigitBinding { read: Read; key?: string }
 const profileDigits = (key: string): DigitBinding => ({ read: d => d.profile[key] || '', key });
