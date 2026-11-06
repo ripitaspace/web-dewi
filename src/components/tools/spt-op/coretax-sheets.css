@@ -330,3 +330,7 @@
 .spt-coretax .sheet[data-sheet="3"] .emptybox.ptkpbox{box-sizing:border-box;width:calc(var(--pw) * 0.1575)!important;height:calc(var(--pw) * 0.0165);min-width:0;margin-right:calc(var(--pw) * 0.0345);border:calc(var(--pw) * 0.0016) solid #4a72c2;flex:none}
 .spt-coretax .sheet[data-sheet="3"] .question .qval,
 .spt-coretax .sheet[data-sheet="3"] .r-val{font-size:calc(var(--pw) * 0.0105)}
+
+/* Kotak digit terakhir: <input> tersembunyi menjadi anak terakhir, jadi :last-child tidak kena */
+.spt-coretax .digitrow i:last-of-type{border-right:1px solid #1b1b1b}
+.spt-coretax .sheet[data-sheet="3"] .tf .digitrow i:last-of-type{border-right-color:#2e6fc4}
