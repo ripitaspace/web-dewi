@@ -289,3 +289,44 @@
 .spt-coretax .cb.on{background:#111}
 .spt-coretax td[data-sub]{text-align:left}
 @media print{.spt-coretax{width:max-content;background:#fff}.spt-coretax .sheet{margin:0}}
+
+/* Induk halaman 1 – penyesuaian ke formulir resmi (header, identitas, pita pertanyaan) */
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-id{font-weight:400;font-size:9.6pt}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-id strong{font-weight:700}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-name{font-size:13pt;font-weight:800;letter-spacing:-.02em;line-height:1.02}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-name span{font-size:9.6pt!important;font-weight:700;letter-spacing:0;line-height:1.08;display:inline-block}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-box{border:0;gap:.6mm}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-box br{display:none}
+.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-head{border-bottom-width:calc(var(--pw) * 0.0022)}
+
+/* Bagian A */
+.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow{flex:1;min-width:0}
+.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow i{flex:1;width:auto;min-width:0}
+.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r{border-bottom:1px solid rgba(255,255,255,.14);padding-bottom:.3mm}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep p:nth-of-type(2){padding-right:calc(var(--pw) * 0.045)}
+
+/* Bagian B–D */
+.spt-coretax .sheet[data-sheet="3"] .qtext{color:#2b3f7e;font-weight:700;margin-right:calc(var(--pw) * 0.0216)}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="B"]+.form-body>.question:is(:nth-child(3),:nth-child(5),:nth-child(7),:nth-child(9)) .qtext{padding-left:calc(var(--pw) * 0.0115);text-indent:calc(var(--pw) * -0.0115)}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="B"]+.form-body>.line-row>b{background:transparent;margin-left:calc(var(--pw) * 0.0434);width:auto;min-width:calc(var(--pw) * 0.0204);justify-content:flex-start;font-weight:400;font-size:7.2pt}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qval,
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="D"]+.form-body>.question:nth-child(5) .qval{height:calc(var(--pw) * 0.0235)}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.line-row:nth-child(10) .r-val{height:calc(var(--pw) * 0.0225)}
+.spt-coretax .sheet[data-sheet="3"] .opts .tick{width:calc(var(--pw) * 0.0237);height:calc(var(--pw) * 0.0165);margin-right:calc(var(--pw) * 0.0063)}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qtext{min-height:calc(var(--pw) * 0.0235);display:flex;align-items:center;margin-top:calc(var(--pw) * 0.0007)}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.line-row:nth-child(10) .r-val{display:flex;align-items:center;justify-content:flex-end}
+
+/* Kotak isian kanan Induk halaman 1 – ukuran mengikuti formulir resmi */
+.spt-coretax .sheet[data-sheet="3"] .question{grid-template-columns:calc(var(--pw) * 0.0204) calc(var(--pw) * 0.0204) minmax(0,1fr) calc(var(--pw) * 0.2624)}
+.spt-coretax .sheet[data-sheet="3"] .qtext{margin-right:calc(var(--pw) * 0.0151);min-height:calc(var(--pw) * 0.0165);box-sizing:border-box}
+.spt-coretax .sheet[data-sheet="3"] .question .nb,
+.spt-coretax .sheet[data-sheet="3"] .line-row b{height:calc(var(--pw) * 0.0165)}
+.spt-coretax .sheet[data-sheet="3"] .question .qval,
+.spt-coretax .sheet[data-sheet="3"] .r-val{box-sizing:border-box;width:calc(var(--pw) * 0.2624);height:calc(var(--pw) * 0.0165);border:calc(var(--pw) * 0.0016) solid #4a72c2;background:#fff;display:flex;align-items:center;justify-content:flex-end;padding:0 calc(var(--pw) * 0.004);line-height:1;font-size:6.8pt;overflow:hidden;white-space:nowrap}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qval,
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="D"]+.form-body>.question:nth-child(5) .qval,
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.line-row:nth-child(10) .r-val{height:calc(var(--pw) * 0.0218)}
+.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qtext{min-height:calc(var(--pw) * 0.0218)}
+.spt-coretax .sheet[data-sheet="3"] .emptybox.ptkpbox{box-sizing:border-box;width:calc(var(--pw) * 0.1575)!important;height:calc(var(--pw) * 0.0165);min-width:0;margin-right:calc(var(--pw) * 0.0345);border:calc(var(--pw) * 0.0016) solid #4a72c2;flex:none}
+.spt-coretax .sheet[data-sheet="3"] .question .qval,
+.spt-coretax .sheet[data-sheet="3"] .r-val{font-size:calc(var(--pw) * 0.0105)}
