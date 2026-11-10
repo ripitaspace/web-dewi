@@ -346,7 +346,7 @@ describe('Reconciliation and tax verification gates', () => {
     const d = umkm([332639973]);
     expect(umkmEligibility(d)).toMatchObject({ eligible: true, annualGross: 332639973 });
     expect(compute(d).find(r => r.key === 'umkmTax')).toMatchObject({ value: 0, verification: 'ruleset-2025' });
-    for (const key of ['pk', 'rawTax', 'tax', 'balance']) expect(compute(d).find(r => r.key === key)?.value).toBeNull();
+    for (const key of ['pk', 'rawTax', 'tax', 'balance', 'p25Next']) expect(compute(d).find(r => r.key === key)).toMatchObject({ value: null, verification: 'not-applicable' });
   });
   it('aggregates multiple TKU, reconciles UMKM payments, and flags a mismatch without hiding the formula', () => {
     const d = umkm([400000000]);
