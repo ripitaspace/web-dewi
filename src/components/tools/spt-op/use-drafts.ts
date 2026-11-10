@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { fresh, readBackup, reducer, type Draft, type Action } from '@/modules/spt-op/model';
-import { listDrafts, saveDraft } from '@/modules/spt-op/storage';
+import { deleteDraft as deleteStoredDraft, listDrafts, saveDraft, withoutDraft } from '@/modules/spt-op/storage';
 export function useDrafts() {
     const [draft, reduce] = useReducer((d: Draft | null, a: Action) => a.type === 'replace' ? a.draft : d ? reducer(d, a) : null, null);
     const [saved, setSaved] = useState('Memuat draft…');
@@ -127,6 +127,35 @@ export function useDrafts() {
             return false;
         }
     }
+    async function deleteDraft(id: string) {
+        if (!await save())
+            return false;
+        try {
+            const deleted = await deleteStoredDraft(id);
+            if (!deleted) {
+                setSaved('Draft tidak ditemukan atau sudah dihapus.');
+                setList(items => withoutDraft(items, id));
+                return false;
+            }
+            setList(items => withoutDraft(items, id));
+            delete revision.current[id];
+            if (latest.current?.id === id) {
+                const next = fresh();
+                revision.current[next.id] = next.revision;
+                persisted.current = null;
+                dispatch({ type: 'replace', draft: next });
+                setSaved('Draft dihapus. Draft kosong baru dibuat.');
+            }
+            else
+                setSaved('Draft dihapus.');
+            setBlocked(false);
+            return true;
+        }
+        catch (error) {
+            setSaved(error instanceof Error ? error.message : 'Draft gagal dihapus.');
+            return false;
+        }
+    }
     function rescue() {
         if (!latest.current)
             return;
@@ -140,5 +169,5 @@ export function useDrafts() {
             throw Error('Draft HTML tidak ditemukan di origin ini. Gunakan file Backup JSON dari HTML.');
         return readBackup({ format: 'RIPITAX.SPT.OP.v1', data: JSON.parse(raw) });
     }
-    return { draft, dispatch, ready, saved, list, save, replace, openDraft, reload, rescue, legacy, blocked };
+    return { draft, dispatch, ready, saved, list, save, replace, openDraft, deleteDraft, reload, rescue, legacy, blocked };
 }

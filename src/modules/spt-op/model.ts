@@ -23,7 +23,7 @@ export interface Row {
     review?: boolean;
 }
 export interface Draft {
-    schema: 2;
+    schema: 3;
     id: string;
     revision: number;
     updatedAt: string;
@@ -34,6 +34,8 @@ export interface Draft {
     declaration: Values;
     documentNotes: Values;
     tables: Record<string, Row[]>;
+    /** Source rows from the Excel blueprint that do not have a dedicated SPT table yet. */
+    importTables: Record<string, Row[]>;
     books: Record<string, Row[]>;
     overrides: Record<string, {
         value: string;
@@ -81,10 +83,19 @@ export const catalog = raw as unknown as {
 export const field = (key: string, label: string, type = 'text', options: string[] = [], required = false): Field => ({ key, label, type, options, required });
 export const profileFields = [...catalog.profileFields, field('amendment', 'Nomor pembetulan', 'number')];
 export const partnerFields = ['wpNet', 'spouseNet', 'wpDed', 'spouseDed', 'combinedPtkp'].map((key, i) => field(key, ['Neto WP', 'Neto pasangan', 'Pengurang WP', 'Pengurang pasangan', 'PTKP gabungan — perlu verifikasi'][i], 'money'));
-export const declarationFields = [field('refund', 'G · Permohonan pengembalian', 'select', ['Pemeriksaan|Pemeriksaan', 'Pendahuluan|Pendahuluan']), field('additional', 'J · Daftar lampiran tambahan'), field('signer', 'K · Nama penandatangan'), field('capacity', 'K · Kapasitas penandatangan', 'select', ['Wajib Pajak|Wajib Pajak', 'Kuasa|Kuasa / wakil']), field('date', 'K · Tanggal pernyataan', 'date'), field('place', 'K · Tempat'), field('notes', 'Catatan / referensi dokumen pendukung')];
+export const declarationFields = [field('refund', 'G · Permohonan pengembalian', 'select', ['Pemeriksaan|Pemeriksaan', 'Pendahuluan|Pendahuluan']), field('additional', 'J · Daftar lampiran tambahan'), field('confirmed', 'K · Pernyataan benar, lengkap, dan jelas', 'yesno'), field('signer', 'K · Nama penandatangan'), field('capacity', 'K · Kapasitas penandatangan', 'select', ['Wajib Pajak|Wajib Pajak', 'Kuasa|Kuasa / wakil']), field('date', 'K · Tanggal pernyataan', 'date'), field('place', 'K · Tempat'), field('notes', 'Catatan / referensi dokumen pendukung')];
 export const assets = ['cash', 'receivables', 'investments', 'movable', 'immovable', 'otherassets'];
-export function fresh(): Draft { return { schema: 2, id: crypto.randomUUID(), revision: 0, updatedAt: '', profile: { ...catalog.propsDefault, amendment: '0' }, questions: {}, extras: {}, partner: {}, declaration: {}, documentNotes: {}, tables: {}, books: {}, overrides: {} }; }
+export function fresh(): Draft { return { schema: 3, id: crypto.randomUUID(), revision: 0, updatedAt: '', profile: { ...catalog.propsDefault, amendment: '0' }, questions: {}, extras: {}, partner: {}, declaration: {}, documentNotes: {}, tables: {}, importTables: {}, books: {}, overrides: {} }; }
 export function row(values: Values, origin = 'manual'): Row { return { id: crypto.randomUUID(), values, origin, disposed: false, review: false }; }
+/** A clearly fictional, local-only draft for exploring the Studio. */
+export function exampleDraft(): Draft {
+    const d = fresh();
+    d.profile = { ...d.profile, year: '2025', tin: '0000000000000000', name: 'WAJIB PAJAK CONTOH', idNumber: '0000000000000000', phone: '081234567890', email: 'contoh@example.test', incomeSource: 'Pekerjaan', ptkp: 'TK/0' };
+    d.tables.jobs = [row({ employer: 'PERUSAHAAN CONTOH', employerTin: '0000000000000000', gross: '120000000', expense: '6000000', net: '114000000' }, 'contoh')];
+    d.tables.withholding = [row({ payerTin: '0000000000000000', payerName: 'PERUSAHAAN CONTOH', slipNo: 'BUKTI-POTONG-CONTOH', slipDate: '2025-12-31', taxType: 'PPh 21', gross: '120000000', withheld: '3000000' }, 'contoh')];
+    d.tables.cash = [row({ code: '0102', account: '000123456789', owner: 'WAJIB PAJAK CONTOH', bank: 'BANK CONTOH', country: 'IDN', year: '2020', balance: '25000000', pps: '' }, 'contoh')];
+    return d;
+}
 export type Action = {
     type: 'replace';
     draft: Draft;
@@ -115,12 +126,16 @@ export function readBackup(input: unknown): Draft {
     if (!isObject(input) || !isObject(input.data))
         throw Error('Bukan backup SPT OP.');
     const old = input.format === 'RIPITAX.SPT.OP.v1', v = input.data;
-    if (!old && (input.format !== 'RIPITAX.SPT.OP.v2' || v.schema !== 2))
+    if (!old && (!['RIPITAX.SPT.OP.v2', 'RIPITAX.SPT.OP.v3'].includes(String(input.format)) || ![2, 3].includes(Number(v.schema))))
         throw Error('Versi backup belum didukung.');
     const d = fresh();
     d.profile = { ...d.profile, ...values(v.profile) };
     for (const key of ['questions', 'extras', 'partner', 'declaration', 'documentNotes'] as const)
         d[key] = values(v[key] || {});
+    if (d.questions.hasNorm === 'ya')
+        d.questions.hasNorm = 'NPPN';
+    else if (d.questions.hasNorm === 'tidak')
+        d.questions.hasNorm = d.profile.bookMethod === 'Pencatatan' ? 'FINAL_TANPA_PEMBUKUAN' : 'PEMBUKUAN';
     const rowIds = new Set<string>();
     for (const group of ['tables', 'books'] as const) {
         if (!isObject(v[group] || {}))
@@ -136,6 +151,17 @@ export function readBackup(input: unknown): Draft {
                     throw Error('ID baris backup kosong atau duplikat.');
                 restored.id = item.id;
             } rowIds.add(restored.id); return { ...restored, disposed: !old && item.disposed === true, review: !old && item.review === true }; });
+        }
+    }
+    if (!old && v.importTables !== undefined) {
+        if (!isObject(v.importTables))
+            throw Error('Data impor Excel tidak valid.');
+        for (const [key, items] of Object.entries(v.importTables)) {
+            if (!/^\d{2}_[A-Z_]+$/.test(key) || !Array.isArray(items) || items.length > 100000)
+                throw Error('Data impor Excel tidak valid.');
+            d.importTables[key] = items.map(item => { if (!isObject(item))
+                throw Error('Baris impor Excel rusak.'); const restored = row(values(item.values), typeof item.origin === 'string' ? item.origin : `import:${key}`); if (typeof item.id === 'string' && item.id)
+                restored.id = item.id; return restored; });
         }
     }
     if (!old && v.overrides !== undefined) {
@@ -154,4 +180,4 @@ export function readBackup(input: unknown): Draft {
                 v[key].forEach((n, i) => d.extras[key + i] = String(n));
     return d;
 }
-export function backup(d: Draft) { return JSON.stringify({ format: 'RIPITAX.SPT.OP.v2', savedAt: new Date().toISOString(), data: d }, null, 2); }
+export function backup(d: Draft) { return JSON.stringify({ format: 'RIPITAX.SPT.OP.v3', savedAt: new Date().toISOString(), data: d }, null, 2); }

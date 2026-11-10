@@ -18,3 +18,5 @@ catch (e) {
     tx.abort();
     return;
 } next = { ...d, revision: expected + 1, updatedAt: new Date().toISOString() }; s.put(next); }; tx.oncomplete = () => { db.close(); resolve(next); }; tx.onabort = tx.onerror = () => { db.close(); reject(Error(failure)); }; }); }
+export function withoutDraft(drafts: Draft[], id: string) { return drafts.filter(draft => draft.id !== id); }
+export async function deleteDraft(id: string): Promise<boolean> { const db = await open(); return new Promise((resolve, reject) => { const tx = db.transaction('drafts', 'readwrite'), s = tx.objectStore('drafts'); let found = false, failure = 'Draft gagal dihapus.'; const r = s.get(id); r.onsuccess = () => { if (!r.result) return; found = true; s.delete(id); }; r.onerror = () => { failure = 'Draft gagal dibaca sebelum dihapus.'; tx.abort(); }; tx.oncomplete = () => { db.close(); resolve(found); }; tx.onabort = tx.onerror = () => { db.close(); reject(Error(failure)); }; }); }

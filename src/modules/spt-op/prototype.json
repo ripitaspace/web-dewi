@@ -2314,10 +2314,14 @@
       "required": false
     },
     {
-      "label": "1b-3 · Menggunakan Norma?",
+      "label": "3 · Metode penghasilan neto usaha",
       "key": "hasNorm",
-      "type": "yesno",
-      "options": [],
+      "type": "select",
+      "options": [
+        "PEMBUKUAN|Tidak, saya menyelenggarakan pembukuan",
+        "FINAL_TANPA_PEMBUKUAN|Ya, hanya menerima penghasilan dari usaha yang dikenakan pajak bersifat final dan tidak menyelenggarakan pembukuan",
+        "NPPN|Ya, saya berhak menggunakan Norma Penghitungan Penghasilan Neto"
+      ],
       "required": false
     },
     {

@@ -67,7 +67,7 @@ export function regionOrdinal(binding: TableBinding, id: string, group: string, 
 
 // ---- Profile / question / result slots ------------------------------------------------------
 type Read = (draft: Draft) => string;
-const eq = (group: 'profile' | 'questions', key: string, value: string) => (d: Draft) => d[group][key] === value;
+const eq = (group: 'profile' | 'questions' | 'declaration', key: string, value: string) => (d: Draft) => d[group][key] === value;
 const yes = (key: string) => [eq('questions', key, 'tidak'), eq('questions', key, 'ya')];
 const noTick = () => false;
 export const ticks: Record<number, ((draft: Draft) => boolean)[]> = {
@@ -78,17 +78,17 @@ export const ticks: Record<number, ((draft: Draft) => boolean)[]> = {
     eq('profile', 'maritalTax', 'PH'), eq('profile', 'maritalTax', 'MT'),
     ...yes('hasJobs'), ...yes('hasBusiness'),
     d => d.questions.hasUMKM === 'tidak' && d.questions.hasOPPT === 'tidak', eq('questions', 'hasUMKM', 'ya'), eq('questions', 'hasOPPT', 'ya'),
-    d => d.questions.hasNorm === 'tidak' && d.profile.bookMethod !== 'Pencatatan', d => d.questions.hasNorm === 'tidak' && d.profile.bookMethod === 'Pencatatan', eq('questions', 'hasNorm', 'ya'),
+    d => d.questions.hasNorm === 'PEMBUKUAN' || (d.questions.hasNorm === 'tidak' && d.profile.bookMethod !== 'Pencatatan'), d => d.questions.hasNorm === 'FINAL_TANPA_PEMBUKUAN' || (d.questions.hasNorm === 'tidak' && d.profile.bookMethod === 'Pencatatan'), d => ['NPPN', 'ya'].includes(d.questions.hasNorm),
     eq('questions', 'sector', 'dagangan'), eq('questions', 'sector', 'jasa'), eq('questions', 'sector', 'industri'),
     ...yes('hasOtherDomestic'), ...yes('hasForeign'), ...yes('hasDeductions'), ...yes('hasTaxRelief'), ...yes('hasWithholding'), ...yes('hasForeignRefund')],
   4: [...yes('hasDeferral'),
     d => /pemeriksaan/i.test(d.declaration.refund || ''), d => /pendahuluan/i.test(d.declaration.refund || ''),
     ...yes('hasP25'), ...yes('hasCustomP25'), ...yes('hasOPPTP25'), ...yes('hasDebt'), ...yes('hasFinal'), ...yes('hasExempt'), ...yes('hasDepreciation'), ...yes('hasSpecialCosts'), ...yes('hasForeignDividend'),
-    ...Array.from({ length: 11 }, () => noTick), d => /wajib pajak/i.test(d.declaration.capacity || ''), d => /kuasa|wakil/i.test(d.declaration.capacity || '')],
+    ...yes('hasFinancialStatements'), ...yes('hasZakatProof'), ...yes('hasForeignCreditProof'), ...yes('hasPowerOfAttorney'), ...yes('hasOtherAttachments'), eq('declaration', 'confirmed', 'ya'), d => /wajib pajak/i.test(d.declaration.capacity || ''), d => /kuasa|wakil/i.test(d.declaration.capacity || '')],
 };
 /**
  * Direct-toggle actions for ticks that map 1:1 onto a stored answer. Ticks that are derived from several
- * answers or from free text (hasNorm "Tidak", UMKM/OPPT "Tidak", refund, capacity) stay out and open the editor.
+ * answers or from free text (UMKM/OPPT "Tidak", refund, capacity) stay out and open the editor.
  * `clearable` answers (Ya/Tidak) go back to "" (belum dijawab) when the active tick is clicked again.
  */
 export interface TickSet { group: 'profile' | 'questions' | 'declaration'; key: string; value: string; clearable: boolean }
@@ -102,7 +102,7 @@ export const tickSets: Record<number, Record<number, TickSet>> = {
     [10, S('profile', 'idType', 'KTP')], [11, S('profile', 'idType', 'KITAS')], [12, S('profile', 'idType', 'PASPOR')],
     [13, S('profile', 'maritalTax', 'PH')], [14, S('profile', 'maritalTax', 'MT')],
     ...[...yesSets('hasJobs'), ...yesSets('hasBusiness')].map((set, n) => [15 + n, set]),
-    [20, S('questions', 'hasUMKM', 'ya')], [21, S('questions', 'hasOPPT', 'ya')], [24, S('questions', 'hasNorm', 'ya')],
+    [20, S('questions', 'hasUMKM', 'ya')], [21, S('questions', 'hasOPPT', 'ya')], [22, S('questions', 'hasNorm', 'PEMBUKUAN')], [23, S('questions', 'hasNorm', 'FINAL_TANPA_PEMBUKUAN')], [24, S('questions', 'hasNorm', 'NPPN')],
     [25, S('questions', 'sector', 'dagangan')], [26, S('questions', 'sector', 'jasa')], [27, S('questions', 'sector', 'industri')],
     ...['hasOtherDomestic', 'hasForeign', 'hasDeductions', 'hasTaxRelief', 'hasWithholding', 'hasForeignRefund'].flatMap(yesSets).map((set, n) => [28 + n, set]),
   ]),
@@ -110,7 +110,8 @@ export const tickSets: Record<number, Record<number, TickSet>> = {
     ...yesSets('hasDeferral').map((set, n) => [n, set]),
     [2, S('declaration', 'refund', 'Pemeriksaan')], [3, S('declaration', 'refund', 'Pendahuluan')],
     [33, S('declaration', 'capacity', 'Wajib Pajak')], [34, S('declaration', 'capacity', 'Kuasa')],
-    ...['hasP25', 'hasCustomP25', 'hasOPPTP25', 'hasDebt', 'hasFinal', 'hasExempt', 'hasDepreciation', 'hasSpecialCosts', 'hasForeignDividend'].flatMap(yesSets).map((set, n) => [4 + n, set]),
+    ...['hasP25', 'hasCustomP25', 'hasOPPTP25', 'hasDebt', 'hasFinal', 'hasExempt', 'hasDepreciation', 'hasSpecialCosts', 'hasForeignDividend', 'hasFinancialStatements', 'hasZakatProof', 'hasForeignCreditProof', 'hasPowerOfAttorney', 'hasOtherAttachments'].flatMap(yesSets).map((set, n) => [4 + n, set]),
+    [32, S('declaration', 'confirmed', 'ya')],
   ]),
 };
 /** Answer boxes show the 1-based option picked among the listed tick ordinals; unlisted boxes stay blank. */

@@ -40,7 +40,7 @@ export function compute(d: Draft): Result[] {
     const override = (key: string, v: number | null) => { const o = d.overrides[key]; return o?.enabled ? (o.reason.trim() && o.value.trim() ? numeric(o.value) : null) : v; };
     const jobs = sum('jobs', 'net'), norm = sum('nppn', 'net'), other = sum('otherdomestic', 'net'), foreign = sum('foreign', 'net');
     const profit = d.books[d.questions.sector]?.find(r => r.values.code === '4800');
-    const business = override('business', d.questions.hasNorm === 'ya' ? norm : profit ? numeric(rowValue('book', profit, 'fiscal')) : d.questions.hasBusiness === 'tidak' ? 0 : null);
+    const business = override('business', ['NPPN', 'ya'].includes(d.questions.hasNorm) ? norm : profit ? numeric(rowValue('book', profit, 'fiscal')) : d.questions.hasBusiness === 'tidak' ? 0 : null);
     const deductions = override('deductions', sum('deductions', 'amount') + sum('taxloss', 'compensated'));
     const net = business === null ? null : jobs + business + other + foreign;
     const credit = sum('withholding', 'withheld') + sum('foreign', 'credit');
@@ -67,7 +67,7 @@ export function compute(d: Draft): Result[] {
     return results.map(r => ({ ...r, value: r.value !== null && Number.isFinite(r.value) ? r.value : null, ruleVersion: rules?.version || 'unsupported-year', verification: r.value === null || !Number.isFinite(r.value) ? 'pending' : 'rekap-input', source: rules?.sources.prototype?.title || 'Belum ada ruleset DJP terdaftar untuk tahun ini.' }));
 }
 const questionFor: Record<string, string> = { jobs: 'hasJobs', withholding: 'hasWithholding', debts: 'hasDebt', finalincome: 'hasFinal', exempt: 'hasExempt', foreign: 'hasForeign', nppn: 'hasNorm', otherdomestic: 'hasOtherDomestic', umkm: 'hasUMKM', opent: 'hasOPPT', normmonths: 'hasNorm', depreciation: 'hasDepreciation', amortization: 'hasDepreciation', entertainment: 'hasSpecialCosts', promotion: 'hasSpecialCosts', baddebt: 'hasSpecialCosts', deductions: 'hasDeductions', taxrelief: 'hasTaxRelief' };
-export function sectionStatus(d: Draft, k: string) { const q = questionFor[k], answer = q ? d.questions[q] : undefined; const rows = d.tables[k] || []; return { applicability: answer === 'tidak' ? 'Tidak Berlaku' : answer === 'ya' ? 'Berlaku' : 'Perlu Verifikasi', progress: (answer === 'ya' && !rows.length) || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review) ? 'Belum Lengkap' : 'Perlu Verifikasi' }; }
+export function sectionStatus(d: Draft, k: string) { const q = questionFor[k], answer = q ? d.questions[q] : undefined, yes = answer === 'ya' || answer === 'NPPN', no = answer === 'tidak' || ['PEMBUKUAN', 'FINAL_TANPA_PEMBUKUAN'].includes(answer || ''); const rows = d.tables[k] || []; return { applicability: no ? 'Tidak Berlaku' : yes ? 'Berlaku' : 'Perlu Verifikasi', progress: (yes && !rows.length) || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review) ? 'Belum Lengkap' : 'Perlu Verifikasi' }; }
 export function validate(d: Draft): string[] {
     const status = ruleStatus(d.profile.year);
     const issues = [status.message, 'Aturan kewajiban lampiran dan XML belum disahkan terhadap seluruh referensi resmi.'];

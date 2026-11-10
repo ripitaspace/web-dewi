@@ -30,6 +30,7 @@ export const navigation = [
   ...catalog.NAV,
   ['01 · SPT', 'declaration', 'Pernyataan & lampiran tambahan', 4],
   ['06 · Data & XML', 'documentNotes', 'Referensi dokumen', 4],
+  ['06 · Data & XML', 'imports', 'Data sumber Excel', 4],
 ] as [string, string, string, number][];
 
 export const navigationTree: NavigationNode[] = [
@@ -84,6 +85,7 @@ export const navigationTree: NavigationNode[] = [
     leaf('validation', 'Pemeriksaan data', 'validation', 3),
     leaf('xml', 'Ekspor XML Coretax', 'xml', 14),
     leaf('references', 'Referensi dokumen', 'documentNotes', 4, 'references'),
+    leaf('imports', 'Data sumber Excel', 'imports', 4),
   ] },
 ];
 

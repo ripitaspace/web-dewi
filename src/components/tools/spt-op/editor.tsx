@@ -36,6 +36,8 @@ export function Editor({ draft, section, dispatch, onSection }: {
     }
     if (section === 'xml')
         return <><h3>XML per lampiran</h3><p>Ekspor belum aktif sampai sampel dan pemetaan resmi lolos pengujian.</p>{adapters.map(a => <section className="spt-record" key={a.id}><strong>{a.label}</strong><p>{a.reason}</p><button disabled>Preview / ekspor XML · belum terverifikasi</button></section>)}<a href={xmlGuide} target="_blank" rel="noreferrer">Panduan DJP versi 20260310 ↗</a><p>Gunakan converter resmi untuk menyiapkan XML, unggah manual pada tabel terkait, lalu periksa hasil proses pada XML Monitoring.</p></>;
+    if (section === 'imports')
+        return <><h3>Data sumber Excel</h3><p>Setiap baris dari template disimpan agar kolom yang belum memiliki kotak SPT tidak hilang. Perbarui melalui Excel lalu impor kembali untuk menggantinya.</p>{Object.entries(draft.importTables || {}).map(([sheet, sourceRows]) => <details className="spt-record" key={sheet}><summary><strong>{sheet}</strong> · {sourceRows.length} baris</summary>{sourceRows.map((source, index) => <div className="spt-record" key={source.id}><strong>Baris {index + 1}</strong><p>{Object.entries(source.values).filter(([, value]) => value).map(([key, value]) => <small key={key}>{key}: {value} · </small>)}</p></div>)}</details>)}{!Object.keys(draft.importTables || {}).length && <p>Belum ada template Excel yang diimpor.</p>}</>;
     if (!table && !book)
         return null;
     const status = sectionStatus(draft, section);
