@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as XLSX from 'xlsx';
 import { backup, catalog, draftKey, fresh, readBackup, reducer, row } from './model';
-import { compute, errors, numeric, sectionStatus, validate } from './engine';
+import { compute, errors, numeric, readiness, sectionStatus, validate } from './engine';
 import { copyAssets, csv, excelDate, parseCSV, previewImport, readWorkbook } from './import-export';
 import { pageCount, pageRows } from './form-layout';
 import { assertCanSave, saveDraft } from './storage';
@@ -150,6 +150,12 @@ describe('Reconciliation and tax verification gates', () => {
     const d=fresh(); d.profile.year=year; d.tables.jobs=[employer()];
     for(const key of ['pt','pk','rawTax','tax','balance','amended','p25Next','umkmTax','phmt']) expect(compute(d).find(r=>r.key===key)?.value).toBeNull();
     expect(rules2025.annualReturnVerified).toBe(false);
+  });
+  it('keeps unsupported years editable but blocks their reporting readiness', () => {
+    const d = fresh(); d.profile.year = '2026'; d.profile.tin = '0000000000000001'; d.profile.name = 'CONTOH';
+    const report = readiness(d);
+    expect(report.rulesReady).toBe(false);
+    expect(report.issues.join(' ')).toMatch(/2026/);
   });
   // These expected values come from the four published DJP illustrations, not the prototype.
   it.each([[54000000,0],[60000000,300000],[120000000,3900000],[180000000,12900000]])('matches DJP TK/0 reference net %i', (net,tax) => {

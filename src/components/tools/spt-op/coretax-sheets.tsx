@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { catalog, type Draft } from '@/modules/spt-op/model';
+import { catalog, declarationFields, partnerFields, profileFields, type Draft, type Field } from '@/modules/spt-op/model';
 import { compute, money, numeric, rowValue } from '@/modules/spt-op/engine';
 import { pageRows } from '@/modules/spt-op/form-layout';
 import { digitsOnly } from '@/modules/spt-op/field-rules';
@@ -8,7 +8,8 @@ import { answerTicks, assetTotal, tickSets, bookCell, taggedSum, boxSlots, capac
 import { sheetComponents, type SlotComponents } from './coretax-sheets.generated';
 import './coretax-sheets.css';
 
-interface Context { draft: Draft; part: number; print: boolean; onField?: (key: string, value: string) => void; onSet?: (group: 'profile' | 'questions' | 'declaration', key: string, value: string) => void; onSection?: (section: string) => void }
+type ScalarGroup = 'profile' | 'questions' | 'extras' | 'partner' | 'declaration';
+interface Context { draft: Draft; part: number; print: boolean; onField?: (key: string, value: string) => void; onSet?: (group: ScalarGroup, key: string, value: string) => void; onSection?: (section: string) => void }
 const Ctx = createContext<Context | null>(null);
 const useCtx = () => { const value = useContext(Ctx); if (!value) throw Error('Coretax slot outside a sheet'); return value; };
 const px = (mm: number) => mm * 96 / 25.4;
@@ -52,12 +53,19 @@ function R({ s, i }: { s: number; i: number }) {
 }
 function useResults(draft: Draft) { return useMemo(() => compute(draft), [draft]); }
 function Box({ s, i, style }: { s: number; i: number; style?: React.CSSProperties }) {
-  const { draft, onSection, print } = useCtx();
+  const { draft, onSet, onSection, print } = useCtx();
   const slot = boxSlots[s]?.[i];
   if (!slot) return <span className="emptybox" style={style} />;
-  const [group, key] = slot.split('.') as ['profile' | 'partner' | 'extras' | 'declaration', string];
+  const [group, key] = slot.split('.') as [Exclude<ScalarGroup, 'questions'>, string];
   const raw = draft[group][key] || '';
-  return <span className={`emptybox${print ? '' : ' clickable'}`} title={print ? undefined : 'Klik untuk mengisi di editor'} style={style} onClick={print ? undefined : () => onSection?.(group)}>{group === 'declaration' || group === 'profile' ? raw : raw ? money(numeric(raw)) : ''}</span>;
+  const fields: Field[] = group === 'profile' ? profileFields : group === 'partner' ? partnerFields : group === 'declaration' ? declarationFields : catalog.extraFields;
+  const meta = fields.find(item => item.key === key);
+  const shown = group === 'declaration' || group === 'profile' ? raw : raw ? money(numeric(raw)) : '';
+  if (print || !onSet || !meta) return <span className={`emptybox${print ? '' : ' clickable'}`} title={print ? undefined : 'Klik untuk mengisi di editor'} style={style} onClick={print ? undefined : () => onSection?.(group)}>{shown}</span>;
+  const control = meta.type === 'select'
+    ? <select aria-label={`Formulir ${key}`} value={raw} onChange={event => onSet(group, key, event.target.value)}><option value="">Pilih</option>{meta.options.map(option => { const [value, label] = option.split('|'); return <option key={value} value={value}>{label || value}</option>; })}</select>
+    : <input aria-label={`Formulir ${key}`} value={raw} inputMode={meta.type === 'money' ? 'decimal' : undefined} onClick={event => event.stopPropagation()} onChange={event => onSet(group, key, event.target.value)} />;
+  return <span className="emptybox inline-field" style={style}>{control}</span>;
 }
 function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { s: number; t: number; r: number; c: number; code?: string; g?: string; k?: number; sum?: boolean; sub?: string; lead?: string; tag?: string; className?: string; style?: React.CSSProperties }) {
   const { draft, part, print, onSection } = useCtx();

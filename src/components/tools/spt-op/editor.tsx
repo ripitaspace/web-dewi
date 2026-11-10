@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { assets, catalog, field, profileFields, partnerFields, declarationFields, row, type Action, type Draft, type Row } from '@/modules/spt-op/model';
-import { compute, errors, money, numeric, rowValue, sectionStatus, validate } from '@/modules/spt-op/engine';
+import { compute, errors, money, numeric, readiness, rowValue, sectionStatus } from '@/modules/spt-op/engine';
 import { adapters, xmlGuide } from '@/modules/spt-op/xml';
 import { csv, download } from '@/modules/spt-op/import-export';
 import { Fields } from './fields';
@@ -30,8 +30,10 @@ export function Editor({ draft, section, dispatch, onSection }: {
     }
     if (section === 'summary')
         return <>{compute(draft).map(r => <section className="spt-record" key={r.key}><strong>{r.label}</strong><b>{money(r.value)}</b><p>{r.note}</p><small>{r.verification === 'pending' ? 'Perlu Verifikasi' : 'Rekap input, belum disahkan'} · {r.ruleVersion}</small><small>Sumber: {r.source}</small><div className="spt-actions">{r.sections.map(s => <button key={s} onClick={() => onSection(s)}>Lihat {catalog.tables[s]?.title || catalog.BOOKS[s]?.title || s}</button>)}</div></section>)}{['business', 'deductions'].map(key => { const o = draft.overrides[key] || { value: '', reason: '', enabled: false }; return <section className="spt-record" key={key}><label><input type="checkbox" checked={o.enabled} onChange={e => dispatch({ type: 'override', key, value: { ...o, enabled: e.target.checked } })}/> Override {key === 'business' ? 'neto usaha' : 'pengurang'}</label><Fields fields={[field('value', 'Nilai pengganti', 'money'), field('reason', 'Alasan dan dokumen sumber')]} values={{ value: o.value, reason: o.reason }} onChange={(k, v) => dispatch({ type: 'override', key, value: { ...o, [k]: v } })}/>{o.enabled && !o.reason && <p className="spt-error">Alasan wajib diisi sebelum override digunakan.</p>}</section>; })}</>;
-    if (section === 'validation')
-        return <><h3>Pemeriksaan data</h3>{validate(draft).map((v, i) => <p className="spt-warning" key={i}>{v}</p>)}</>;
+    if (section === 'validation') {
+        const report = readiness(draft);
+        return <><h3>Pemeriksaan kesiapan</h3><p className={report.rulesReady ? 'spt-success' : 'spt-warning'}>{report.summary}</p><dl className="spt-readiness"><div><dt>Aturan tahun pajak</dt><dd>{report.rulesReady ? 'Terverifikasi' : 'Belum siap pelaporan'}</dd></div><div><dt>Kontrol langsung di formulir</dt><dd>{report.mapped.direct}</dd></div><div><dt>Tabel lampiran</dt><dd>{report.mapped.editorOnly} dibuka dari sel formulir</dd></div></dl><h4>Temuan yang perlu ditinjau</h4>{report.issues.map((v, i) => <p className="spt-warning" key={i}>{v}</p>)}</>;
+    }
     if (section === 'xml')
         return <><h3>XML per lampiran</h3><p>Ekspor belum aktif sampai sampel dan pemetaan resmi lolos pengujian.</p>{adapters.map(a => <section className="spt-record" key={a.id}><strong>{a.label}</strong><p>{a.reason}</p><button disabled>Preview / ekspor XML · belum terverifikasi</button></section>)}<a href={xmlGuide} target="_blank" rel="noreferrer">Panduan DJP versi 20260310 ↗</a><p>Gunakan converter resmi untuk menyiapkan XML, unggah manual pada tabel terkait, lalu periksa hasil proses pada XML Monitoring.</p></>;
     if (!table && !book)

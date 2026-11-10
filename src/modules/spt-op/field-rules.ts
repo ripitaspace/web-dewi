@@ -27,6 +27,7 @@ export const digitsOnly = (value: string, max?: number) => { const digits = valu
 export function rangeIssue(f: Pick<Field, 'key' | 'type'>, value: string): string | null {
   if (!value) return null;
   if (isIdentityKey(f.key) && /\D/.test(value)) return 'hanya angka (tanpa titik, spasi, atau tanda hubung)';
+  if (isIdentityKey(f.key) && value.length !== identityLength) return `harus ${identityLength} digit`;
   const kind = numberKind(f);
   if (kind === 'month' && !(/^\d{1,2}$/.test(value) && Number(value) >= 1 && Number(value) <= 12)) return 'bulan 1–12';
   if (kind === 'percent') { const n = Number(value.replace(',', '.')); if (Number.isFinite(n) && (n < 0 || n > 100)) return 'persentase 0–100'; }

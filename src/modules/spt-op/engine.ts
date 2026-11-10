@@ -1,5 +1,5 @@
 import { catalog, type Draft, type Field, type Row } from './model';
-import { rules2025 } from './rules-2025';
+import { ruleSetFor, ruleStatus } from './rules';
 import { isHidden, isRequired, rangeIssue } from './field-rules';
 export function numeric(v: string | number | undefined): number { if (typeof v === 'number')
     return v; let s = (v || '').trim().replace(/\s/g, ''); if (!s)
@@ -25,7 +25,6 @@ export function fieldError(f: Field, v: string, values?: Record<string, string>)
     return rangeIssue(f, v);
 }
 export function errors(fields: Field[], r: Row): string[] { return fields.flatMap(f => { if (isHidden(f, r.values)) return []; const issue = fieldError(f, r.values[f.key] || '', r.values); return issue ? [f.label + ': ' + issue] : []; }); }
-export const ruleVersion = rules2025.version;
 export interface Result {
     key: string;
     label: string;
@@ -64,15 +63,16 @@ export function compute(d: Draft): Result[] {
         { key: 'final', label: 'Dasar penghasilan final', value: sum('finalincome', 'base'), sections: ['finalincome'], note: sourceNote },
         { key: 'exempt', label: 'Penghasilan bukan objek', value: sum('exempt', 'gross'), sections: ['exempt'], note: sourceNote },
     ];
-    return results.map(r => ({ ...r, value: r.value !== null && Number.isFinite(r.value) ? r.value : null, ruleVersion: d.profile.year === '2025' ? ruleVersion : 'unsupported-year', verification: r.value === null || !Number.isFinite(r.value) ? 'pending' : 'rekap-input', source: rules2025.sources.prototype.title }));
+    const rules = ruleSetFor(d.profile.year);
+    return results.map(r => ({ ...r, value: r.value !== null && Number.isFinite(r.value) ? r.value : null, ruleVersion: rules?.version || 'unsupported-year', verification: r.value === null || !Number.isFinite(r.value) ? 'pending' : 'rekap-input', source: rules?.sources.prototype?.title || 'Belum ada ruleset DJP terdaftar untuk tahun ini.' }));
 }
 const questionFor: Record<string, string> = { jobs: 'hasJobs', withholding: 'hasWithholding', debts: 'hasDebt', finalincome: 'hasFinal', exempt: 'hasExempt', foreign: 'hasForeign', nppn: 'hasNorm', otherdomestic: 'hasOtherDomestic', umkm: 'hasUMKM', opent: 'hasOPPT', normmonths: 'hasNorm', depreciation: 'hasDepreciation', amortization: 'hasDepreciation', entertainment: 'hasSpecialCosts', promotion: 'hasSpecialCosts', baddebt: 'hasSpecialCosts', deductions: 'hasDeductions', taxrelief: 'hasTaxRelief' };
 export function sectionStatus(d: Draft, k: string) { const q = questionFor[k], answer = q ? d.questions[q] : undefined; const rows = d.tables[k] || []; return { applicability: answer === 'tidak' ? 'Tidak Berlaku' : answer === 'ya' ? 'Berlaku' : 'Perlu Verifikasi', progress: (answer === 'ya' && !rows.length) || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review) ? 'Belum Lengkap' : 'Perlu Verifikasi' }; }
 export function validate(d: Draft): string[] {
-    const issues = ['Aturan kewajiban lampiran, kalkulasi pajak, dan XML belum disahkan terhadap seluruh referensi resmi.'];
+    const status = ruleStatus(d.profile.year);
+    const issues = [status.message, 'Aturan kewajiban lampiran dan XML belum disahkan terhadap seluruh referensi resmi.'];
     if (!d.profile.name.trim()) issues.push('Nama wajib pajak belum diisi.');
     if (!/^\d{16}$/.test(d.profile.tin)) issues.push('Identitas: isi NIK/NPWP 16 digit sebagai teks.');
-    if (d.profile.year !== '2025') issues.push('Tahun ini belum memiliki ruleset; kalkulasi pajak dan XML ditahan.');
     if (d.profile.sptStatus === 'Pembetulan' && !/^[1-9]\d*$/.test(d.profile.amendment)) issues.push('Isi nomor pembetulan lebih dari 0.');
     const from = numeric(d.profile.fromMonth), to = numeric(d.profile.toMonth);
     if (!Number.isInteger(from) || !Number.isInteger(to) || from < 1 || to > 12 || from > to) issues.push('Periode bulan tidak valid.');
@@ -94,4 +94,17 @@ export function validate(d: Draft): string[] {
     if ((d.tables.foreign || []).length && (d.tables.withholding || []).some(r => r.values.taxType === 'PPh Pasal 24')) issues.push('Rekonsiliasi PPh 24: periksa kredit luar negeri dan bukti potong agar tidak dihitung ganda.');
     if(['businessNeto','compLoss','otherDeduction','otherTaxRelief','phmtTax','nextP25'].some(key=>numeric(d.extras[key])!==0)) issues.push('Nilai manual lama disimpan sebagai pendukung; tidak ditambahkan otomatis. Untuk neto usaha/pengurang gunakan override beralasan di Ikhtisar.');
     return issues;
+}
+
+export interface ReadinessReport { rulesReady: boolean; summary: string; issues: string[]; mapped: { direct: string; editorOnly: number } }
+/** Release gate for this local preparation workspace, never a filing approval. */
+export function readiness(d: Draft): ReadinessReport {
+    const status = ruleStatus(d.profile.year);
+    const issues = validate(d);
+    return {
+        rulesReady: status.ready,
+        summary: status.ready && !issues.length ? 'Data kerja siap ditinjau dan dicetak.' : 'Data kerja belum siap dilaporkan; selesaikan temuan di bawah.',
+        mapped: { direct: 'Kotak dan pilihan yang sudah dipetakan', editorOnly: Object.keys(catalog.tables).length },
+        issues,
+    };
 }

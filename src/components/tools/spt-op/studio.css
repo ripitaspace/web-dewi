@@ -80,4 +80,5 @@ body.spt-pdf-export .spt-print{display:block;position:fixed;left:-20000px;top:0;
 .spt-grid .spt-cell-na,.spt-grid .spt-cell-ro{display:block;padding:6px 7px;color:#617287}
 .spt-grid-actions{white-space:nowrap;min-width:110px}.spt-grid-actions button{padding:4px 7px;font-size:12px;margin-left:3px}.spt-grid-warn{color:#a84543;font-size:11px;margin-right:4px;cursor:help}
 .spt-grid-empty{padding:18px!important;text-align:center;color:#617287}
+.spt-success{background:#e6f5ea;border-left:3px solid #27744a;padding:12px;font-size:12px;color:#174b2d}.spt-readiness{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.65rem;margin:1rem 0}.spt-readiness div{border:1px solid #d4d9d7;padding:.65rem;background:#fff}.spt-readiness dt{font-size:.75rem;color:#59635f}.spt-readiness dd{margin:.3rem 0 0;font-weight:700}
 .spt-grid-foot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:12px;font-size:12px;color:#617287}.spt-grid-foot b{margin-left:auto;color:var(--ink);font-size:13px}

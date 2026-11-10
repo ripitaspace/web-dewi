@@ -112,6 +112,10 @@
 .spt-coretax .ptkpbox{margin-left:auto;margin-right:1.5mm}
 .spt-coretax .inline-formula{font-size:6.4pt}
 .spt-coretax .inbox{display:inline-block;width:6mm;height:3.4mm;border:.3mm solid #3276d7;background:#fff;vertical-align:middle}
+.spt-coretax.is-interactive .emptybox.inline-field{padding:0;overflow:hidden;cursor:text}
+.spt-coretax.is-interactive .emptybox.inline-field input,.spt-coretax.is-interactive .emptybox.inline-field select{display:block;width:100%;height:100%;min-height:0;border:0;background:#fff;color:#111;font:inherit;padding:0 .7mm;box-sizing:border-box}
+.spt-coretax.is-interactive .emptybox.inline-field select{font-size:5.8pt}
+.spt-coretax.is-interactive .emptybox.inline-field input:focus,.spt-coretax.is-interactive .emptybox.inline-field select:focus{outline:.4mm solid #d19718;outline-offset:-.4mm}
 .spt-coretax .gantispt{display:inline-flex;align-items:center;gap:1.2mm;font-size:7pt;margin-left:2mm}
 .spt-coretax .cbx{display:inline-block;width:3.5mm;height:3.5mm;border:.35mm solid #2464bf;background:#fff}
 .spt-coretax .sheet small{font-size:6.2pt}
@@ -360,6 +364,8 @@
 
 /* halaman 2 induk: isian */
 .spt-coretax [data-sheet="4"] .qval,.spt-coretax [data-sheet="4"] .r-val{position:relative;left:calc(var(--pw)*.0054);width:calc(var(--pw)*.2554)}
+/* Do not inherit the options paragraph's negative hanging indent into formula badges. */
+.spt-coretax [data-sheet="4"] .inline-formula{white-space:nowrap;text-indent:0}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .opts p,.spt-coretax [data-sheet="4"] .section[data-sec="I"]+.form-body .opts p{font-size:7.15pt;line-height:calc(var(--pw)*.0165)}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .opts,.spt-coretax [data-sheet="4"] .section[data-sec="I"]+.form-body .opts{margin-bottom:calc(var(--pw)*.0019)}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .opts{margin-right:calc(var(--pw)*.36)}

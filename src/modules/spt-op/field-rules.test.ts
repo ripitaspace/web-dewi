@@ -56,6 +56,7 @@ describe('aturan field', () => {
     expect(errors(cols, row({ ...base, MonthOfAcquisition: '12' }))).toEqual([]);
     expect(rangeIssue({ key: 'norm', type: 'number' }, '120')).toBe('persentase 0–100');
     expect(rangeIssue({ key: 'debtorTin', type: 'text' }, '12-3')).toMatch(/hanya angka/);
+    expect(rangeIssue({ key: 'debtorTin', type: 'text' }, '123456789012345')).toMatch(/16 digit/);
   });
 });
 
