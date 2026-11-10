@@ -162,7 +162,15 @@ export function compute(d: Draft): Result[] {
     return results.map(r => ({ ...r, value: r.value !== null && Number.isFinite(r.value) ? r.value : null, ruleVersion: rules?.version || 'unsupported-year', verification: r.verification === 'not-applicable' ? r.verification : r.value === null || !Number.isFinite(r.value) ? 'pending' : r.verification || 'rekap-input', source: r.source || rules?.sources.prototype?.title || 'Belum ada ruleset DJP terdaftar untuk tahun ini.' }));
 }
 const questionFor: Record<string, string> = { jobs: 'hasJobs', withholding: 'hasWithholding', debts: 'hasDebt', finalincome: 'hasFinal', exempt: 'hasExempt', foreign: 'hasForeign', nppn: 'hasNorm', otherdomestic: 'hasOtherDomestic', umkm: 'hasUMKM', opent: 'hasOPPT', normmonths: 'hasNorm', depreciation: 'hasDepreciation', amortization: 'hasDepreciation', entertainment: 'hasSpecialCosts', promotion: 'hasSpecialCosts', baddebt: 'hasSpecialCosts', deductions: 'hasDeductions', taxrelief: 'hasTaxRelief' };
-export function sectionStatus(d: Draft, k: string) { const q = questionFor[k], answer = q ? d.questions[q] : undefined, yes = answer === 'ya' || answer === 'NPPN', no = answer === 'tidak' || ['PEMBUKUAN', 'FINAL_TANPA_PEMBUKUAN'].includes(answer || ''); const rows = d.tables[k] || []; return { applicability: no ? 'Tidak Berlaku' : yes ? 'Berlaku' : 'Perlu Verifikasi', progress: (yes && !rows.length) || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review) ? 'Belum Lengkap' : 'Perlu Verifikasi' }; }
+export function sectionStatus(d: Draft, k: string) {
+    const q = questionFor[k], answer = q ? d.questions[q] : undefined;
+    const yes = answer === 'ya' || answer === 'NPPN', no = answer === 'tidak' || ['PEMBUKUAN', 'FINAL_TANPA_PEMBUKUAN'].includes(answer || '');
+    const rows = d.tables[k] || [];
+    if (no) return { applicability: 'Tidak Berlaku', progress: '—' };
+    if (!yes) return { applicability: 'Perlu Verifikasi', progress: 'Menunggu jawaban' };
+    if (!rows.length || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review)) return { applicability: 'Berlaku', progress: 'Belum Lengkap' };
+    return { applicability: 'Berlaku', progress: 'Lengkap' };
+}
 export function validate(d: Draft): string[] {
     const status = ruleStatus(d.profile.year);
     const issues = [status.message, 'Aturan kewajiban lampiran dan XML belum disahkan terhadap seluruh referensi resmi.'];

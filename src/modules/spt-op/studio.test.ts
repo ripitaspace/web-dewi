@@ -144,13 +144,14 @@ describe('Import and export', () => {
     const workbook = XLSX.readFile(`public/tools/spt-op/examples/${file}`);
     return workbook.SheetNames.map(name => ({ name, rows: XLSX.utils.sheet_to_json<string[]>(workbook.Sheets[name], { header: 1, raw: false, defval: '' }) }));
   };
-  it.each(exampleFiles)('loads incomplete example %s while retaining source rows for review', file => {
+  it.each(exampleFiles)('loads example %s while retaining source rows for review', file => {
     const result = importTemplateWorkbook(readExample(file), { mode: 'example' });
     expect(result).toMatchObject({ recognized: true, errors: [] });
     expect(result.draft?.profile.name).toMatch(/^SIMULASI/);
     expect(result.draft?.profile.incomeSource).toBe(exampleIncomeSources[file]);
     expect(result.draft?.importTables['11_UTANG']).not.toHaveLength(0);
-    expect(result.warnings.length).toBeGreaterThan(0);
+    if (file === 'SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx') expect(result.warnings).toHaveLength(0);
+    else expect(result.warnings.length).toBeGreaterThan(0);
   });
   it('calculates the regular employee example and marks unrelated branches not applicable', () => {
     const result = importTemplateWorkbook(readExample('SPT_OP_WP01_Karyawan_2025.xlsx'), { mode: 'example' });
@@ -170,10 +171,16 @@ describe('Import and export', () => {
     const result = importTemplateWorkbook(sheets, { mode: 'example' });
     expect(result.draft?.extras.umkmPaid0).toBe('300');
   });
-  it('calculates the cleaned UMKM example without duplicate final-income rows', () => {
+  it('calculates the cleaned UMKM example with complete active attachments', () => {
     const result = importTemplateWorkbook(readExample('SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx'), { mode: 'example' });
-    expect(result.warnings.some(warning => warning.startsWith('14_PENGHASILAN_LAIN'))).toBe(false);
-    expect(compute(result.draft!).find(item => item.key === 'umkmTax')).toMatchObject({ value: 0, verification: 'ruleset-2025' });
+    const draft = result.draft!;
+    expect(result.warnings).toHaveLength(0);
+    expect(draft.profile.maritalTax).toBe('Gabung');
+    expect(draft.tables.family.map(item => item.values.relation)).toEqual(['Istri', 'Anak']);
+    expect(draft.tables.receivables.every(item => item.values.code !== '0209')).toBe(true);
+    expect(draft.tables.debts.every(item => item.values.code === '101')).toBe(true);
+    for (const section of ['family', 'receivables', 'debts', 'umkm']) expect(sectionStatus(draft, section)).toEqual({ applicability: 'Berlaku', progress: 'Lengkap' });
+    expect(compute(draft).find(item => item.key === 'umkmTax')).toMatchObject({ value: 0, verification: 'ruleset-2025' });
   });
   it('keeps the standard Excel import strict while normalizing known movable-asset ownership values', () => {
     const sheets = readExample('SPT_OP_WP01_Karyawan_2025.xlsx');

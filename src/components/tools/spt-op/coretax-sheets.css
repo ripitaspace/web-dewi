@@ -366,3 +366,8 @@
 .spt-coretax .sheet[data-sheet="3"] .idgrid .sep .tick{width:4.6mm;height:4.6mm;margin-right:1.2mm;vertical-align:middle}
 .spt-coretax .sheet[data-sheet="3"] .idgrid .sep p:nth-of-type(2){margin-top:1.5mm;margin-bottom:3mm;padding-right:1mm}
 .spt-coretax .sheet[data-sheet="3"] .idgrid .sep .digitrow i{width:4.45mm;height:4.8mm}
+
+/* Induk halaman 2 — rumus angsuran PPh 25 tetap menjadi satu baris utuh. */
+.spt-coretax .sheet[data-sheet="4"] .section[data-sec="H"]+.form-body .inline-formula{display:inline-flex;align-items:center;gap:.55mm;white-space:nowrap;text-indent:0;vertical-align:middle;margin-left:1mm}
+.spt-coretax .sheet[data-sheet="4"] .section[data-sec="H"]+.form-body .inline-formula .inbox{flex:none;width:6mm;height:3.8mm;vertical-align:middle}
+.spt-coretax .sheet[data-sheet="4"] .section[data-sec="H"]+.form-body .inline-formula .ref{flex:none;margin:0;min-width:4.3mm;height:4.3mm;display:inline-flex;align-items:center;justify-content:center;line-height:1}
