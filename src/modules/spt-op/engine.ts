@@ -164,8 +164,8 @@ export function compute(d: Draft): Result[] {
 const questionFor: Record<string, string> = { jobs: 'hasJobs', withholding: 'hasWithholding', debts: 'hasDebt', finalincome: 'hasFinal', exempt: 'hasExempt', foreign: 'hasForeign', nppn: 'hasNorm', otherdomestic: 'hasOtherDomestic', umkm: 'hasUMKM', opent: 'hasOPPT', normmonths: 'hasNorm', depreciation: 'hasDepreciation', amortization: 'hasDepreciation', entertainment: 'hasSpecialCosts', promotion: 'hasSpecialCosts', baddebt: 'hasSpecialCosts', deductions: 'hasDeductions', taxrelief: 'hasTaxRelief' };
 export function sectionStatus(d: Draft, k: string) {
     const q = questionFor[k], answer = q ? d.questions[q] : undefined;
-    const yes = answer === 'ya' || answer === 'NPPN', no = answer === 'tidak' || ['PEMBUKUAN', 'FINAL_TANPA_PEMBUKUAN'].includes(answer || '');
     const rows = d.tables[k] || [];
+    const yes = answer === 'ya' || answer === 'NPPN' || (!q && rows.length > 0), no = answer === 'tidak' || ['PEMBUKUAN', 'FINAL_TANPA_PEMBUKUAN'].includes(answer || '');
     if (no) return { applicability: 'Tidak Berlaku', progress: '—' };
     if (!yes) return { applicability: 'Perlu Verifikasi', progress: 'Menunggu jawaban' };
     if (!rows.length || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review)) return { applicability: 'Berlaku', progress: 'Belum Lengkap' };
