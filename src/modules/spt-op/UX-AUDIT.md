@@ -321,3 +321,5 @@ Belum: grid bulanan & tabel inline (P2), kondisional `ownerTin`, katalog kode (m
 
 **P2 (sebagian) selesai:** grid kalender 12 bulan untuk L3B-A/B/C (Tab Januari→Desember, total setahun, tombol "Isi N bulan kosong dengan 0"); `ownerTin`/`ownerName` hanya tampil dan wajib bila `ownership = Other` (aturan `dependsOn` di `field-rules.ts`, dipakai `errors()`, impor, dan `cellParts`).
 Belum dari P2: edit tabel inline (L1A dkk.) — ditunda karena mengubah pola interaksi tabel dan perlu keputusan sendiri.
+
+**Tabel inline selesai:** tombol "▦ Edit sebagai tabel" pada setiap lampiran bertabel (bukan buku besar L3A-1..3) membuka grid lebar (`table-grid.tsx`): satu baris = satu `Row` di draft yang sama dengan dialog baris; kontrol sel mengikuti tipe (angka/identitas/pilihan/tanggal/teks); Enter = baris berikutnya (membuat baris baru di akhir), Tab = kolom berikutnya; sel bermasalah ditandai + hitungan ⚠ per baris; duplikasi/hapus; total kolom ringkasan; kolom "Dilepas" untuk harta. Dialog baris tetap tersedia.
