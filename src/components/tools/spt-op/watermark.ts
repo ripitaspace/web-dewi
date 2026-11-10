@@ -65,7 +65,7 @@ export function applyStamp(root: HTMLElement | null, draft: Draft): () => void {
     if (!root) return () => undefined;
     const { id, at } = stampId(draft);
     const owner = (draft.profile.name || 'Tanpa nama').toString().trim().toUpperCase().slice(0, 40);
-    const tile = `<svg xmlns="http://www.w3.org/2000/svg" width="380" height="260"><g transform="rotate(-30 190 130)" font-family="Helvetica,Arial,sans-serif" text-anchor="middle" fill="rgb(110,110,110)"><text x="190" y="135" font-size="11" font-weight="600" letter-spacing="1.5" fill-opacity="0.15">${esc(owner)} · DRAF PRIBADI</text></g></svg>`;
+    const tile = `<svg xmlns="http://www.w3.org/2000/svg" width="380" height="260"><g transform="rotate(-30 190 130)" font-family="Helvetica,Arial,sans-serif" text-anchor="middle" fill="rgb(110,110,110)"><text x="190" y="135" font-size="11" font-weight="600" letter-spacing="1.5" fill-opacity="0.07">${esc(owner)} · DRAF PRIBADI</text></g></svg>`;
     const bg = `url("data:image/svg+xml;utf8,${encodeURIComponent(tile)}")`;
     const footer = `PUSPITACORE · SPT Orang Pribadi Studio · Dicetak ${at.toLocaleString('id-ID')} · ID ${id} · ${owner} · Bukan dokumen resmi DJP — periksa kembali sebelum dilaporkan`;
     const nodes: HTMLElement[] = [];

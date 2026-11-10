@@ -13,8 +13,9 @@ import { useDrafts } from './use-drafts';
 import './studio.css';
 import { navigation, Topbar, Navigation } from './chrome';
 import { type NavigationTarget } from './navigation-tree';
-import { PrintDialog } from './print-dialog';
+import { PrintDialog, type PrintJob } from './print-dialog';
 import { applyStamp } from './watermark';
+import { overflowingPrintSheets } from './print-layout';
 import { firstPage, landscapePages, lastPage, pageNumbers, sheetLabel } from '@/modules/spt-op/coretax-map';
 
 const exampleScenarios = [
@@ -30,16 +31,20 @@ const examplePath = (file: string) => `/tools/spt-op/examples/${file}`;
 
 export function SptStudio() {
     const { draft, dispatch, ready, saved, list, save, replace, openDraft, deleteDraft, reload, rescue, legacy, blocked } = useDrafts();
-    const [section, setSection] = useState('profile'), [page, setPage] = useState(3), [part, setPart] = useState(0), [zoom, setZoom] = useState(100), [modal, setModal] = useState(''), [notice, setNotice] = useState(''), [sheets, setSheets] = useState<Worksheet[] | null>(null), [printPages, setPrintPages] = useState<number[]>([]), [pdfPages, setPdfPages] = useState<number[]>([]), [copyId, setCopyId] = useState(''), [focusId, setFocusId] = useState<string | null>(null), [isMaximized, setIsMaximized] = useState(false), [isInspectorCompact, setIsInspectorCompact] = useState(false), [, setLoadingExample] = useState('');
+    const [section, setSection] = useState('profile'), [page, setPage] = useState(3), [part, setPart] = useState(0), [zoom, setZoom] = useState(100), [modal, setModal] = useState(''), [notice, setNotice] = useState(''), [sheets, setSheets] = useState<Worksheet[] | null>(null), [printJob, setPrintJob] = useState<PrintJob | null>(null), [pdfJob, setPdfJob] = useState<PrintJob | null>(null), [copyId, setCopyId] = useState(''), [focusId, setFocusId] = useState<string | null>(null), [isMaximized, setIsMaximized] = useState(false), [isInspectorCompact, setIsInspectorCompact] = useState(false), [, setLoadingExample] = useState('');
     const router = useRouter();
     const file = useRef<HTMLInputElement>(null), restoreFile = useRef<HTMLInputElement>(null), printRef = useRef<HTMLDivElement>(null);
+    // The export toolbar always produces the standard form-only PDF. Keep this
+    // small adapter while the toolbar remains a compact inline JSX expression.
+    const pdfPages = pdfJob?.pages || [];
+    const setPdfPages = (pages: number[]) => setPdfJob({ pages, includeDetails: false });
     useEffect(() => {
         document.body.classList.toggle('spt-workspace-maximized', isMaximized);
         return () => document.body.classList.remove('spt-workspace-maximized');
     }, [isMaximized]);
-    useEffect(() => { if (!pdfPages.length)
+    useEffect(() => { if (!pdfJob)
         return; let cancelled = false, removeStamp = () => {}; document.body.classList.add('spt-pdf-export');
-        (async () => { try { await document.fonts?.ready; await Promise.all(Array.from(printRef.current?.querySelectorAll('img') || []).map(i => i.decode().catch(() => undefined))); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+        (async () => { try { await document.fonts?.ready; await Promise.all(Array.from(printRef.current?.querySelectorAll('img') || []).map(i => i.decode().catch(() => undefined))); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); const overflow = overflowingPrintSheets(printRef.current); if (overflow.length) throw Error(`Lembar melebihi batas F4: ${overflow.join(', ')}.`);
             const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import('html2canvas-pro'), import('jspdf')]);
             const pages = Array.from(printRef.current?.querySelectorAll<HTMLElement>('.spt-coretax .sheet, .spt-print-details') || []);
             if (!pages.length) throw Error('no pages');
@@ -70,12 +75,12 @@ export function SptStudio() {
                 setNotice(`Menyiapkan PDF… ${index + 1}/${pages.length}`);
             }
             if (cancelled || !pdf) return; const name = (draft?.profile.name || 'SPT_OP').replace(/[^\w\-]+/g, '_'); pdf.save(`SPT_OP_${draft?.profile.year ?? ''}_${name}.pdf`); setNotice('PDF selesai diunduh.'); }
-          catch { if (!cancelled) setNotice('Gagal membuat PDF. Coba lagi.'); }
-          finally { removeStamp(); document.body.classList.remove('spt-pdf-export'); if (!cancelled) setPdfPages([]); } })();
-        return () => { cancelled = true; document.body.classList.remove('spt-pdf-export'); }; }, [pdfPages]); // eslint-disable-line react-hooks/exhaustive-deps
-    useEffect(() => { if (!printPages.length)
-        return; let cancelled = false, removeStamp = () => {}; const after = () => { removeStamp(); document.body.classList.remove('spt-printing'); setPrintPages([]); }; document.body.classList.add('spt-printing'); window.addEventListener('afterprint', after); Promise.all(Array.from(printRef.current?.querySelectorAll('img') || []).map(i => i.decode())).then(() => { if (!cancelled) { removeStamp = applyStamp(printRef.current, draft!);
-        window.print(); } }).catch(() => { setNotice('Gagal memuat formulir cetak. Coba lagi setelah semua halaman tersedia.'); after(); }); return () => { cancelled = true; document.body.classList.remove('spt-printing'); window.removeEventListener('afterprint', after); }; }, [printPages]);
+          catch (error) { if (!cancelled) setNotice(error instanceof Error ? `PDF dibatalkan: ${error.message}` : 'Gagal membuat PDF. Coba lagi.'); }
+          finally { removeStamp(); document.body.classList.remove('spt-pdf-export'); if (!cancelled) setPdfJob(null); } })();
+        return () => { cancelled = true; document.body.classList.remove('spt-pdf-export'); }; }, [pdfJob]); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => { if (!printJob)
+        return; let cancelled = false, removeStamp = () => {}; const after = () => { removeStamp(); document.body.classList.remove('spt-printing'); setPrintJob(null); }; document.body.classList.add('spt-printing'); window.addEventListener('afterprint', after); Promise.all(Array.from(printRef.current?.querySelectorAll('img') || []).map(i => i.decode())).then(() => { const overflow = overflowingPrintSheets(printRef.current); if (overflow.length) { setNotice(`Cetak dibatalkan: lembar melebihi batas F4 (${overflow.join(', ')}).`); after(); return; } if (!cancelled) { removeStamp = applyStamp(printRef.current, draft!);
+        window.print(); } }).catch(() => { setNotice('Gagal memuat formulir cetak. Coba lagi setelah semua halaman tersedia.'); after(); }); return () => { cancelled = true; document.body.classList.remove('spt-printing'); window.removeEventListener('afterprint', after); }; }, [draft, printJob]);
     function choose(s: string) { setFocusId(null); setSection(s); setPage(navigation.find(n => n[1] === s)?.[3] || 3); setPart(0); }
     function navigate(target: NavigationTarget) {
         setSection(target.section);
@@ -172,5 +177,5 @@ export function SptStudio() {
         setModal(''); }}>Buka draft</button><button className="spt-delete-draft" aria-label={`Hapus draft ${item.profile.name || 'tanpa nama'} tahun ${item.profile.year}`} onClick={async () => { const name = item.profile.name || 'Tanpa nama'; if (window.confirm(`Hapus draft ${name} tahun ${item.profile.year}? Data lokal ini tidak dapat dipulihkan.`) && await deleteDraft(item.id)) setModal(''); }}>🗑 Hapus</button></div></div>)}<h3>Copy harta dan utang tahun sebelumnya</h3><select value={copyId} onChange={e => setCopyId(e.target.value)}><option value="">Pilih draft sumber</option>{list.filter(x => x.profile.tin === d.profile.tin && Number(x.profile.year) < Number(d.profile.year)).map(x => <option key={x.id} value={x.id}>{x.profile.name} · {x.profile.year}</option>)}</select><button disabled={!copyId} onClick={() => { const source = list.find(x => x.id === copyId); if (source && window.confirm('Tambahkan salinan harta/utang? Periksa duplikasi dan perbarui nilai akhir tahun.')) {
         dispatch({ type: 'replace', draft: copyAssets(source, d) });
         setModal('');
-    } }}>Copy dan tinjau nilai</button></Dialog>}{modal === 'print' && <PrintDialog draft={d} page={page} onClose={() => setModal('')} onPrint={pages => { setModal(''); setPrintPages(pages); }}/>}<div className="spt-print" ref={printRef}>{(pdfPages.length ? pdfPages : printPages).flatMap(n => Array.from({ length: pageCount(d, n) }, (_, i) => <Document key={n + '-' + i} draft={d} page={n} part={i} print/>))}{(printPages.length > 0 || pdfPages.length > 0) && <PrintDetails draft={d}/>}</div></section>;
+    } }}>Copy dan tinjau nilai</button></Dialog>}{modal === 'print' && <PrintDialog draft={d} page={page} onClose={() => setModal('')} onPrint={job => { setModal(''); setPrintJob(job); }}/>}<div className="spt-print" ref={printRef}>{(pdfJob || printJob) && (pdfJob || printJob)!.pages.flatMap(n => Array.from({ length: pageCount(d, n) }, (_, i) => <Document key={n + '-' + i} draft={d} page={n} part={i} print/>))}{(pdfJob || printJob)?.includeDetails && <PrintDetails draft={d}/>}</div></section>;
 }

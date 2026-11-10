@@ -96,3 +96,7 @@ body.spt-pdf-export .spt-print{display:block;position:fixed;left:-20000px;top:0;
 .spt-screen .spt-continuation{display:none}
 @media(max-width:700px){.spt-continuation{align-items:stretch;flex-direction:column}.spt-continuation .spt-actions{display:grid;grid-template-columns:1fr 1fr}.spt-continuation label{grid-column:1/-1;justify-content:space-between}.spt-continuation label select{flex:1}}
 @media(max-width:560px){.spt-grid-foot{align-items:stretch}.spt-grid-foot b{margin-left:0}.spt-grid-pagination{width:100%;display:grid;grid-template-columns:1fr 1fr}.spt-grid-pagination span{grid-column:1/-1;text-align:center}.spt-grid-pagination button{width:100%}}
+
+/* Keep the direct PDF renderer on the same F4 canvas as browser printing. */
+body.spt-pdf-export .spt-print .spt-coretax .sheet{width:215.9mm;height:330.2mm;overflow:hidden}
+body.spt-pdf-export .spt-print .spt-coretax .sheet.landscape{width:330.2mm;height:215.9mm}

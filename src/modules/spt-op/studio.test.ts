@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as XLSX from 'xlsx';
 import { backup, catalog, draftKey, fresh, readBackup, reducer, row } from './model';
-import { compute, errors, numeric, readiness, regularEmployeeEligibility, sectionStatus, umkmEligibility, validate } from './engine';
+import { compute, errors, numeric, printBlockers, readiness, regularEmployeeEligibility, sectionStatus, umkmEligibility, validate } from './engine';
 import { copyAssets, csv, excelDate, parseCSV, previewImport, readWorkbook } from './import-export';
 import { importTemplateWorkbook } from './template-import';
 import { pageCount, pageRows } from './form-layout';
@@ -339,6 +339,12 @@ describe('Reconciliation and tax verification gates', () => {
     d.questions.hasCustomP25 = 'ya';
     expect(compute(d).find(r => r.key === 'pk')?.value).toBe(60000000);
     expect(compute(d).find(r => r.key === 'p25Next')).toMatchObject({ value: null, verification: 'pending', note: 'Lampiran 4 Bagian A belum termasuk ruleset ini.' });
+  });
+  it('blocks printing when a displayed calculation still needs verification', () => {
+    const d = regularEmployee();
+    expect(printBlockers(d)).toEqual([]);
+    d.questions.hasCustomP25 = 'ya';
+    expect(printBlockers(d)).toContain('Angsuran PPh 25 berikutnya: Lampiran 4 Bagian A belum termasuk ruleset ini.');
   });
   it('holds the ruleset when the PPh 21 answer and its evidence disagree', () => {
     const d = regularEmployee();

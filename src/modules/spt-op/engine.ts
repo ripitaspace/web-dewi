@@ -43,6 +43,13 @@ export interface Result {
     source?: string;
 }
 
+/** Values that must be resolved before a browser print can be treated as a complete SPT form. */
+export function printBlockers(d: Draft): string[] {
+    return compute(d)
+        .filter(result => result.verification === 'pending' || result.verification === 'reconciliation-required')
+        .map(result => `${result.label}: ${result.note}`);
+}
+
 export interface RegularEmployeeEligibility {
     eligible: boolean;
     reason: string;
@@ -152,7 +159,7 @@ export function compute(d: Draft): Result[] {
         { key: 'payable', label: 'Saldo setelah penundaan', value: null, sections: ['extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.questions.hasDeferral === 'tidak' ? notApplicable : {}) },
         { key: 'amended', label: 'Selisih pembetulan', value: null, sections: ['extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.profile.sptStatus === 'Normal' ? notApplicable : {}) },
         { key: 'p25Next', label: 'Angsuran PPh 25 berikutnya', value: p25Next, sections: ['extras'], note: d.questions.hasCustomP25 === 'ya' ? 'Lampiran 4 Bagian A belum termasuk ruleset ini.' : regular.eligible ? calculatedNote : regular.reason, ...(umkm.eligible ? generalTaxNotApplicable : regular.eligible && d.questions.hasCustomP25 !== 'ya' ? calculated : {}) },
-        { key: 'umkmTax', label: 'PPh final UMKM', value: umkmTax, sections: ['umkm'], note: d.questions.hasUMKM === 'tidak' ? 'Tidak Berlaku untuk jawaban SPT ini.' : !umkm.eligible ? umkm.reason : umkmReconciled ? umkm.reason : `PPh terhitung Rp${money(umkmTax)}; rekonsiliasikan dengan setoran/pemotongan Rp${money(umkmPayments)}.`, ...(d.questions.hasUMKM === 'tidak' ? notApplicable : umkm.eligible ? umkmReconciled ? calculatedUmkm : { ...calculatedUmkm, verification: 'reconciliation-required' as const } : {}) },
+        { key: 'umkmTax', label: 'PPh final UMKM', value: umkmTax, sections: ['umkm'], note: d.questions.hasBusiness === 'tidak' || d.questions.hasUMKM === 'tidak' ? 'Tidak Berlaku untuk jawaban SPT ini.' : !umkm.eligible ? umkm.reason : umkmReconciled ? umkm.reason : `PPh terhitung Rp${money(umkmTax)}; rekonsiliasikan dengan setoran/pemotongan Rp${money(umkmPayments)}.`, ...(d.questions.hasBusiness === 'tidak' || d.questions.hasUMKM === 'tidak' ? notApplicable : umkm.eligible ? umkmReconciled ? calculatedUmkm : { ...calculatedUmkm, verification: 'reconciliation-required' as const } : {}) },
         { key: 'phmt', label: 'Alokasi PPh PH/MT', value: null, sections: ['partner'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(!['PH', 'MT'].includes(d.profile.maritalTax) ? notApplicable : {}) },
         { key: 'debt', label: 'Saldo utang akhir tahun', value: sum('debts', 'balance'), sections: ['debts'], note: sourceNote },
         { key: 'final', label: 'Dasar penghasilan final', value: sum('finalincome', 'base'), sections: ['finalincome'], note: sourceNote },

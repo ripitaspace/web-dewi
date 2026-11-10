@@ -84,13 +84,8 @@
 .spt-coretax .suptab{position:absolute;right:2.2mm;top:2mm;width:35mm;height:14mm;padding:2.4mm .6mm;font-size:10.8pt;white-space:normal}
 .spt-coretax .supinputs{position:absolute;left:3mm;right:3mm;bottom:1.4mm;height:5.3mm;margin:0;padding:0;display:flex;justify-content:space-between;align-items:center;font-size:6pt}
 .spt-coretax .supinputs .digitrow i{height:4mm;width:4mm}
-/* Spread the asset and income ledger rows to match the official F4 visual rhythm. */
-.spt-coretax .sheet[data-sheet="5"] .reg.compact td.empty{height:6.3mm}
-.spt-coretax .sheet[data-sheet="5"] .reg:not(.compact) td.empty{height:11.5mm}
-.spt-coretax .sheet[data-sheet="6"] .reg.compact td.empty{height:7mm}
-.spt-coretax .sheet[data-sheet="7"] .reg.compact td.empty{height:6.45mm}
-.spt-coretax .sheet[data-sheet="8"] .reg.compact td.empty{height:6.8mm}
-/* Compact only the two dense Induk pages to remain entirely within one F4 sheet each. */
+/* Dense attachment tables use the standard row heights so every designed sheet
+   stays inside its physical F4 page. Continuation sheets come from pageCount(). */
 
 .spt-coretax .note2{display:flex;justify-content:space-between;gap:4mm;font-size:5.4pt;margin:.6mm 0 1.8mm}
 .spt-coretax .note2 span{flex:1}.spt-coretax .note2 span:last-child{text-align:right}
