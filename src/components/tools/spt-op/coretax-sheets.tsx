@@ -20,11 +20,12 @@ function Digits({ s, i, cls, count }: { s: number; i: number; cls: string; count
   const { draft, print, onField } = useCtx();
   const binding = digitBinding(s, i, count);
   const raw = binding.read(draft);
-  const [typing, setTyping] = useState<string | null>(null);
-  const value = typing ?? raw;
   const month = binding.key === 'fromMonth' || binding.key === 'toMonth';
+  const formatted = month ? padMonth(raw) : raw;
+  const [typing, setTyping] = useState<string | null>(null);
+  const value = typing ?? formatted;
   const editable = !print && !!binding.key && !(s >= 7 && s <= 9 && i >= 2) && !(s === 16 && i === 2);
-  return <span className={cls}>{Array.from({ length: count }, (_, n) => <i key={n}>{value[n] || ''}</i>)}{editable && <input id={`field-${binding.key}`} aria-label={`Formulir ${binding.key}`} title="Klik untuk mengisi" value={value} inputMode="numeric" onFocus={event => { setTyping(raw); event.currentTarget.select(); }} onChange={event => { const next = digitsOnly(event.target.value, count); setTyping(next); onField?.(binding.key!, next); }} onBlur={() => { if (month) onField?.(binding.key!, padMonth(value)); setTyping(null); }} />}</span>;
+  return <span className={cls}>{Array.from({ length: count }, (_, n) => <i key={n}>{value[n] || ''}</i>)}{editable && <input id={`field-${binding.key}`} aria-label={`Formulir ${binding.key}`} title="Klik untuk mengisi" value={value} inputMode="numeric" onFocus={event => { setTyping(formatted); event.currentTarget.select(); }} onChange={event => { const next = digitsOnly(event.target.value, count); setTyping(next); onField?.(binding.key!, next); }} onBlur={() => { if (month) onField?.(binding.key!, padMonth(value)); setTyping(null); }} />}</span>;
 }
 function Q({ s, i, hidden }: { s: number; i: number; hidden?: boolean }) {
   const { draft } = useCtx();
