@@ -112,10 +112,6 @@
 .spt-coretax .ptkpbox{margin-left:auto;margin-right:1.5mm}
 .spt-coretax .inline-formula{font-size:6.4pt}
 .spt-coretax .inbox{display:inline-block;width:6mm;height:3.4mm;border:.3mm solid #3276d7;background:#fff;vertical-align:middle}
-.spt-coretax.is-interactive .emptybox.inline-field{padding:0;overflow:hidden;cursor:text}
-.spt-coretax.is-interactive .emptybox.inline-field input,.spt-coretax.is-interactive .emptybox.inline-field select{display:block;width:100%;height:100%;min-height:0;border:0;background:#fff;color:#111;font:inherit;padding:0 .7mm;box-sizing:border-box}
-.spt-coretax.is-interactive .emptybox.inline-field select{font-size:5.8pt}
-.spt-coretax.is-interactive .emptybox.inline-field input:focus,.spt-coretax.is-interactive .emptybox.inline-field select:focus{outline:.4mm solid #d19718;outline-offset:-.4mm}
 .spt-coretax .gantispt{display:inline-flex;align-items:center;gap:1.2mm;font-size:7pt;margin-left:2mm}
 .spt-coretax .cbx{display:inline-block;width:3.5mm;height:3.5mm;border:.35mm solid #2464bf;background:#fff}
 .spt-coretax .sheet small{font-size:6.2pt}
@@ -274,84 +270,6 @@
 .spt-coretax .sheet[data-sheet="3"] .top-fields::after{content:"";position:absolute;left:0;right:0;bottom:calc(var(--pw) * -.0096);height:calc(var(--pw) * .0009);background:#0e0e0e}
 .spt-coretax .sheet[data-sheet="3"] .tf .sd{position:absolute;left:calc(var(--pw) * 0.0755);top:calc(var(--pw) * 0.0895);transform:translateX(-50%);font-size:5.2pt}
 
-.spt-coretax{width:max-content;flex:none;background:transparent;font-size:7pt;--navy:#202c5c;--yellow:#ffc20c;--blue:#bacce9;--light:#e4e7e7;--border:#181818;--ink:#070707;color:#070707}
-.spt-coretax .sheet{margin:0 0 15px;box-sizing:border-box}
-.spt-coretax .digitrow{position:relative}
-.spt-coretax .digitrow i{font-style:normal;font-size:8pt;line-height:4.2mm;text-align:center;font-weight:700;color:#111;font-family:Arial,Helvetica,sans-serif}
-.spt-coretax .digitrow input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:text;border:0;padding:0;margin:0;background:transparent}
-.spt-coretax .digitrow:focus-within{outline:2px solid var(--yellow);outline-offset:1px}
-.spt-coretax .slot-input{font:inherit;color:#111;background:transparent;border:0;padding:0 .6mm;width:100%;height:100%;min-width:0;box-shadow:none;font-weight:700}
-.spt-coretax .slot-input:focus{outline:2px solid var(--yellow);outline-offset:-1px}
-.spt-coretax .tick.on,.spt-coretax .sq.on{background:#111;box-shadow:inset 0 0 0 1.2px #fff}
-.spt-coretax .tick,.spt-coretax .sq{cursor:default}
-.spt-coretax td.num,.spt-coretax .r-val,.spt-coretax .emptybox{text-align:right}
-.spt-coretax .r-val,.spt-coretax .emptybox,.spt-coretax .qval{font-weight:700;color:#111;font-size:7.5pt}
-.spt-coretax td.empty,.spt-coretax td{font-size:6.4pt;overflow:hidden;word-break:break-word}
-.spt-coretax .sub-line{white-space:nowrap;overflow:hidden;text-overflow:clip;font-weight:600;color:#111}
-.spt-coretax .sub-line:empty{display:none}
-.spt-coretax .cb{display:inline-block;width:2.6mm;height:2.6mm;border:.25mm solid #2464bf;margin-right:1mm;vertical-align:middle;background:#fff}
-.spt-coretax .cb.on{background:#111}
-.spt-coretax td[data-sub]{text-align:left}
-@media print{.spt-coretax{width:max-content;background:#fff}.spt-coretax .sheet{margin:0}}
-
-/* Induk halaman 1 – penyesuaian ke formulir resmi (header, identitas, pita pertanyaan) */
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-id{font-weight:400;font-size:9.6pt}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-id strong{font-weight:700}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-name{font-size:13pt;font-weight:800;letter-spacing:-.02em;line-height:1.02}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-name span{font-size:9.6pt!important;font-weight:700;letter-spacing:0;line-height:1.08;display:inline-block}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-box{border:0;gap:.6mm}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-box br{display:none}
-.spt-coretax .sheet:is([data-sheet="3"],[data-sheet="4"]) .induk-head{border-bottom-width:calc(var(--pw) * 0.0022)}
-
-/* Bagian A */
-.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow{flex:1;min-width:0}
-.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow i{flex:1;width:auto;min-width:0}
-.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r{border-bottom:1px solid rgba(255,255,255,.14);padding-bottom:.3mm}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep p:nth-of-type(2){padding-right:calc(var(--pw) * 0.045)}
-
-/* Bagian B–D */
-.spt-coretax .sheet[data-sheet="3"] .qtext{color:#2b3f7e;font-weight:700;margin-right:calc(var(--pw) * 0.0216)}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="B"]+.form-body>.question:is(:nth-child(3),:nth-child(5),:nth-child(7),:nth-child(9)) .qtext{padding-left:calc(var(--pw) * 0.0115);text-indent:calc(var(--pw) * -0.0115)}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="B"]+.form-body>.line-row>b{background:transparent;margin-left:calc(var(--pw) * 0.0434);width:auto;min-width:calc(var(--pw) * 0.0204);justify-content:flex-start;font-weight:400;font-size:7.2pt}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qval,
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="D"]+.form-body>.question:nth-child(5) .qval{height:calc(var(--pw) * 0.0235)}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.line-row:nth-child(10) .r-val{height:calc(var(--pw) * 0.0225)}
-.spt-coretax .sheet[data-sheet="3"] .opts .tick{width:calc(var(--pw) * 0.0237);height:calc(var(--pw) * 0.0165);margin-right:calc(var(--pw) * 0.0063)}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qtext{min-height:calc(var(--pw) * 0.0235);display:flex;align-items:center;margin-top:calc(var(--pw) * 0.0007)}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.line-row:nth-child(10) .r-val{display:flex;align-items:center;justify-content:flex-end}
-
-/* Kotak isian kanan Induk halaman 1 – ukuran mengikuti formulir resmi */
-.spt-coretax .sheet[data-sheet="3"] .question{grid-template-columns:calc(var(--pw) * 0.0204) calc(var(--pw) * 0.0204) minmax(0,1fr) calc(var(--pw) * 0.2624)}
-.spt-coretax .sheet[data-sheet="3"] .qtext{margin-right:calc(var(--pw) * 0.0151);min-height:calc(var(--pw) * 0.0165);box-sizing:border-box}
-.spt-coretax .sheet[data-sheet="3"] .question .nb,
-.spt-coretax .sheet[data-sheet="3"] .line-row b{height:calc(var(--pw) * 0.0165)}
-.spt-coretax .sheet[data-sheet="3"] .question .qval,
-.spt-coretax .sheet[data-sheet="3"] .r-val{box-sizing:border-box;width:calc(var(--pw) * 0.2624);height:calc(var(--pw) * 0.0165);border:calc(var(--pw) * 0.0016) solid #4a72c2;background:#fff;display:flex;align-items:center;justify-content:flex-end;padding:0 calc(var(--pw) * 0.004);line-height:1;font-size:6.8pt;overflow:hidden;white-space:nowrap}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qval,
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="D"]+.form-body>.question:nth-child(5) .qval,
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.line-row:nth-child(10) .r-val{height:calc(var(--pw) * 0.0218)}
-.spt-coretax .sheet[data-sheet="3"] .section[data-sec="C"]+.form-body>.question:nth-child(8) .qtext{min-height:calc(var(--pw) * 0.0218)}
-.spt-coretax .sheet[data-sheet="3"] .emptybox.ptkpbox{box-sizing:border-box;width:calc(var(--pw) * 0.1575)!important;height:calc(var(--pw) * 0.0165);min-width:0;margin-right:calc(var(--pw) * 0.0345);border:calc(var(--pw) * 0.0016) solid #4a72c2;flex:none}
-.spt-coretax .sheet[data-sheet="3"] .question .qval,
-.spt-coretax .sheet[data-sheet="3"] .r-val{font-size:calc(var(--pw) * 0.0105)}
-
-/* Kotak digit terakhir: <input> tersembunyi menjadi anak terakhir, jadi :last-child tidak kena */
-.spt-coretax .digitrow i:last-of-type{border-right:1px solid #1b1b1b}
-.spt-coretax .sheet[data-sheet="3"] .tf .digitrow i:last-of-type{border-right-color:#2e6fc4}
-
-/* Isyarat interaktif — hanya di tampilan isian (kelas .is-interactive tidak dipasang saat cetak/PDF). */
-.spt-coretax.is-interactive .clickable{cursor:pointer;transition:background-color .12s,outline-color .12s}
-.spt-coretax.is-interactive .digitrow:has(input){cursor:text}
-@media (hover:hover){
-  .spt-coretax.is-interactive .tick.clickable:hover{outline:2px solid #2464bf;outline-offset:1px;background:#e9f1ff}
-  .spt-coretax.is-interactive td.clickable:hover,.spt-coretax.is-interactive .emptybox.clickable:hover,.spt-coretax.is-interactive .r-val.clickable:hover{background:#fffbe1;outline:1px solid #c9a634;outline-offset:-1px}
-  .spt-coretax.is-interactive .digitrow:has(input):hover i{background:#fffbe1}
-  .spt-coretax.is-interactive .digitrow:has(input):hover{outline:2px solid #c9a634;outline-offset:1px}
-}
-.spt-coretax.is-interactive .tick.clickable:focus-visible,.spt-coretax.is-interactive .digitrow:has(input:focus-visible){outline:3px solid #86a7d4;outline-offset:2px}
-.spt-coretax.is-interactive .digitrow:has(input:focus) i{background:#fffbe1}
-@media (prefers-reduced-motion:reduce){.spt-coretax.is-interactive .clickable{transition:none}}
-
 /* halaman 2 induk: penyesuaian terhadap acuan */
 .spt-coretax [data-sheet="4"] .line-row b.a2{margin-left:calc(var(--pw)*.0013 - 2mm)}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"],.spt-coretax [data-sheet="4"] .section[data-sec="F"],.spt-coretax [data-sheet="4"] .section[data-sec="G"],.spt-coretax [data-sheet="4"] .section[data-sec="H"]{font-weight:400}
@@ -364,8 +282,6 @@
 
 /* halaman 2 induk: isian */
 .spt-coretax [data-sheet="4"] .qval,.spt-coretax [data-sheet="4"] .r-val{position:relative;left:calc(var(--pw)*.0054);width:calc(var(--pw)*.2554)}
-/* Do not inherit the options paragraph's negative hanging indent into formula badges. */
-.spt-coretax [data-sheet="4"] .inline-formula{white-space:nowrap;text-indent:0}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .opts p,.spt-coretax [data-sheet="4"] .section[data-sec="I"]+.form-body .opts p{font-size:7.15pt;line-height:calc(var(--pw)*.0165)}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .opts,.spt-coretax [data-sheet="4"] .section[data-sec="I"]+.form-body .opts{margin-bottom:calc(var(--pw)*.0019)}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .opts{margin-right:calc(var(--pw)*.36)}
@@ -408,4 +324,25 @@
 .spt-coretax [data-sheet="4"] .section[data-sec="J"]{margin-top:.7mm!important}
 .spt-coretax [data-sheet="4"] .section[data-sec="E"]+.form-body .line-row:last-child{margin-top:calc(var(--pw)*.0031)}
 .spt-coretax [data-sheet="4"] .section[data-sec="F"]{margin-top:.6mm!important}
+
 .spt-coretax [data-sheet="4"] .form-body.kform{margin-top:0!important}
+
+.spt-coretax{width:max-content;flex:none;background:transparent;font-size:7pt;--navy:#202c5c;--yellow:#ffc20c;--blue:#bacce9;--light:#e4e7e7;--border:#181818;--ink:#070707;color:#070707}
+.spt-coretax .sheet{margin:0 0 15px;box-sizing:border-box}
+.spt-coretax .digitrow{position:relative}
+.spt-coretax .digitrow i{font-style:normal;font-size:8pt;line-height:4.2mm;text-align:center;font-weight:700;color:#111;font-family:Arial,Helvetica,sans-serif}
+.spt-coretax .digitrow input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:text;border:0;padding:0;margin:0;background:transparent}
+.spt-coretax .digitrow:focus-within{outline:2px solid var(--yellow);outline-offset:1px}
+.spt-coretax .slot-input{font:inherit;color:#111;background:transparent;border:0;padding:0 .6mm;width:100%;height:100%;min-width:0;box-shadow:none;font-weight:700}
+.spt-coretax .slot-input:focus{outline:2px solid var(--yellow);outline-offset:-1px}
+.spt-coretax .tick.on,.spt-coretax .sq.on{background:#111;box-shadow:inset 0 0 0 1.2px #fff}
+.spt-coretax .tick,.spt-coretax .sq{cursor:default}
+.spt-coretax td.num,.spt-coretax .r-val,.spt-coretax .emptybox{text-align:right}
+.spt-coretax .r-val,.spt-coretax .emptybox,.spt-coretax .qval{font-weight:700;color:#111;font-size:7.5pt}
+.spt-coretax td.empty,.spt-coretax td{font-size:6.4pt;overflow:hidden;word-break:break-word}
+.spt-coretax .sub-line{white-space:nowrap;overflow:hidden;text-overflow:clip;font-weight:600;color:#111}
+.spt-coretax .sub-line:empty{display:none}
+.spt-coretax .cb{display:inline-block;width:2.6mm;height:2.6mm;border:.25mm solid #2464bf;margin-right:1mm;vertical-align:middle;background:#fff}
+.spt-coretax .cb.on{background:#111}
+.spt-coretax td[data-sub]{text-align:left}
+@media print{.spt-coretax{width:max-content;background:#fff}.spt-coretax .sheet{margin:0}}

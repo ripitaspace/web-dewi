@@ -63,8 +63,8 @@ function Box({ s, i, style }: { s: number; i: number; style?: React.CSSPropertie
   const shown = group === 'declaration' || group === 'profile' ? raw : raw ? money(numeric(raw)) : '';
   if (print || !onSet || !meta) return <span className={`emptybox${print ? '' : ' clickable'}`} title={print ? undefined : 'Klik untuk mengisi di editor'} style={style} onClick={print ? undefined : () => onSection?.(group)}>{shown}</span>;
   const control = meta.type === 'select'
-    ? <select aria-label={`Formulir ${key}`} value={raw} onChange={event => onSet(group, key, event.target.value)}><option value="">Pilih</option>{meta.options.map(option => { const [value, label] = option.split('|'); return <option key={value} value={value}>{label || value}</option>; })}</select>
-    : <input aria-label={`Formulir ${key}`} value={raw} inputMode={meta.type === 'money' ? 'decimal' : undefined} onClick={event => event.stopPropagation()} onChange={event => onSet(group, key, event.target.value)} />;
+    ? <select className="slot-input" aria-label={`Formulir ${key}`} value={raw} onChange={event => onSet(group, key, event.target.value)}><option value="">Pilih</option>{meta.options.map(option => { const [value, label] = option.split('|'); return <option key={value} value={value}>{label || value}</option>; })}</select>
+    : <input className="slot-input" aria-label={`Formulir ${key}`} value={raw} inputMode={meta.type === 'money' ? 'decimal' : undefined} onClick={event => event.stopPropagation()} onChange={event => onSet(group, key, event.target.value)} />;
   return <span className="emptybox inline-field" style={style}>{control}</span>;
 }
 function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { s: number; t: number; r: number; c: number; code?: string; g?: string; k?: number; sum?: boolean; sub?: string; lead?: string; tag?: string; className?: string; style?: React.CSSProperties }) {
@@ -92,6 +92,7 @@ function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { 
   const clickable = !print && !!section && !binding.book;
   return <td className={[className, /^[\d.,]+$|^-?[\d.,]+$/.test(content) ? 'num' : '', clickable ? 'clickable' : ''].filter(Boolean).join(' ') || undefined} style={style} onClick={clickable ? () => onSection?.(section!) : undefined} title={clickable ? 'Klik untuk mengisi / mengedit tabel' : undefined} data-tag={tag} data-lead={lead && !content ? lead : undefined}>{sub ? sub.split('|').map((label, index) => <div className="sub-line" key={index}>{label.startsWith('[ ]') ? <><span className={`cb${parts[index] === 'x' ? ' on' : ''}`} />{label.slice(4)}</> : <>{label} {parts[index] || ''}</>}</div>) : content}</td>;
 }
+// Keep this list in sync with SlotComponents generated from the Coretax template.
 const slots: SlotComponents = { Digits, Q, R, Box, Tick, C };
 
 /**

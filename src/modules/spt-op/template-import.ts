@@ -7,6 +7,8 @@ type InputSheet = typeof INPUT_SHEETS[number];
 type SourceRow = { values: Values; line: number };
 export type TemplateImportSummary = { sheet: string; rows: number; mapped: number };
 export type TemplateImportResult = { recognized: boolean; draft?: Draft; errors: string[]; warnings: string[]; summary: TemplateImportSummary[] };
+export type TemplateImportMode = 'strict' | 'example';
+export type TemplateImportOptions = { mode?: TemplateImportMode };
 
 const compact = (value: string) => value.trim().toUpperCase().replace(/[\s-]+/g, '_');
 const yesNo = (value: string) => compact(value) === 'YA' ? 'ya' : compact(value) === 'TIDAK' ? 'tidak' : value.trim();
@@ -32,9 +34,22 @@ const tableMaps: Partial<Record<InputSheet, [string, Record<string, string>]>> =
     '17_NORMA': ['nppn', { tku: 'tku_id', business: 'jenis_usaha_pekerjaan', gross: 'peredaran_bruto', norm: 'persen_norma', net: 'penghasilan_neto_input' }],
 };
 
-export function importTemplateWorkbook(sheets: Worksheet[]): TemplateImportResult {
+function normalizeTableValues(key: string, values: Values): Values {
+    if (key !== 'movable') return values;
+    const ownership = ({ SENDIRI: 'Taxpayer', PIHAK_LAIN: 'Other' } as Record<string, string>)[compact(values.ownership || '')];
+    return ownership ? { ...values, ownership } : values;
+}
+
+function validationFields(key: string, fields: { key: string; type: string; label: string; required: boolean; options: string[] }[], values: Values) {
+    if (key !== 'movable' || values.ownership !== 'Taxpayer') return fields;
+    return fields.map(field => ['ownerTin', 'ownerName'].includes(field.key) ? { ...field, required: false } : field);
+}
+
+export function importTemplateWorkbook(sheets: Worksheet[], options: TemplateImportOptions = {}): TemplateImportResult {
+    const mode = options.mode || 'strict';
     const byName = new Map(sheets.map(sheet => [sheet.name, sheet]));
     const errors: string[] = [], warnings: string[] = [], summary: TemplateImportSummary[] = [];
+    const reviewRows = new Map<string, { count: number; messages: Set<string> }>();
     const meta = byName.get('01_META');
     if (!meta || meta.rows[4]?.[0] !== 'file_signature') return { recognized: false, errors, warnings, summary };
     const missing = INPUT_SHEETS.filter(name => !byName.has(name));
@@ -75,8 +90,24 @@ export function importTemplateWorkbook(sheets: Worksheet[]): TemplateImportResul
     summary.push({ sheet: '03_PILIHAN_INDUK', rows: source['03_PILIHAN_INDUK'].length, mapped: source['03_PILIHAN_INDUK'].filter(item => item.values.jawaban).length });
     const addTable = (key: string, input: SourceRow[], map: Record<string, string>, name: string) => {
         const fields = catalog.tables[key]?.columns || [];
-        const rows = input.map(item => row(copy(item, map), `import:${name}:${item.line}`));
-        for (const item of rows) for (const message of errorsFor(fields, item)) errors.push(`${name}: ${message}`);
+        const rows: Row[] = [];
+        for (const item of input) {
+            const next = row(normalizeTableValues(key, copy(item, map)), `import:${name}:${item.line}`);
+            const messages = errorsFor(validationFields(key, fields, next.values), next);
+            if (!messages.length) {
+                rows.push(next);
+                continue;
+            }
+            if (mode === 'strict') {
+                for (const message of messages) errors.push(`${name}: ${message}`);
+                rows.push(next);
+                continue;
+            }
+            const review = reviewRows.get(name) || { count: 0, messages: new Set<string>() };
+            review.count++;
+            for (const message of messages) review.messages.add(message);
+            reviewRows.set(name, review);
+        }
         d.tables[key] = rows;
         summary.push({ sheet: name, rows: input.length, mapped: rows.length });
     };
@@ -110,6 +141,7 @@ export function importTemplateWorkbook(sheets: Worksheet[]): TemplateImportResul
     summary.push({ sheet: '23_PH_MT', rows: source['23_PH_MT'].length, mapped: source['23_PH_MT'].length });
     const deductionMaps: Record<string, [string, Record<string, string>]> = { KERUGIAN_FISKAL: ['taxloss', { year: 'tahun_asal', loss: 'nilai_awal', compensated: 'nilai_tahun_ini' }], PENGURANG_NETO: ['deductions', { code: 'jenis_uraian', type: 'jenis_uraian', amount: 'nilai_tahun_ini' }], PENGURANG_PPH: ['taxrelief', { code: 'jenis_uraian', type: 'jenis_uraian', amount: 'nilai_tahun_ini' }] };
     for (const [category, config] of Object.entries(deductionMaps)) addTable(config[0], source['24_PENGURANG'].filter(item => compact(item.values.kategori) === category), config[1], '24_PENGURANG');
+    for (const [sheet, review] of reviewRows) warnings.push(`${sheet}: ${review.count} baris disimpan sebagai data sumber untuk ditinjau (${[...review.messages].slice(0, 2).join('; ')}).`);
     for (const name of INPUT_SHEETS) if (!summary.some(item => item.sheet === name)) summary.push({ sheet: name, rows: source[name].length, mapped: 0 });
     const grouped = Object.values(summary.reduce<Record<string, TemplateImportSummary>>((all, item) => ({ ...all, [item.sheet]: { sheet: item.sheet, rows: source[item.sheet as InputSheet].length, mapped: (all[item.sheet]?.mapped || 0) + item.mapped } }), {}));
     return { recognized: true, draft: d, errors, warnings, summary: grouped };

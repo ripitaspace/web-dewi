@@ -58,7 +58,9 @@ function convert(sheet, n) {
     return `<Q s={${n}} i={${qval++}}${style ? ' hidden' : ''} />`;
   });
   out = out.replace(/<span class="r-val"><\/span>/g, () => `<R s={${n}} i={${rval++}} />`);
+  if (n === 3) out = out.replace(/<span class="emptybox ptkpbox" style="width:26mm"><\/span>/g, '<Box s={3} i={4} style={{"width":"26mm"}} />');
   out = out.replace(/<span class="emptybox" style="([^"]*)"><\/span>/g, (_, style) => `<Box s={${n}} i={${box++}} style={{${styleObject(style)}}} />`);
+  if (n === 3) out = out.replace(/(<div class="r"><b>(?:2\. NAMA|4\. NO\. ID|5\. NO\. TELEPON|6\. EMAIL)<\/b>)<em><\/em>/g, (_, prefix) => `${prefix}<Box s={${n}} i={${box++}} />`);
   out = out.replace(/<span class="tick"><\/span>/g, () => `<Tick s={${n}} i={${tick++}} />`);
   // Tables: every empty body cell becomes <C>, keyed by table ordinal, row and column.
   out = out.replace(/<table class="([^"]*)">([\s\S]*?)<\/table>/g, (whole, cls, inner) => {

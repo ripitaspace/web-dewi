@@ -5,6 +5,7 @@ import { compute, errors, numeric, readiness, sectionStatus, validate } from './
 import { copyAssets, csv, excelDate, parseCSV, previewImport, readWorkbook } from './import-export';
 import { importTemplateWorkbook } from './template-import';
 import { pageCount, pageRows } from './form-layout';
+import { boxSlots } from './coretax-map';
 import { assertCanSave, saveDraft, withoutDraft } from './storage';
 import { adapters, previewXML } from './xml';
 import { progressiveReference, rules2025 } from './rules-2025';
@@ -108,6 +109,32 @@ describe('Import and export', () => {
     expect(result).toMatchObject({ recognized: true, errors: [] });
     expect(result.summary).toHaveLength(24);
   });
+  const exampleFiles = [
+    'SPT_OP_WP01_Karyawan_2025.xlsx',
+    'SPT_OP_WP02_Karyawan_Menikah_2025.xlsx',
+    'SPT_OP_WP03_Status_PH_MT_2025.xlsx',
+    'SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx',
+    'SPT_OP_WP05_Profesional_NPPN_2025.xlsx',
+    'SPT_OP_WP06_Pengusaha_Pembukuan_2025.xlsx',
+  ];
+  const readExample = (file: string) => {
+    const workbook = XLSX.readFile(`public/tools/spt-op/examples/${file}`);
+    return workbook.SheetNames.map(name => ({ name, rows: XLSX.utils.sheet_to_json<string[]>(workbook.Sheets[name], { header: 1, raw: false, defval: '' }) }));
+  };
+  it.each(exampleFiles)('loads incomplete example %s while retaining source rows for review', file => {
+    const result = importTemplateWorkbook(readExample(file), { mode: 'example' });
+    expect(result).toMatchObject({ recognized: true, errors: [] });
+    expect(result.draft?.profile.name).toMatch(/^SIMULASI/);
+    expect(result.draft?.importTables['11_UTANG']).not.toHaveLength(0);
+    expect(result.warnings.length).toBeGreaterThan(0);
+  });
+  it('keeps the standard Excel import strict while normalizing known movable-asset ownership values', () => {
+    const sheets = readExample('SPT_OP_WP01_Karyawan_2025.xlsx');
+    const strict = importTemplateWorkbook(sheets);
+    const example = importTemplateWorkbook(sheets, { mode: 'example' });
+    expect(strict.errors.length).toBeGreaterThan(0);
+    expect(example.draft?.tables.movable.map(item => item.values.ownership)).toEqual(expect.arrayContaining(['Taxpayer', 'Other']));
+  });
   it('reads quoted multiline CSV and does not lose leading zero', () => {
     const parsed = parseCSV('\uFEFFNama;NPWP;Catatan\r\n"A; B";0000123;"Baris 1\nBaris 2 ""kutip"""');
     expect(parsed).toEqual([['Nama', 'NPWP', 'Catatan'], ['A; B', '0000123', 'Baris 1\nBaris 2 "kutip"']]);
@@ -198,6 +225,9 @@ describe('Reconciliation and tax verification gates', () => {
 });
 
 describe('Form continuation and XML', () => {
+  it('maps identity text fields to the Induk profile boxes', () => {
+    expect(boxSlots[3]).toMatchObject({ 0: 'profile.name', 1: 'profile.idNumber', 2: 'profile.phone', 3: 'profile.email' });
+  });
   it('prints each active row exactly once beyond the capacity of every table', () => {
     const d=fresh();
     for(const [key,layout] of Object.entries(catalog.LAYOUTS)) {

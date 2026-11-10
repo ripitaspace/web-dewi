@@ -125,7 +125,7 @@ export const resultSlots: Record<number, (string | null)[]> = {
   16: ['net', 'extras.compLoss', 'extras.otherDeduction', null, 'pt', 'pk', 'rawTax', 'relief', 'credit', 'balance', 'p25Next'],
 };
 export const boxSlots: Record<number, Record<number, string>> = {
-  3: { 0: 'profile.ptkp' },
+  3: { 0: 'profile.name', 1: 'profile.idNumber', 2: 'profile.phone', 3: 'profile.email', 4: 'profile.ptkp' },
   4: { 3: 'declaration.signer' },
   // 0 = A.5 helper box; B rows 1-3 have WP/spouse boxes (1-6), rows 4-9 one merged box each (7, 8 = PTKP helper, 9-13).
   16: { 3: 'partner.wpNet', 4: 'partner.spouseNet', 5: 'partner.wpDed', 6: 'partner.spouseDed', 9: 'partner.combinedPtkp', 12: 'extras.phmtTax' },
