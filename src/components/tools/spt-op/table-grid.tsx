@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { row as newRow, type Field, type Row } from '@/modules/spt-op/model';
 import { fieldError, money, numeric, rowValue } from '@/modules/spt-op/engine';
 import { choiceOf, isHidden, isIdentityKey, numberKind } from '@/modules/spt-op/field-rules';
+import { capacityOf } from '@/modules/spt-op/coretax-map';
 import { TaxIdentityField, TaxNumberField } from './inputs';
 
 /**
@@ -14,27 +15,37 @@ export function TableGrid({ section, columns, rows, assets, sumKey, sumLabel, on
   section: string; columns: Field[]; rows: Row[]; assets: boolean; sumKey?: string | null; sumLabel?: string; onRows: (rows: Row[]) => void;
 }) {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [listPage, setListPage] = useState(0);
   const pendingFocus = useRef<string | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const setFocus = (target: { id: string; key: string }) => { pendingFocus.current = `grid-${target.id}-${target.key}`; };
   const firstKey = columns.find(c => c.type !== 'computed')?.key || columns[0]?.key;
+  const pageSize = capacityOf(section);
+  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+  const pageStart = listPage * pageSize;
+  const pageRows = rows.slice(pageStart, pageStart + pageSize);
   const cell = (rowId: string, key: string) => `${rowId}:${key}`;
   useEffect(() => {
     if (!pendingFocus.current) return;
     document.getElementById(pendingFocus.current)?.focus();
     pendingFocus.current = null;
   }, [rows]);
+  useEffect(() => {
+    setListPage(previous => Math.min(previous, pageCount - 1));
+  }, [pageCount]);
   const set = (id: string, key: string, value: string) => onRows(rows.map(item => item.id === id ? { ...item, values: { ...item.values, [key]: value } } : item));
   const touch = (id: string, key: string) => setTouched(previous => previous[cell(id, key)] ? previous : { ...previous, [cell(id, key)]: true });
   const add = (after?: string) => {
     const created = newRow({});
     const at = after ? rows.findIndex(item => item.id === after) + 1 : rows.length;
-    onRows([...rows.slice(0, at), created, ...rows.slice(at)]);
+    const nextRows = [...rows.slice(0, at), created, ...rows.slice(at)];
+    onRows(nextRows);
+    setListPage(Math.floor(at / pageSize));
     setFocus({ id: created.id, key: firstKey });
   };
   const enter = (id: string, key: string) => {
     const index = rows.findIndex(item => item.id === id);
-    if (index === rows.length - 1) { const created = newRow({}); onRows([...rows, created]); setFocus({ id: created.id, key }); }
+    if (index === rows.length - 1) { const created = newRow({}); const nextRows = [...rows, created]; onRows(nextRows); setListPage(Math.floor((nextRows.length - 1) / pageSize)); setFocus({ id: created.id, key }); }
     else setFocus({ id: rows[index + 1].id, key });
   };
   const sum = sumKey ? rows.filter(item => !item.disposed).reduce((total, item) => total + (Number.isFinite(numeric(rowValue(section, item, sumKey))) ? numeric(rowValue(section, item, sumKey)) : 0), 0) : null;
@@ -62,7 +73,8 @@ export function TableGrid({ section, columns, rows, assets, sumKey, sumLabel, on
     <div className="spt-grid-scroll"><table className="spt-grid">
       <thead><tr><th scope="col">#</th>{columns.map(f => <th scope="col" key={f.key}>{f.label}{f.required ? ' *' : ''}</th>)}{assets && <th scope="col">Dilepas</th>}<th scope="col"><span className="spt-sr">Aksi</span></th></tr></thead>
       <tbody>
-        {rows.map((item, index) => {
+        {pageRows.map((item, pageIndex) => {
+          const index = pageStart + pageIndex;
           const problems = columns.filter(f => f.type !== 'computed' && !isHidden(f, item.values) && fieldError(f, item.values[f.key] || '', item.values));
           return <tr key={item.id} className={item.disposed ? 'disposed' : undefined}>
             <th scope="row">{index + 1}</th>
@@ -82,6 +94,11 @@ export function TableGrid({ section, columns, rows, assets, sumKey, sumLabel, on
       <button type="button" className="primary" onClick={() => add()}>＋ Tambah baris</button>
       <span>{rows.length} baris · Enter = baris berikutnya, Tab = kolom berikutnya</span>
       {sum !== null && <b>Total {sumLabel}: {money(sum)}</b>}
+      {pageCount > 1 && <div className="spt-grid-pagination" aria-label="Navigasi daftar tabel">
+        <button type="button" disabled={listPage === 0} onClick={() => setListPage(listPage - 1)}>← Daftar sebelumnya</button>
+        <span aria-live="polite">Daftar {listPage + 1} dari {pageCount}</span>
+        <button type="button" disabled={listPage === pageCount - 1} onClick={() => setListPage(listPage + 1)}>Daftar berikutnya →</button>
+      </div>}
     </div>
   </div>;
 }
