@@ -10,6 +10,12 @@ else if (/^-?\d{1,3}([.,]\d{3})+$/.test(s))
     s = s.replace(/[.,]/g, '');
 else
     s = s.replace(',', '.'); return Number(s); }
+export const PTKP_ANNUAL: Record<string, number> = {
+    'TK/0': 54_000_000, 'TK/1': 58_500_000, 'TK/2': 63_000_000, 'TK/3': 67_500_000,
+    'K/0': 58_500_000, 'K/1': 63_000_000, 'K/2': 67_500_000, 'K/3': 72_000_000,
+    'K/I/0': 112_500_000, 'K/I/1': 117_000_000, 'K/I/2': 121_500_000, 'K/I/3': 126_000_000,
+};
+export function ptkpAmount(status: string | undefined): number | null { return status && status in PTKP_ANNUAL ? PTKP_ANNUAL[status] : null; }
 export const money = (n: number | null) => n === null || !Number.isFinite(n) ? 'Perlu Verifikasi' : new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 }).format(n);
 export function rowValue(k: string, r: Row, key: string): string { if (key === 'net' && k === 'jobs')
     return String(numeric(r.values.gross) - numeric(r.values.expense)); if (key === 'net' && k === 'nppn')
@@ -44,6 +50,7 @@ export function compute(d: Draft): Result[] {
     const deductions = override('deductions', sum('deductions', 'amount') + sum('taxloss', 'compensated'));
     const net = business === null ? null : jobs + business + other + foreign;
     const credit = sum('withholding', 'withheld') + sum('foreign', 'credit');
+    const ptkp = ptkpAmount(d.profile.ptkp);
     const sourceNote = 'Rekap data kerja; perlakuan pajak dan kelengkapan perlu verifikasi.';
     const results: Result[] = [
         { key: 'jobs', label: 'Penghasilan neto pekerjaan', value: jobs, sections: ['jobs'], note: 'Bruto dikurangi pengurang yang diinput.' },
@@ -53,7 +60,8 @@ export function compute(d: Draft): Result[] {
         { key: 'net', label: 'Penghasilan neto setahun', value: net, sections: ['jobs', 'nppn', 'otherdomestic', 'foreign'], note: sourceNote },
         { key: 'ded', label: 'Pengurang penghasilan neto', value: deductions, sections: ['deductions', 'taxloss'], note: 'Override menggantikan rekap, tidak ditambahkan kembali.' },
         { key: 'afterDed', label: 'Neto setelah pengurang (rekap)', value: net === null || deductions === null ? null : net - deductions, sections: ['deductions', 'taxloss'], note: sourceNote },
-        ...[['pt', 'PTKP'], ['pk', 'PKP'], ['rawTax', 'PPh terutang'], ['tax', 'PPh setelah pengurang']].map(([key, label]) => ({ key, label, value: null, sections: ['profile', 'partner'], note: 'Menunggu ruleset 2025 dan skenario acuan resmi yang terverifikasi.' })),
+        { key: 'pt', label: 'PTKP', value: ptkp, sections: ['profile'], note: 'Nilai mengikuti status PTKP yang dipilih.' },
+        ...[['pk', 'PKP'], ['rawTax', 'PPh terutang'], ['tax', 'PPh setelah pengurang']].map(([key, label]) => ({ key, label, value: null, sections: ['profile', 'partner'], note: 'Menunggu ruleset 2025 dan skenario acuan resmi yang terverifikasi.' })),
         { key: 'credit', label: 'Rekap kredit pajak (belum direkonsiliasi)', value: credit, sections: ['withholding', 'foreign'], note: 'Periksa kemungkinan PPh 24 dicatat dua kali; belum digunakan sebagai kredit final.' },
         { key: 'balance', label: 'Kurang / (lebih) bayar', value: null, sections: ['extras', 'withholding', 'foreign'], note: 'Ditahan sampai perhitungan pajak dan kredit tervalidasi.' },
         { key: 'relief', label: 'Rekap pengurang PPh', value: sum('taxrelief', 'amount'), sections: ['taxrelief'], note: sourceNote },

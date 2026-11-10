@@ -346,3 +346,17 @@
 .spt-coretax .cb.on{background:#111}
 .spt-coretax td[data-sub]{text-align:left}
 @media print{.spt-coretax{width:max-content;background:#fff}.spt-coretax .sheet{margin:0}}
+
+/* Induk halaman 1 — panel identitas dua kolom, mengikuti proporsi formulir. */
+.spt-coretax .sheet[data-sheet="3"] .idgrid{grid-template-columns:54% minmax(0,1fr);min-height:34.5mm;gap:3mm;padding:2mm 2.5mm}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .r{min-height:4.8mm;margin:.55mm 0!important;gap:1.2mm;font-size:7pt}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .r b{width:21mm;flex:none}
+.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow,.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.emptybox{flex:1;min-width:0}
+.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow i{flex:1;width:auto;min-width:0;height:4.8mm}
+.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.emptybox{height:4.8mm}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep{display:block;border-left:.45mm solid var(--yellow);padding-left:2.5mm;font-size:7pt}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep>b{display:block;margin:.25mm 0 1.3mm;font-size:7.2pt;line-height:1.15}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep p{margin:1mm 0;font-size:6.8pt;line-height:1.18}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep .tick{width:4.6mm;height:4.6mm;margin-right:1.2mm;vertical-align:middle}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep p:nth-of-type(2){margin-top:1.5mm;margin-bottom:3mm;padding-right:1mm}
+.spt-coretax .sheet[data-sheet="3"] .idgrid .sep .digitrow i{width:4.45mm;height:4.8mm}

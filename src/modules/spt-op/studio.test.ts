@@ -5,7 +5,7 @@ import { compute, errors, numeric, readiness, sectionStatus, validate } from './
 import { copyAssets, csv, excelDate, parseCSV, previewImport, readWorkbook } from './import-export';
 import { importTemplateWorkbook } from './template-import';
 import { pageCount, pageRows } from './form-layout';
-import { boxSlots } from './coretax-map';
+import { boxSlots, tableBindings } from './coretax-map';
 import { assertCanSave, saveDraft, withoutDraft } from './storage';
 import { adapters, previewXML } from './xml';
 import { progressiveReference, rules2025 } from './rules-2025';
@@ -205,7 +205,8 @@ describe('Reconciliation and tax verification gates', () => {
   });
   it.each(['2024','2025','2026'])('withholds unverified annual results for %s', year => {
     const d=fresh(); d.profile.year=year; d.tables.jobs=[employer()];
-    for(const key of ['pt','pk','rawTax','tax','balance','amended','p25Next','umkmTax','phmt']) expect(compute(d).find(r=>r.key===key)?.value).toBeNull();
+    expect(compute(d).find(r=>r.key==='pt')?.value).toBe(54000000);
+    for(const key of ['pk','rawTax','tax','balance','amended','p25Next','umkmTax','phmt']) expect(compute(d).find(r=>r.key===key)?.value).toBeNull();
     expect(rules2025.annualReturnVerified).toBe(false);
   });
   it('keeps unsupported years editable but blocks their reporting readiness', () => {
@@ -226,7 +227,13 @@ describe('Reconciliation and tax verification gates', () => {
 
 describe('Form continuation and XML', () => {
   it('maps identity text fields to the Induk profile boxes', () => {
-    expect(boxSlots[3]).toMatchObject({ 0: 'profile.name', 1: 'profile.idNumber', 2: 'profile.phone', 3: 'profile.email' });
+    expect(boxSlots[3]).toMatchObject({ 0: 'profile.name', 1: 'profile.idNumber', 2: 'profile.phone', 3: 'profile.email', 4: 'profile.ptkp' });
+  });
+  it('maps every Inspector table and book to an official sheet', () => {
+    const mappedTables = new Set(Object.values(tableBindings).flatMap(binding => [binding.section, ...(binding.regions ? ['amortization'] : [])]).filter(Boolean));
+    expect(Object.keys(catalog.tables).every(key => mappedTables.has(key))).toBe(true);
+    const mappedBooks = new Set(Object.values(tableBindings).flatMap(binding => binding.book ? [binding.book] : []));
+    expect(Object.keys(catalog.BOOKS).every(key => mappedBooks.has(key))).toBe(true);
   });
   it('prints each active row exactly once beyond the capacity of every table', () => {
     const d=fresh();
