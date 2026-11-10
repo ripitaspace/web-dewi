@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { backup, catalog, draftKey, exampleDraft, fresh, readBackup, type Draft } from '@/modules/spt-op/model';
+import { backup, catalog, draftKey, fresh, readBackup, type Draft } from '@/modules/spt-op/model';
 import { compute, money } from '@/modules/spt-op/engine';
 import { copyAssets, download, parseCSV, readWorkbook, type Worksheet } from '@/modules/spt-op/import-export';
 import { Document, pageCount, PrintDetails } from './document';
@@ -16,9 +16,21 @@ import { type NavigationTarget } from './navigation-tree';
 import { PrintDialog } from './print-dialog';
 import { applyStamp } from './watermark';
 import { firstPage, landscapePages, lastPage, pageNumbers, sheetLabel } from '@/modules/spt-op/coretax-map';
+
+const exampleScenarios = [
+    { file: 'SPT_OP_WP01_Karyawan_2025.xlsx', title: 'Karyawan', description: 'Pekerja dengan penghasilan dari satu pemberi kerja.' },
+    { file: 'SPT_OP_WP02_Karyawan_Menikah_2025.xlsx', title: 'Karyawan menikah', description: 'Karyawan dengan data keluarga dan penghasilan lainnya.' },
+    { file: 'SPT_OP_WP03_Status_PH_MT_2025.xlsx', title: 'Status PH/MT', description: 'Contoh pengisian untuk status penghasilan suami-istri terpisah.' },
+    { file: 'SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx', title: 'Pengusaha UMKM', description: 'Usaha dengan peredaran bruto tertentu dan data omzet bulanan.' },
+    { file: 'SPT_OP_WP05_Profesional_NPPN_2025.xlsx', title: 'Profesional NPPN', description: 'Pekerjaan bebas dengan pencatatan dan norma penghitungan neto.' },
+    { file: 'SPT_OP_WP06_Pengusaha_Pembukuan_2025.xlsx', title: 'Pengusaha pembukuan', description: 'Usaha dengan pembukuan, rekonsiliasi laba rugi, dan neraca.' },
+] as const;
+
+const examplePath = (file: string) => `/tools/spt-op/examples/${file}`;
+
 export function SptStudio() {
     const { draft, dispatch, ready, saved, list, save, replace, openDraft, deleteDraft, reload, rescue, legacy, blocked } = useDrafts();
-    const [section, setSection] = useState('profile'), [page, setPage] = useState(3), [part, setPart] = useState(0), [zoom, setZoom] = useState(100), [modal, setModal] = useState(''), [notice, setNotice] = useState(''), [sheets, setSheets] = useState<Worksheet[] | null>(null), [printPages, setPrintPages] = useState<number[]>([]), [pdfPages, setPdfPages] = useState<number[]>([]), [copyId, setCopyId] = useState(''), [focusId, setFocusId] = useState<string | null>(null), [isMaximized, setIsMaximized] = useState(false);
+    const [section, setSection] = useState('profile'), [page, setPage] = useState(3), [part, setPart] = useState(0), [zoom, setZoom] = useState(100), [modal, setModal] = useState(''), [notice, setNotice] = useState(''), [sheets, setSheets] = useState<Worksheet[] | null>(null), [printPages, setPrintPages] = useState<number[]>([]), [pdfPages, setPdfPages] = useState<number[]>([]), [copyId, setCopyId] = useState(''), [focusId, setFocusId] = useState<string | null>(null), [isMaximized, setIsMaximized] = useState(false), [, setLoadingExample] = useState('');
     const router = useRouter();
     const file = useRef<HTMLInputElement>(null), restoreFile = useRef<HTMLInputElement>(null), printRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -89,12 +101,42 @@ export function SptStudio() {
     catch (e) {
         setNotice(e instanceof Error ? e.message : 'File gagal dibaca.');
     } }
+    async function loadExample(example: typeof exampleScenarios[number]) {
+        if (!window.confirm(`Muat contoh ${example.title}? Draft yang sedang dibuka akan diganti.`)) return;
+        setLoadingExample(example.file);
+        try {
+            const response = await fetch(examplePath(example.file));
+            if (!response.ok) throw Error('Berkas contoh tidak tersedia.');
+            const workbook = await readWorkbook(new File([await response.arrayBuffer()], example.file, { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+            const mapped = importTemplateWorkbook(workbook);
+            if (!mapped.recognized || !mapped.draft) throw Error('Struktur berkas contoh tidak dikenali.');
+            if (mapped.errors.length) throw Error(mapped.errors.join('\n'));
+            if (await replace(mapped.draft)) {
+                choose('profile');
+                setModal('');
+                setNotice(mapped.warnings.length ? `Contoh ${example.title} dimuat dengan ${mapped.warnings.length} catatan untuk ditinjau.` : `Contoh ${example.title} berhasil dimuat.`);
+            }
+        }
+        catch (e) { setNotice(e instanceof Error ? e.message : 'Contoh gagal dimuat.'); }
+        finally { setLoadingExample(''); }
+    }
+    useEffect(() => {
+        const onLoadExample = (event: Event) => {
+            const file = (event as CustomEvent<string>).detail;
+            const example = exampleScenarios.find(item => item.file === file);
+            if (example) void loadExample(example);
+        };
+        window.addEventListener('spt-load-example', onLoadExample);
+        return () => window.removeEventListener('spt-load-example', onLoadExample);
+    // The event is dispatched from the topbar dialog; replacing a draft remains stable for this Studio session.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     if (!ready || !draft)
         return <section className="spt-root" aria-label="SPT OP Studio"><p role="status">Memuat SPT OP Studio…</p></section>;
     const d: Draft = draft, results = compute(d);
     const counts = pageCount(d, page);
     return <section className={`spt-root${isMaximized ? ' spt-workspace-maximized' : ''}`} aria-label="SPT OP Studio"><div className="spt-screen"><Topbar onPrint={() => setModal('print')} draft={d} saved={saved} isMaximized={isMaximized} onToggleMaximize={() => setIsMaximized(value => !value)} onBack={async () => { if (await save())
-        router.push('/karya'); }} onDrafts={() => setModal('drafts')} onSave={() => void save()} onValidate={() => choose('validation')} onImport={() => file.current?.click()} onLoadExample={() => { if (window.confirm('Muat data contoh? Draft yang sedang dibuka akan diganti.')) { void replace(exampleDraft()).then(loaded => { if (loaded) { choose('profile'); setNotice('Data contoh berhasil dimuat.'); } }); } }} onExport={() => setModal('export')}/>{blocked && <div className="spt-warning" role="alert">{saved}<button onClick={() => { if (window.confirm('Muat draft dari penyimpanan dan buang perubahan lokal yang belum tersimpan?'))
+        router.push('/karya'); }} onDrafts={() => setModal('drafts')} onSave={() => void save()} onValidate={() => choose('validation')} onImport={() => file.current?.click()} onLoadExample={() => setModal('examples')} onExport={() => setModal('export')}/>{blocked && <div className="spt-warning" role="alert">{saved}<button onClick={() => { if (window.confirm('Muat draft dari penyimpanan dan buang perubahan lokal yang belum tersimpan?'))
         void reload().catch(() => setNotice('Draft gagal dimuat.')); }}>Muat draft terbaru</button><button onClick={rescue}>Simpan salinan (identitas dikosongkan)</button></div>}{notice && <div role="status" className="spt-notice">{notice}<button onClick={() => setNotice('')} aria-label="Tutup pemberitahuan">✕</button></div>}<div className="spt-app"><Navigation draft={d} section={section} onNavigate={navigate}/><section className="spt-workspace"><div className="spt-head"><small>SPT ORANG PRIBADI · DRAFT KERJA {d.profile.year}</small><h2>{catalog.PAGE_NAMES[page - 1]}</h2><p>Tampilan formulir dari prototype · pemeriksaan aturan dan pemetaan masih berlangsung.</p></div><div className="spt-kpis">{['net', 'tax', 'credit', 'balance'].map(key => { const r = results.find(r => r.key === key)!; return <button key={key} onClick={() => choose('summary')}><small>{r.label}</small><strong>{money(r.value)}</strong></button>; })}</div><div className="spt-mobile-nav"><label>Bagian<select value={section} onChange={e => choose(e.target.value)}>{navigation.map(([, k, t]) => <option value={k} key={k}>{t}</option>)}</select></label></div><div className="spt-toolbar"><button disabled={page === firstPage} onClick={() => go(page - 1)}>← Previous</button><label>Halaman<select value={page} onChange={e => go(Number(e.target.value))}>{pageNumbers.map(n => <option key={n} value={n}>{sheetLabel(n)}. {catalog.PAGE_NAMES[n - 1]}</option>)}</select></label><button disabled={page === lastPage} onClick={() => go(page + 1)}>Next →</button><button disabled={zoom === 55} onClick={() => setZoom(Math.max(55, zoom - 10))} aria-label="Zoom out">−</button><span>{zoom}%</span><button disabled={zoom === 170} onClick={() => setZoom(Math.min(170, zoom + 10))} aria-label="Zoom in">＋</button><button onClick={() => setModal('print')}>Preview / Print</button></div>{counts > 1 && <label>Lembar lanjutan<select value={part} onChange={e => setPart(Number(e.target.value))}>{Array.from({ length: counts }, (_, i) => <option key={i} value={i}>{i === 0 ? 'Utama' : `Lanjutan ${i}`}</option>)}</select></label>}<a className="spt-editor-jump" href="#spt-editor">Buka editor data ↓</a><div className="spt-stage"><div style={{ width: `${zoom}%`, minWidth: 350, maxWidth: (landscapePages.includes(page) ? 1300 : 860) * zoom / 100, flexShrink: 0 }}><Document draft={d} page={page} part={part} onField={(key, value) => dispatch({ type: 'field', group: 'profile', key, value })} onSet={(group, key, value) => dispatch({ type: 'field', group, key, value })} onSection={choose}/></div></div><p className="spt-footnote">Seluruh data juga disertakan dalam rincian cetak. Pemetaan isian lengkap dan hasil pajak memerlukan pembandingan dengan sumber resmi.</p></section><aside className="spt-inspector" id="spt-editor"><header><h2>{navigation.find(x => x[1] === section)?.[2]}</h2><small>Editor data · perubahan tersimpan otomatis</small></header><div className="spt-editor"><Editor key={section} draft={d} section={section} dispatch={dispatch} onSection={choose}/></div></aside></div></div><input ref={file} type="file" hidden accept=".xlsx,.csv,.tsv,.json" onChange={e => { void openFile(e.target.files?.[0]); e.target.value = ''; }}/><input ref={restoreFile} type="file" hidden accept=".json" onChange={e => { void openFile(e.target.files?.[0]); e.target.value = ''; }}/>{sheets && <ImportDialog sheets={sheets} initial={section} tables={d.tables} onClose={() => setSheets(null)} onImport={(key, rows) => { dispatch({ type: 'rows', key, rows: [...(d.tables[key] || []), ...rows] }); setSheets(null); choose(key); setNotice(`${rows.length} baris diimpor.`); }}/>}{modal === 'export' && <Dialog title="Ekspor data kerja" onClose={() => setModal('')}><div className="spt-actions"><button onClick={() => download(`RIPITAX_SPT_OP_${d.profile.year}.json`, backup(d))}>Backup seluruh data JSON</button><button onClick={() => { setModal(''); choose('xml'); }}>XML per lampiran</button><button onClick={() => { setModal(''); setNotice('Menyiapkan PDF…'); setPdfPages(pageNumbers); }} disabled={pdfPages.length > 0}>Unduh PDF</button><button onClick={() => setModal('print')}>Preview / cetak</button></div><p>Ekspor CSV tersedia pada editor setiap tabel.</p></Dialog>}{modal === 'drafts' && <Dialog title="Draft lokal" onClose={() => setModal('')}><div className="spt-actions"><button onClick={async () => { if (await replace(fresh()))
         setModal(''); }}>Draft baru</button><button onClick={() => restoreFile.current?.click()}>Restore JSON</button><button onClick={async () => { try {
         const old = legacy();

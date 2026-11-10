@@ -4,12 +4,22 @@ import { useState, type ReactNode } from 'react';
 import { type Draft } from '@/modules/spt-op/model';
 import { RipitaMark } from '@/components/brand/ripita-mark';
 import { descendantIds, navigationTree, type NavigationNode, type NavigationTarget } from './navigation-tree';
+import { Dialog } from './dialog';
 
 export { navigation } from './navigation-tree';
 
 interface TopbarProps { draft: Draft; saved: string; isMaximized: boolean; onToggleMaximize: () => void; onBack: () => void; onDrafts: () => void; onSave: () => void; onValidate: () => void; onImport: () => void; onLoadExample: () => void; onPrint: () => void; onExport: () => void; }
 
 type ActionIconName = 'maximize' | 'restore' | 'draft' | 'save' | 'validate' | 'import' | 'template' | 'backup' | 'print' | 'export';
+const exampleScenarios = [
+  { file: 'SPT_OP_WP01_Karyawan_2025.xlsx', title: 'Karyawan', description: 'Pekerja dengan penghasilan dari satu pemberi kerja.' },
+  { file: 'SPT_OP_WP02_Karyawan_Menikah_2025.xlsx', title: 'Karyawan menikah', description: 'Karyawan dengan data keluarga dan penghasilan lainnya.' },
+  { file: 'SPT_OP_WP03_Status_PH_MT_2025.xlsx', title: 'Status PH/MT', description: 'Contoh pengisian untuk status penghasilan suami-istri terpisah.' },
+  { file: 'SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx', title: 'Pengusaha UMKM', description: 'Usaha dengan peredaran bruto tertentu dan data omzet bulanan.' },
+  { file: 'SPT_OP_WP05_Profesional_NPPN_2025.xlsx', title: 'Profesional NPPN', description: 'Pekerjaan bebas dengan pencatatan dan norma penghitungan neto.' },
+  { file: 'SPT_OP_WP06_Pengusaha_Pembukuan_2025.xlsx', title: 'Pengusaha pembukuan', description: 'Usaha dengan pembukuan, rekonsiliasi laba rugi, dan neraca.' },
+] as const;
+const examplePath = (file: string) => `/tools/spt-op/examples/${file}`;
 function ActionIcon({ name }: { name: ActionIconName }) {
   const paths: Record<ActionIconName, ReactNode> = {
     maximize: <><path d="M15 3h6v6" /><path d="M9 21H3v-6" /><path d="m21 3-7 7" /><path d="m3 21 7-7" /></>,
@@ -26,7 +36,8 @@ function ActionIcon({ name }: { name: ActionIconName }) {
   return <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
 }
 
-export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, onDrafts, onSave, onValidate, onImport, onLoadExample, onPrint, onExport }: TopbarProps) {
+export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, onDrafts, onSave, onValidate, onImport, onPrint, onExport }: TopbarProps) {
+  const [examplesOpen, setExamplesOpen] = useState(false);
   return <header className="spt-topbar">
     <button className="spt-back" onClick={onBack} aria-label="Kembali ke Karya">← Karya</button>
     <div className="spt-brand"><RipitaMark className="spt-brand-mark" title="PuspitaCore" /><div><b>PUSPITACORE</b><small>SPT ORANG PRIBADI STUDIO</small></div></div>
@@ -40,10 +51,10 @@ export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, on
       <span className="spt-actions-sep" aria-hidden="true" />
       <button type="button" className="spt-icon-btn" onClick={onImport} aria-label="Import" title="Import"><ActionIcon name="import" /></button>
       <a className="spt-icon-btn" href="/tools/spt-op/PuspitaCore_SPT_OP_Import_Excel.xlsx" download aria-label="Unduh template Excel" title="Unduh template Excel"><ActionIcon name="template" /></a>
-      <button type="button" className="spt-icon-btn" onClick={onLoadExample} aria-label="Muat contoh" title="Muat contoh"><ActionIcon name="backup" /></button>
+      <button type="button" className="spt-icon-btn" onClick={() => setExamplesOpen(true)} aria-label="Muat contoh" title="Muat contoh"><ActionIcon name="backup" /></button>
       <button type="button" className="spt-icon-btn" onClick={onPrint} aria-label="Print" title="Print"><ActionIcon name="print" /></button>
       <button type="button" className="spt-icon-btn primary" onClick={onExport} aria-label="Ekspor" title="Ekspor"><ActionIcon name="export" /></button>
-    </div>
+    </div>{examplesOpen && <Dialog title="Pilih contoh SPT OP" onClose={() => setExamplesOpen(false)}><p className="spt-example-intro">Pilih skenario untuk memuatnya ke Studio, atau unduh workbook Excel untuk dipelajari dan diimpor kembali.</p><div className="spt-example-grid">{exampleScenarios.map(example => <article className="spt-example-card" key={example.file}><h3>{example.title}</h3><p>{example.description}</p><div className="spt-actions"><button className="primary" onClick={() => { setExamplesOpen(false); window.dispatchEvent(new CustomEvent('spt-load-example', { detail: example.file })); }}>Muat contoh</button><a className="spt-download-link" href={examplePath(example.file)} download>Unduh Excel</a></div></article>)}</div></Dialog>}
   </header>;
 }
 

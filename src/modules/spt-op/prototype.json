@@ -2154,6 +2154,16 @@
       "required": true
     },
     {
+      "label": "Jenis periode pajak",
+      "key": "periodType",
+      "type": "select",
+      "options": [
+        "TAHUN_PAJAK|Tahun pajak",
+        "BAGIAN_TAHUN|Bagian tahun pajak"
+      ],
+      "required": true
+    },
+    {
       "label": "Status SPT",
       "key": "sptStatus",
       "type": "select",
@@ -2530,6 +2540,7 @@
   ],
   "propsDefault": {
     "year": "2025",
+    "periodType": "TAHUN_PAJAK",
     "sptStatus": "Normal",
     "fromMonth": "1",
     "toMonth": "12",

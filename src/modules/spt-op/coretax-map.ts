@@ -69,9 +69,8 @@ export function regionOrdinal(binding: TableBinding, id: string, group: string, 
 type Read = (draft: Draft) => string;
 const eq = (group: 'profile' | 'questions' | 'declaration', key: string, value: string) => (d: Draft) => d[group][key] === value;
 const yes = (key: string) => [eq('questions', key, 'tidak'), eq('questions', key, 'ya')];
-const noTick = () => false;
 export const ticks: Record<number, ((draft: Draft) => boolean)[]> = {
-  3: [noTick, noTick, eq('profile', 'sptStatus', 'Normal'), eq('profile', 'sptStatus', 'Pembetulan'),
+  3: [eq('profile', 'periodType', 'TAHUN_PAJAK'), eq('profile', 'periodType', 'BAGIAN_TAHUN'), eq('profile', 'sptStatus', 'Normal'), eq('profile', 'sptStatus', 'Pembetulan'),
     eq('profile', 'incomeSource', 'Pekerjaan'), eq('profile', 'incomeSource', 'Kegiatan Usaha'), eq('profile', 'incomeSource', 'Pekerjaan Bebas'),
     eq('profile', 'bookMethod', 'Pembukuan Stelsel Akrual'), eq('profile', 'bookMethod', 'Pembukuan Stelsel Kas'), eq('profile', 'bookMethod', 'Pencatatan'),
     eq('profile', 'idType', 'KTP'), eq('profile', 'idType', 'KITAS'), eq('profile', 'idType', 'PASPOR'),
@@ -96,6 +95,7 @@ const S = (group: TickSet['group'], key: string, value: string): TickSet => ({ g
 const yesSets = (key: string): TickSet[] => [S('questions', key, 'tidak'), S('questions', key, 'ya')];
 export const tickSets: Record<number, Record<number, TickSet>> = {
   3: Object.fromEntries([
+    [0, S('profile', 'periodType', 'TAHUN_PAJAK')], [1, S('profile', 'periodType', 'BAGIAN_TAHUN')],
     [2, S('profile', 'sptStatus', 'Normal')], [3, S('profile', 'sptStatus', 'Pembetulan')],
     [4, S('profile', 'incomeSource', 'Pekerjaan')], [5, S('profile', 'incomeSource', 'Kegiatan Usaha')], [6, S('profile', 'incomeSource', 'Pekerjaan Bebas')],
     [7, S('profile', 'bookMethod', 'Pembukuan Stelsel Akrual')], [8, S('profile', 'bookMethod', 'Pembukuan Stelsel Kas')], [9, S('profile', 'bookMethod', 'Pencatatan')],

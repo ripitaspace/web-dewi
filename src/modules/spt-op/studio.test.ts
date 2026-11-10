@@ -88,14 +88,14 @@ describe('Import and export', () => {
     const names = ['01_META', '02_IDENTITAS', '03_PILIHAN_INDUK', '04_KELUARGA', '05_HARTA_KAS', '06_HARTA_PIUTANG', '07_HARTA_INVESTASI', '08_HARTA_BERGERAK', '09_HARTA_PROPERTI', '10_HARTA_LAIN', '11_UTANG', '12_PEKERJAAN', '13_BUKTI_POTONG', '14_PENGHASILAN_LAIN', '15_TKU', '16_OMZET_BULANAN', '17_NORMA', '18_REKON_LR', '19_NERACA', '20_PENYUSUTAN', '21_BIAYA_TERTENTU', '22_PPH25', '23_PH_MT', '24_PENGURANG'];
     const sheet = (name: string, header: string[] = ['id_baris'], data: string[] = []) => ({ name, rows: [[], [], [], [], header, data] });
     const sheets = names.map(name => sheet(name));
-    sheets[0] = sheet('01_META', ['file_signature', 'schema_version', 'tahun_pajak', 'status_spt'], ['PC-SPTOP-IMPORT', '0.1.0', '2025', 'NORMAL']);
+    sheets[0] = sheet('01_META', ['file_signature', 'schema_version', 'tahun_pajak', 'jenis_periode', 'status_spt'], ['PC-SPTOP-IMPORT', '0.1.0', '2025', 'BAGIAN_TAHUN', 'NORMAL']);
     sheets[1] = sheet('02_IDENTITAS', ['nik_npwp', 'nama_wp', 'email'], ['0000000000000001', 'Rico', 'rico@example.test']);
     sheets[2] = { name: '03_PILIHAN_INDUK', rows: [[], [], [], [], ['field_key', 'jawaban'], ['B_1A_PEKERJAAN', 'YA'], ['B_1B3_METODE_NETO', 'NPPN'], ['I_14B_UTANG', 'TIDAK'], ['J_A_LAPKEU', 'YA']] };
     sheets[4] = sheet('05_HARTA_KAS', ['kode_harta', 'nomor_akun', 'atas_nama', 'bank_institusi', 'lokasi_harta', 'tahun_perolehan', 'saldo_akhir'], ['0102', '123', 'Rico', 'Bank Contoh', 'IDN', '2020', '1000000']);
     sheets[11] = sheet('12_PEKERJAAN', ['pemberi_kerja_nama', 'pemberi_kerja_nik_npwp', 'penghasilan_bruto', 'pengurang_bruto'], ['CONTOH', '0000000000000002', '120000000', '6000000']);
     const result = importTemplateWorkbook(sheets);
     expect(result).toMatchObject({ recognized: true, errors: [] });
-    expect(result.draft?.profile).toMatchObject({ year: '2025', name: 'Rico', tin: '0000000000000001' });
+    expect(result.draft?.profile).toMatchObject({ year: '2025', periodType: 'BAGIAN_TAHUN', name: 'Rico', tin: '0000000000000001' });
     expect(result.draft?.questions).toMatchObject({ hasJobs: 'ya', hasNorm: 'NPPN', hasDebt: 'tidak', hasFinancialStatements: 'ya' });
     expect(result.draft?.tables.cash[0].values).toMatchObject({ code: '0102', balance: '1000000' });
     expect(result.draft?.tables.jobs[0].values.employer).toBe('CONTOH');
