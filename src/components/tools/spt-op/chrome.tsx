@@ -9,7 +9,7 @@ export { navigation } from './navigation-tree';
 
 interface TopbarProps { draft: Draft; saved: string; isMaximized: boolean; onToggleMaximize: () => void; onBack: () => void; onDrafts: () => void; onSave: () => void; onValidate: () => void; onImport: () => void; onBackup: () => void; onPrint: () => void; onPdf: () => void; pdfBusy?: boolean; onExport: () => void; }
 
-type ActionIconName = 'maximize' | 'restore' | 'draft' | 'save' | 'validate' | 'import' | 'backup' | 'print' | 'pdf' | 'export';
+type ActionIconName = 'maximize' | 'restore' | 'draft' | 'save' | 'validate' | 'import' | 'template' | 'backup' | 'print' | 'pdf' | 'export';
 function ActionIcon({ name }: { name: ActionIconName }) {
   const paths: Record<ActionIconName, ReactNode> = {
     maximize: <><path d="M15 3h6v6" /><path d="M9 21H3v-6" /><path d="m21 3-7 7" /><path d="m3 21 7-7" /></>,
@@ -18,6 +18,7 @@ function ActionIcon({ name }: { name: ActionIconName }) {
     save: <><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><path d="M17 21v-8H7v8" /><path d="M7 3v5h8" /></>,
     validate: <><circle cx="12" cy="12" r="9" /><path d="m8.5 12.5 2.5 2.5 4.5-5" /></>,
     import: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m17 8-5-5-5 5" /><path d="M12 3v12" /></>,
+    template: <><path d="M4 3h16v18H4z" /><path d="M8 3v18M4 8h16M12 12h4M12 16h4" /></>,
     backup: <><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5" /><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3" /></>,
     print: <><path d="M6 9V3h12v6" /><rect x="6" y="14" width="12" height="7" rx="1" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /></>,
     pdf: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M9 17v-4h1.5a1.2 1.2 0 0 1 0 2.4H9" /><path d="M14 17v-4" /></>,
@@ -39,6 +40,7 @@ export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, on
       <button type="button" className="spt-icon-btn" onClick={onValidate} aria-label="Validasi" title="Validasi"><ActionIcon name="validate" /></button>
       <span className="spt-actions-sep" aria-hidden="true" />
       <button type="button" className="spt-icon-btn" onClick={onImport} aria-label="Import" title="Import"><ActionIcon name="import" /></button>
+      <a className="spt-icon-btn" href="/tools/spt-op/PuspitaCore_SPT_OP_Import_Excel.xlsx" download aria-label="Unduh template Excel" title="Unduh template Excel"><ActionIcon name="template" /></a>
       <button type="button" className="spt-icon-btn" onClick={onBackup} aria-label="Backup JSON" title="Backup JSON"><ActionIcon name="backup" /></button>
       <button type="button" className="spt-icon-btn" onClick={onPrint} aria-label="Print" title="Print"><ActionIcon name="print" /></button>
       <button type="button" className="spt-icon-btn" onClick={onPdf} disabled={pdfBusy} aria-busy={pdfBusy} aria-label="Unduh PDF (F4)" title="Unduh PDF (F4)"><ActionIcon name="pdf" /></button>
