@@ -119,6 +119,8 @@
 .spt-coretax .sheet:is([data-sheet="5"],[data-sheet="6"],[data-sheet="7"]) .notice,.spt-coretax .sheet[data-sheet="15"] .notice{font-size:5.3pt;line-height:1.22;padding:1.8mm 2.4mm 0}
 .spt-coretax .sheet:is([data-sheet="5"],[data-sheet="6"],[data-sheet="7"]) .notice b{font-size:7pt}
 .spt-coretax .sheet[data-sheet="14"] .reg td{padding-top:.2mm;padding-bottom:.2mm}
+.spt-coretax .sheet[data-sheet="14"] .reg td:last-child{overflow:hidden}
+.spt-coretax .sheet[data-sheet="14"] .reg td:last-child .spt-cell-text{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:1;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.08}
 .spt-coretax .sheet{width:215.9mm;height:330.2mm;page:portrait}
 .spt-coretax .sheet.landscape{width:330.2mm;height:215.9mm;page:landscape}
 @page{size:215.9mm 330.2mm;margin:0}
@@ -147,7 +149,7 @@
 .spt-coretax .reg .sum td{height:3.8mm;background:#e5e8e8;font-weight:300;letter-spacing:.07em}
 .spt-coretax .reg .sumtag{position:relative;background:#fff!important;text-align:right;padding-right:1mm}
 .spt-coretax .reg .sumtag[data-tag]::before{content:attr(data-tag);position:absolute;left:-6mm;top:50%;transform:translateY(-50%);background:var(--yellow);color:#111;font-weight:700;font-size:5.4pt;line-height:3mm;height:3mm;padding:0 2.2mm 0 1.6mm;clip-path:polygon(0 0,82% 0,100% 50%,82% 100%,0 100%);white-space:nowrap}
-.spt-coretax .reg td.itemlabel::before{content:attr(data-lead) ". ··································";color:#555;font-size:5.6pt;letter-spacing:.02em}
+.spt-coretax .reg td.itemlabel[data-lead]::before{content:attr(data-lead) ". ··································";color:#555;font-size:5.6pt;letter-spacing:.02em}
 .spt-coretax .reg tr.sum td.sumlabel{text-align:left;padding-left:1.5mm}
 .spt-coretax .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3mm;align-items:start}
 .spt-coretax .two-col .col>.section{margin-top:1.4mm}

@@ -22,6 +22,7 @@ export function numberKind(f: Pick<Field, 'key' | 'type'>): NumberKind | null {
 }
 
 export const digitsOnly = (value: string, max?: number) => { const digits = value.replace(/\D/g, ''); return max ? digits.slice(0, max) : digits; };
+export const padMonth = (value: string) => /^\d{1,2}$/.test(value) ? value.padStart(2, '0') : value;
 
 /** Aturan rentang/format di luar pemeriksaan "angka valid"; dipakai bersama oleh form baris, kolom isian, dan tab Pemeriksaan. */
 export function rangeIssue(f: Pick<Field, 'key' | 'type'>, value: string): string | null {

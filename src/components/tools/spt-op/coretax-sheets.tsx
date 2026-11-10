@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { catalog, declarationFields, partnerFields, profileFields, type Draft, type Field } from '@/modules/spt-op/model';
 import { compute, money, numeric, rowValue } from '@/modules/spt-op/engine';
 import { activeRows, pageRows } from '@/modules/spt-op/form-layout';
-import { digitsOnly } from '@/modules/spt-op/field-rules';
+import { digitsOnly, padMonth } from '@/modules/spt-op/field-rules';
 import { answerTicks, assetTotal, tickSets, bookCell, taggedSum, boxSlots, capacityOf, cellParts, cellText, digitBinding, landscapePages, pageSheets, regionOrdinal, resultSlots, tableBindings, ticks } from '@/modules/spt-op/coretax-map';
 import { sheetComponents, type SlotComponents } from './coretax-sheets.generated';
 import './coretax-sheets.css';
@@ -19,9 +19,12 @@ const pagerTotalTags = new Set(['1', '2', '3.6', '4', '5', '6', 'A', 'B', 'C', '
 function Digits({ s, i, cls, count }: { s: number; i: number; cls: string; count: number }) {
   const { draft, print, onField } = useCtx();
   const binding = digitBinding(s, i, count);
-  const value = binding.read(draft);
+  const raw = binding.read(draft);
+  const [typing, setTyping] = useState<string | null>(null);
+  const value = typing ?? raw;
+  const month = binding.key === 'fromMonth' || binding.key === 'toMonth';
   const editable = !print && !!binding.key && !(s >= 7 && s <= 9 && i >= 2) && !(s === 16 && i === 2);
-  return <span className={cls}>{Array.from({ length: count }, (_, n) => <i key={n}>{value[n] || ''}</i>)}{editable && <input id={`field-${binding.key}`} aria-label={`Formulir ${binding.key}`} title="Klik untuk mengisi" value={value} inputMode="numeric" onChange={event => onField?.(binding.key!, digitsOnly(event.target.value, count))} />}</span>;
+  return <span className={cls}>{Array.from({ length: count }, (_, n) => <i key={n}>{value[n] || ''}</i>)}{editable && <input id={`field-${binding.key}`} aria-label={`Formulir ${binding.key}`} title="Klik untuk mengisi" value={value} inputMode="numeric" onFocus={event => { setTyping(raw); event.currentTarget.select(); }} onChange={event => { const next = digitsOnly(event.target.value, count); setTyping(next); onField?.(binding.key!, next); }} onBlur={() => { if (month) onField?.(binding.key!, padMonth(value)); setTyping(null); }} />}</span>;
 }
 function Q({ s, i, hidden }: { s: number; i: number; hidden?: boolean }) {
   const { draft } = useCtx();
@@ -111,7 +114,9 @@ function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { 
   } else if (section) {
     let ordinal = r;
     if (binding.regions) { const ro = regionOrdinal(binding, id, g || '', k || 0); if (!ro) return <td className={className} style={style} data-lead={lead} />; section = ro.section; ordinal = ro.ordinal; }
-    const tablePart = print ? part : tableParts[section] || 0;
+    // A page continuation selects the default part for every table on the sheet.
+    // A table pager, when present, remains an explicit per-table override.
+    const tablePart = print ? part : tableParts[section] ?? part;
     const row = pageRows(draft, section, tablePart)[ordinal], column = binding.cols[c];
     if (!row && column === '#no' && s === 17) content = String(tablePart * capacityOf(section) + ordinal + 1);
     if (row && column) {
@@ -120,7 +125,7 @@ function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { 
       if (lead && content) content = `${lead}. ${content}`;
     }
   }
-  const tablePart = section ? (print ? part : tableParts[section] || 0) : 0;
+  const tablePart = section ? (print ? part : tableParts[section] ?? part) : 0;
   const continuationCount = section ? Math.max(1, Math.ceil(activeRows(draft, section).length / capacityOf(section))) : 1;
   const clickable = !print && !!section && !binding.book;
   return <td className={[className, /^[\d.,]+$|^-?[\d.,]+$/.test(content) ? 'num' : '', clickable ? 'clickable' : ''].filter(Boolean).join(' ') || undefined} style={style} onClick={clickable ? () => onSection?.(section!) : undefined} title={clickable ? 'Klik untuk mengisi / mengedit tabel' : undefined} data-tag={tag} data-lead={lead && !content ? lead : undefined}>{sub ? sub.split('|').map((label, index) => <div className="sub-line" key={index}>{label.startsWith('[ ]') ? <><span className={`cb${parts[index] === 'x' ? ' on' : ''}`} />{label.slice(4)}</> : <>{label} {parts[index] || ''}</>}</div>) : sum ? content : <span className="spt-cell-text">{content}</span>}{sum && !print && section && tag && pagerTotalTags.has(tag) && <><span ref={anchor} /><TablePager section={section} page={tablePart} count={continuationCount} anchor={anchor} /></>}</td>;

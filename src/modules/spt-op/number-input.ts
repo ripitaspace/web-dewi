@@ -1,5 +1,5 @@
 import { numeric } from './engine';
-import { digitsOnly, type NumberKind } from './field-rules';
+import { digitsOnly, padMonth, type NumberKind } from './field-rules';
 /**
  * Nilai disimpan sebagai string kanonik: '' = belum diisi, '0' = nol disengaja, titik sebagai desimal
  * (maks 2 digit, tanpa pemisah ribuan) sehingga `numeric()` selalu membacanya tanpa ambigu.
@@ -8,7 +8,10 @@ import { digitsOnly, type NumberKind } from './field-rules';
 export function canonicalNumber(raw: string, kind: NumberKind): string {
   const text = raw.replace(/rp\.?/gi, '').replace(/[\s ]/g, '');
   if (!text) return '';
-  if (kind === 'year' || kind === 'month' || kind === 'integer') return digitsOnly(text, kind === 'year' ? 4 : kind === 'month' ? 2 : undefined);
+  if (kind === 'year' || kind === 'month' || kind === 'integer') {
+    const digits = digitsOnly(text, kind === 'year' ? 4 : kind === 'month' ? 2 : undefined);
+    return kind === 'month' ? padMonth(digits) : digits;
+  }
   if (!/^-?[\d.,]+$/.test(text)) return raw;
   const n = numeric(text);
   if (!Number.isFinite(n)) return raw;
@@ -18,7 +21,8 @@ export function canonicalNumber(raw: string, kind: NumberKind): string {
 const canonicalPattern = /^-?\d+(\.\d+)?$/;
 const formatter = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 });
 export function displayNumber(value: string, kind: NumberKind): string {
-  if (!value || !canonicalPattern.test(value) || kind === 'year' || kind === 'month' || kind === 'integer') return value;
+  if (kind === 'month') return padMonth(value);
+  if (!value || !canonicalPattern.test(value) || kind === 'year' || kind === 'integer') return value;
   return formatter.format(Number(value));
 }
 /** Satu titik + tepat 3 digit pada angka desimal ("1.500") dibaca ribuan; beri tahu pengguna. */

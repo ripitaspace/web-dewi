@@ -1,6 +1,6 @@
 import { catalog, type Draft, type Field, type Row } from './model';
 import { ruleSetFor, ruleStatus } from './rules';
-import { progressiveReference, roundPkpDownToThousand } from './rules-2025';
+import { progressiveReference, roundPkpDownToThousand, UMKM_ANNUAL_GROSS_LIMIT, umkmFinalReference } from './rules-2025';
 import { isHidden, isRequired, rangeIssue } from './field-rules';
 export function numeric(v: string | number | undefined): number { if (typeof v === 'number')
     return v; let s = (v || '').trim().replace(/\s/g, ''); if (!s)
@@ -39,13 +39,19 @@ export interface Result {
     sections: string[];
     note: string;
     ruleVersion?: string;
-    verification?: 'rekap-input' | 'ruleset-2025' | 'not-applicable' | 'pending';
+    verification?: 'rekap-input' | 'ruleset-2025' | 'not-applicable' | 'pending' | 'reconciliation-required';
     source?: string;
 }
 
 export interface RegularEmployeeEligibility {
     eligible: boolean;
     reason: string;
+}
+
+export interface UmkmEligibility {
+    eligible: boolean;
+    reason: string;
+    annualGross: number | null;
 }
 
 const activeRows = (d: Draft, key: string) => (d.tables[key] || []).filter(row => !row.disposed);
@@ -76,6 +82,28 @@ export function regularEmployeeEligibility(d: Draft): RegularEmployeeEligibility
     if (ptkpAmount(d.profile.ptkp) === null) return { eligible: false, reason: 'Pilih status PTKP yang tersedia.' };
     return { eligible: true, reason: 'Dihitung dari data dan ruleset 2025 terbatas — bukan persetujuan pelaporan.' };
 }
+
+/** A deliberately narrow final-UMKM slice. Annual-return reporting remains unverified. */
+export function umkmEligibility(d: Draft): UmkmEligibility {
+    const ineligible = (reason: string): UmkmEligibility => ({ eligible: false, reason, annualGross: null });
+    if (d.profile.year !== '2025') return ineligible('Ruleset UMKM terbatas hanya tersedia untuk Tahun Pajak 2025.');
+    if (d.profile.sptStatus !== 'Normal') return ineligible('SPT pembetulan belum termasuk ruleset UMKM terbatas.');
+    if (d.profile.periodType !== 'TAHUN_PAJAK' || d.profile.fromMonth !== '1' || d.profile.toMonth !== '12') return ineligible('Bagian tahun pajak belum termasuk ruleset UMKM terbatas.');
+    if (d.profile.incomeSource !== 'Kegiatan Usaha') return ineligible('Ruleset ini hanya untuk sumber penghasilan kegiatan usaha.');
+    if (['PH', 'MT'].includes(d.profile.maritalTax)) return ineligible('Status PH/MT memerlukan perhitungan pasangan tersendiri.');
+    if (d.questions.hasBusiness !== 'ya' || d.questions.hasUMKM !== 'ya' || d.questions.hasOPPT === 'ya' || d.questions.hasNorm !== 'FINAL_TANPA_PEMBUKUAN') return ineligible('Pilih usaha dengan rezim final peredaran bruto tertentu dan pencatatan.');
+    if (!activeRows(d, 'umkm').length) return ineligible('Isi rekap omzet UMKM untuk memakai ruleset ini.');
+    if (d.questions.hasJobs === 'ya' || activeRows(d, 'jobs').length || activeRows(d, 'nppn').length || activeRows(d, 'opent').length || Object.values(d.books).some(rows => rows.some(row => !row.disposed))) return ineligible('Penghasilan pekerjaan, NPPN, OPPT, atau pembukuan belum termasuk ruleset UMKM ini.');
+    if (d.questions.hasOtherDomestic !== 'tidak' || d.questions.hasForeign !== 'tidak' || d.questions.hasDeductions !== 'tidak' || d.questions.hasTaxRelief !== 'tidak') return ineligible('Penghasilan atau pengurang di luar UMKM belum termasuk ruleset ini.');
+    if (activeRows(d, 'otherdomestic').length || activeRows(d, 'foreign').length || activeRows(d, 'finalincome').length || activeRows(d, 'deductions').length || activeRows(d, 'taxloss').length || activeRows(d, 'taxrelief').length) return ineligible('Rincian penghasilan final atau pengurang tambahan perlu dihitung terpisah.');
+    if (d.questions.hasWithholding !== 'tidak' || activeRows(d, 'withholding').length || d.questions.hasForeignRefund !== 'tidak' || d.questions.hasDeferral !== 'tidak') return ineligible('Kredit, pemotongan, atau penundaan pajak belum termasuk ruleset ini.');
+    if (['hasP25', 'hasCustomP25', 'hasOPPTP25'].some(key => d.questions[key] === 'ya') || ['p25Paid', 'p25STP', 'foreignRefund', 'deferral', 'previousBalance'].some(key => hasAmount(d.extras[key]))) return ineligible('Angsuran atau penyesuaian pajak umum belum termasuk ruleset UMKM ini.');
+    const monthlyGross = activeRows(d, 'umkm').flatMap(row => Array.from({ length: 12 }, (_, index) => row.values[`m${index + 1}`] || '')).filter(Boolean).map(numeric);
+    if (!monthlyGross.length || monthlyGross.some(value => !Number.isFinite(value) || value < 0)) return ineligible('Periksa nilai omzet UMKM bulanan.');
+    const annualGross = monthlyGross.reduce((sum, value) => sum + value, 0);
+    if (annualGross > UMKM_ANNUAL_GROSS_LIMIT) return { eligible: false, annualGross, reason: 'Omzet tahunan melampaui batas Rp4,8 miliar untuk ruleset UMKM ini.' };
+    return { eligible: true, annualGross, reason: 'Dihitung dari data dan ruleset UMKM 2025 terbatas — bukan persetujuan pelaporan.' };
+}
 export function compute(d: Draft): Result[] {
     const sum = (k: string, col: string) => (d.tables[k] || []).filter(r => !r.disposed).reduce((s, r) => s + numeric(rowValue(k, r, col)), 0);
     const override = (key: string, v: number | null) => { const o = d.overrides[key]; return o?.enabled ? (o.reason.trim() && o.value.trim() ? numeric(o.value) : null) : v; };
@@ -87,6 +115,7 @@ export function compute(d: Draft): Result[] {
     const credit = sum('withholding', 'withheld') + sum('foreign', 'credit');
     const ptkp = ptkpAmount(d.profile.ptkp);
     const regular = regularEmployeeEligibility(d);
+    const umkm = umkmEligibility(d);
     const pkp = regular.eligible && net !== null && ptkp !== null ? roundPkpDownToThousand(net - ptkp) : null;
     const rawTax = pkp === null ? null : progressiveReference(pkp);
     const tax = rawTax;
@@ -95,9 +124,13 @@ export function compute(d: Draft): Result[] {
         ? null
         : d.questions.hasP25 === 'ya' && d.questions.hasCustomP25 === 'tidak' && d.questions.hasOPPTP25 === 'tidak' && balance !== null ? balance / 12
             : d.questions.hasP25 === 'tidak' && d.questions.hasOPPTP25 === 'tidak' ? 0 : null;
+    const umkmTax = umkm.eligible && umkm.annualGross !== null ? umkmFinalReference(umkm.annualGross) : null;
+    const umkmPayments = Array.from({ length: 12 }, (_, index) => numeric(d.extras[`umkmPaid${index}`]) + numeric(d.extras[`umkmWithheld${index}`])).reduce((sum, value) => sum + value, 0);
+    const umkmReconciled = umkmTax !== null && umkmTax === umkmPayments;
     const sourceNote = 'Rekap data kerja; perlakuan pajak dan kelengkapan perlu verifikasi.';
     const calculatedNote = regular.reason;
     const calculated = { verification: 'ruleset-2025' as const, source: ruleSetFor('2025')?.sources.regularEmployee.title };
+    const calculatedUmkm = { verification: 'ruleset-2025' as const, source: ruleSetFor('2025')?.sources.umkm.title };
     const notApplicable = { verification: 'not-applicable' as const, note: 'Tidak Berlaku untuk jawaban SPT ini.' };
     const results: Result[] = [
         { key: 'jobs', label: 'Penghasilan neto pekerjaan', value: jobs, sections: ['jobs'], note: 'Bruto dikurangi pengurang yang diinput.' },
@@ -118,7 +151,7 @@ export function compute(d: Draft): Result[] {
         { key: 'payable', label: 'Saldo setelah penundaan', value: null, sections: ['extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.questions.hasDeferral === 'tidak' ? notApplicable : {}) },
         { key: 'amended', label: 'Selisih pembetulan', value: null, sections: ['extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.profile.sptStatus === 'Normal' ? notApplicable : {}) },
         { key: 'p25Next', label: 'Angsuran PPh 25 berikutnya', value: p25Next, sections: ['extras'], note: d.questions.hasCustomP25 === 'ya' ? 'Lampiran 4 Bagian A belum termasuk ruleset ini.' : regular.eligible ? calculatedNote : regular.reason, ...(regular.eligible && d.questions.hasCustomP25 !== 'ya' ? calculated : {}) },
-        { key: 'umkmTax', label: 'PPh final UMKM', value: null, sections: ['umkm'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.questions.hasUMKM === 'tidak' ? notApplicable : {}) },
+        { key: 'umkmTax', label: 'PPh final UMKM', value: umkmTax, sections: ['umkm'], note: d.questions.hasUMKM === 'tidak' ? 'Tidak Berlaku untuk jawaban SPT ini.' : !umkm.eligible ? umkm.reason : umkmReconciled ? umkm.reason : `PPh terhitung Rp${money(umkmTax)}; rekonsiliasikan dengan setoran/pemotongan Rp${money(umkmPayments)}.`, ...(d.questions.hasUMKM === 'tidak' ? notApplicable : umkm.eligible ? umkmReconciled ? calculatedUmkm : { ...calculatedUmkm, verification: 'reconciliation-required' as const } : {}) },
         { key: 'phmt', label: 'Alokasi PPh PH/MT', value: null, sections: ['partner'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(!['PH', 'MT'].includes(d.profile.maritalTax) ? notApplicable : {}) },
         { key: 'debt', label: 'Saldo utang akhir tahun', value: sum('debts', 'balance'), sections: ['debts'], note: sourceNote },
         { key: 'final', label: 'Dasar penghasilan final', value: sum('finalincome', 'base'), sections: ['finalincome'], note: sourceNote },

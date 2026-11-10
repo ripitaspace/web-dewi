@@ -15,7 +15,7 @@ export const pageNumbers = Object.keys(pageSheets).map(Number);
 export interface TableBinding { section: string | null; cols: (string | null)[]; book?: string; regions?: string[][] }
 const T = (section: string | null, cols: (string | null)[], extra: Partial<TableBinding> = {}): TableBinding => ({ section, cols, ...extra });
 const months = Array.from({ length: 12 }, (_, i) => 'm' + (i + 1));
-const depreciationCols = ['CodeOfAsset', 'GroupOfAsset', '@period', 'AcquisitionPrice', 'RemainingValue', 'CommercialMethode', 'FiscalMethode', 'FiscalDepretiationThisYear', 'Notes'];
+const depreciationCols = ['CodeOfAsset', 'AssetName', '@period', 'AcquisitionPrice', 'RemainingValue', 'CommercialMethode', 'FiscalMethode', 'FiscalDepretiationThisYear', 'Notes'];
 export const tableBindings: Record<string, TableBinding> = {
   '5.0': T('cash', ['code', '@description', 'account', 'owner', 'bank', 'country', 'year', 'balance', 'pps']),
   '5.1': T('receivables', ['code', 'description', 'country', '@debtor', 'principal', 'year', 'balance', 'pps']),

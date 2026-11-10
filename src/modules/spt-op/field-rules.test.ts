@@ -25,6 +25,7 @@ describe('canonicalNumber', () => {
   it('tahun/bulan hanya digit', () => {
     expect(canonicalNumber('20a25', 'year')).toBe('2025');
     expect(canonicalNumber('1 2', 'month')).toBe('12');
+    expect(canonicalNumber('1', 'month')).toBe('01');
   });
   it('nilai kanonik selalu terbaca sama oleh numeric()', () => {
     for (const raw of ['0', '1', '1500', '1500000.5', '-2000', '0.25', '1234567.89']) expect(numeric(canonicalNumber(raw, 'currency'))).toBe(Number(raw));
@@ -32,6 +33,7 @@ describe('canonicalNumber', () => {
   it('format tampilan id-ID dan peringatan titik ribuan', () => {
     expect(displayNumber('1500000.5', 'currency')).toBe('1.500.000,5');
     expect(displayNumber('2025', 'year')).toBe('2025');
+    expect(displayNumber('9', 'month')).toBe('09');
     expect(ambiguousDecimal('1.500', 'decimal')).toBe(true);
     expect(ambiguousDecimal('1.500', 'currency')).toBe(false);
   });
@@ -51,7 +53,7 @@ describe('aturan field', () => {
   });
   it('rentang bulan dan persen diperiksa pada baris', () => {
     const cols = catalog.tables.depreciation.columns;
-    const base = { CodeOfAsset: 'x', GroupOfAsset: 'Group 1', YearOfAcquisition: '2024', AcquisitionPrice: '1', RemainingValue: '1', CommercialMethode: 'GL', FiscalMethode: 'GL', FiscalDepretiationThisYear: '1' };
+    const base = { CodeOfAsset: 'x', AssetName: 'Aset contoh', GroupOfAsset: 'Group 1', YearOfAcquisition: '2024', AcquisitionPrice: '1', RemainingValue: '1', CommercialMethode: 'GL', FiscalMethode: 'GL', FiscalDepretiationThisYear: '1' };
     expect(errors(cols, row({ ...base, MonthOfAcquisition: '13' }))).toContain('Bulan perolehan: bulan 1–12');
     expect(errors(cols, row({ ...base, MonthOfAcquisition: '12' }))).toEqual([]);
     expect(rangeIssue({ key: 'norm', type: 'number' }, '120')).toBe('persentase 0–100');

@@ -1403,6 +1403,13 @@
           "required": true
         },
         {
+          "label": "Nama aset",
+          "key": "AssetName",
+          "type": "text",
+          "options": [],
+          "required": true
+        },
+        {
           "label": "Bulan perolehan",
           "key": "MonthOfAcquisition",
           "type": "number",
@@ -1496,6 +1503,13 @@
             "Group 4|Kelompok 4",
             "Other Group|Lainnya"
           ],
+          "required": true
+        },
+        {
+          "label": "Nama aset",
+          "key": "AssetName",
+          "type": "text",
+          "options": [],
           "required": true
         },
         {
@@ -3617,7 +3631,7 @@
           43
         ],
         [
-          "GroupOfAsset",
+          "AssetName",
           69,
           131
         ],

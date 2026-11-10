@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import * as XLSX from 'xlsx';
 import { backup, catalog, draftKey, fresh, readBackup, reducer, row } from './model';
-import { compute, errors, numeric, readiness, regularEmployeeEligibility, sectionStatus, validate } from './engine';
+import { compute, errors, numeric, readiness, regularEmployeeEligibility, sectionStatus, umkmEligibility, validate } from './engine';
 import { copyAssets, csv, excelDate, parseCSV, previewImport, readWorkbook } from './import-export';
 import { importTemplateWorkbook } from './template-import';
 import { pageCount, pageRows } from './form-layout';
 import { boxSlots, tableBindings } from './coretax-map';
 import { assertCanSave, saveDraft, withoutDraft } from './storage';
 import { adapters, previewXML } from './xml';
-import { progressiveReference, roundPkpDownToThousand, rules2025 } from './rules-2025';
+import { progressiveReference, roundPkpDownToThousand, rules2025, umkmFinalReference } from './rules-2025';
 
 const employer = () => row({ employer: 'PERUSAHAAN CONTOH', employerTin: '0000000000000001', gross: '120000000', expense: '6000000' });
 
@@ -89,11 +89,12 @@ describe('Import and export', () => {
     const names = ['01_META', '02_IDENTITAS', '03_PILIHAN_INDUK', '04_KELUARGA', '05_HARTA_KAS', '06_HARTA_PIUTANG', '07_HARTA_INVESTASI', '08_HARTA_BERGERAK', '09_HARTA_PROPERTI', '10_HARTA_LAIN', '11_UTANG', '12_PEKERJAAN', '13_BUKTI_POTONG', '14_PENGHASILAN_LAIN', '15_TKU', '16_OMZET_BULANAN', '17_NORMA', '18_REKON_LR', '19_NERACA', '20_PENYUSUTAN', '21_BIAYA_TERTENTU', '22_PPH25', '23_PH_MT', '24_PENGURANG'];
     const sheet = (name: string, header: string[] = ['id_baris'], data: string[] = []) => ({ name, rows: [[], [], [], [], header, data] });
     const sheets = names.map(name => sheet(name));
-    sheets[0] = sheet('01_META', ['file_signature', 'schema_version', 'tahun_pajak', 'jenis_periode', 'status_spt'], ['PC-SPTOP-IMPORT', '0.1.0', '2025', 'BAGIAN_TAHUN', 'NORMAL']);
+    sheets[0] = sheet('01_META', ['file_signature', 'schema_version', 'tahun_pajak', 'jenis_periode', 'status_spt'], ['PC-SPTOP-IMPORT', '0.2.0', '2025', 'BAGIAN_TAHUN', 'NORMAL']);
     sheets[1] = sheet('02_IDENTITAS', ['nik_npwp', 'nama_wp', 'email'], ['0000000000000001', 'Rico', 'rico@example.test']);
     sheets[2] = { name: '03_PILIHAN_INDUK', rows: [[], [], [], [], ['field_key', 'jawaban'], ['B_1A_PEKERJAAN', 'YA'], ['B_1B3_METODE_NETO', 'NPPN'], ['I_14B_UTANG', 'TIDAK'], ['J_A_LAPKEU', 'YA']] };
     sheets[4] = sheet('05_HARTA_KAS', ['kode_harta', 'nomor_akun', 'atas_nama', 'bank_institusi', 'lokasi_harta', 'tahun_perolehan', 'saldo_akhir'], ['0102', '123', 'Rico', 'Bank Contoh', 'IDN', '2020', '1000000']);
     sheets[11] = sheet('12_PEKERJAAN', ['pemberi_kerja_nama', 'pemberi_kerja_nik_npwp', 'penghasilan_bruto', 'pengurang_bruto'], ['CONTOH', '0000000000000002', '120000000', '6000000']);
+    sheets[19] = sheet('20_PENYUSUTAN', ['id_aset', 'kode_harta_djp', 'kelompok_jenis_harta', 'nama_harta', 'jenis_aset']);
     const result = importTemplateWorkbook(sheets);
     expect(result).toMatchObject({ recognized: true, errors: [] });
     expect(result.draft?.profile).toMatchObject({ year: '2025', periodType: 'BAGIAN_TAHUN', name: 'Rico', tin: '0000000000000001' });
@@ -108,6 +109,20 @@ describe('Import and export', () => {
     const result = importTemplateWorkbook(sheets);
     expect(result).toMatchObject({ recognized: true, errors: [] });
     expect(result.summary).toHaveLength(24);
+  });
+  it('rejects a legacy Excel template without nama_harta', () => {
+    const names = ['01_META', '02_IDENTITAS', '03_PILIHAN_INDUK', '04_KELUARGA', '05_HARTA_KAS', '06_HARTA_PIUTANG', '07_HARTA_INVESTASI', '08_HARTA_BERGERAK', '09_HARTA_PROPERTI', '10_HARTA_LAIN', '11_UTANG', '12_PEKERJAAN', '13_BUKTI_POTONG', '14_PENGHASILAN_LAIN', '15_TKU', '16_OMZET_BULANAN', '17_NORMA', '18_REKON_LR', '19_NERACA', '20_PENYUSUTAN', '21_BIAYA_TERTENTU', '22_PPH25', '23_PH_MT', '24_PENGURANG'];
+    const sheets = names.map(name => ({ name, rows: [[], [], [], [], ['id_baris'], []] }));
+    sheets[0] = { name: '01_META', rows: [[], [], [], [], ['file_signature', 'schema_version'], ['PC-SPTOP-IMPORT', '0.1.0']] };
+    const result = importTemplateWorkbook(sheets);
+    expect(result.errors).toContain('Versi template Excel lama. Unduh template SPT OP Studio terbaru sebelum mengimpor.');
+  });
+  it('rejects a workbook that claims version 0.2.0 but lacks nama_harta', () => {
+    const names = ['01_META', '02_IDENTITAS', '03_PILIHAN_INDUK', '04_KELUARGA', '05_HARTA_KAS', '06_HARTA_PIUTANG', '07_HARTA_INVESTASI', '08_HARTA_BERGERAK', '09_HARTA_PROPERTI', '10_HARTA_LAIN', '11_UTANG', '12_PEKERJAAN', '13_BUKTI_POTONG', '14_PENGHASILAN_LAIN', '15_TKU', '16_OMZET_BULANAN', '17_NORMA', '18_REKON_LR', '19_NERACA', '20_PENYUSUTAN', '21_BIAYA_TERTENTU', '22_PPH25', '23_PH_MT', '24_PENGURANG'];
+    const sheets = names.map(name => ({ name, rows: [[], [], [], [], ['id_baris'], []] }));
+    sheets[0] = { name: '01_META', rows: [[], [], [], [], ['file_signature', 'schema_version'], ['PC-SPTOP-IMPORT', '0.2.0']] };
+    const result = importTemplateWorkbook(sheets);
+    expect(result.errors).toContain('20_PENYUSUTAN: kolom wajib nama_harta tidak ditemukan. Unduh template SPT OP Studio terbaru sebelum mengimpor.');
   });
   const exampleFiles = [
     'SPT_OP_WP01_Karyawan_2025.xlsx',
@@ -143,6 +158,22 @@ describe('Import and export', () => {
     const values = compute(result.draft!);
     expect(values.find(item => item.key === 'pk')).toMatchObject({ verification: 'ruleset-2025' });
     for (const key of ['payable', 'amended', 'umkmTax', 'phmt']) expect(values.find(item => item.key === key)?.verification).toBe('not-applicable');
+  });
+  it('imports UMKM payments by adding each TKU within the same month', () => {
+    const sheets = readExample('SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx');
+    const omzet = sheets.find(sheet => sheet.name === '16_OMZET_BULANAN')!;
+    const header = omzet.rows[4];
+    const paid = header.indexOf('pph_dibayar_sendiri');
+    const january = omzet.rows.filter(row => row[2] === '1').slice(0, 2);
+    january[0][paid] = '100';
+    january[1][paid] = '200';
+    const result = importTemplateWorkbook(sheets, { mode: 'example' });
+    expect(result.draft?.extras.umkmPaid0).toBe('300');
+  });
+  it('calculates the cleaned UMKM example without duplicate final-income rows', () => {
+    const result = importTemplateWorkbook(readExample('SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx'), { mode: 'example' });
+    expect(result.warnings.some(warning => warning.startsWith('14_PENGHASILAN_LAIN'))).toBe(false);
+    expect(compute(result.draft!).find(item => item.key === 'umkmTax')).toMatchObject({ value: 0, verification: 'ruleset-2025' });
   });
   it('keeps the standard Excel import strict while normalizing known movable-asset ownership values', () => {
     const sheets = readExample('SPT_OP_WP01_Karyawan_2025.xlsx');
@@ -207,6 +238,17 @@ describe('Reconciliation and tax verification gates', () => {
     };
     d.tables.jobs = [employer()];
     d.tables.withholding = [row({ payerTin: '0000000000000001', payerName: 'PERUSAHAAN CONTOH', taxType: 'PPh Pasal 21', gross: '120000000', withheld: '3000000' })];
+    return d;
+  };
+  const umkm = (monthlyGross: number[]) => {
+    const d = fresh();
+    d.profile = { ...d.profile, year: '2025', sptStatus: 'Normal', periodType: 'TAHUN_PAJAK', fromMonth: '1', toMonth: '12', incomeSource: 'Kegiatan Usaha', maritalTax: 'TK', bookMethod: 'Pencatatan' };
+    d.questions = {
+      hasJobs: 'tidak', hasBusiness: 'ya', hasUMKM: 'ya', hasOPPT: 'tidak', hasNorm: 'FINAL_TANPA_PEMBUKUAN',
+      hasOtherDomestic: 'tidak', hasForeign: 'tidak', hasDeductions: 'tidak', hasTaxRelief: 'tidak',
+      hasWithholding: 'tidak', hasForeignRefund: 'tidak', hasDeferral: 'tidak', hasP25: 'tidak', hasCustomP25: 'tidak', hasOPPTP25: 'tidak',
+    };
+    d.tables.umkm = [row(Object.fromEntries(monthlyGross.map((value, index) => [`m${index + 1}`, String(value)])))];
     return d;
   };
   it.each([['1.234.567,89',1234567.89],['1,234,567.89',1234567.89],['0001',1],['-500',-500]])('parses %s', (input, expected) => expect(numeric(input)).toBe(expected));
@@ -297,7 +339,34 @@ describe('Reconciliation and tax verification gates', () => {
     expect(regularEmployeeEligibility(d)).toMatchObject({ eligible: false });
     expect(compute(d).find(r => r.key === 'pk')?.value).toBeNull();
   });
-  it.todo('official annual fixtures: PH/MT, books, NPPN and UMKM eligibility');
+  it.each([[500000000,0],[650000000,750000]])('calculates final UMKM tax from annual gross %i', (gross, expected) => {
+    expect(umkmFinalReference(gross)).toBe(expected);
+  });
+  it('calculates UMKM under the annual allowance and keeps it separate from annual income tax', () => {
+    const d = umkm([332639973]);
+    expect(umkmEligibility(d)).toMatchObject({ eligible: true, annualGross: 332639973 });
+    expect(compute(d).find(r => r.key === 'umkmTax')).toMatchObject({ value: 0, verification: 'ruleset-2025' });
+    for (const key of ['pk', 'rawTax', 'tax', 'balance']) expect(compute(d).find(r => r.key === key)?.value).toBeNull();
+  });
+  it('aggregates multiple TKU, reconciles UMKM payments, and flags a mismatch without hiding the formula', () => {
+    const d = umkm([400000000]);
+    d.tables.umkm.push(row({ m1: '250000000' }));
+    d.extras.umkmPaid0 = '750000';
+    expect(compute(d).find(r => r.key === 'umkmTax')).toMatchObject({ value: 750000, verification: 'ruleset-2025' });
+    d.extras.umkmPaid0 = '500000';
+    expect(compute(d).find(r => r.key === 'umkmTax')).toMatchObject({ value: 750000, verification: 'reconciliation-required' });
+  });
+  it.each([
+    ['PH/MT', (d: ReturnType<typeof umkm>) => { d.profile.maritalTax = 'PH'; }],
+    ['other income', (d: ReturnType<typeof umkm>) => { d.questions.hasOtherDomestic = 'ya'; }],
+    ['PPh 25', (d: ReturnType<typeof umkm>) => { d.questions.hasP25 = 'ya'; }],
+    ['gross above Rp4.8 billion', (d: ReturnType<typeof umkm>) => { d.tables.umkm[0].values.m1 = '4800000001'; }],
+  ])('holds UMKM calculation for %s outside the limited ruleset', (_name, change) => {
+    const d = umkm([100]);
+    change(d);
+    expect(umkmEligibility(d).eligible).toBe(false);
+    expect(compute(d).find(r => r.key === 'umkmTax')?.value).toBeNull();
+  });
   it.todo('official annual fixtures: foreign credit, overpayment, installments and amendment');
 });
 
@@ -319,6 +388,19 @@ describe('Form continuation and XML', () => {
       const rows=Array.from({length:pageCount(d,catalog.tables[key].page)},(_,part)=>pageRows(d,key,part)).flat();
       expect(rows.map(r=>r.id)).toEqual(d.tables[key].filter(r=>!r.disposed).map(r=>r.id));
     }
+  });
+  it('splits WP06 amortization across the two page-14 form parts', async () => {
+    const workbook = XLSX.readFile('public/tools/spt-op/examples/SPT_OP_WP06_Pengusaha_Pembukuan_2025.xlsx');
+    const sheets = workbook.SheetNames.map(name => ({ name, rows: XLSX.utils.sheet_to_json<string[]>(workbook.Sheets[name], { header: 1, defval: '' }) }));
+    const result = importTemplateWorkbook(sheets, { mode: 'example' });
+    const draft = result.draft!;
+
+    expect(result.errors).toEqual([]);
+    expect(pageCount(draft, 14)).toBe(2);
+    expect(pageRows(draft, 'depreciation', 0)).toHaveLength(20);
+    expect(pageRows(draft, 'amortization', 0)).toHaveLength(5);
+    expect(pageRows(draft, 'depreciation', 0).map(item => item.values.AssetName).slice(0, 3)).toEqual(['Laptop operasional', 'Printer laser', 'Mesin kasir']);
+    expect(pageRows(draft, 'amortization', 1).map(item => item.values.CodeOfAsset)).toEqual(['0608', '0699']);
   });
   it('has all 17 source pages with native portrait/landscape dimensions', () => {
     expect(catalog.PAGES).toHaveLength(17);
