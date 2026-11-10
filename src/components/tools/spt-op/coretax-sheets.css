@@ -29,6 +29,7 @@
 .spt-coretax .reg.tight td.empty{height:2.6mm}
 .spt-coretax .reg .sum td{height:4.4mm;background:#e5e8e8}
 .spt-coretax .reg .sum .sumtag{background:var(--yellow);font-weight:700;text-align:center}
+.spt-coretax.is-interactive .reg .sum td:first-child{position:relative}.spt-coretax.is-interactive .spt-table-pager{position:absolute;z-index:3;left:1.2mm;top:50%;display:inline-flex;align-items:center;gap:.7mm;transform:translateY(-50%);font:600 4.8pt/1 Arial,sans-serif;white-space:nowrap}.spt-coretax.is-interactive .spt-table-pager button{width:3.7mm;height:3.2mm;border:.25mm solid #202c5c;border-radius:.4mm;background:#fff;color:#202c5c;padding:0;font:700 6pt/1 Arial,sans-serif;cursor:pointer}.spt-coretax.is-interactive .spt-table-pager button:hover:not(:disabled){background:#202c5c;color:#fff}.spt-coretax.is-interactive .spt-table-pager button:disabled{opacity:.38;cursor:default}.spt-coretax.is-interactive .spt-table-pager button:focus-visible{outline:.35mm solid #202c5c;outline-offset:.25mm}
 .spt-coretax .reg .lined{border-bottom:.3mm solid #26356a}
 .spt-coretax .reg .shaded{background:#929292}
 .spt-coretax .reg .group{background:#999;font-weight:bold}
@@ -339,7 +340,10 @@
 .spt-coretax .tick,.spt-coretax .sq{cursor:default}
 .spt-coretax td.num,.spt-coretax .r-val,.spt-coretax .emptybox{text-align:right}
 .spt-coretax .r-val,.spt-coretax .emptybox,.spt-coretax .qval{font-weight:700;color:#111;font-size:7.5pt}
-.spt-coretax td.empty,.spt-coretax td{font-size:6.4pt;overflow:hidden;word-break:break-word}
+.spt-coretax td.empty,.spt-coretax td{font-size:6.4pt;overflow:hidden;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.spt-coretax td.num{white-space:nowrap;overflow-wrap:normal;word-break:normal}
+.spt-coretax .reg td.empty .spt-cell-text{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-height:1;overflow-wrap:anywhere;word-break:normal}
+.spt-coretax .reg tr[style*="height"] td.empty .spt-cell-text{-webkit-line-clamp:2;font-size:6pt}
 .spt-coretax .sub-line{white-space:nowrap;overflow:hidden;text-overflow:clip;font-weight:600;color:#111}
 .spt-coretax .sub-line:empty{display:none}
 .spt-coretax .cb{display:inline-block;width:2.6mm;height:2.6mm;border:.25mm solid #2464bf;margin-right:1mm;vertical-align:middle;background:#fff}

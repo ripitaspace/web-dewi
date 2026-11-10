@@ -1,0 +1,70 @@
+@media print {
+  @page { margin: 12mm; }
+
+  .calculator {
+    max-width: none;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .calculator .notice { display: flex !important; }
+  .calculator .formColumn { display: grid !important; }
+  .calculator .education,
+  .calculator .disclaimer { display: block !important; }
+
+  .calculator button { display: none !important; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(300px, .88fr);
+    gap: 18px;
+  }
+
+  .summary,
+  .panel,
+  .item,
+  .education,
+  .education details {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .summary {
+    position: static;
+    border-color: rgba(158, 27, 63, .32) !important;
+    background: var(--delima) !important;
+    color: var(--gading) !important;
+  }
+
+  .summary > span { color: var(--kunyit) !important; }
+  .summary strong,
+  .summary dd { color: var(--gading) !important; }
+  .summary p,
+  .summary dt { color: rgba(243, 231, 211, .78) !important; }
+  .message {
+    color: var(--gading) !important;
+    background: rgba(255, 255, 255, .1) !important;
+  }
+  .progressLabel { color: rgba(243, 231, 211, .78) !important; }
+  .emphasis { color: #fff1d4 !important; }
+  .progress { background: rgba(243, 231, 211, .22) !important; }
+  .progress i { background: var(--kunyit) !important; }
+  .errors {
+    color: #fff1f1 !important;
+    background: rgba(242, 185, 197, .2) !important;
+  }
+  .review {
+    color: #fff1d4 !important;
+    border-color: var(--kunyit) !important;
+    background: rgba(232, 185, 63, .15) !important;
+  }
+
+  .calculator input,
+  .calculator select { opacity: 1; }
+  .status {
+    display: block !important;
+    min-height: 0;
+  }
+  .education { margin-top: 22px; }
+  .disclaimer { padding-top: 16px; }
+}

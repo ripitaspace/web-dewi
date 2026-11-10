@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import styles from "./bea-cukai-calculator.module.css";
 import theme from "./bea-cukai-calculator-theme.module.css";
+import printStyles from "./bea-cukai-calculator-print.module.css";
 import {
   calculatePassengerImport,
   emptyScenario,
@@ -145,8 +146,8 @@ export function BeaCukaiCalculatorClient() {
   }
 
   return (
-    <div className={`${styles.calculator} ${theme.calculator}`}>
-      <section className={`${styles.notice} ${theme.notice}`} aria-label="Privasi kalkulator">
+    <div className={`${styles.calculator} ${theme.calculator} ${printStyles.calculator}`}>
+      <section className={`${styles.notice} ${theme.notice} ${printStyles.notice}`} aria-label="Privasi kalkulator">
         <span aria-hidden="true">⌁</span>
         <p><strong>Privat di perangkatmu.</strong> Data perjalanan dan belanjaan tidak dikirim ke server PuspitaCore.</p>
       </section>
@@ -156,9 +157,9 @@ export function BeaCukaiCalculatorClient() {
         <button type="button" className={styles.textButton} onClick={clearAll}>Kosongkan</button>
       </div>
 
-      <div className={styles.layout}>
-        <div className={styles.formColumn}>
-          <section className={`${styles.panel} ${theme.panel}`} aria-labelledby="travel-title">
+      <div className={`${styles.layout} ${printStyles.layout}`}>
+        <div className={`${styles.formColumn} ${printStyles.formColumn}`}>
+          <section className={`${styles.panel} ${theme.panel} ${printStyles.panel}`} aria-labelledby="travel-title">
             <div className={styles.sectionHeading}><span>01 · PERJALANAN</span><h2 id="travel-title">Mulai dari perjalananmu.</h2></div>
             <div className={styles.fieldGrid}>
               <label>Negara asal perjalanan<input value={scenario.originCountry} onChange={(event) => updateScenario({ originCountry: event.target.value })} placeholder="Contoh: Jepang" /></label>
@@ -166,13 +167,13 @@ export function BeaCukaiCalculatorClient() {
             </div>
           </section>
 
-          <section className={`${styles.panel} ${theme.panel}`} aria-labelledby="passenger-title">
+          <section className={`${styles.panel} ${theme.panel} ${printStyles.panel}`} aria-labelledby="passenger-title">
             <div className={styles.sectionHeadingRow}><div className={styles.sectionHeading}><span>02 · PENUMPANG</span><h2 id="passenger-title">Fasilitas dihitung per orang.</h2></div><button type="button" className={styles.secondaryButton} onClick={addPassenger}>+ Tambah penumpang</button></div>
             <p className={styles.help}>Setiap penumpang memiliki pembebasan sendiri. Barang harus dikaitkan kepada pemiliknya.</p>
             <div className={styles.passengers}>{scenario.passengers.map((passenger, index) => <div className={styles.passengerRow} key={passenger.id}><label>Nama penumpang {index + 1}<input value={passenger.name} onChange={(event) => updatePassenger(passenger.id, event.target.value)} /></label>{scenario.passengers.length > 1 && <button type="button" className={styles.iconButton} onClick={() => removePassenger(passenger.id)} aria-label={`Hapus ${passenger.name || `penumpang ${index + 1}`}`}>×</button>}</div>)}</div>
           </section>
 
-          <section className={`${styles.panel} ${theme.panel}`} aria-labelledby="rate-title">
+          <section className={`${styles.panel} ${theme.panel} ${printStyles.panel}`} aria-labelledby="rate-title">
             <div className={styles.sectionHeading}><span>03 · KURS MANUAL</span><h2 id="rate-title">Masukkan kurs Bea Cukai.</h2></div>
             <p className={styles.help}>Isi IDR per 1 unit mata uang. Untuk JPY, masukkan nilai per 1 JPY, bukan per 100 JPY.</p>
             <div className={styles.fieldGrid}>
@@ -183,10 +184,10 @@ export function BeaCukaiCalculatorClient() {
             <a className={styles.officialLink} href="https://www.beacukai.go.id/kurs" target="_blank" rel="noreferrer">Buka kurs resmi Bea Cukai ↗</a>
           </section>
 
-          <section className={`${styles.panel} ${theme.panel}`} aria-labelledby="items-title">
+          <section className={`${styles.panel} ${theme.panel} ${printStyles.panel}`} aria-labelledby="items-title">
             <div className={styles.sectionHeadingRow}><div className={styles.sectionHeading}><span>04 · BELANJAAN</span><h2 id="items-title">Apa saja yang kamu bawa?</h2></div><button type="button" className={styles.primaryButton} onClick={addItem}>+ Tambah barang</button></div>
             <p className={styles.help}>Subtotal belanja: <strong>{moneyIdr.format(Math.round(result.totalShoppingIdr))}</strong></p>
-            <div className={styles.items}>{scenario.items.map((item, index) => <article className={styles.item} key={item.id} aria-label={`Barang ${index + 1}`}>
+            <div className={styles.items}>{scenario.items.map((item, index) => <article className={`${styles.item} ${printStyles.item}`} key={item.id} aria-label={`Barang ${index + 1}`}>
               <div className={styles.itemHeading}><strong>Barang {index + 1}</strong>{scenario.items.length > 1 && <button type="button" className={styles.textButton} onClick={() => removeItem(item.id)}>Hapus</button>}</div>
               <div className={styles.fieldGrid}>
                 <label className={styles.full}>Nama barang<input value={item.name} onChange={(event) => updateItem(item.id, { name: event.target.value })} placeholder="Contoh: Tas" /></label>
@@ -203,12 +204,12 @@ export function BeaCukaiCalculatorClient() {
           </section>
         </div>
 
-        <aside className={`${styles.summary} ${theme.summary}`} aria-label="Ringkasan estimasi">
+        <aside className={`${styles.summary} ${theme.summary} ${printStyles.summary}`} aria-label="Ringkasan estimasi">
           <span>ESTIMASI PUNGUTAN</span>
           <h2>Total Pungutan</h2>
           <strong className={`${styles.total} ${!result.isReady ? theme.pendingTotal : ""}`}>{result.isReady ? moneyIdr.format(Math.round(result.totalLevyIdr)) : "Lengkapi kurs"}</strong>
           <p className={styles.totalUsd}>{result.isReady ? moneyUsd.format(result.totalLevyUsd) : ""}</p>
-          {result.reviews.length > 0 ? <p className={styles.message}>Ada barang yang belum dimasukkan ke estimasi karena memerlukan peninjauan khusus.</p> : result.isReady && result.totalLevyUsd === 0 ? <p className={styles.message}>Belanjaanmu masih berada dalam batas pembebasan USD 500 untuk barang pribadi.</p> : <p className={styles.message}>Nilai belanjaan yang dapat dihitung melewati batas pembebasan. Ini adalah estimasi, bukan penetapan resmi.</p>}
+          {result.reviews.length > 0 ? <p className={`${styles.message} ${printStyles.message}`}>Ada barang yang belum dimasukkan ke estimasi karena memerlukan peninjauan khusus.</p> : result.isReady && result.totalLevyUsd === 0 ? <p className={`${styles.message} ${printStyles.message}`}>Belanjaanmu masih berada dalam batas pembebasan USD 500 untuk barang pribadi.</p> : <p className={`${styles.message} ${printStyles.message}`}>Nilai belanjaan yang dapat dihitung melewati batas pembebasan. Ini adalah estimasi, bukan penetapan resmi.</p>}
           <dl className={styles.breakdown}>
             <div><dt>Total belanjaan</dt><dd>{moneyIdr.format(Math.round(result.totalShoppingIdr))}</dd></div>
             <div><dt>Nilai pribadi yang dihitung</dt><dd>{moneyUsd.format(result.totalShoppingUsd)}</dd></div>
@@ -217,25 +218,25 @@ export function BeaCukaiCalculatorClient() {
             <div><dt>Bea masuk</dt><dd>{moneyUsd.format(result.importDutyUsd)}</dd></div>
             <div><dt>PPN impor</dt><dd>{moneyUsd.format(result.vatUsd)}</dd></div>
             <div><dt>PPnBM (bila ada)</dt><dd>{moneyUsd.format(result.ppnbmUsd)}</dd></div>
-            <div className={styles.emphasis}><dt>Total belanja + pungutan</dt><dd>{moneyIdr.format(Math.round(result.totalCostIdr))}</dd></div>
+            <div className={`${styles.emphasis} ${printStyles.emphasis}`}><dt>Total belanja + pungutan</dt><dd>{moneyIdr.format(Math.round(result.totalCostIdr))}</dd></div>
           </dl>
-          <div className={styles.passengerBreakdown}><h3>Fasilitas per penumpang</h3>{result.passengers.map((entry) => { const passenger = scenario.passengers.find((candidate) => candidate.id === entry.passengerId); return <div key={entry.passengerId}><div className={styles.progressLabel}><span>{passenger?.name || "Penumpang"}</span><b>{moneyUsd.format(entry.eligibleValueUsd)} / USD 500</b></div><div className={styles.progress}><i style={{ width: `${entry.allowanceUsedPercent}%` }} /></div></div>; })}</div>
-          {result.errors.length > 0 && <div className={styles.errors} role="alert"><strong>Lengkapi data berikut:</strong><ul>{result.errors.map((error) => <li key={error}>{error}</li>)}</ul></div>}
-          {result.reviews.length > 0 && <div className={styles.review} role="status"><strong>Perlu Peninjauan</strong>{result.reviews.map((review) => <p key={review.itemId}><b>{review.itemName}:</b> {review.message}</p>)}</div>}
+          <div className={styles.passengerBreakdown}><h3>Fasilitas per penumpang</h3>{result.passengers.map((entry) => { const passenger = scenario.passengers.find((candidate) => candidate.id === entry.passengerId); return <div key={entry.passengerId}><div className={`${styles.progressLabel} ${printStyles.progressLabel}`}><span>{passenger?.name || "Penumpang"}</span><b>{moneyUsd.format(entry.eligibleValueUsd)} / USD 500</b></div><div className={`${styles.progress} ${printStyles.progress}`}><i style={{ width: `${entry.allowanceUsedPercent}%` }} /></div></div>; })}</div>
+          {result.errors.length > 0 && <div className={`${styles.errors} ${printStyles.errors}`} role="alert"><strong>Lengkapi data berikut:</strong><ul>{result.errors.map((error) => <li key={error}>{error}</li>)}</ul></div>}
+          {result.reviews.length > 0 && <div className={`${styles.review} ${printStyles.review}`} role="status"><strong>Perlu Peninjauan</strong>{result.reviews.map((review) => <p key={review.itemId}><b>{review.itemName}:</b> {review.message}</p>)}</div>}
           <div className={styles.summaryActions} role="group" aria-label="Aksi simulasi"><button type="button" className={styles.iconButton} style={squareIconButtonStyle} onClick={saveScenario} aria-label="Simpan di perangkat" title="Simpan di perangkat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v13" /><path d="m6.5 11.5 5.5 5.5 5.5-5.5" /><path d="M5 21h14" /></svg></button><button type="button" className={styles.iconButton} style={squareIconButtonStyle} onClick={loadScenario} aria-label="Muat simpanan" title="Muat simpanan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.35-5.65" /><path d="M4 4v5h5" /></svg></button><button type="button" className={styles.iconButton} style={squareIconButtonStyle} onClick={copySummary} aria-label="Salin ringkasan" title="Salin ringkasan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1" /><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4" /></svg></button><button type="button" className={styles.iconButton} style={squareIconButtonStyle} onClick={() => window.print()} aria-label="Cetak" title="Cetak"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 8V3h10v5" /><rect x="4" y="8" width="16" height="9" rx="2" /><path d="M7 14h10v7H7z" /><path d="M17 11h.01" /></svg></button></div>
-          <p className={styles.status}>Aturan estimasi: <a href="https://jdih.kemenkeu.go.id/dok/pmk-34-tahun-2025" target="_blank" rel="noreferrer">{PASSENGER_IMPORT_RULES.version}</a> · efektif {PASSENGER_IMPORT_RULES.effectiveFrom}.</p>
-          <p className={styles.status} role="status">{notice}</p>
+          <p className={`${styles.status} ${printStyles.status}`}>Aturan estimasi: <a href="https://jdih.kemenkeu.go.id/dok/pmk-34-tahun-2025" target="_blank" rel="noreferrer">{PASSENGER_IMPORT_RULES.version}</a> · efektif {PASSENGER_IMPORT_RULES.effectiveFrom}.</p>
+          <p className={`${styles.status} ${printStyles.status}`} role="status">{notice}</p>
         </aside>
       </div>
 
-      <section className={styles.education} aria-labelledby="how-title"><span>CATATAN PENTING</span><h2 id="how-title">Cara menghitung dan kapan perlu memeriksa ulang.</h2><div className={styles.accordions}>
+      <section className={`${styles.education} ${printStyles.education}`} aria-labelledby="how-title"><span>CATATAN PENTING</span><h2 id="how-title">Cara menghitung dan kapan perlu memeriksa ulang.</h2><div className={styles.accordions}>
         <details><summary>Apa itu pembebasan USD 500?</summary><p>Fasilitas ini diperhitungkan per penumpang untuk barang pribadi yang memenuhi ketentuan, bukan digabungkan untuk seluruh rombongan.</p></details>
         <details><summary>Kenapa PPN dihitung setelah bea masuk?</summary><p>Dalam model estimasi ini, nilai impor untuk PPN dihitung dari nilai yang terkena pungutan ditambah bea masuk.</p></details>
         <details><summary>Kenapa kurs pajak bisa berbeda dari kurs bank?</summary><p>Gunakan Nilai Dasar Penetapan Bea Masuk (NDPBM) pada periode kedatangan. Kalkulator ini meminta kurs manual agar tidak mengklaim kurs live.</p></details>
         <details><summary>Kapan HP perlu registrasi IMEI?</summary><p>HKT yang diperoleh dari luar negeri membutuhkan registrasi IMEI untuk jaringan seluler Indonesia. Registrasi tidak dipungut biaya administrasi, tetapi pungutan impor dapat tetap timbul.</p></details>
         <details><summary>Kenapa hasilnya dapat berbeda dari petugas?</summary><p>Petugas dapat menetapkan berdasarkan klasifikasi barang, nilai pabean, kurs, dokumen, dan ketentuan yang berlaku saat kedatangan.</p></details>
       </div></section>
-      <p className={styles.disclaimer}>Perhitungan ini merupakan estimasi untuk membantu perencanaan biaya perjalanan. Hasil akhir dapat berbeda berdasarkan klasifikasi barang, penetapan nilai pabean, kurs, ketentuan yang berlaku, dan pemeriksaan pejabat Bea Cukai. Kalkulator ini bukan layanan resmi Direktorat Jenderal Bea dan Cukai.</p>
+      <p className={`${styles.disclaimer} ${printStyles.disclaimer}`}>Perhitungan ini merupakan estimasi untuk membantu perencanaan biaya perjalanan. Hasil akhir dapat berbeda berdasarkan klasifikasi barang, penetapan nilai pabean, kurs, ketentuan yang berlaku, dan pemeriksaan pejabat Bea Cukai. Kalkulator ini bukan layanan resmi Direktorat Jenderal Bea dan Cukai.</p>
     </div>
   );
 }

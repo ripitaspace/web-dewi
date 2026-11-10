@@ -1,14 +1,19 @@
 /** Evidence registry: a verified formula does not verify the whole annual return. */
 export const rules2025 = {
-    version: '2025-review.1',
+    version: '2025-regular-employee.1',
     year: '2025',
     annualReturnVerified: false,
     sources: {
         rates: {
-            title: 'DJP · Gaji Rp5 Juta Kini Kena Pajak? (2 Januari 2023)',
-            url: 'https://www.pajak.go.id/index.php/id/siaran-pers/gaji-rp5-juta-kini-kena-pajak',
-            scope: 'Lapisan tarif UU HPP dan empat ilustrasi TK/0. Bukan validasi seluruh SPT 2025.',
+            title: 'DJP · UU Pajak Penghasilan, Pasal 17',
+            url: 'https://pajak.go.id/id/peraturan/pajak-penghasilan',
+            scope: 'Lapisan tarif PPh orang pribadi dan pembulatan PKP ke bawah hingga ribuan rupiah penuh.',
             checkedAt: '2026-11-04',
+        },
+        regularEmployee: {
+            title: 'DJP · Panduan SPT OP Coretax Form V25022026',
+            scope: 'Alur Induk C.2–C.9 dan H.13a untuk SPT OP reguler. Hanya dipakai bersama pagar kelayakan ruleset ini.',
+            checkedAt: '2026-11-10',
         },
         prototype: {
             title: 'RIPITAX SPT OP Studio 2025 · prototype pengguna',
@@ -17,8 +22,8 @@ export const rules2025 = {
     },
     pending: [
         'Kewajiban lampiran dan seluruh field Induk A–K',
-        'Penghasilan pekerjaan, batas pengurang, dan beberapa pemberi kerja',
-        'PTKP selain ilustrasi TK/0, pembulatan PKP, dan periode tidak penuh',
+        'Penghasilan pekerjaan dengan pengurang khusus atau periode tidak penuh',
+        'PTKP dan pembulatan di luar skenario karyawan reguler',
         'Pembukuan, NPPN, fasilitas UMKM dan OPPT',
         'Penghasilan pasangan PH/MT dan kredit PPh 24',
         'Pengurang, kompensasi kerugian, angsuran, dan pembetulan',
@@ -38,4 +43,11 @@ export function progressiveReference(pkp: number): number {
             break;
     }
     return tax;
+}
+
+/** Pasal 17 ayat (3) UU PPh: PKP dibulatkan ke bawah hingga ribuan rupiah penuh. */
+export function roundPkpDownToThousand(value: number): number {
+    if (!Number.isFinite(value))
+        throw Error('PKP acuan harus angka yang valid.');
+    return Math.floor(Math.max(0, value) / 1_000) * 1_000;
 }

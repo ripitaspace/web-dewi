@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import * as XLSX from 'xlsx';
 import { backup, catalog, draftKey, fresh, readBackup, reducer, row } from './model';
-import { compute, errors, numeric, readiness, sectionStatus, validate } from './engine';
+import { compute, errors, numeric, readiness, regularEmployeeEligibility, sectionStatus, validate } from './engine';
 import { copyAssets, csv, excelDate, parseCSV, previewImport, readWorkbook } from './import-export';
 import { importTemplateWorkbook } from './template-import';
 import { pageCount, pageRows } from './form-layout';
 import { boxSlots, tableBindings } from './coretax-map';
 import { assertCanSave, saveDraft, withoutDraft } from './storage';
 import { adapters, previewXML } from './xml';
-import { progressiveReference, rules2025 } from './rules-2025';
+import { progressiveReference, roundPkpDownToThousand, rules2025 } from './rules-2025';
 
 const employer = () => row({ employer: 'PERUSAHAAN CONTOH', employerTin: '0000000000000001', gross: '120000000', expense: '6000000' });
 
@@ -117,6 +117,14 @@ describe('Import and export', () => {
     'SPT_OP_WP05_Profesional_NPPN_2025.xlsx',
     'SPT_OP_WP06_Pengusaha_Pembukuan_2025.xlsx',
   ];
+  const exampleIncomeSources: Record<string, string> = {
+    'SPT_OP_WP01_Karyawan_2025.xlsx': 'Pekerjaan',
+    'SPT_OP_WP02_Karyawan_Menikah_2025.xlsx': 'Pekerjaan',
+    'SPT_OP_WP03_Status_PH_MT_2025.xlsx': 'Pekerjaan',
+    'SPT_OP_WP04_Pengusaha_UMKM_2025.xlsx': 'Kegiatan Usaha',
+    'SPT_OP_WP05_Profesional_NPPN_2025.xlsx': 'Pekerjaan Bebas',
+    'SPT_OP_WP06_Pengusaha_Pembukuan_2025.xlsx': 'Kegiatan Usaha',
+  };
   const readExample = (file: string) => {
     const workbook = XLSX.readFile(`public/tools/spt-op/examples/${file}`);
     return workbook.SheetNames.map(name => ({ name, rows: XLSX.utils.sheet_to_json<string[]>(workbook.Sheets[name], { header: 1, raw: false, defval: '' }) }));
@@ -125,8 +133,16 @@ describe('Import and export', () => {
     const result = importTemplateWorkbook(readExample(file), { mode: 'example' });
     expect(result).toMatchObject({ recognized: true, errors: [] });
     expect(result.draft?.profile.name).toMatch(/^SIMULASI/);
+    expect(result.draft?.profile.incomeSource).toBe(exampleIncomeSources[file]);
     expect(result.draft?.importTables['11_UTANG']).not.toHaveLength(0);
     expect(result.warnings.length).toBeGreaterThan(0);
+  });
+  it('calculates the regular employee example and marks unrelated branches not applicable', () => {
+    const result = importTemplateWorkbook(readExample('SPT_OP_WP01_Karyawan_2025.xlsx'), { mode: 'example' });
+    expect(result.draft).toBeDefined();
+    const values = compute(result.draft!);
+    expect(values.find(item => item.key === 'pk')).toMatchObject({ verification: 'ruleset-2025' });
+    for (const key of ['payable', 'amended', 'umkmTax', 'phmt']) expect(values.find(item => item.key === key)?.verification).toBe('not-applicable');
   });
   it('keeps the standard Excel import strict while normalizing known movable-asset ownership values', () => {
     const sheets = readExample('SPT_OP_WP01_Karyawan_2025.xlsx');
@@ -182,6 +198,17 @@ describe('Import and export', () => {
 });
 
 describe('Reconciliation and tax verification gates', () => {
+  const regularEmployee = () => {
+    const d = fresh();
+    d.questions = {
+      hasJobs: 'ya', hasBusiness: 'tidak', hasOtherDomestic: 'tidak', hasForeign: 'tidak',
+      hasDeductions: 'tidak', hasTaxRelief: 'tidak', hasWithholding: 'ya', hasForeignRefund: 'tidak',
+      hasDeferral: 'tidak', hasP25: 'tidak', hasCustomP25: 'tidak', hasOPPTP25: 'tidak',
+    };
+    d.tables.jobs = [employer()];
+    d.tables.withholding = [row({ payerTin: '0000000000000001', payerName: 'PERUSAHAAN CONTOH', taxType: 'PPh Pasal 21', gross: '120000000', withheld: '3000000' })];
+    return d;
+  };
   it.each([['1.234.567,89',1234567.89],['1,234,567.89',1234567.89],['0001',1],['-500',-500]])('parses %s', (input, expected) => expect(numeric(input)).toBe(expected));
   it('does not turn invalid amounts into zero', () => expect(Number.isNaN(numeric('not a number'))).toBe(true));
   it('sums multiple employers and applies overrides once', () => {
@@ -220,7 +247,56 @@ describe('Reconciliation and tax verification gates', () => {
     expect(progressiveReference(Math.max(0,net-54000000))).toBe(tax);
   });
   it('rejects invalid PKP in the isolated tariff function', () => expect(()=>progressiveReference(NaN)).toThrow());
-  it.todo('official annual fixtures: multiple employers and deductions');
+  it('calculates the verified 2025 regular-employee slice and keeps its provenance', () => {
+    const d = regularEmployee();
+    const result = compute(d);
+    expect(regularEmployeeEligibility(d)).toMatchObject({ eligible: true });
+    expect(result.find(r => r.key === 'pk')).toMatchObject({ value: 60000000, verification: 'ruleset-2025' });
+    expect(result.find(r => r.key === 'rawTax')).toMatchObject({ value: 3000000, verification: 'ruleset-2025' });
+    expect(result.find(r => r.key === 'tax')).toMatchObject({ value: 3000000 });
+    expect(result.find(r => r.key === 'credit')).toMatchObject({ value: 3000000, label: 'Kredit PPh Pasal 21' });
+    expect(result.find(r => r.key === 'balance')).toMatchObject({ value: 0 });
+    expect(result.find(r => r.key === 'p25Next')).toMatchObject({ value: 0 });
+  });
+  it('rounds PKP down to the full thousand before applying the progressive tariff', () => {
+    const d = regularEmployee();
+    d.tables.jobs[0].values = { ...d.tables.jobs[0].values, gross: '120000123', expense: '0' };
+    expect(roundPkpDownToThousand(66000123)).toBe(66000000);
+    expect(compute(d).find(r => r.key === 'pk')?.value).toBe(66000000);
+    expect(compute(d).find(r => r.key === 'rawTax')?.value).toBe(3900000);
+  });
+  it('sums multiple employers and derives the regular PPh 25 installment when selected', () => {
+    const d = regularEmployee();
+    d.tables.jobs.push(employer());
+    d.questions.hasP25 = 'ya';
+    const result = compute(d);
+    expect(result.find(r => r.key === 'pk')?.value).toBe(174000000);
+    expect(result.find(r => r.key === 'rawTax')?.value).toBe(20100000);
+    expect(result.find(r => r.key === 'p25Next')?.value).toBe(1425000);
+  });
+  it.each([
+    ['PH/MT', (d: ReturnType<typeof regularEmployee>) => { d.profile.maritalTax = 'PH'; }],
+    ['usaha', (d: ReturnType<typeof regularEmployee>) => { d.questions.hasBusiness = 'ya'; }],
+    ['PPh 24', (d: ReturnType<typeof regularEmployee>) => { d.tables.withholding[0].values.taxType = 'PPh Pasal 24'; }],
+    ['pembetulan', (d: ReturnType<typeof regularEmployee>) => { d.profile.sptStatus = 'Pembetulan'; d.profile.amendment = '1'; }],
+  ])('holds annual calculations for %s outside the limited ruleset', (_name, change) => {
+    const d = regularEmployee();
+    change(d);
+    expect(regularEmployeeEligibility(d).eligible).toBe(false);
+    for (const key of ['pk', 'rawTax', 'tax', 'balance', 'p25Next']) expect(compute(d).find(r => r.key === key)?.value).toBeNull();
+  });
+  it('holds only the standalone Lampiran 4A calculation when H.13b is selected', () => {
+    const d = regularEmployee();
+    d.questions.hasCustomP25 = 'ya';
+    expect(compute(d).find(r => r.key === 'pk')?.value).toBe(60000000);
+    expect(compute(d).find(r => r.key === 'p25Next')).toMatchObject({ value: null, verification: 'pending', note: 'Lampiran 4 Bagian A belum termasuk ruleset ini.' });
+  });
+  it('holds the ruleset when the PPh 21 answer and its evidence disagree', () => {
+    const d = regularEmployee();
+    d.tables.withholding = [];
+    expect(regularEmployeeEligibility(d)).toMatchObject({ eligible: false });
+    expect(compute(d).find(r => r.key === 'pk')?.value).toBeNull();
+  });
   it.todo('official annual fixtures: PH/MT, books, NPPN and UMKM eligibility');
   it.todo('official annual fixtures: foreign credit, overpayment, installments and amendment');
 });

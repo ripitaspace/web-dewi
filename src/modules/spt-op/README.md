@@ -13,8 +13,8 @@ Status: workspace persiapan sudah terintegrasi; **belum selesai sebagai mesin SP
 
 - `model.ts`: skema v2, reducer, ID baris, asal data, backup/migrasi v1, nilai manual sebagai override beralasan.
 - `storage.ts` + `use-drafts.ts`: IndexedDB, autosave, antrean simpan, pemeriksaan revisi atomik, pencegahan identitas/periode ganda, penanganan gagal simpan dan salinan penyelamatan.
-- `engine.ts`: aritmetika rekap input, rekonsiliasi dasar, status dan validasi. Hasil membawa versi/sumber/status verifikasi. Tidak mengeluarkan PPh final ketika ruleset belum disahkan.
-- `rules-2025.ts`: registry sumber dan fungsi tarif progresif terpisah yang diuji dengan empat contoh DJP. Lulus fungsi tarif tidak berarti seluruh SPT tervalidasi.
+- `engine.ts`: aritmetika rekap input, rekonsiliasi dasar, status dan validasi. Untuk SPT Normal 2025 setahun penuh yang hanya berisi penghasilan pekerjaan reguler, mesin menghitung PKP, PPh Pasal 17, kredit PPh 21, saldo, dan H.13a; seluruh cabang lain tetap ditahan.
+- `rules-2025.ts`: registry sumber, pembulatan PKP, dan fungsi tarif progresif terpisah. Lulus skenario karyawan reguler tidak berarti seluruh SPT tervalidasi.
 - `import-export.ts`: xlsx lokal, pemilihan sheet/header/pemetaan, tanggal Excel 1900/1904, leading zero, kandidat duplikat, CSV dan JSON.
 - `form-layout.ts` + `document.tsx`: koordinat native SVG dan pembagian baris lanjutan, overlay React serta rincian cetak lengkap.
 - `xml.ts`: daftar adapter dan alasan blokir per format. Tag dan skema belum ditebak; belum ada serializer yang dinyatakan siap Coretax.
@@ -33,7 +33,7 @@ Status: workspace persiapan sudah terintegrasi; **belum selesai sebagai mesin SP
 
 - Status kewajiban `Wajib`/`Selesai` yang ditetapkan aturan resmi belum diaktifkan. `Berlaku`/`Tidak Berlaku` mengikuti jawaban pengguna; status pemeriksaan terpisah dan data tetap disimpan.
 - Pemetaan overlay mengikuti bagian yang tersedia di prototype. Seluruh checkbox Induk A–K, rincian rekonsiliasi L3A dan hasil L4 belum semuanya dipetakan ke posisi resmi; datanya tetap dapat diedit dan tersedia pada rincian cetak. Jangan menyebutnya formulir resmi yang terisi lengkap.
-- PTKP/PKP/PPh final, PH/MT, kelayakan UMKM/NPPN, PPh 24, angsuran, kompensasi rugi dan pembetulan menunggu ruleset serta contoh tahunan resmi. Tahun selain 2025 dapat disimpan; tidak mendapat hasil pajak final.
+- PTKP/PKP/PPh terutang/kredit PPh 21/H.13a hanya dihitung untuk SPT Normal 2025 setahun penuh dengan penghasilan pekerjaan reguler. PPh final, PH/MT, kelayakan UMKM/NPPN, PPh 24, Lampiran 4A/H.13b, kompensasi rugi, dan pembetulan menunggu ruleset serta contoh tahunan resmi. Tahun selain 2025 dapat disimpan; tidak mendapat hasil pajak final.
 - Seluruh format XML masih diblokir. Diperlukan template/converter serta sample VALID XML untuk masing-masing kelompok harta L1A, L3C dan L3D.
 - Format print F4 sudah diatur, tetapi kesesuaian milimeter dengan PDF resmi dan hasil PDF/printer lintas browser belum disahkan. In-app browser membuka jalur print dengan timeout pada otomasi; hasil print fisik/PDF tidak dinyatakan lulus.
 - Navigasi bertingkat Induk → A–K → field, minimize panel, dan pencarian navigasi merupakan permintaan lanjutan dengan rico-plan; belum diterapkan dalam snapshot ini.

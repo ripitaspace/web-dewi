@@ -1,18 +1,20 @@
 'use client';
 import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { catalog, declarationFields, partnerFields, profileFields, type Draft, type Field } from '@/modules/spt-op/model';
 import { compute, money, numeric, rowValue } from '@/modules/spt-op/engine';
-import { pageRows } from '@/modules/spt-op/form-layout';
+import { activeRows, pageRows } from '@/modules/spt-op/form-layout';
 import { digitsOnly } from '@/modules/spt-op/field-rules';
 import { answerTicks, assetTotal, tickSets, bookCell, taggedSum, boxSlots, capacityOf, cellParts, cellText, digitBinding, landscapePages, pageSheets, regionOrdinal, resultSlots, tableBindings, ticks } from '@/modules/spt-op/coretax-map';
 import { sheetComponents, type SlotComponents } from './coretax-sheets.generated';
 import './coretax-sheets.css';
 
 type ScalarGroup = 'profile' | 'questions' | 'extras' | 'partner' | 'declaration';
-interface Context { draft: Draft; part: number; print: boolean; onField?: (key: string, value: string) => void; onSet?: (group: ScalarGroup, key: string, value: string) => void; onSection?: (section: string) => void }
+interface Context { draft: Draft; part: number; print: boolean; tableParts: Record<string, number>; onField?: (key: string, value: string) => void; onSet?: (group: ScalarGroup, key: string, value: string) => void; onSection?: (section: string) => void; onTablePart?: (section: string, part: number) => void }
 const Ctx = createContext<Context | null>(null);
 const useCtx = () => { const value = useContext(Ctx); if (!value) throw Error('Coretax slot outside a sheet'); return value; };
 const px = (mm: number) => mm * 96 / 25.4;
+const pagerTotalTags = new Set(['1', '2', '3.6', '4', '5', '6', 'A', 'B', 'C', 'D', 'E', 'B.5']);
 
 function Digits({ s, i, cls, count }: { s: number; i: number; cls: string; count: number }) {
   const { draft, print, onField } = useCtx();
@@ -67,8 +69,36 @@ function Box({ s, i, style }: { s: number; i: number; style?: React.CSSPropertie
     : <input className="slot-input" aria-label={`Formulir ${key}`} value={raw} inputMode={meta.type === 'money' ? 'decimal' : undefined} onClick={event => event.stopPropagation()} onChange={event => onSet(group, key, event.target.value)} />;
   return <span className="emptybox inline-field" style={style}>{control}</span>;
 }
+function TablePager({ section, page, count, anchor }: { section: string; page: number; count: number; anchor: React.RefObject<HTMLSpanElement | null> }) {
+  const { onTablePart } = useCtx();
+  const [host, setHost] = useState<HTMLElement | null>(null);
+  const safePage = Math.min(page, count - 1);
+  useLayoutEffect(() => {
+    const cell = anchor.current?.closest('tr')?.querySelector<HTMLElement>('td:first-child');
+    if (!cell) return;
+    // The label cell already belongs to the generated template and contains text.
+    // Create a leaf host inside it so React never shares a portal container with that text.
+    const pagerHost = document.createElement('span');
+    pagerHost.className = 'spt-table-pager-host';
+    cell.prepend(pagerHost);
+    setHost(pagerHost);
+    return () => {
+      pagerHost.remove();
+    };
+  }, [anchor]);
+  useLayoutEffect(() => {
+    if (safePage !== page) onTablePart?.(section, safePage);
+  }, [onTablePart, page, safePage, section]);
+  if (!host) return null;
+  return createPortal(<span className="spt-table-pager" aria-label={`Navigasi ${section}`}>
+    <button type="button" disabled={safePage === 0} onClick={() => onTablePart?.(section, safePage - 1)} aria-label="Halaman sebelumnya">←</button>
+    <span>Halaman {safePage + 1}/{count}</span>
+    <button type="button" disabled={safePage === count - 1} onClick={() => onTablePart?.(section, safePage + 1)} aria-label="Halaman berikutnya">→</button>
+  </span>, host);
+}
 function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { s: number; t: number; r: number; c: number; code?: string; g?: string; k?: number; sum?: boolean; sub?: string; lead?: string; tag?: string; className?: string; style?: React.CSSProperties }) {
-  const { draft, part, print, onSection } = useCtx();
+  const { draft, part, print, tableParts, onSection } = useCtx();
+  const anchor = useRef<HTMLSpanElement>(null);
   const id = `${s}.${t}`, binding = tableBindings[id];
   if (!binding) return <td className={className} style={style} data-lead={lead} data-tag={tag} />;
   let content = '', section = binding.section, parts: string[] = [];
@@ -81,16 +111,19 @@ function C({ s, t, r, c, code, g, k, sum, sub, lead, tag, className, style }: { 
   } else if (section) {
     let ordinal = r;
     if (binding.regions) { const ro = regionOrdinal(binding, id, g || '', k || 0); if (!ro) return <td className={className} style={style} data-lead={lead} />; section = ro.section; ordinal = ro.ordinal; }
-    const row = pageRows(draft, section, part)[ordinal], column = binding.cols[c];
-    if (!row && column === '#no' && s === 17) content = String(part * capacityOf(section) + ordinal + 1);
+    const tablePart = print ? part : tableParts[section] || 0;
+    const row = pageRows(draft, section, tablePart)[ordinal], column = binding.cols[c];
+    if (!row && column === '#no' && s === 17) content = String(tablePart * capacityOf(section) + ordinal + 1);
     if (row && column) {
-      content = column === '#no' ? String(part * capacityOf(section) + ordinal + 1) : cellText(section, row, column);
+      content = column === '#no' ? String(tablePart * capacityOf(section) + ordinal + 1) : cellText(section, row, column);
       if (sub) parts = cellParts(section, row, column);
       if (lead && content) content = `${lead}. ${content}`;
     }
   }
+  const tablePart = section ? (print ? part : tableParts[section] || 0) : 0;
+  const continuationCount = section ? Math.max(1, Math.ceil(activeRows(draft, section).length / capacityOf(section))) : 1;
   const clickable = !print && !!section && !binding.book;
-  return <td className={[className, /^[\d.,]+$|^-?[\d.,]+$/.test(content) ? 'num' : '', clickable ? 'clickable' : ''].filter(Boolean).join(' ') || undefined} style={style} onClick={clickable ? () => onSection?.(section!) : undefined} title={clickable ? 'Klik untuk mengisi / mengedit tabel' : undefined} data-tag={tag} data-lead={lead && !content ? lead : undefined}>{sub ? sub.split('|').map((label, index) => <div className="sub-line" key={index}>{label.startsWith('[ ]') ? <><span className={`cb${parts[index] === 'x' ? ' on' : ''}`} />{label.slice(4)}</> : <>{label} {parts[index] || ''}</>}</div>) : content}</td>;
+  return <td className={[className, /^[\d.,]+$|^-?[\d.,]+$/.test(content) ? 'num' : '', clickable ? 'clickable' : ''].filter(Boolean).join(' ') || undefined} style={style} onClick={clickable ? () => onSection?.(section!) : undefined} title={clickable ? 'Klik untuk mengisi / mengedit tabel' : undefined} data-tag={tag} data-lead={lead && !content ? lead : undefined}>{sub ? sub.split('|').map((label, index) => <div className="sub-line" key={index}>{label.startsWith('[ ]') ? <><span className={`cb${parts[index] === 'x' ? ' on' : ''}`} />{label.slice(4)}</> : <>{label} {parts[index] || ''}</>}</div>) : sum ? content : <span className="spt-cell-text">{content}</span>}{sum && !print && section && tag && pagerTotalTags.has(tag) && <><span ref={anchor} /><TablePager section={section} page={tablePart} count={continuationCount} anchor={anchor} /></>}</td>;
 }
 // Keep this list in sync with SlotComponents generated from the Coretax template.
 const slots: SlotComponents = { Digits, Q, R, Box, Tick, C };
@@ -119,8 +152,8 @@ function Fit({ print, landscape, children }: { print: boolean; landscape: boolea
   return <div ref={wrapper} className="spt-coretax-fit" style={print ? undefined : { height: fit.height || undefined, overflow: 'hidden' }}><div ref={inner} className={`spt-coretax${print ? '' : ' is-interactive'}`} style={print ? undefined : { transform: `scale(${fit.scale})`, transformOrigin: '0 0' }}>{children}</div></div>;
 }
 
-export function CoretaxPage({ draft, page, part = 0, print = false, onField, onSet, onSection }: { draft: Draft; page: number; part?: number; print?: boolean; onField?: Context['onField']; onSet?: Context['onSet']; onSection?: Context['onSection'] }) {
+export function CoretaxPage({ draft, page, part = 0, print = false, onField, onSet, onSection, tableParts = {}, onTablePart }: { draft: Draft; page: number; part?: number; print?: boolean; onField?: Context['onField']; onSet?: Context['onSet']; onSection?: Context['onSection']; tableParts?: Context['tableParts']; onTablePart?: Context['onTablePart'] }) {
   const sheets = pageSheets[page];
   if (!sheets) return null;
-  return <Ctx.Provider value={{ draft, part, print, onField, onSet, onSection }}><Fit print={print} landscape={landscapePages.includes(page)}>{sheets.map(number => { const Sheet = sheetComponents[number - 1]; return <Sheet key={number} slots={slots} />; })}</Fit></Ctx.Provider>;
+  return <Ctx.Provider value={{ draft, part, print, tableParts, onField, onSet, onSection, onTablePart }}><Fit print={print} landscape={landscapePages.includes(page)}>{sheets.map(number => { const Sheet = sheetComponents[number - 1]; return <Sheet key={number} slots={slots} />; })}</Fit></Ctx.Provider>;
 }

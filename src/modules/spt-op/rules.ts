@@ -1,6 +1,6 @@
 import { rules2025 } from './rules-2025';
 
-/** Rules are registered by tax year; drafts remain local preparations until verified. */
+/** Rules are registered by tax year; drafts remain local preparations until the annual return is fully verified. */
 export interface AnnualRuleSet {
   year: string;
   version: string;
@@ -18,6 +18,6 @@ export function ruleSetFor(year: string): AnnualRuleSet | null {
 export function ruleStatus(year: string) {
   const rules = ruleSetFor(year);
   if (!rules) return { rules, ready: false, message: `Tahun pajak ${year || 'belum diisi'} belum memiliki ruleset DJP yang terdaftar.` };
-  if (!rules.annualReturnVerified) return { rules, ready: false, message: `Ruleset ${year} masih berupa rekap kerja; perhitungan SPT tahunan dan pelaporan ditahan.` };
+  if (!rules.annualReturnVerified) return { rules, ready: false, message: `Ruleset ${year} hanya mendukung skenario terbatas; pelaporan tetap ditahan.` };
   return { rules, ready: true, message: `Ruleset ${year} telah diverifikasi untuk SPT tahunan.` };
 }

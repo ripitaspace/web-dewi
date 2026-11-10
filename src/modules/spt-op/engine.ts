@@ -1,5 +1,6 @@
 import { catalog, type Draft, type Field, type Row } from './model';
 import { ruleSetFor, ruleStatus } from './rules';
+import { progressiveReference, roundPkpDownToThousand } from './rules-2025';
 import { isHidden, isRequired, rangeIssue } from './field-rules';
 export function numeric(v: string | number | undefined): number { if (typeof v === 'number')
     return v; let s = (v || '').trim().replace(/\s/g, ''); if (!s)
@@ -38,8 +39,42 @@ export interface Result {
     sections: string[];
     note: string;
     ruleVersion?: string;
-    verification?: 'rekap-input' | 'pending';
+    verification?: 'rekap-input' | 'ruleset-2025' | 'not-applicable' | 'pending';
     source?: string;
+}
+
+export interface RegularEmployeeEligibility {
+    eligible: boolean;
+    reason: string;
+}
+
+const activeRows = (d: Draft, key: string) => (d.tables[key] || []).filter(row => !row.disposed);
+const hasAmount = (value: string | undefined) => value !== undefined && value.trim() !== '' && numeric(value) !== 0;
+
+/**
+ * The first verified slice deliberately accepts only a full-year, normal employee return.
+ * Every unsupported branch stays pending rather than being inferred from blank answers.
+ */
+export function regularEmployeeEligibility(d: Draft): RegularEmployeeEligibility {
+    if (d.profile.year !== '2025') return { eligible: false, reason: 'Ruleset terbatas hanya tersedia untuk Tahun Pajak 2025.' };
+    if (d.profile.sptStatus !== 'Normal') return { eligible: false, reason: 'SPT pembetulan belum termasuk ruleset karyawan reguler.' };
+    if (d.profile.periodType !== 'TAHUN_PAJAK' || d.profile.fromMonth !== '1' || d.profile.toMonth !== '12') return { eligible: false, reason: 'Bagian tahun pajak belum termasuk ruleset karyawan reguler.' };
+    if (d.profile.incomeSource !== 'Pekerjaan') return { eligible: false, reason: 'Ruleset ini hanya untuk sumber penghasilan pekerjaan.' };
+    if (['PH', 'MT'].includes(d.profile.maritalTax)) return { eligible: false, reason: 'Status PH/MT memerlukan perhitungan pasangan tersendiri.' };
+    if (d.questions.hasJobs !== 'ya' || !activeRows(d, 'jobs').length) return { eligible: false, reason: 'Isi penghasilan dari pekerjaan untuk memakai ruleset karyawan reguler.' };
+    if (d.questions.hasBusiness !== 'tidak' || d.questions.hasUMKM === 'ya' || d.questions.hasOPPT === 'ya' || activeRows(d, 'nppn').length || Object.values(d.books).some(rows => rows.some(row => !row.disposed))) return { eligible: false, reason: 'Penghasilan usaha, UMKM, OPPT, atau pembukuan belum termasuk ruleset ini.' };
+    if (d.questions.hasOtherDomestic !== 'tidak' || activeRows(d, 'otherdomestic').length) return { eligible: false, reason: 'Konfirmasikan tidak ada penghasilan dalam negeri lainnya.' };
+    if (d.questions.hasForeign !== 'tidak' || activeRows(d, 'foreign').length) return { eligible: false, reason: 'Konfirmasikan tidak ada penghasilan atau kredit pajak luar negeri.' };
+    if (d.questions.hasDeductions !== 'tidak' || d.questions.hasTaxRelief !== 'tidak' || activeRows(d, 'deductions').length || activeRows(d, 'taxloss').length || activeRows(d, 'taxrelief').length || d.overrides.deductions?.enabled) return { eligible: false, reason: 'Konfirmasikan tidak ada pengurang penghasilan neto atau PPh terutang.' };
+    if (d.questions.hasForeignRefund !== 'tidak' || d.questions.hasDeferral !== 'tidak') return { eligible: false, reason: 'Konfirmasikan tidak ada pengembalian kredit luar negeri atau penundaan.' };
+    if (['p25Paid', 'p25STP', 'foreignRefund', 'deferral', 'previousBalance'].some(key => hasAmount(d.extras[key]))) return { eligible: false, reason: 'Kredit atau penyesuaian pajak tambahan belum termasuk ruleset ini.' };
+    const withholding = activeRows(d, 'withholding');
+    if ((d.questions.hasWithholding === 'ya') !== (withholding.length > 0)) return { eligible: false, reason: 'Samakan jawaban kredit pajak dengan rincian bukti potong PPh Pasal 21.' };
+    if (withholding.some(row => row.values.taxType !== 'PPh Pasal 21')) return { eligible: false, reason: 'Hanya kredit PPh Pasal 21 yang termasuk ruleset ini.' };
+    if (activeRows(d, 'jobs').some(row => !Number.isFinite(numeric(row.values.gross)) || !Number.isFinite(numeric(row.values.expense)) || numeric(row.values.expense) > numeric(row.values.gross))) return { eligible: false, reason: 'Periksa nilai bruto dan pengurang pada penghasilan pekerjaan.' };
+    if (withholding.some(row => !Number.isFinite(numeric(row.values.withheld)))) return { eligible: false, reason: 'Periksa nilai kredit PPh Pasal 21.' };
+    if (ptkpAmount(d.profile.ptkp) === null) return { eligible: false, reason: 'Pilih status PTKP yang tersedia.' };
+    return { eligible: true, reason: 'Dihitung dari data dan ruleset 2025 terbatas — bukan persetujuan pelaporan.' };
 }
 export function compute(d: Draft): Result[] {
     const sum = (k: string, col: string) => (d.tables[k] || []).filter(r => !r.disposed).reduce((s, r) => s + numeric(rowValue(k, r, col)), 0);
@@ -51,7 +86,19 @@ export function compute(d: Draft): Result[] {
     const net = business === null ? null : jobs + business + other + foreign;
     const credit = sum('withholding', 'withheld') + sum('foreign', 'credit');
     const ptkp = ptkpAmount(d.profile.ptkp);
+    const regular = regularEmployeeEligibility(d);
+    const pkp = regular.eligible && net !== null && ptkp !== null ? roundPkpDownToThousand(net - ptkp) : null;
+    const rawTax = pkp === null ? null : progressiveReference(pkp);
+    const tax = rawTax;
+    const balance = tax === null ? null : tax - credit;
+    const p25Next = !regular.eligible || d.questions.hasCustomP25 === 'ya' || d.questions.hasOPPTP25 === 'ya'
+        ? null
+        : d.questions.hasP25 === 'ya' && d.questions.hasCustomP25 === 'tidak' && d.questions.hasOPPTP25 === 'tidak' && balance !== null ? balance / 12
+            : d.questions.hasP25 === 'tidak' && d.questions.hasOPPTP25 === 'tidak' ? 0 : null;
     const sourceNote = 'Rekap data kerja; perlakuan pajak dan kelengkapan perlu verifikasi.';
+    const calculatedNote = regular.reason;
+    const calculated = { verification: 'ruleset-2025' as const, source: ruleSetFor('2025')?.sources.regularEmployee.title };
+    const notApplicable = { verification: 'not-applicable' as const, note: 'Tidak Berlaku untuk jawaban SPT ini.' };
     const results: Result[] = [
         { key: 'jobs', label: 'Penghasilan neto pekerjaan', value: jobs, sections: ['jobs'], note: 'Bruto dikurangi pengurang yang diinput.' },
         { key: 'business', label: 'Penghasilan neto usaha', value: business, sections: ['nppn', d.questions.sector || 'jasa'], note: 'Norma dan rekonsiliasi memerlukan dasar dan pemeriksaan; override harus menyertakan alasan.' },
@@ -61,18 +108,24 @@ export function compute(d: Draft): Result[] {
         { key: 'ded', label: 'Pengurang penghasilan neto', value: deductions, sections: ['deductions', 'taxloss'], note: 'Override menggantikan rekap, tidak ditambahkan kembali.' },
         { key: 'afterDed', label: 'Neto setelah pengurang (rekap)', value: net === null || deductions === null ? null : net - deductions, sections: ['deductions', 'taxloss'], note: sourceNote },
         { key: 'pt', label: 'PTKP', value: ptkp, sections: ['profile'], note: 'Nilai mengikuti status PTKP yang dipilih.' },
-        ...[['pk', 'PKP'], ['rawTax', 'PPh terutang'], ['tax', 'PPh setelah pengurang']].map(([key, label]) => ({ key, label, value: null, sections: ['profile', 'partner'], note: 'Menunggu ruleset 2025 dan skenario acuan resmi yang terverifikasi.' })),
-        { key: 'credit', label: 'Rekap kredit pajak (belum direkonsiliasi)', value: credit, sections: ['withholding', 'foreign'], note: 'Periksa kemungkinan PPh 24 dicatat dua kali; belum digunakan sebagai kredit final.' },
-        { key: 'balance', label: 'Kurang / (lebih) bayar', value: null, sections: ['extras', 'withholding', 'foreign'], note: 'Ditahan sampai perhitungan pajak dan kredit tervalidasi.' },
+        { key: 'pk', label: 'PKP', value: pkp, sections: ['profile', 'jobs'], note: regular.eligible ? calculatedNote : regular.reason, ...calculated },
+        { key: 'rawTax', label: 'PPh terutang', value: rawTax, sections: ['profile', 'jobs'], note: regular.eligible ? calculatedNote : regular.reason, ...calculated },
+        { key: 'tax', label: 'PPh setelah pengurang', value: tax, sections: ['profile', 'jobs'], note: regular.eligible ? calculatedNote : regular.reason, ...calculated },
+        { key: 'credit', label: regular.eligible ? 'Kredit PPh Pasal 21' : 'Rekap kredit pajak (belum direkonsiliasi)', value: credit, sections: ['withholding', 'foreign'], note: regular.eligible ? calculatedNote : 'Periksa kemungkinan PPh 24 dicatat dua kali; belum digunakan sebagai kredit final.', ...(regular.eligible ? calculated : {}) },
+        { key: 'balance', label: 'Kurang / (lebih) bayar', value: balance, sections: ['extras', 'withholding', 'foreign'], note: regular.eligible ? calculatedNote : regular.reason, ...calculated },
         { key: 'relief', label: 'Rekap pengurang PPh', value: sum('taxrelief', 'amount'), sections: ['taxrelief'], note: sourceNote },
         ...[['p25Paid', 'PPh 25 dibayar'], ['p25STP', 'Pokok STP PPh 25'], ['foreignRefund', 'Pengembalian kredit luar negeri'], ['deferral', 'Angsuran / penundaan'], ['previousBalance', 'Saldo SPT sebelumnya']].map(([key, label]) => ({ key, label, value: numeric(d.extras[key]), sections: ['extras'], note: sourceNote })),
-        ...[['payable', 'Saldo setelah penundaan'], ['amended', 'Selisih pembetulan'], ['p25Next', 'Angsuran PPh 25 berikutnya'], ['umkmTax', 'PPh final UMKM'], ['phmt', 'Alokasi PPh PH/MT']].map(([key, label]) => ({ key, label, value: null, sections: [key === 'umkmTax' ? 'umkm' : key === 'phmt' ? 'partner' : 'extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.' })),
+        { key: 'payable', label: 'Saldo setelah penundaan', value: null, sections: ['extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.questions.hasDeferral === 'tidak' ? notApplicable : {}) },
+        { key: 'amended', label: 'Selisih pembetulan', value: null, sections: ['extras'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.profile.sptStatus === 'Normal' ? notApplicable : {}) },
+        { key: 'p25Next', label: 'Angsuran PPh 25 berikutnya', value: p25Next, sections: ['extras'], note: d.questions.hasCustomP25 === 'ya' ? 'Lampiran 4 Bagian A belum termasuk ruleset ini.' : regular.eligible ? calculatedNote : regular.reason, ...(regular.eligible && d.questions.hasCustomP25 !== 'ya' ? calculated : {}) },
+        { key: 'umkmTax', label: 'PPh final UMKM', value: null, sections: ['umkm'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(d.questions.hasUMKM === 'tidak' ? notApplicable : {}) },
+        { key: 'phmt', label: 'Alokasi PPh PH/MT', value: null, sections: ['partner'], note: 'Menunggu verifikasi syarat, rumus, dan contoh acuan resmi.', ...(!['PH', 'MT'].includes(d.profile.maritalTax) ? notApplicable : {}) },
         { key: 'debt', label: 'Saldo utang akhir tahun', value: sum('debts', 'balance'), sections: ['debts'], note: sourceNote },
         { key: 'final', label: 'Dasar penghasilan final', value: sum('finalincome', 'base'), sections: ['finalincome'], note: sourceNote },
         { key: 'exempt', label: 'Penghasilan bukan objek', value: sum('exempt', 'gross'), sections: ['exempt'], note: sourceNote },
     ];
     const rules = ruleSetFor(d.profile.year);
-    return results.map(r => ({ ...r, value: r.value !== null && Number.isFinite(r.value) ? r.value : null, ruleVersion: rules?.version || 'unsupported-year', verification: r.value === null || !Number.isFinite(r.value) ? 'pending' : 'rekap-input', source: rules?.sources.prototype?.title || 'Belum ada ruleset DJP terdaftar untuk tahun ini.' }));
+    return results.map(r => ({ ...r, value: r.value !== null && Number.isFinite(r.value) ? r.value : null, ruleVersion: rules?.version || 'unsupported-year', verification: r.verification === 'not-applicable' ? r.verification : r.value === null || !Number.isFinite(r.value) ? 'pending' : r.verification || 'rekap-input', source: r.source || rules?.sources.prototype?.title || 'Belum ada ruleset DJP terdaftar untuk tahun ini.' }));
 }
 const questionFor: Record<string, string> = { jobs: 'hasJobs', withholding: 'hasWithholding', debts: 'hasDebt', finalincome: 'hasFinal', exempt: 'hasExempt', foreign: 'hasForeign', nppn: 'hasNorm', otherdomestic: 'hasOtherDomestic', umkm: 'hasUMKM', opent: 'hasOPPT', normmonths: 'hasNorm', depreciation: 'hasDepreciation', amortization: 'hasDepreciation', entertainment: 'hasSpecialCosts', promotion: 'hasSpecialCosts', baddebt: 'hasSpecialCosts', deductions: 'hasDeductions', taxrelief: 'hasTaxRelief' };
 export function sectionStatus(d: Draft, k: string) { const q = questionFor[k], answer = q ? d.questions[q] : undefined, yes = answer === 'ya' || answer === 'NPPN', no = answer === 'tidak' || ['PEMBUKUAN', 'FINAL_TANPA_PEMBUKUAN'].includes(answer || ''); const rows = d.tables[k] || []; return { applicability: no ? 'Tidak Berlaku' : yes ? 'Berlaku' : 'Perlu Verifikasi', progress: (yes && !rows.length) || rows.some(r => errors(catalog.tables[k]?.columns || [], r).length || r.review) ? 'Belum Lengkap' : 'Perlu Verifikasi' }; }

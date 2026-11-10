@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { catalog, profileFields, partnerFields, declarationFields, type Draft } from '@/modules/spt-op/model';
 import { CoretaxPage } from './coretax-sheets';
 export { pageCount } from '@/modules/spt-op/form-layout';
 
 export function Document({ draft, page, part = 0, onField, onSet, onSection, print = false }: { draft: Draft; page: number; part?: number; onField?: (key: string, value: string) => void; onSet?: (group: 'profile' | 'questions' | 'extras' | 'partner' | 'declaration', key: string, value: string) => void; onSection?: (section: string) => void; print?: boolean }) {
-  return <CoretaxPage draft={draft} page={page} part={part} print={print} onField={onField} onSet={onSet} onSection={onSection}/>;
+  const [tableParts, setTableParts] = useState<Record<string, number>>({});
+  return <CoretaxPage draft={draft} page={page} part={part} print={print} onField={onField} onSet={onSet} onSection={onSection} tableParts={tableParts} onTablePart={(section, tablePart) => setTableParts(previous => ({ ...previous, [section]: tablePart }))}/>;
 }
 
 const scalarLabels = [...profileFields, ...partnerFields, ...declarationFields, ...catalog.questionFields, ...catalog.extraFields];
