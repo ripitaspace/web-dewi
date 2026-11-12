@@ -16,6 +16,7 @@ const staticPages: Array<{ path: string; changeFrequency: MetadataRoute.Sitemap[
   { path: "/tentang", changeFrequency: "monthly", priority: 0.6 },
   { path: "/kerja-bersama", changeFrequency: "monthly", priority: 0.6 },
   { path: "/ripintar", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/privasi", changeFrequency: "yearly", priority: 0.3 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
