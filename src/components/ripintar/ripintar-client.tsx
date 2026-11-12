@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { missionById, missions, ranks, typingText } from "@/modules/ripintar/content";
@@ -9,18 +11,18 @@ import { loadJourney, requestDurableStorage, resetJourney, saveJourney } from "@
 import type { Evaluation, MissionDefinition, RipintarState } from "@/modules/ripintar/types";
 import styles from "./ripintar.module.css";
 
-type Tab = "dashboard" | "roadmap" | "workspace" | "records";
+export type RipintarView = "dashboard" | "roadmap" | "workspace" | "records";
 type SaveState = "Menyimpan" | "Tersimpan lokal" | "Gagal disimpan";
 
 const stateLabel = (status: string) => ({ LOCKED: "Terkunci", AVAILABLE: "Tersedia", IN_PROGRESS: "Dikerjakan", SUBMITTED: "Dikirim", REVISION_REQUIRED: "Perlu revisi", MASTERED: "Tuntas" }[status] || status);
 const missionLabel = (id: string) => missionById[id]?.title || id;
 
-export function RipintarClient() {
+export function RipintarClient({ initialView = "dashboard", initialMissionId }: { initialView?: RipintarView; initialMissionId?: string } = {}) {
+  const router = useRouter();
   const [journey, setJourney] = useState<RipintarState>(createInitialState);
   const [loaded, setLoaded] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("Menyimpan");
-  const [tab, setTab] = useState<Tab>("dashboard");
-  const [selectedId, setSelectedId] = useState("rookie-01");
+  const [selectedId, setSelectedId] = useState(() => initialMissionId && missionById[initialMissionId] ? initialMissionId : "rookie-01");
   const [feedback, setFeedback] = useState<Evaluation | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -36,7 +38,7 @@ export function RipintarClient() {
     try { await saveJourney(next); setSaveState("Tersimpan lokal"); } catch { setSaveState("Gagal disimpan"); }
   };
   const dismissOnboarding = () => { const next = { ...journey, onboardingSeen: true }; setShowOnboarding(false); void persist(next); };
-  const choose = (mission: MissionDefinition) => { if (canOpenMission(journey, mission)) { setSelectedId(mission.id); setFeedback(null); setTab("workspace"); } };
+  const choose = (mission: MissionDefinition) => { if (canOpenMission(journey, mission)) { setSelectedId(mission.id); setFeedback(null); router.push(`/ripintar/missions/${mission.id}`); } };
   const onSubmit = (answer: Record<string, unknown>) => {
     try { const outcome = submitMission(journey, selectedId, answer); const withTyping = current.kind === "typing" && outcome.evaluation.passed ? { ...outcome.state, typingHistory: [...outcome.state.typingHistory, { missionId: current.id, at: new Date().toISOString(), wpm: Number(answer.wpm), accuracy: Number(answer.accuracy), errors: Number(answer.errors), elapsedSeconds: Number(answer.elapsedSeconds) }] } : outcome.state; setFeedback(outcome.evaluation); void persist(withTyping); }
     catch { setFeedback({ passed: false, category: "Akses misi", feedback: "Misi ini belum terbuka untuk dikerjakan.", hint: "Selesaikan misi sebelumnya terlebih dahulu.", snapshot: {} }); }
@@ -44,6 +46,9 @@ export function RipintarClient() {
   const current = missionById[selectedId]!;
   const rookie = rankProgress(journey, "rookie");
   const nextMission = missions.find((mission) => statusFor(journey, mission.id) === "AVAILABLE" && mission.playable);
+  useEffect(() => {
+    if (loaded && !canOpenMission(journey, current) && nextMission) setSelectedId(nextMission.id);
+  }, [loaded, journey, current, nextMission]);
 
   return <div className={styles.shell}>
     <SiteHeader currentKey="ripita" />
@@ -53,13 +58,13 @@ export function RipintarClient() {
         <div className={styles.emblem}><div className={styles.emblemCircle}>01</div><div><span className={styles.kicker}>Rank saat ini</span><strong style={{ display: "block", fontFamily: "var(--display)", fontSize: "1.55rem", margin: "4px 0" }}>Rookie · Division III</strong><span>{rookie.complete}/9 misi inti dikuasai</span></div></div>
       </div>
     </section>
-    <div className={styles.nav}><nav className={`container ${styles.navInner}`} aria-label="Navigasi Ripintar">{([ ["dashboard", "Dasbor"], ["roadmap", "Career Roadmap"], ["workspace", "Meja Kerja"], ["records", "Catatan Kompetensi"] ] as const).map(([key, label]) => <button key={key} className={styles.navButton} aria-current={tab === key ? "page" : undefined} onClick={() => setTab(key)}>{label}</button>)}</nav></div>
+    <div className={styles.nav}><nav className={`container ${styles.navInner}`} aria-label="Navigasi Ripintar">{([ ["dashboard", "Dasbor", "/ripintar/dashboard"], ["roadmap", "Career Roadmap", "/ripintar/roadmap"], ["workspace", "Meja Kerja", "/ripintar/workspace"], ["records", "Catatan Kompetensi", "/ripintar/records"] ] as const).map(([key, label, href]) => <Link key={key} href={href} className={styles.navButton} aria-current={initialView === key ? "page" : undefined}>{label}</Link>)}</nav></div>
     <main className={`container ${styles.main}`}>
       {!loaded ? <section className={styles.panel}><p>Menyiapkan perjalanan lokalmu…</p></section> : <>
-        {tab === "dashboard" && <Dashboard journey={journey} rookie={rookie} nextMission={nextMission} choose={choose} saveState={saveState} />}
-        {tab === "roadmap" && <Roadmap journey={journey} choose={choose} />}
-        {tab === "workspace" && <Workspace mission={current} journey={journey} feedback={feedback} onSubmit={onSubmit} />}
-        {tab === "records" && <Records journey={journey} onReset={() => setConfirmReset(true)} />}
+        {initialView === "dashboard" && <Dashboard journey={journey} rookie={rookie} nextMission={nextMission} choose={choose} saveState={saveState} />}
+        {initialView === "roadmap" && <Roadmap journey={journey} choose={choose} />}
+        {initialView === "workspace" && <Workspace mission={current} journey={journey} feedback={feedback} onSubmit={onSubmit} />}
+        {initialView === "records" && <Records journey={journey} onReset={() => setConfirmReset(true)} />}
       </>}
     </main>
     <SiteFooter />

@@ -2,6 +2,14 @@
 
 Ripintar is a browser-local, mastery-based practice layer at `/ripintar`. It deliberately has no account, server progress, import/export, or synchronization.
 
+## Routes
+
+- `/ripintar` and `/ripintar/dashboard` — dashboard.
+- `/ripintar/roadmap` — all rank and mission prerequisites.
+- `/ripintar/workspace` — the next available playable assignment.
+- `/ripintar/records` — local competency, assessment, and typing history.
+- `/ripintar/missions/[missionId]` — a stable, shareable URL for each mission. Browser-local progression still protects locked assignments when a URL is entered directly.
+
 ## Architecture
 
 - `src/modules/ripintar/content.ts` contains the stable, data-driven rank and mission catalog.
