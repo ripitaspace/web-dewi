@@ -2223,6 +2223,60 @@ body.is-ready .spice,
   }
 }
 
+.tax-tool-seo {
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--gading) 82%, var(--rempah) 18%);
+}
+
+.tax-tool-seo__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+  gap: clamp(28px, 6vw, 72px);
+  align-items: start;
+}
+
+.tax-tool-seo h2 {
+  max-width: 16ch;
+  margin: 10px 0 16px;
+  font: 700 clamp(2rem, 4vw, 3.35rem)/1.05 var(--display);
+}
+
+.tax-tool-seo p,
+.tax-tool-seo li {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.tax-tool-seo ol {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding-left: 24px;
+}
+
+.tax-tool-seo__aside {
+  display: grid;
+  gap: 12px;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .42);
+}
+
+.tax-tool-seo__aside h3,
+.tax-tool-seo__aside strong { color: var(--delima); }
+
+.tax-tool-seo details { border-top: 1px solid var(--line); padding-top: 12px; }
+.tax-tool-seo summary { cursor: pointer; font-weight: 700; }
+.tax-tool-seo details p { margin: 9px 0 0; font-size: .92rem; }
+.tax-tool-seo__notice { margin: 4px 0; font-size: .84rem; }
+.tax-tool-seo__aside ul { display: grid; gap: 6px; margin: 2px 0 0; padding-left: 18px; }
+.tax-tool-seo__aside a { color: var(--delima); font-weight: 700; }
+
+@media (max-width: 760px) {
+  .tax-tool-seo__grid { grid-template-columns: 1fr; }
+}
+
 /* SPT OP Studio: keep every top-bar action in the same button treatment. */
 .spt-root a.spt-icon-btn {
   border: 1px solid #cbd5e0;

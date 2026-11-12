@@ -10,6 +10,10 @@ import { QuotationGeneratorClient } from "@/components/tools/quotation-generator
 import { BeaCukaiCalculatorClient } from "@/components/tools/bea-cukai-calculator-client";
 import { Pph21PayrollStudio } from "@/components/tools/pph21-payroll-studio";
 import { MINI_TOOLS } from "@/lib/mini-tools";
+import { createPageMetadata } from "@/lib/seo";
+import { getTaxToolSeo, hasTaxToolSeo, TaxToolSeo } from "@/components/seo/tax-tool-seo";
+import { getKaryaCardSeo } from "@/lib/karya-card-seo";
+import { KaryaToolSeo } from "@/components/seo/karya-tool-seo";
 
 interface MiniToolPageProps {
   params: Promise<{ slug: string }>;
@@ -22,15 +26,24 @@ function getTool(slug: string) {
 export async function generateMetadata({ params }: MiniToolPageProps): Promise<Metadata> {
   const { slug } = await params;
   const tool = getTool(slug);
+  const taxToolSeo = tool && hasTaxToolSeo(slug) ? getTaxToolSeo(slug) : undefined;
+  const cardSeo = tool ? getKaryaCardSeo(tool.href) : undefined;
 
   return tool
-    ? { title: `${tool.title} — PUSPITA × RIPITA`, description: tool.description }
-    : { title: "Mini Tool Tidak Ditemukan — PUSPITA × RIPITA" };
+    ? createPageMetadata({
+      title: taxToolSeo?.metadataTitle || taxToolSeo?.title || cardSeo?.title || tool.title,
+      description: taxToolSeo?.description || cardSeo?.description || tool.description,
+      path: tool.href,
+      robots: tool.status === "maintenance" ? { index: false, follow: true } : undefined,
+    })
+    : { title: "Mini Tool Tidak Ditemukan" };
 }
 
 export default async function MiniToolPage({ params }: MiniToolPageProps) {
   const { slug } = await params;
   const tool = getTool(slug);
+  const taxToolSeo = tool && hasTaxToolSeo(slug) ? getTaxToolSeo(slug) : undefined;
+  const cardSeo = tool ? getKaryaCardSeo(tool.href) : undefined;
 
   if (!tool) notFound();
 
@@ -44,8 +57,8 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
               <Link href="/karya">Karya</Link><span>/</span><span>{tool.category}</span>
             </nav>
             <span className="eyebrow text-rempah">MINI TOOL · {tool.category}</span>
-            <h1 className="display-lg">{tool.title}</h1>
-            <p className="lead muted">{tool.description}</p>
+            <h1 className="display-lg">{taxToolSeo?.heading || taxToolSeo?.title || cardSeo?.h1 || tool.title}</h1>
+            <p className="lead muted">{taxToolSeo?.description || cardSeo?.description || tool.description}</p>
           </div>
         </section>
 
@@ -64,6 +77,8 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
             )}
           </div>
         </section>
+        {tool.status === "available" && hasTaxToolSeo(slug) ? <TaxToolSeo toolKey={slug} /> : null}
+        {tool.status === "available" && !hasTaxToolSeo(slug) && cardSeo ? <KaryaToolSeo seo={cardSeo} /> : null}
       </main>
       <SiteFooter />
     </>

@@ -3,11 +3,15 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { CoretaxEmbed } from "@/components/pages/coretax-embed";
+import { TaxToolSeo } from "@/components/seo/tax-tool-seo";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Coretax Invoice Scraper — Karya PUSPITA",
-  description: "Ekstraksi faktur pajak PDF ke data barang dan Excel.",
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Coretax Invoice Scraper",
+  description: "Ekstrak detail faktur pajak PDF menjadi data barang dan rekap Excel langsung di browser.",
+  path: "/karya/pajak/coretax",
+  image: "/images/artworks/coretax-ripita-icon.png",
+});
 
 export default function CoretaxPage() {
   return (
@@ -24,6 +28,7 @@ export default function CoretaxPage() {
         <section className="section-tight"><div className="container coretax-shell">
           <CoretaxEmbed />
         </div></section>
+        <TaxToolSeo toolKey="coretax" />
       </main>
       <SiteFooter />
     </>

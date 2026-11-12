@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/navigation/site-header";
 import { CatalogExplorer } from "@/components/learning/catalog-explorer";
 import { LearningPlayer } from "@/components/learning/learning-player";
 import { getLearningModule } from "@/modules/learning/catalog";
+import { createPageMetadata } from "@/lib/seo";
 import {
   breadcrumbs,
   getChildTopics,
@@ -33,7 +34,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { domain, topic = [] } = await params;
   const route = resolveCatalogRoute(domain, topic);
-  return route ? { title: `${route.topic?.title || route.domain.title} — Belajar PUSPITA`, description: route.topic?.description || route.domain.description } : { title: "Bidang belajar tidak ditemukan — PUSPITA" };
+  return route
+    ? createPageMetadata({
+      title: `${route.topic?.title || route.domain.title} — Belajar`,
+      description: route.topic?.description || route.domain.description || "Modul dan topik belajar interaktif dari PuspitaCore.",
+      path: `/belajar/${domain}${topic.length ? `/${topic.join("/")}` : ""}`,
+    })
+    : { title: "Bidang belajar tidak ditemukan" };
 }
 
 export default async function LearningCatalogRoute({ params }: Props) {

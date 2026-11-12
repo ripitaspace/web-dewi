@@ -3,9 +3,11 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { notion, notionX } from "../core/client";
 import { CMS_CONFIG } from "../core/config";
 import { CMS_CONSTANTS } from "../core/constants";
+import { cmsCache } from "../core/cache";
 import { formatDate, getCoverUrl, getFileUrl, getMultiSelect, getText, richTextToHtml } from "../core/utils";
 import { BlogPost, emptyTentangData, TentangChapter, TentangPageData, TypeBlog } from "../types";
 
+const BLOG_POSTS_CACHE_KEY = "cms:blog-posts";
 
 function getProp(props: Record<string, any>, candidateNames: string[]) {
   if (!props) return undefined;
@@ -305,6 +307,7 @@ export const refreshBlogPostsCache = async (): Promise<BlogPost[]> => {
       mapNotionPageToBlogPost(page as TypeBlog)
     );
 
+    await cmsCache.set(BLOG_POSTS_CACHE_KEY, posts);
     // Keep the related Notion content fresh for the same request.
     await refreshTentangDataCache();
     return posts;
@@ -321,12 +324,13 @@ export const getBlogPosts = cache(async (options?: { type?: string }): Promise<B
     throw new Error("CMS blog is not configured");
   } else {
     try {
-      // Always query Notion for a request. Writing the cache in the refresh
-      // function is kept only for the manual /api/renew diagnostic endpoint.
-      posts = await refreshBlogPostsCache();
+      const cachedPosts = await cmsCache.get<BlogPost[]>(BLOG_POSTS_CACHE_KEY, CMS_CONSTANTS.BLOG_LIST_CACHE_TTL_MS);
+      posts = cachedPosts || await refreshBlogPostsCache();
     } catch (error) {
       console.error("[CMS Blog] Error fetching blog posts:", error);
-      throw new Error("Artikel belum dapat dimuat", { cause: error });
+      const stalePosts = await cmsCache.get<BlogPost[]>(BLOG_POSTS_CACHE_KEY, 0);
+      if (stalePosts) posts = stalePosts;
+      else throw new Error("Artikel belum dapat dimuat", { cause: error });
     }
   }
 

@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Pajak — Karya PUSPITA",
-  description: "Mini tools pajak dari PUSPITA dan RIPITA.",
-};
+export const metadata: Metadata = createPageMetadata({ title: "Tools Pajak", description: "Koleksi tools pajak PuspitaCore untuk mengurangi pekerjaan berulang dan menjaga dokumen tetap rapi.", path: "/karya/pajak" });
 
 export default function PajakPage() {
   return (

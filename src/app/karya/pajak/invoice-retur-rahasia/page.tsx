@@ -3,11 +3,14 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { CoretaxEmbed } from "@/components/pages/coretax-embed";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Invoice Retur Rahasia — Karya PUSPITA",
-  description: "Ruang persiapan Invoice Retur Rahasia untuk membuat invoice retur dengan lebih mudah.",
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Invoice Retur Rahasia",
+  description: "Ruang persiapan invoice retur yang sedang dikembangkan.",
+  path: "/karya/pajak/invoice-retur-rahasia",
+  robots: { index: false, follow: true },
+});
 
 export default function InvoiceReturRahasiaPage() {
   return (

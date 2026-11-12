@@ -4,27 +4,15 @@ import Link from 'next/link';
 import { SiteHeader } from '@/components/navigation/site-header';
 import { SiteFooter } from '@/components/navigation/site-footer';
 import { SptStudio } from '@/components/tools/spt-op/studio';
+import { TaxToolSeo } from '@/components/seo/tax-tool-seo';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'SPT Orang Pribadi — PUSPITACORE',
+export const metadata: Metadata = createPageMetadata({
+  title: 'SPT Orang Pribadi',
   description: 'Siapkan SPT Orang Pribadi melalui formulir, lampiran, draft lokal, impor, dan cetak.',
-  openGraph: {
-    title: 'SPT Orang Pribadi — PUSPITACORE',
-    description: 'Persiapkan SPT Tahunan dengan Lebih Mudah dan Terstruktur.',
-    url: '/karya/tools/spt-op',
-    type: 'website',
-    images: [{
-      url: '/images/artworks/spt-orang-pribadi-cover.png',
-      width: 1774,
-      height: 887,
-      alt: 'Ilustrasi editorial SPT Orang Pribadi dengan formulir, bandeng, udang, kalkulator, dan laptop.',
-    }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    images: ['/images/artworks/spt-orang-pribadi-cover.png'],
-  },
-};
+  path: '/karya/tools/spt-op',
+  image: '/images/artworks/spt-orang-pribadi-cover.png',
+});
 
 export default function Page() {
   return (
@@ -41,6 +29,7 @@ export default function Page() {
           <Image className="spt-hero-stamp" src="/images/analytics/web-analytics-stamp-blank.png" alt="" width={1122} height={1402} sizes="(max-width: 640px) 92px, 132px" />
         </section>
         <SptStudio />
+        <TaxToolSeo toolKey="spt-op" />
       </main>
       <SiteFooter />
     </div>

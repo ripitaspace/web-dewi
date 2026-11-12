@@ -132,14 +132,11 @@ export function AboutHero() {
               interaction.to(strike, { scaleX: .94, rotation: -2, duration: .35, ease: "power2.out" });
               break;
             case "cerita":
-              interaction.to(letters, {
-                keyframes: [
-                  { color: "#781b34", yPercent: -11, duration: .18, ease: "sine.out" },
-                  { color: "#d34e5e", yPercent: 0, duration: .16, ease: "sine.inOut" },
-                  { color: "#1e1b18", duration: .38, ease: "power1.out" },
-                ],
-                stagger: .055,
-              });
+              // Keep these as regular timeline steps. GSAP's nested keyframes
+              // timeline can be invalidated after a quick hover/restart cycle.
+              interaction.to(letters, { color: "#781b34", yPercent: -11, duration: .18, stagger: .055, ease: "sine.out" })
+                .to(letters, { color: "#d34e5e", yPercent: 0, duration: .16, stagger: .055, ease: "sine.inOut" })
+                .to(letters, { color: "#1e1b18", duration: .38, stagger: .055, ease: "power1.out" });
               break;
             case "berpikirku":
               interaction.fromTo(fish, { x: () => thinkingWord.offsetWidth * .62, rotation: -5 }, {
@@ -148,13 +145,8 @@ export function AboutHero() {
                 .to(fish, { opacity: 0, duration: .25 }, .75);
               break;
             case "terbentuk.":
-              interaction.to(nodes, {
-                keyframes: [
-                  { y: -3, scale: 1.2, duration: .3, ease: "sine.out" },
-                  { y: 0, scale: 1, duration: .4, ease: "sine.inOut" },
-                ],
-                stagger: .12,
-              }, 0);
+              interaction.to(nodes, { y: -3, scale: 1.2, duration: .3, stagger: .12, ease: "sine.out" }, 0)
+                .to(nodes, { y: 0, scale: 1, duration: .4, stagger: .12, ease: "sine.inOut" });
               break;
           }
           const enter = () => { if (ready) interaction.restart(); };

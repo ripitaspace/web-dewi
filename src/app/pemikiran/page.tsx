@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { getBlogPosts } from "@/modules/cms";
 import { PemikiranClient } from "@/components/pages/pemikiran-client";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Pemikiran — PUSPITA",
-  description: "Arsip pemikiran, esai, framework, diagram, dan catatan lapangan dari PUSPITA.",
-};
+export const metadata: Metadata = createPageMetadata({ title: "Pemikiran", description: "Arsip esai, framework, diagram, dan catatan lapangan dari PuspitaCore.", path: "/pemikiran" });
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

@@ -155,19 +155,14 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                             </span>
                           ))}
                         </div>
-                        <h3 style={{ fontSize: "1.65rem", margin: "6px 0 14px" }}>{item.title}</h3>
+                        <h3 style={{ fontSize: "1.65rem", margin: "6px 0 14px" }}><Link href={`/blog/${item.slug}`}>{item.title}</Link></h3>
                         <p className="muted" style={{ marginBottom: "12px" }}>
                           {item.excerpt}
                         </p>
                       </div>
                       <div className="card-actions" style={{ flexDirection: "column", alignItems: "stretch" }}>
-                        <button
-                          className="btn btn-primary btn-small"
-                          onClick={() => setSelectedWork(item)}
-                          type="button"
-                        >
-                          Pelajari
-                        </button>
+                        <Link className="btn btn-primary btn-small" href={`/blog/${item.slug}`}>Baca studi kasus</Link>
+                        <button className="btn btn-secondary btn-small" onClick={() => setSelectedWork(item)} type="button">Ringkasan</button>
                         <a href="https://www.ripita.space" className="btn btn-secondary btn-small" target="_blank" rel="noreferrer">
                           Lihat di RIPITA
                         </a>

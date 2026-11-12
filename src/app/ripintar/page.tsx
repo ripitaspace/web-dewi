@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { RipitaClient } from "@/components/pages/ripita-client";
+import { RipintarClient } from "@/components/ripintar/ripintar-client";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "RIPINTAR — Buku Digital & Pembahasan Mendalam",
-  description: "Ruang buku digital untuk membahas materi secara utuh, dengan konteks, contoh penerapan, dan coding lengkap.",
-};
+export const metadata: Metadata = createPageMetadata({ title: "RIPINTAR — Simulasi Karier Akuntansi", description: "Ruang praktik lokal untuk membangun keterampilan kerja digital dan akuntansi secara bertahap.", path: "/ripintar" });
 
 export default function RipintarPage() {
-  return <RipitaClient />;
+  return <RipintarClient />;
 }

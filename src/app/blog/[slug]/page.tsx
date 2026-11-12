@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { RipitaMark } from "@/components/brand/ripita-mark";
 import { getBlogPostBySlug, NotionBody } from "@/modules/cms";
+import { JsonLd } from "@/components/seo/json-ld";
+import { absoluteUrl, createPageMetadata, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -23,16 +25,20 @@ export async function generateMetadata({
     };
   }
 
+  const description = post.excerpt || "Artikel dan pemikiran dari PuspitaCore";
+  const image = post.image && !post.image.startsWith("data:") ? post.image : DEFAULT_OG_IMAGE;
+
   return {
-    title: `${post.title} — PUSPITA × RIPITA`,
-    description: post.excerpt || "Artikel dan pemikiran dari PUSPITA × RIPITA",
+    ...createPageMetadata({ title: post.title, description, path: `/blog/${slug}`, image, type: "article" }),
     openGraph: {
       title: post.title,
-      description: post.excerpt,
+      description,
+      url: absoluteUrl(`/blog/${slug}`),
+      siteName: SITE_NAME,
       type: "article",
       publishedTime: post.dateISO || undefined,
       authors: [post.author],
-      images: post.image ? [post.image] : undefined,
+      images: [{ url: image }],
     },
   };
 }
@@ -44,15 +50,29 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+  const isCaseStudy = post.type === "karya";
 
   return (
     <div className="blog-detail-root">
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": isCaseStudy ? "CreativeWork" : "Article",
+        headline: post.title,
+        description: post.excerpt || undefined,
+        image: post.image && !post.image.startsWith("data:") ? [post.image] : undefined,
+        datePublished: post.dateISO || undefined,
+        dateModified: post.dateISO || undefined,
+        author: { "@type": "Person", name: post.author || SITE_NAME },
+        publisher: { "@type": "Organization", name: SITE_NAME, url: absoluteUrl() },
+        mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
+        inLanguage: "id-ID",
+      }} />
       {/* Top Navbar */}
       <header className="blog-detail-nav">
         <div className="blog-nav-inner">
-          <Link href="/pemikiran" className="blog-back-btn">
+          <Link href={isCaseStudy ? "/karya" : "/pemikiran"} className="blog-back-btn">
             <span className="arrow">←</span>
-            <span>Kembali ke Pemikiran</span>
+            <span>{isCaseStudy ? "Kembali ke Karya" : "Kembali ke Pemikiran"}</span>
           </Link>
           <Link href="/" className="brand-mini">
             <RipitaMark className="brand-logo-mini" data-ripita-logo-target />
@@ -119,8 +139,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <h3>PUSPITA × RIPITA</h3>
                 <p>Rupa Indonesia · Akal Masa Depan</p>
               </div>
-              <Link href="/pemikiran" className="btn primary">
-                Baca pemikiran lainnya →
+              <Link href={isCaseStudy ? "/karya" : "/pemikiran"} className="btn primary">
+                {isCaseStudy ? "Lihat karya lainnya →" : "Baca pemikiran lainnya →"}
               </Link>
             </div>
           </footer>

@@ -94,7 +94,7 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
           <h2 id="extension-overview" className={styles.title}>Download Faktur Coretax Lebih Praktis</h2>
           <p className={styles.intro}>
             Unduh faktur Pajak Keluaran dan Pajak Masukan dari halaman Coretax yang sedang kamu buka.
-            {laptopKentang ? " 🥔 Dirancang tetap ringan untuk laptop kentang, dengan download berurutan dan progres yang mudah diikuti." : " Extension dirancang untuk menjalankan download secara berurutan dan menampilkan progresnya."}
+            {laptopKentang ? " 🥔 Panduan Laptop Kentang membantu mengatur satu halaman tabel dan satu antrean download dalam satu waktu ketika perangkat terasa lambat." : " Bookmarklet membantu memicu download secara berurutan dan menampilkan progresnya."}
           </p>
           <div className={styles.scope}>
             <span aria-hidden="true">↓</span>

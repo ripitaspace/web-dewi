@@ -3,11 +3,9 @@ import { RouteLoading } from "@/components/system-state/route-loading";
 import type { Metadata } from "next";
 import { BelajarClient } from "@/components/pages/belajar-client";
 import { getModulesForDomain, getPublishedDomains, getPublishedModuleCards } from "@/modules/learning/registry";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Belajar — PUSPITA",
-  description: "Modul interaktif dan latihan yang dapat langsung dipraktikkan.",
-};
+export const metadata: Metadata = createPageMetadata({ title: "Belajar", description: "Modul interaktif dan latihan PuspitaCore yang dapat langsung dipraktikkan.", path: "/belajar" });
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

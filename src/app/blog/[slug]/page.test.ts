@@ -33,8 +33,9 @@ describe("article detail route", () => {
   });
   it("uses article-specific metadata and a machine-readable publication date", async () => {
     expect(await generateMetadata(props)).toMatchObject({
-      title: `${post.title} — PUSPITA × RIPITA`,
-      openGraph: { type: "article", publishedTime: post.dateISO },
+      title: post.title,
+      alternates: { canonical: `https://www.puspitacore.com/blog/${post.slug}` },
+      openGraph: { type: "article", publishedTime: post.dateISO, url: `https://www.puspitacore.com/blog/${post.slug}` },
     });
   });
   it("returns not found for a missing article", async () => {
@@ -44,5 +45,12 @@ describe("article detail route", () => {
   it("preserves CMS failures for the error boundary instead of redirecting or showing empty content", async () => {
     mocks.getPost.mockRejectedValue(new Error("Artikel belum dapat dimuat"));
     await expect(BlogPostPage(props)).rejects.toThrow("Artikel belum dapat dimuat");
+  });
+  it("treats a Karya post as a case study and links it back to the Karya catalogue", async () => {
+    mocks.getPost.mockResolvedValue({ ...post, type: "karya" });
+    const html = renderToStaticMarkup(await BlogPostPage(props));
+    expect(html).toContain('href="/karya"');
+    expect(html).toContain("Kembali ke Karya");
+    expect(html).toContain("Lihat karya lainnya");
   });
 });
