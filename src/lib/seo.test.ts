@@ -15,3 +15,15 @@ describe("SEO metadata helpers", () => {
     });
   });
 });
+
+describe("article description fallback", () => {
+  it("builds a clipped description from the first Notion text blocks", async () => {
+    const { descriptionFromRecordMap, absoluteImageUrl } = await import("./seo");
+    const block = (text: string) => ({ value: { value: { type: "text", properties: { title: [[text]] } } } });
+    const result = descriptionFromRecordMap({ block: { a: block("Langkah pertama pembatalan."), b: block("x ".repeat(200)) } });
+    expect(result.startsWith("Langkah pertama pembatalan.")).toBe(true);
+    expect(result.length).toBeLessThanOrEqual(160);
+    expect(descriptionFromRecordMap(null)).toBe("");
+    expect(absoluteImageUrl("/api/notion-image?url=a")).toBe("https://www.puspitacore.com/api/notion-image?url=a");
+  });
+});

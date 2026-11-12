@@ -2,8 +2,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getBlogPostBySlug, NotionBody } from "@/modules/cms";
+import { getBlogSeoOverride } from "@/lib/blog-seo";
 import { JsonLd } from "@/components/seo/json-ld";
-import { absoluteUrl, createPageMetadata, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
+import { absoluteImageUrl, absoluteUrl, createPageMetadata, descriptionFromRecordMap, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -24,13 +25,19 @@ export async function generateMetadata({
     };
   }
 
-  const description = post.excerpt || "Artikel dan pemikiran dari PuspitaCore";
-  const image = post.image && !post.image.startsWith("data:") ? post.image : DEFAULT_OG_IMAGE;
+  const seo = getBlogSeoOverride(slug);
+  const title = seo?.title ?? post.title;
+  const description =
+    seo?.description || post.excerpt || descriptionFromRecordMap(post.recordMap) || "Artikel dan pemikiran dari PuspitaCore";
+  const image = absoluteImageUrl(
+    post.image && !post.image.startsWith("data:") ? post.image : DEFAULT_OG_IMAGE,
+  );
 
   return {
-    ...createPageMetadata({ title: post.title, description, path: `/blog/${slug}`, image, type: "article" }),
+    ...createPageMetadata({ title, description, path: `/blog/${slug}`, image, type: "article" }),
+    keywords: seo?.keywords,
     openGraph: {
-      title: post.title,
+      title,
       description,
       url: absoluteUrl(`/blog/${slug}`),
       siteName: SITE_NAME,
@@ -50,15 +57,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
   const isCaseStudy = post.type === "karya";
+  const seo = getBlogSeoOverride(slug);
+  const title = seo?.title ?? post.title;
+  const description = seo?.description || post.excerpt || descriptionFromRecordMap(post.recordMap);
 
   return (
     <div className="blog-detail-root">
       <JsonLd data={{
         "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Beranda", item: absoluteUrl() },
+          { "@type": "ListItem", position: 2, name: isCaseStudy ? "Karya" : "Pemikiran", item: absoluteUrl(isCaseStudy ? "/karya" : "/pemikiran") },
+          { "@type": "ListItem", position: 3, name: title, item: absoluteUrl(`/blog/${slug}`) },
+        ],
+      }} />
+      <JsonLd data={{
+        "@context": "https://schema.org",
         "@type": isCaseStudy ? "CreativeWork" : "Article",
-        headline: post.title,
-        description: post.excerpt || undefined,
-        image: post.image && !post.image.startsWith("data:") ? [post.image] : undefined,
+        headline: title,
+        keywords: seo?.keywords.join(", "),
+        description: description || undefined,
+        image: post.image && !post.image.startsWith("data:") ? [absoluteImageUrl(post.image)] : [absoluteUrl(DEFAULT_OG_IMAGE)],
         datePublished: post.dateISO || undefined,
         dateModified: post.dateISO || undefined,
         author: { "@type": "Person", name: post.author || SITE_NAME },
@@ -66,6 +86,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
         inLanguage: "id-ID",
       }} />
+      {seo && (
+        <JsonLd data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: seo.faq.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text: item.answer },
+          })),
+        }} />
+      )}
       {/* Top Navbar */}
       <header className="blog-detail-nav">
         <div className="blog-nav-inner">
@@ -89,10 +120,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <time className="article-date" dateTime={post.dateISO || undefined}>{post.date}</time>
             </div>
 
-            <h1 className="article-title">{post.title}</h1>
+            <h1 className="article-title">{title}</h1>
 
-            {post.excerpt && (
-              <p className="article-lead">{post.excerpt}</p>
+            {description && (
+              <p className="article-lead">{description}</p>
             )}
 
             <div className="article-author-bar">
@@ -109,7 +140,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="article-cover">
                 <img
                   src={post.image}
-                  alt={post.title}
+                  alt={title}
                   className="article-cover-img"
                 />
               </div>
@@ -130,6 +161,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             )}
           </div>
+
+          {seo && (
+            <section className="article-faq" aria-labelledby="article-faq-title">
+              <h2 id="article-faq-title">Pertanyaan yang sering diajukan</h2>
+              {seo.faq.map((item) => (
+                <details key={item.question}>
+                  <summary>{item.question}</summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </section>
+          )}
 
           {/* Article Footer */}
           <footer className="article-footer">
