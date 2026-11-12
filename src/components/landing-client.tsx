@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { useEffect, useRef, useState } from "react";
-import { RipitaMark } from "@/components/brand/ripita-mark";
 import { RIPITA_LOADER_COMPLETE_EVENT } from "@/components/brand/ripita-signature-loader";
 import type { BlogPost } from "@/modules/cms";
 
@@ -413,8 +412,10 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
 
       <header className={`site-nav ${isNavCompact ? "compact" : ""}`} id="siteNav">
         <a className="brand" href="#top" aria-label="PUSPITA × RIPITA">
-          <RipitaMark
+          <img
             className="brand-logo"
+            src="/images/brand/puspita-ripita-mark.png"
+            alt=""
             data-ripita-logo-target
           />
           <span className="brand-copy">

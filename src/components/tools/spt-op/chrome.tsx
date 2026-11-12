@@ -2,7 +2,6 @@
 
 import { useState, type ReactNode } from 'react';
 import { type Draft } from '@/modules/spt-op/model';
-import { RipitaMark } from '@/components/brand/ripita-mark';
 import { descendantIds, navigationTree, type NavigationNode, type NavigationTarget } from './navigation-tree';
 import { Dialog } from './dialog';
 
@@ -48,7 +47,7 @@ export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, on
   };
   return <header className="spt-topbar">
     <button className="spt-back" onClick={onBack} aria-label="Kembali ke Karya">← Karya</button>
-    <div className="spt-brand"><RipitaMark className="spt-brand-mark" title="PuspitaCore" /><div><b>PUSPITACORE</b><small>SPT ORANG PRIBADI STUDIO</small></div></div>
+    <div className="spt-brand"><img className="spt-brand-mark" src="/images/brand/puspita-ripita-mark.png" alt="PuspitaCore" /><div><b>PUSPITACORE</b><small>SPT ORANG PRIBADI STUDIO</small></div></div>
     <span className="spt-pill">{draft.profile.name || 'SPT Orang Pribadi'} · {draft.profile.year}</span><span className="spt-save" role="status">{saved}</span>
     <div className="spt-actions" role="group" aria-label="Aksi SPT">
       <button type="button" className="spt-icon-btn spt-maximize" onClick={onToggleMaximize} aria-pressed={isMaximized} aria-label={isMaximized ? 'Kembalikan tampilan' : 'Maximize workspace'} title={isMaximized ? 'Kembalikan tampilan' : 'Maximize workspace'}><ActionIcon name={isMaximized ? 'restore' : 'maximize'} /></button>

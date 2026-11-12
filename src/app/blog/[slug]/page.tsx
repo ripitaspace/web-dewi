@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { RipitaMark } from "@/components/brand/ripita-mark";
 import { getBlogPostBySlug, NotionBody } from "@/modules/cms";
 import { JsonLd } from "@/components/seo/json-ld";
 import { absoluteUrl, createPageMetadata, DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/seo";
@@ -75,7 +74,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <span>{isCaseStudy ? "Kembali ke Karya" : "Kembali ke Pemikiran"}</span>
           </Link>
           <Link href="/" className="brand-mini">
-            <RipitaMark className="brand-logo-mini" data-ripita-logo-target />
+            <img className="brand-logo-mini" src="/images/brand/puspita-ripita-mark.png" alt="" data-ripita-logo-target />
             <strong>PUSPITA × RIPITA</strong>
           </Link>
         </div>

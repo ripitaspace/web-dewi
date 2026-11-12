@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { RipitaMark } from "@/components/brand/ripita-mark";
 import { ROUTE_ORDER } from "@/lib/site-data";
 
 interface SiteHeaderProps {
@@ -29,8 +28,10 @@ export function SiteHeader({ currentKey }: SiteHeaderProps) {
   return (
     <header className={`site-nav ${isScrolled ? "compact" : ""}`} id="siteNav">
       <Link className="brand" href="/" aria-label="PUSPITA × RIPITA">
-        <RipitaMark
+        <img
           className="brand-logo"
+          src="/images/brand/puspita-ripita-mark.png"
+          alt=""
           data-ripita-logo-target
         />
         <span className="brand-copy">
