@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/navigation/site-footer";
 import { useEffect, useRef, useState } from "react";
 import { RIPITA_LOADER_COMPLETE_EVENT } from "@/components/brand/ripita-signature-loader";
 import type { BlogPost } from "@/modules/cms";
+import { ROUTE_ORDER } from "@/lib/site-data";
 
 const HERO_OBJECTS = [
   {
@@ -424,13 +425,11 @@ export function LandingClient({ blogPosts }: LandingClientProps) {
           </span>
         </a>
         <nav className="nav-links" aria-label="Navigasi utama">
-          <Link href="/" className="active">Beranda</Link>
-          <Link href="/tentang">Tentang</Link>
-          <Link href="/pemikiran">Pemikiran</Link>
-          <Link href="/karya">Karya</Link>
-          <Link href="/belajar">Belajar</Link>
-          <Link href="/kerja-bersama">Kerja Bersama</Link>
-          <Link href="/ripintar">RIPINTAR</Link>
+          {ROUTE_ORDER.map((item) => (
+            <Link key={item.key} href={item.path} className={item.path === "/" ? "active" : ""}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <div className="nav-actions">
           <a
