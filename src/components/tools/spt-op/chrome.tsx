@@ -10,7 +10,7 @@ export { navigation } from './navigation-tree';
 
 interface TopbarProps { draft: Draft; saved: string; isMaximized: boolean; onToggleMaximize: () => void; onBack: () => void; onDrafts: () => void; onSave: () => void; onValidate: () => void; onImport: () => void; onLoadExample: () => void; onPrint: () => void; onExport: () => void; }
 
-type ActionIconName = 'maximize' | 'restore' | 'draft' | 'save' | 'validate' | 'import' | 'template' | 'backup' | 'print' | 'export';
+type ActionIconName = 'maximize' | 'restore' | 'draft' | 'save' | 'validate' | 'audit' | 'import' | 'template' | 'backup' | 'print' | 'export';
 const exampleScenarios = [
   { file: 'SPT_OP_WP01_Karyawan_2025.xlsx', title: 'Karyawan', description: 'Pekerja dengan penghasilan dari satu pemberi kerja.' },
   { file: 'SPT_OP_WP02_Karyawan_Menikah_2025.xlsx', title: 'Karyawan menikah', description: 'Karyawan dengan data keluarga dan penghasilan lainnya.' },
@@ -27,6 +27,7 @@ function ActionIcon({ name }: { name: ActionIconName }) {
     draft: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M9 14h6" /></>,
     save: <><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><path d="M17 21v-8H7v8" /><path d="M7 3v5h8" /></>,
     validate: <><circle cx="12" cy="12" r="9" /><path d="m8.5 12.5 2.5 2.5 4.5-5" /></>,
+    audit: <><path d="M4 4h16v16H4z" /><path d="M8 8h8M8 12h5M8 16h3" /><path d="m16 15 1.5 1.5L21 13" /></>,
     import: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m17 8-5-5-5 5" /><path d="M12 3v12" /></>,
     template: <><path d="M4 3h16v18H4z" /><path d="M8 3v18M4 8h16M12 12h4M12 16h4" /></>,
     backup: <><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5" /><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3" /></>,
@@ -38,6 +39,13 @@ function ActionIcon({ name }: { name: ActionIconName }) {
 
 export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, onDrafts, onSave, onValidate, onImport, onPrint, onExport }: TopbarProps) {
   const [examplesOpen, setExamplesOpen] = useState(false);
+  const [downloadsOpen, setDownloadsOpen] = useState(false);
+  const [templateDownloading, setTemplateDownloading] = useState(false);
+  const [auditMode, setAuditMode] = useState(false);
+  const downloadTemplate = () => {
+    setTemplateDownloading(true);
+    window.setTimeout(() => setTemplateDownloading(false), 900);
+  };
   return <header className="spt-topbar">
     <button className="spt-back" onClick={onBack} aria-label="Kembali ke Karya">← Karya</button>
     <div className="spt-brand"><RipitaMark className="spt-brand-mark" title="PuspitaCore" /><div><b>PUSPITACORE</b><small>SPT ORANG PRIBADI STUDIO</small></div></div>
@@ -48,13 +56,14 @@ export function Topbar({ draft, saved, isMaximized, onToggleMaximize, onBack, on
       <button type="button" className="spt-icon-btn" onClick={onDrafts} aria-label="Draft" title="Draft"><ActionIcon name="draft" /></button>
       <button type="button" className="spt-icon-btn" onClick={onSave} aria-label="Simpan" title="Simpan"><ActionIcon name="save" /></button>
       <button type="button" className="spt-icon-btn" onClick={onValidate} aria-label="Validasi" title="Validasi"><ActionIcon name="validate" /></button>
+      <button type="button" className={`spt-icon-btn${auditMode ? ' is-active' : ''}`} onClick={() => { const next = !auditMode; setAuditMode(next); window.dispatchEvent(new CustomEvent('spt-audit-mode', { detail: next })); }} aria-pressed={auditMode} aria-label={auditMode ? 'Matikan mode audit anotasi' : 'Nyalakan mode audit anotasi'} title={auditMode ? 'Matikan mode audit anotasi' : 'Nyalakan mode audit anotasi'}><ActionIcon name="audit" /></button>
       <span className="spt-actions-sep" aria-hidden="true" />
       <button type="button" className="spt-icon-btn" onClick={onImport} aria-label="Import" title="Import"><ActionIcon name="import" /></button>
-      <a className="spt-icon-btn" href="/tools/spt-op/PuspitaCore_SPT_OP_Import_Excel.xlsx" download aria-label="Unduh template Excel" title="Unduh template Excel"><ActionIcon name="template" /></a>
+      <button type="button" className={`spt-icon-btn${templateDownloading ? ' is-busy' : ''}`} onClick={() => setDownloadsOpen(true)} aria-busy={templateDownloading} aria-label={templateDownloading ? 'Menyiapkan template Excel' : 'Unduh template Excel'} title={templateDownloading ? 'Menyiapkan template Excel' : 'Unduh template Excel'}>{templateDownloading ? <span className="spt-button-spinner" aria-hidden="true" /> : <ActionIcon name="template" />}</button>
       <button type="button" className="spt-icon-btn" onClick={() => setExamplesOpen(true)} aria-label="Muat contoh" title="Muat contoh"><ActionIcon name="backup" /></button>
       <button type="button" className="spt-icon-btn" onClick={onPrint} aria-label="Print" title="Print"><ActionIcon name="print" /></button>
-      <button type="button" className="spt-icon-btn primary" onClick={onExport} aria-label="Ekspor" title="Ekspor"><ActionIcon name="export" /></button>
-    </div>{examplesOpen && <Dialog title="Pilih contoh SPT OP" onClose={() => setExamplesOpen(false)}><p className="spt-example-intro">Pilih skenario untuk memuatnya ke Studio, atau unduh workbook Excel untuk dipelajari dan diimpor kembali.</p><div className="spt-example-grid">{exampleScenarios.map(example => <article className="spt-example-card" key={example.file}><h3>{example.title}</h3><p>{example.description}</p><div className="spt-actions"><button className="primary" onClick={() => { setExamplesOpen(false); window.dispatchEvent(new CustomEvent('spt-load-example', { detail: example.file })); }}>Muat contoh</button><a className="spt-download-link" href={examplePath(example.file)} download>Unduh Excel</a></div></article>)}</div></Dialog>}
+      <button type="button" className="spt-icon-btn" onClick={onExport} aria-label="Ekspor" title="Ekspor"><ActionIcon name="export" /></button>
+    </div>{downloadsOpen && <Dialog title="Unduhan Excel SPT OP" onClose={() => setDownloadsOpen(false)}><div className="spt-example-grid"><article className="spt-example-card"><h3>Formulir Excel untuk staf</h3><p>Replika 17 halaman formulir SPT OP. Isi kotak kuning muda dan simpan file untuk dikumpulkan.</p><a className="spt-download-link" href="/tools/spt-op/PuspitaCore_Formulir_SPT_OP_Staf.xlsx" download onClick={downloadTemplate}>Unduh formulir Excel untuk staf</a></article><article className="spt-example-card"><h3>Template impor teknis</h3><p>Format tabel untuk diimpor ke SPT OP Studio. Ini berbeda dari formulir pengisian staf.</p><a className="spt-download-link" href="/tools/spt-op/PuspitaCore_SPT_OP_Import_Excel.xlsx" download onClick={downloadTemplate}>Unduh template impor</a></article></div></Dialog>}{examplesOpen && <Dialog title="Pilih contoh SPT OP" onClose={() => setExamplesOpen(false)}><p className="spt-example-intro">Pilih skenario untuk memuatnya ke Studio, atau unduh workbook Excel untuk dipelajari dan diimpor kembali.</p><div className="spt-example-grid">{exampleScenarios.map(example => <article className="spt-example-card" key={example.file}><h3>{example.title}</h3><p>{example.description}</p><div className="spt-actions"><button className="primary" onClick={() => { setExamplesOpen(false); window.dispatchEvent(new CustomEvent('spt-load-example', { detail: example.file })); }}>Muat contoh</button><a className="spt-download-link" href={examplePath(example.file)} download>Unduh Excel</a></div></article>)}</div></Dialog>}
   </header>;
 }
 

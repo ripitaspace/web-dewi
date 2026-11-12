@@ -100,3 +100,22 @@ body.spt-pdf-export .spt-print{display:block;position:fixed;left:-20000px;top:0;
 /* Keep the direct PDF renderer on the same F4 canvas as browser printing. */
 body.spt-pdf-export .spt-print .spt-coretax .sheet{width:215.9mm;height:330.2mm;overflow:hidden}
 body.spt-pdf-export .spt-print .spt-coretax .sheet.landscape{width:330.2mm;height:215.9mm}
+
+/* Setelah hero lewat, header Studio menjadi satu-satunya header yang menempel. */
+.spt-page .spt-topbar{position:sticky;top:0;z-index:120}
+@media(min-width:951px){.spt-page .spt-nav,.spt-page .spt-inspector{top:74px;max-height:calc(100vh - 74px)}}
+
+/* Editor profil mengikuti bagian yang pembaca lihat pada Induk SPT. */
+.spt-profile-editor{display:grid;gap:18px}
+.spt-editor-group{padding-top:16px;border-top:1px solid #dbe2eb}
+.spt-editor-group:first-child{padding-top:0;border-top:0}
+.spt-editor-group>header{margin-bottom:8px}
+.spt-editor-group h3{margin:0;font-size:14px;color:#13294a}
+.spt-editor-group p{margin:4px 0 0;color:#617287;font-size:11px;line-height:1.4}
+.spt-editor-group .spt-formgrid{margin:0}
+.spt-page-group{background:#f7f9fc;padding:12px;border:1px solid #dbe2eb;border-radius:8px}
+.spt-page-group>header{margin-bottom:10px}
+.spt-page-table-links{display:grid;gap:6px}
+.spt-page-table-links button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid #cdd9e8;border-radius:6px;padding:9px 10px;color:#13294a;font:inherit}
+.spt-page-table-links button:hover,.spt-page-table-links button.is-current{border-color:#193867;background:#eef4fb}
+.spt-page-table-links small{color:#617287;white-space:nowrap}

@@ -6,6 +6,7 @@ import { ConnectionNotice } from "@/components/system-state/connection-notice";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.puspitacore.com"),
   title: "PUSPITA × RIPITA — Kinetic Hero Prototype",
   description:
     "Prototype kinetic hero PUSPITA × RIPITA: rasa menjadi rupa, ide menjadi sistem.",

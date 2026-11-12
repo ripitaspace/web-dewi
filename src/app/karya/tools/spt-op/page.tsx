@@ -8,6 +8,22 @@ import { SptStudio } from '@/components/tools/spt-op/studio';
 export const metadata: Metadata = {
   title: 'SPT Orang Pribadi — PUSPITACORE',
   description: 'Siapkan SPT Orang Pribadi melalui formulir, lampiran, draft lokal, impor, dan cetak.',
+  openGraph: {
+    title: 'SPT Orang Pribadi — PUSPITACORE',
+    description: 'Persiapkan SPT Tahunan dengan Lebih Mudah dan Terstruktur.',
+    url: '/karya/tools/spt-op',
+    type: 'website',
+    images: [{
+      url: '/images/artworks/spt-orang-pribadi-cover.png',
+      width: 1774,
+      height: 887,
+      alt: 'Ilustrasi editorial SPT Orang Pribadi dengan formulir, bandeng, udang, kalkulator, dan laptop.',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/artworks/spt-orang-pribadi-cover.png'],
+  },
 };
 
 export default function Page() {

@@ -2223,6 +2223,94 @@ body.is-ready .spice,
   }
 }
 
+/* SPT OP Studio: keep every top-bar action in the same button treatment. */
+.spt-root a.spt-icon-btn {
+  border: 1px solid #cbd5e0;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.spt-root a.spt-icon-btn:hover,
+.spt-root a.spt-icon-btn:focus-visible {
+  background: #edf2f9;
+}
+
+.spt-button-spinner {
+  width: 17px;
+  height: 17px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spt-action-spin .7s linear infinite;
+}
+
+.spt-root .spt-actions[data-export-actions="true"] {
+  align-items: center;
+}
+
+.spt-root .spt-actions[data-export-actions="true"] > button {
+  position: relative;
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  place-items: center;
+  font-size: 0;
+}
+
+.spt-root .spt-actions[data-export-actions="true"] > button::before {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.spt-root .spt-actions[data-export-actions="true"] > button:nth-child(1)::before { content: '⇩'; }
+.spt-root .spt-actions[data-export-actions="true"] > button:nth-child(2)::before { content: '</>'; font-size: 13px; }
+.spt-root .spt-actions[data-export-actions="true"] > button:nth-child(3)::before { content: '↓'; }
+.spt-root .spt-actions[data-export-actions="true"] > button:nth-child(4)::before { content: '⎙'; }
+
+.spt-root .spt-actions[data-export-actions="true"] > button[data-busy="true"]::before {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ink);
+  border-right-color: transparent;
+  border-radius: 50%;
+  content: '';
+  animation: spt-action-spin .7s linear infinite;
+}
+
+.spt-root .spt-actions[data-export-actions="true"] > button::after {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  z-index: 35;
+  width: max-content;
+  max-width: 180px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #102540;
+  color: #fff;
+  content: attr(aria-label);
+  font: 600 11px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -3px);
+  transition: opacity .12s ease, transform .12s ease;
+  white-space: nowrap;
+}
+
+.spt-root .spt-actions[data-export-actions="true"] > button:hover::after,
+.spt-root .spt-actions[data-export-actions="true"] > button:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@keyframes spt-action-spin {
+  to { transform: rotate(1turn); }
+}
+
 /* ==========================================================================
    PUSPITA MULTI-VIEW & PAGES SYSTEM
    ========================================================================== */
@@ -3252,6 +3340,43 @@ code.notion-inline-code {
 .tool-placeholder p { max-width: 610px; margin: 0 0 24px; color: rgba(30, 27, 24, .7); line-height: 1.65; }
 
 .tool-category-hero { padding-bottom: clamp(48px, 7vw, 86px); }
+.spt-page .site-nav { position: absolute; }
+.spt-page .spt-topbar { top: 0; }
+.spt-page .spt-nav,
+.spt-page .spt-inspector {
+  top: 74px;
+  max-height: calc(100vh - 74px);
+}
+.spt-root .spt-toolbar {
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 15px;
+  padding: 7px;
+  border: 1px solid #cbd5e0;
+  border-radius: 9px;
+  background: #eef3f9;
+}
+.spt-root .spt-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 260px;
+  white-space: nowrap;
+}
+.spt-root .spt-toolbar label > select {
+  display: inline-block;
+  width: auto;
+  margin-top: 0;
+}
+.spt-root .spt-toolbar button:last-child { display: none; }
+.spt-root .spt-toolbar label { max-width: none; }
+.spt-root .spt-toolbar label > select {
+  width: 40ch;
+  max-width: min(40ch, calc(100vw - 80px));
+}
+.spt-root .spt-toolbar.spt-form-bottom-navigation { margin-top: 18px; }
+.spt-root .spt-toolbar.spt-form-bottom-navigation button:last-child { display: inline-flex; }
 .breadcrumb { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 24px; color: rgba(30, 27, 24, 0.62); font-size: 0.78rem; font-weight: 800; }
 .breadcrumb a { color: var(--delima); }
 .tax-tool-card { display: grid; grid-template-columns: 82px 1fr auto; align-items: center; gap: 28px; padding: 30px; }

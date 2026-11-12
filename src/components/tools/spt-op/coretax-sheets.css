@@ -29,7 +29,6 @@
 .spt-coretax .reg.tight td.empty{height:2.6mm}
 .spt-coretax .reg .sum td{height:4.4mm;background:#e5e8e8}
 .spt-coretax .reg .sum .sumtag{background:var(--yellow);font-weight:700;text-align:center}
-.spt-coretax.is-interactive .reg .sum td:first-child{position:relative}.spt-coretax.is-interactive .spt-table-pager{position:absolute;z-index:3;left:1.2mm;top:50%;display:inline-flex;align-items:center;gap:.7mm;transform:translateY(-50%);font:600 4.8pt/1 Arial,sans-serif;white-space:nowrap}.spt-coretax.is-interactive .spt-table-pager button{width:3.7mm;height:3.2mm;border:.25mm solid #202c5c;border-radius:.4mm;background:#fff;color:#202c5c;padding:0;font:700 6pt/1 Arial,sans-serif;cursor:pointer}.spt-coretax.is-interactive .spt-table-pager button:hover:not(:disabled){background:#202c5c;color:#fff}.spt-coretax.is-interactive .spt-table-pager button:disabled{opacity:.38;cursor:default}.spt-coretax.is-interactive .spt-table-pager button:focus-visible{outline:.35mm solid #202c5c;outline-offset:.25mm}
 .spt-coretax .reg .lined{border-bottom:.3mm solid #26356a}
 .spt-coretax .reg .shaded{background:#929292}
 .spt-coretax .reg .group{background:#999;font-weight:bold}
@@ -84,8 +83,13 @@
 .spt-coretax .suptab{position:absolute;right:2.2mm;top:2mm;width:35mm;height:14mm;padding:2.4mm .6mm;font-size:10.8pt;white-space:normal}
 .spt-coretax .supinputs{position:absolute;left:3mm;right:3mm;bottom:1.4mm;height:5.3mm;margin:0;padding:0;display:flex;justify-content:space-between;align-items:center;font-size:6pt}
 .spt-coretax .supinputs .digitrow i{height:4mm;width:4mm}
-/* Dense attachment tables use the standard row heights so every designed sheet
-   stays inside its physical F4 page. Continuation sheets come from pageCount(). */
+/* Spread the asset and income ledger rows to match the official F4 visual rhythm. */
+.spt-coretax .sheet[data-sheet="5"] .reg.compact td.empty{height:6.3mm}
+.spt-coretax .sheet[data-sheet="5"] .reg:not(.compact) td.empty{height:11.5mm}
+.spt-coretax .sheet[data-sheet="6"] .reg.compact td.empty{height:7mm}
+.spt-coretax .sheet[data-sheet="7"] .reg.compact td.empty{height:6.45mm}
+.spt-coretax .sheet[data-sheet="8"] .reg.compact td.empty{height:6.8mm}
+/* Compact only the two dense Induk pages to remain entirely within one F4 sheet each. */
 
 .spt-coretax .note2{display:flex;justify-content:space-between;gap:4mm;font-size:5.4pt;margin:.6mm 0 1.8mm}
 .spt-coretax .note2 span{flex:1}.spt-coretax .note2 span:last-child{text-align:right}
@@ -114,8 +118,6 @@
 .spt-coretax .sheet:is([data-sheet="5"],[data-sheet="6"],[data-sheet="7"]) .notice,.spt-coretax .sheet[data-sheet="15"] .notice{font-size:5.3pt;line-height:1.22;padding:1.8mm 2.4mm 0}
 .spt-coretax .sheet:is([data-sheet="5"],[data-sheet="6"],[data-sheet="7"]) .notice b{font-size:7pt}
 .spt-coretax .sheet[data-sheet="14"] .reg td{padding-top:.2mm;padding-bottom:.2mm}
-.spt-coretax .sheet[data-sheet="14"] .reg td:last-child{overflow:hidden}
-.spt-coretax .sheet[data-sheet="14"] .reg td:last-child .spt-cell-text{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:1;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.08}
 .spt-coretax .sheet{width:215.9mm;height:330.2mm;page:portrait}
 .spt-coretax .sheet.landscape{width:330.2mm;height:215.9mm;page:landscape}
 @page{size:215.9mm 330.2mm;margin:0}
@@ -144,7 +146,7 @@
 .spt-coretax .reg .sum td{height:3.8mm;background:#e5e8e8;font-weight:300;letter-spacing:.07em}
 .spt-coretax .reg .sumtag{position:relative;background:#fff!important;text-align:right;padding-right:1mm}
 .spt-coretax .reg .sumtag[data-tag]::before{content:attr(data-tag);position:absolute;left:-6mm;top:50%;transform:translateY(-50%);background:var(--yellow);color:#111;font-weight:700;font-size:5.4pt;line-height:3mm;height:3mm;padding:0 2.2mm 0 1.6mm;clip-path:polygon(0 0,82% 0,100% 50%,82% 100%,0 100%);white-space:nowrap}
-.spt-coretax .reg td.itemlabel[data-lead]::before{content:attr(data-lead) ". ··································";color:#555;font-size:5.6pt;letter-spacing:.02em}
+.spt-coretax .reg td.itemlabel::before{content:attr(data-lead) ". ··································";color:#555;font-size:5.6pt;letter-spacing:.02em}
 .spt-coretax .reg tr.sum td.sumlabel{text-align:left;padding-left:1.5mm}
 .spt-coretax .two-col{display:grid;grid-template-columns:1fr 1fr;gap:3mm;align-items:start}
 .spt-coretax .two-col .col>.section{margin-top:1.4mm}
@@ -333,36 +335,23 @@
 .spt-coretax .digitrow:focus-within{outline:2px solid var(--yellow);outline-offset:1px}
 .spt-coretax .slot-input{font:inherit;color:#111;background:transparent;border:0;padding:0 .6mm;width:100%;height:100%;min-width:0;box-shadow:none;font-weight:700}
 .spt-coretax .slot-input:focus{outline:2px solid var(--yellow);outline-offset:-1px}
+.spt-coretax .sheet[data-sheet="3"] .identity-wide{width:71.2mm;max-width:100%;box-sizing:border-box}
+.spt-coretax .spt-cell-input{display:block;width:100%;height:100%;min-width:0;border:0;background:transparent;color:#111;font:inherit;padding:.25mm .45mm;box-shadow:none}
+.spt-coretax .spt-cell-input:focus{outline:2px solid var(--yellow);outline-offset:-2px;background:#fffdf4}
+.spt-coretax td.inline-editable{padding:0!important;cursor:text}
 .spt-coretax .tick.on,.spt-coretax .sq.on{background:#111;box-shadow:inset 0 0 0 1.2px #fff}
 .spt-coretax .tick,.spt-coretax .sq{cursor:default}
 .spt-coretax td.num,.spt-coretax .r-val,.spt-coretax .emptybox{text-align:right}
 .spt-coretax .r-val,.spt-coretax .emptybox,.spt-coretax .qval{font-weight:700;color:#111;font-size:7.5pt}
-.spt-coretax td.empty,.spt-coretax td{font-size:6.4pt;overflow:hidden;white-space:normal;overflow-wrap:anywhere;word-break:normal}
-.spt-coretax td.num{white-space:nowrap;overflow-wrap:normal;word-break:normal}
-.spt-coretax .reg td.empty .spt-cell-text{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-height:1;overflow-wrap:anywhere;word-break:normal}
-.spt-coretax .reg tr[style*="height"] td.empty .spt-cell-text{-webkit-line-clamp:2;font-size:6pt}
+.spt-coretax td.empty,.spt-coretax td{font-size:6.4pt;overflow:hidden;word-break:break-word}
 .spt-coretax .sub-line{white-space:nowrap;overflow:hidden;text-overflow:clip;font-weight:600;color:#111}
 .spt-coretax .sub-line:empty{display:none}
 .spt-coretax .cb{display:inline-block;width:2.6mm;height:2.6mm;border:.25mm solid #2464bf;margin-right:1mm;vertical-align:middle;background:#fff}
 .spt-coretax .cb.on{background:#111}
 .spt-coretax td[data-sub]{text-align:left}
+.spt-coretax.is-audit [data-spt-annotation]{outline:.35mm solid rgba(34,88,148,.78);outline-offset:-.35mm;cursor:help}
+.spt-coretax.is-audit [data-spt-kind="input"],.spt-coretax.is-audit [data-spt-kind="choice"]{outline-color:#28744b;background:rgba(65,153,91,.11)!important}
+.spt-coretax.is-audit [data-spt-kind="table-cell"]{outline-color:#2464bf;background:rgba(36,100,191,.1)!important}
+.spt-coretax.is-audit [data-spt-kind="calculated"]{outline-color:#8a5a10;background:rgba(211,145,41,.14)!important}
+.spt-coretax.is-audit [data-spt-status="unmapped"],.spt-coretax.is-audit [data-spt-status="verification-required"]{outline-style:dashed;outline-color:#9d3131;background:rgba(157,49,49,.1)!important}
 @media print{.spt-coretax{width:max-content;background:#fff}.spt-coretax .sheet{margin:0}}
-
-/* Induk halaman 1 — panel identitas dua kolom, mengikuti proporsi formulir. */
-.spt-coretax .sheet[data-sheet="3"] .idgrid{grid-template-columns:54% minmax(0,1fr);min-height:34.5mm;gap:3mm;padding:2mm 2.5mm}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .r{min-height:4.8mm;margin:.55mm 0!important;gap:1.2mm;font-size:7pt}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .r b{width:21mm;flex:none}
-.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow,.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.emptybox{flex:1;min-width:0}
-.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.digitrow i{flex:1;width:auto;min-width:0;height:4.8mm}
-.spt-coretax .sheet[data-sheet="3"] .idgrid>div:first-child .r>.emptybox{height:4.8mm}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep{display:block;border-left:.45mm solid var(--yellow);padding-left:2.5mm;font-size:7pt}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep>b{display:block;margin:.25mm 0 1.3mm;font-size:7.2pt;line-height:1.15}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep p{margin:1mm 0;font-size:6.8pt;line-height:1.18}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep .tick{width:4.6mm;height:4.6mm;margin-right:1.2mm;vertical-align:middle}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep p:nth-of-type(2){margin-top:1.5mm;margin-bottom:3mm;padding-right:1mm}
-.spt-coretax .sheet[data-sheet="3"] .idgrid .sep .digitrow i{width:4.45mm;height:4.8mm}
-
-/* Induk halaman 2 — rumus angsuran PPh 25 tetap menjadi satu baris utuh. */
-.spt-coretax .sheet[data-sheet="4"] .section[data-sec="H"]+.form-body .inline-formula{display:inline-flex;align-items:center;gap:.55mm;white-space:nowrap;text-indent:0;vertical-align:middle;margin-left:1mm}
-.spt-coretax .sheet[data-sheet="4"] .section[data-sec="H"]+.form-body .inline-formula .inbox{flex:none;width:6mm;height:3.8mm;vertical-align:middle}
-.spt-coretax .sheet[data-sheet="4"] .section[data-sec="H"]+.form-body .inline-formula .ref{flex:none;margin:0;min-width:4.3mm;height:4.3mm;display:inline-flex;align-items:center;justify-content:center;line-height:1}

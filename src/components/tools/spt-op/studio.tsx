@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { backup, catalog, draftKey, fresh, readBackup, type Draft } from '@/modules/spt-op/model';
+import { backup, catalog, draftKey, fresh, readBackup, row, type Draft } from '@/modules/spt-op/model';
 import { compute, money } from '@/modules/spt-op/engine';
 import { copyAssets, download, parseCSV, readWorkbook, type Worksheet } from '@/modules/spt-op/import-export';
 import { Document, pageCount, PrintDetails } from './document';
@@ -90,6 +90,22 @@ export function SptStudio() {
         setFocusId(['profile', 'questions', 'extras', 'partner', 'declaration', 'documentNotes'].includes(target.section) ? target.focusId || null : null);
     }
     function go(n: number) { setPage(n); setPart(0); setSection(navigation.find(x => x[3] === n)?.[1] || 'profile'); }
+    useEffect(() => {
+        const navigateFromForm = (event: Event) => {
+            const next = Number((event as CustomEvent<number>).detail);
+            if (Number.isInteger(next) && next >= firstPage && next <= lastPage)
+                go(next);
+        };
+        const zoomFromForm = (event: Event) => {
+            const amount = Number((event as CustomEvent<number>).detail);
+            if (amount)
+                setZoom(current => Math.max(55, Math.min(170, current + amount)));
+        };
+        window.addEventListener('spt-page-navigation', navigateFromForm);
+        window.addEventListener('spt-zoom-navigation', zoomFromForm);
+        return () => { window.removeEventListener('spt-page-navigation', navigateFromForm); window.removeEventListener('spt-zoom-navigation', zoomFromForm); };
+    }, []);
+    useEffect(() => { window.dispatchEvent(new CustomEvent('spt-zoom-changed', { detail: zoom })); }, [zoom]);
     useEffect(() => { if (!focusId) return; const frame = requestAnimationFrame(() => { const input = document.getElementById(`field-${focusId}`); input?.focus(); input?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }); return () => cancelAnimationFrame(frame); }, [focusId, section]);
     async function openFile(f?: File) { if (!f)
         return; try {
@@ -159,6 +175,48 @@ export function SptStudio() {
     // The event is dispatched from the topbar dialog; replacing a draft remains stable for this Studio session.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    useEffect(() => {
+        if (modal !== 'export') return;
+        const actions = document.querySelector<HTMLDivElement>('.spt-dialog .spt-actions');
+        if (!actions) return;
+        actions.dataset.exportActions = 'true';
+        const labels = ['Unduh backup JSON', 'Buka XML per lampiran', 'Unduh PDF', 'Preview / cetak'];
+        const buttons = Array.from(actions.querySelectorAll<HTMLButtonElement>('button'));
+        const cleanup = buttons.map((button, index) => {
+            button.setAttribute('aria-label', labels[index] || 'Aksi ekspor');
+            button.title = labels[index] || 'Aksi ekspor';
+            const showProgress = () => {
+                if (button.disabled) return;
+                button.dataset.busy = 'true';
+                button.setAttribute('aria-busy', 'true');
+                window.setTimeout(() => {
+                    button.removeAttribute('data-busy');
+                    button.removeAttribute('aria-busy');
+                }, 900);
+            };
+            button.addEventListener('click', showProgress);
+            return () => button.removeEventListener('click', showProgress);
+        });
+        return () => cleanup.forEach(remove => remove());
+    }, [modal]);
+    useEffect(() => {
+        const updateFromForm = (event: Event) => {
+            const detail = (event as CustomEvent<{ section: string; activeIndex: number; key: string; value: string }>).detail;
+            if (!draft || !detail?.section || !detail.key || detail.activeIndex < 0) return;
+            const rows = draft.tables[detail.section] || [];
+            const activeRows = rows.filter(item => !item.disposed);
+            const target = activeRows[detail.activeIndex];
+            if (target) {
+                dispatch({ type: 'rows', key: detail.section, rows: rows.map(item => item.id === target.id ? { ...item, values: { ...item.values, [detail.key]: detail.value } } : item) });
+                return;
+            }
+            // A blank row is intentionally transient until the first typed or pasted value.
+            const padding = Array.from({ length: Math.max(0, detail.activeIndex - activeRows.length) }, () => row({}));
+            dispatch({ type: 'rows', key: detail.section, rows: [...rows, ...padding, row({ [detail.key]: detail.value })] });
+        };
+        window.addEventListener('spt-table-cell-edit', updateFromForm);
+        return () => window.removeEventListener('spt-table-cell-edit', updateFromForm);
+    }, [dispatch, draft]);
     if (!ready || !draft)
         return <section className="spt-root" aria-label="SPT OP Studio"><p role="status">Memuat SPT OP Studio…</p></section>;
     const d: Draft = draft, results = compute(d);
