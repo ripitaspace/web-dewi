@@ -66,3 +66,8 @@
   .dragGuideArrow { left: 8vw; top: 52px; }
   .dragGuideCard { margin-top: 112px; padding: 24px; }
 }
+
+.manual { display: grid; gap: 12px; margin-block: 8px 20px; }
+.manual ol { margin: 0; padding-left: 1.2rem; font-size: .82rem; line-height: 1.6; }
+.manual code { font-size: .78rem; }
+.manual p { margin: 0; font-size: .76rem; }

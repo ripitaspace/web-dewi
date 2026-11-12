@@ -90,7 +90,7 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
     <div className={styles.content}>
       <div className={styles.overview}>
         <section aria-labelledby="extension-overview">
-          <span className={styles.status}>{hasListing ? "Chrome & Edge desktop · Ketersediaan sesuai store" : "Dalam pengembangan · Chrome & Edge desktop"}</span>
+          <span className={styles.status}>{hasListing ? "Chrome & Edge desktop · Ketersediaan sesuai store" : "Versi uji · pasang manual · Chrome & Edge desktop"}</span>
           <h2 id="extension-overview" className={styles.title}>Download Faktur Coretax Lebih Praktis</h2>
           <p className={styles.intro}>
             Unduh faktur Pajak Keluaran dan Pajak Masukan dari halaman Coretax yang sedang kamu buka.
@@ -108,7 +108,7 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
           <p id="extension-store-status">
             {hasListing
               ? "Pilih store yang sudah tersedia untuk membuka listing resmi extension."
-              : "Extension sedang dikembangkan dan belum diterbitkan di store. Tombol pemasangan akan aktif setelah listing resmi tersedia."}
+              : "Belum diterbitkan di store. Sambil menunggu listing resmi, kamu bisa memasang versi uji secara manual dengan langkah di bawah."}
           </p>
           <div className={styles.stores}>
             {stores.map((store) => (
@@ -126,6 +126,16 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
                 )}
               </div>
             ))}
+          </div>
+          <div className={styles.manual}>
+            <a className="btn primary" href="/tools/ripita-coretax-downloader.zip" download>Unduh ZIP extension</a>
+            <ol>
+              <li>Ekstrak file ZIP ke sebuah folder.</li>
+              <li>Buka <code>chrome://extensions</code> (Edge: <code>edge://extensions</code>) dan aktifkan <strong>Developer mode</strong>.</li>
+              <li>Klik <strong>Load unpacked</strong>, lalu pilih folder hasil ekstrak.</li>
+              <li>Buka tabel Coretax, muat ulang halaman, lalu klik ikon extension.</li>
+            </ol>
+            <p>Ini versi uji. Browser akan menampilkan peringatan mode developer, dan pembaruan perlu diunduh ulang manual.</p>
           </div>
           <p className={styles.installNote}>Pemasangan memerlukan konfirmasi browser. Tombol di halaman ini membuka store resmi, bukan memasang extension secara langsung.</p>
         </aside>
@@ -160,8 +170,8 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
       </div>
 
       <section className={styles.section} aria-labelledby="extension-features">
-        <span className="eyebrow text-delima">{hasListing ? "TENTANG EXTENSION" : "YANG SEDANG DISIAPKAN"}</span>
-        <h2 id="extension-features">{hasListing ? "Fitur extension" : "Fitur yang direncanakan"}</h2>
+        <span className="eyebrow text-delima">{hasListing ? "TENTANG EXTENSION" : "TENTANG EXTENSION"}</span>
+        <h2 id="extension-features">{hasListing ? "Fitur extension" : "Fitur extension"}</h2>
         <ul className={styles.features}>
           {features.map((feature, index) => (
             <li key={feature.title} className={styles.feature}>
@@ -175,8 +185,8 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
 
       <section className={styles.section} aria-labelledby="extension-guide">
         <span className="eyebrow text-delima">PANDUAN PENGGUNAAN</span>
-        <h2 id="extension-guide">{hasListing ? "Empat langkah untuk mulai" : "Empat langkah setelah extension tersedia"}</h2>
-        <p className={styles.guideNote}>{hasListing ? "Gunakan tombol store yang sudah tersedia, lalu ikuti langkah berikut di browser desktopmu." : "Panduan ini menjelaskan alur yang direncanakan. Extension belum dapat dipasang atau digunakan saat ini."}</p>
+        <h2 id="extension-guide">{hasListing ? "Empat langkah untuk mulai" : "Empat langkah untuk mulai"}</h2>
+        <p className={styles.guideNote}>{hasListing ? "Gunakan tombol store yang sudah tersedia, lalu ikuti langkah berikut di browser desktopmu." : "Pasang versi uji secara manual dari panel pemasangan di atas, lalu ikuti langkah berikut di browser desktopmu."}</p>
         <ol className={styles.steps}>
           {steps.map((step) => (
             <li key={step.title}>
@@ -188,7 +198,7 @@ export async function InvoiceExtensionInfo({ laptopKentang = false, kind = "invo
       </section>
 
       <div className={styles.footer}>
-        <p>{hasListing ? "Lihat detail versi dan ketersediaan extension pada listing store resmi masing-masing browser." : "Implementasi dan pengujian pada menu Pajak Keluaran serta Pajak Masukan masih akan dilakukan sebelum rilis publik."}</p>
+        <p>{hasListing ? "Lihat detail versi dan ketersediaan extension pada listing store resmi masing-masing browser." : "Extension masih versi uji dan belum diuji menyeluruh di semua menu Coretax. Periksa daftar Download browser setelah proses selesai."}</p>
         <Link href="/karya" className="btn">← Kembali ke Karya</Link>
       </div>
     </div>

@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "RIPITA Coretax Downloader",
+  "version": "0.1.0",
+  "description": "Unduh faktur pajak dan bukti potong dari tabel Coretax yang sedang terbuka, satu per satu dengan jeda aman.",
+  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
+  "action": { "default_popup": "popup.html", "default_title": "RIPITA Coretax Downloader" },
+  "content_scripts": [
+    {
+      "matches": ["https://*.pajak.go.id/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
