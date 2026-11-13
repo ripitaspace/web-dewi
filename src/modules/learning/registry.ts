@@ -9,6 +9,9 @@ export const learningDomains: LearningDomain[] = [
   { id: "audit", slug: "audit", title: "Audit", description: "Memahami pemeriksaan, bukti, dan tanggung jawab profesional.", icon: "◌", order: 1, status: "published" },
   { id: "akuntansi", slug: "akuntansi", title: "Akuntansi", description: "Membangun pemahaman akuntansi dari dasar hingga praktik.", icon: "✳", order: 2, status: "published" },
   { id: "pajak", slug: "pajak", title: "Pajak", description: "Mempelajari konsep dan praktik perpajakan Indonesia.", icon: "◈", order: 3, status: "published" },
+  { id: "ekonomi", slug: "ekonomi", title: "Ekonomi", description: "Memahami prinsip ekonomi mikro, makro, dan perilaku pasar.", icon: "◇", order: 4, status: "published" },
+  { id: "sistem", slug: "sistem", title: "Sistem", description: "Mempelajari sistem informasi, proses bisnis, dan pengendalian.", icon: "◎", order: 5, status: "published" },
+  { id: "manajemen", slug: "manajemen", title: "Manajemen", description: "Membangun dasar perencanaan, pengorganisasian, dan pengambilan keputusan.", icon: "❖", order: 6, status: "published" },
 ];
 
 export const learningTopics: LearningTopic[] = [
@@ -71,7 +74,8 @@ export const learningTopics: LearningTopic[] = [
   { id: "tax-pph21", domainId: "pajak", parentId: null, slug: "pph-pasal-21", title: "PPh Pasal 21", order: 3, status: "published" },
   { id: "tax-pph23", domainId: "pajak", parentId: null, slug: "pph-pasal-23", title: "PPh Pasal 23", order: 4, status: "published" },
   { id: "tax-corporate", domainId: "pajak", parentId: null, slug: "pph-badan", title: "PPh Badan", order: 5, status: "published" },
-  { id: "tax-ukp", domainId: "pajak", parentId: null, slug: "ukp", title: "UKP", description: "Ujian Kompetensi Perpajakan (UKP): ujian untuk mengukur pemahaman dan keterampilan praktis perpajakan sebagai syarat menjadi kuasa wajib pajak. Berisi materi, latihan soal, dan strategi persiapan.", active: true, order: 6, status: "published" },
+  { id: "tax-business-law", domainId: "pajak", parentId: null, slug: "hukum-bisnis", title: "Hukum Bisnis", description: "Hukum perusahaan, kontrak, dan regulasi bisnis yang melandasi praktik perpajakan.", order: 6, status: "published" },
+  { id: "tax-ukp", domainId: "pajak", parentId: null, slug: "ukp", title: "UKP", description: "Ujian Kompetensi Perpajakan (UKP): ujian untuk mengukur pemahaman dan keterampilan praktis perpajakan sebagai syarat menjadi kuasa wajib pajak. Berisi materi, latihan soal, dan strategi persiapan.", active: true, order: 7, status: "published" },
   { id: "tax-ukp-a", domainId: "pajak", parentId: "tax-ukp", slug: "ukp-a", title: "UKP A", description: "Tingkat dasar: Bea Meterai, KUP, PPh orang pribadi, PPh pemotongan/pemungutan, serta PPN dan SPT PPN.", active: true, order: 1, status: "published" },
   { id: "tax-ukp-b", domainId: "pajak", parentId: "tax-ukp", slug: "ukp-b", title: "UKP B", description: "Tingkat menengah: akuntansi perpajakan, KUP, PBB-P5L, PPh badan, PPh pemotongan/pemungutan, serta PPN untuk badan dan orang pribadi.", active: true, order: 2, status: "published" },
   { id: "ukp-a-bea-meterai", domainId: "pajak", parentId: "tax-ukp-a", slug: "bea-meterai", title: "UKP A — Bea Meterai", description: "Objek, tarif, saat terutang, pihak yang terutang, pemungut, tata cara pembayaran, serta sanksi administrasi dan pidana bea meterai.", order: 1, status: "published" },
