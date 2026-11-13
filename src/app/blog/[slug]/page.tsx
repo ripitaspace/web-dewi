@@ -122,8 +122,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             <h1 className="article-title">{title}</h1>
 
-            {description && (
-              <p className="article-lead">{description}</p>
+            {post.excerpt && (
+              <p className="article-lead">{post.excerpt}</p>
             )}
 
             <div className="article-author-bar">
