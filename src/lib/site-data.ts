@@ -26,8 +26,9 @@ export const ROUTE_ORDER = [
   { key: "pemikiran", label: "Pemikiran", path: "/pemikiran", num: "03" },
   { key: "karya", label: "Karya", path: "/karya", num: "04" },
   { key: "belajar", label: "Belajar", path: "/belajar", num: "05" },
-  { key: "ripita", label: "RIPINTAR", path: "/ripintar", num: "06" },
-  { key: "kerja-bersama", label: "Kerja Bersama", path: "/kerja-bersama", num: "07" },
+  { key: "pustaka", label: "Pustaka", path: "/pustaka", num: "06" },
+  { key: "ripita", label: "RIPINTAR", path: "/ripintar", num: "07" },
+  { key: "kerja-bersama", label: "Kerja Bersama", path: "/kerja-bersama", num: "08" },
 ] as const;
 
 export const FOCUS_ITEMS: FocusItem[] = [

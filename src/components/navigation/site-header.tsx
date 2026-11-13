@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { ROUTE_ORDER } from "@/lib/site-data";
 
 interface SiteHeaderProps {
-  currentKey?: "beranda" | "tentang" | "pemikiran" | "karya" | "belajar" | "kerja-bersama" | "ripita";
+  currentKey?: "beranda" | "tentang" | "pemikiran" | "karya" | "belajar" | "pustaka" | "kerja-bersama" | "ripita";
 }
 
 export function SiteHeader({ currentKey }: SiteHeaderProps) {
