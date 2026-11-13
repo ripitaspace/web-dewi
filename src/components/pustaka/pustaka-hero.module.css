@@ -1,0 +1,83 @@
+.track {
+  /* Scroll distance that drives the push. Without JS or with reduced motion it is just the hero. */
+  position: relative;
+  height: 400vh;
+  background: #f6e6d0;
+}
+
+.hero {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  padding-top: var(--nav-height);
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #f6e6d0;
+}
+
+.stage {
+  position: relative;
+  width: min(100%, calc((100vh - var(--nav-height)) * 1.5));
+  max-width: 1536px;
+  container-type: inline-size;
+}
+
+.push {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  will-change: transform;
+}
+
+.layer {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.boardContent {
+  position: absolute;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #10283b;
+}
+
+.cover {
+  position: absolute;
+  inset: -50%;
+  z-index: 40;
+  background: #f6e6d0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 9cqw, 8rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.status {
+  margin: 1.2cqw 0 0;
+  font-size: clamp(0.7rem, 1.8cqw, 1.5rem);
+  color: #781b34;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    height: auto;
+  }
+  .hero {
+    position: static;
+    height: auto;
+  }
+}
