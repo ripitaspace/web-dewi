@@ -103,6 +103,7 @@ export const SCENE_ASSETS: SceneAsset[] = [
   layer("tea-cup", "decorations", [180, 890, 170, 125], 9, { status: "ready", anchorX: "left", src: "/illustrations/pustaka/decorations/tea-cup-floral.webp", note: "Cup on saucer (generated). Steam was green-tinted and cropped off." }),
   layer("flower-vase", "decorations", [300, 725, 240, 227], 6, { status: "ready", anchorX: "left", src: "/illustrations/pustaka/decorations/flower-vase-lily.webp", note: "Vase of lilies (generated). Placed on the window sill." }),
   layer("book-stack-left", "furniture", [70, 980, 440, 396], 8, { status: "ready", anchorX: "left", src: "/illustrations/pustaka/furniture/book-stack-batik.webp", note: "Six books with batik cloth (generated)." }),
+  layer("sleeping-cat", "decorations", [1830, 1010, 340, 188], 9, { status: "ready", src: "/illustrations/pustaka/decorations/sleeping-cat-calico.webp", transformOrigin: "30% 90%", note: "Calico cat asleep (generated). Rests on the rug right of Pus." }),
   layer("pus-body", "character", mp(362, 55, 821, 954), 14, { status: "ready", note: "Head, hair, torso, crossed legs. Board area is transparent; arms behind the board were never painted." }),
   layer("board-surface", "board", mp(362, 366, 832, 396), 15, { status: "ready", note: "Whole board, ornament included. Text-free." }),
   layer("pus-left-hands", "hands", mp(345, 513, 70, 105), 20, { status: "ready", transformOrigin: "100% 50%" }),
@@ -113,7 +114,6 @@ export const SCENE_ASSETS: SceneAsset[] = [
   layer("writing-tools", "decorations", m(1430, 620, 106, 230), 12),
   layer("open-book", "decorations", m(1170, 825, 330, 199), 12),
   layer("foreground-plants", "foreground", m(1360, 840, 176, 184), 30),
-  layer("sleeping-cat", "decorations", m(1200, 515, 336, 150), 11, { transformOrigin: "30% 80%", note: "Book under the cat must be whole." }),
   layer("pus-left-arm", "character", mp(345, 480, 120, 260), 13, { transformOrigin: "80% 10%", note: "Arm behind the board. Never visible in the painting: must be painted." }),
   layer("pus-right-arm", "character", mp(1130, 470, 120, 280), 13, { transformOrigin: "20% 10%", note: "Arm behind the board. Never visible in the painting: must be painted." }),
 ];
