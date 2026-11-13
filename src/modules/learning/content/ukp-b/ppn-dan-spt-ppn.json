@@ -1,0 +1,236 @@
+[
+  {
+    "n": 1,
+    "sub": "Objek PPN",
+    "q": "Penyerahan aktiva yang tidak untuk diperjualbelikan terutang PPN hanya bila ...",
+    "o": [
+      "Aktiva tersebut berumur lebih dari 4 tahun",
+      "Pajak Masukan atas perolehannya dapat dikreditkan",
+      "Nilainya lebih dari Rp1 miliar",
+      "Pembelinya PKP"
+    ],
+    "ans": 1,
+    "exp": "Pasal 16D: penyerahan aktiva tidak untuk diperjualbelikan terutang PPN hanya bila Pajak Masukannya dapat dikreditkan."
+  },
+  {
+    "n": 2,
+    "sub": "Objek PPN",
+    "q": "Pemanfaatan JKP dari luar Daerah Pabean ...",
+    "o": [
+      "PPN dipungut dan disetor sendiri oleh pemanfaat",
+      "Tidak terutang PPN",
+      "PPN dipungut oleh penyedia jasa di luar negeri saja",
+      "Dikenai PPh 22"
+    ],
+    "ans": 0,
+    "exp": "Atas pemanfaatan JKP dari luar Daerah Pabean, pemanfaat memungut dan menyetor sendiri PPN-nya."
+  },
+  {
+    "n": 3,
+    "sub": "DPP dan tarif",
+    "q": "PT Alfa mengimpor BKP non-mewah dengan nilai pabean (CIF) Rp300.000.000 dan bea masuk Rp30.000.000. Berapa PPN impor dengan tarif efektif 11% (dalam rupiah)?",
+    "o": [
+      "Rp39.600.000",
+      "Rp33.000.000",
+      "Rp3.630.000",
+      "Rp36.300.000"
+    ],
+    "ans": 3,
+    "exp": "DPP impor = Rp300.000.000 + Rp30.000.000 = Rp330.000.000. PPN = 11% × Rp330.000.000 = Rp36.300.000."
+  },
+  {
+    "n": 4,
+    "sub": "DPP dan tarif",
+    "q": "PKP menjual BKP non-mewah Rp150.000.000 dan di faktur memberikan potongan harga Rp10.000.000. Berapa PPN yang terutang (dalam rupiah)?",
+    "o": [
+      "Rp16.500.000",
+      "Rp16.800.000",
+      "Rp15.400.000",
+      "Rp14.000.000"
+    ],
+    "ans": 2,
+    "exp": "Potongan di faktur mengurangi harga jual: Rp140.000.000 × 11% = Rp15.400.000."
+  },
+  {
+    "n": 5,
+    "sub": "DPP dan tarif",
+    "q": "PKP menjual barang mewah dengan harga jual Rp1.000.000.000. Berapa PPN yang terutang, di luar PPnBM (dalam rupiah)?",
+    "o": [
+      "Rp110.000.000",
+      "Rp120.000.000",
+      "Rp130.000.000",
+      "Rp12.000.000"
+    ],
+    "ans": 1,
+    "exp": "Barang mewah: PPN = 12% × Rp1.000.000.000 = Rp120.000.000."
+  },
+  {
+    "n": 6,
+    "sub": "DPP dan tarif",
+    "q": "Ekspor BKP dikenai PPN dengan tarif ...",
+    "o": [
+      "0%, dan Pajak Masukan tetap dapat dikreditkan",
+      "12% dan Pajak Masukan tidak dapat dikreditkan",
+      "11% dan dapat dikreditkan",
+      "Dikecualikan dari PPN dan tidak dapat dikreditkan"
+    ],
+    "ans": 0,
+    "exp": "Ekspor BKP dikenai tarif 0%, Pajak Masukan tetap dikreditkan."
+  },
+  {
+    "n": 7,
+    "sub": "Faktur pajak",
+    "q": "Faktur pajak atas penerimaan termin pembayaran dibuat pada saat ...",
+    "o": [
+      "Kontrak ditandatangani",
+      "Seluruh pekerjaan selesai",
+      "Akhir tahun buku",
+      "Termin diterima"
+    ],
+    "ans": 3,
+    "exp": "Faktur dibuat saat penyerahan, penerimaan pembayaran sebelum penyerahan, atau penerimaan termin."
+  },
+  {
+    "n": 8,
+    "sub": "Faktur pajak",
+    "q": "Dua PKP menandatangani kontrak pembelian mesin pada 5 Mei tanpa ada pembayaran maupun penyerahan. Pada 5 Mei ...",
+    "o": [
+      "Wajib membuat faktur pajak",
+      "Wajib membuat faktur pajak pengganti",
+      "Belum ada kewajiban membuat faktur pajak",
+      "PPN terutang seketika"
+    ],
+    "ans": 2,
+    "exp": "Penandatanganan kontrak tanpa penyerahan atau pembayaran belum menimbulkan kewajiban faktur pajak."
+  },
+  {
+    "n": 9,
+    "sub": "Faktur pajak",
+    "q": "Faktur pajak yang tidak lengkap, jelas, dan benar ...",
+    "o": [
+      "Tetap dapat dikreditkan",
+      "Pajak Masukannya tidak dapat dikreditkan dan penjual dikenai denda 1% dari DPP",
+      "Dikenai denda 10% dari DPP",
+      "Hanya dikenai teguran"
+    ],
+    "ans": 1,
+    "exp": "Faktur tidak lengkap tidak dapat dikreditkan dan penjual dikenai denda 1% dari DPP."
+  },
+  {
+    "n": 10,
+    "sub": "Faktur pajak",
+    "q": "Retur barang oleh pembeli PKP mengakibatkan ...",
+    "o": [
+      "Pengurangan Pajak Keluaran penjual dan Pajak Masukan pembeli pada masa retur",
+      "Tidak ada perubahan Pajak Keluaran",
+      "Pajak Masukan pembeli tetap utuh",
+      "Pajak Keluaran penjual bertambah"
+    ],
+    "ans": 0,
+    "exp": "Retur mengurangi Pajak Keluaran penjual dan Pajak Masukan pembeli pada masa retur."
+  },
+  {
+    "n": 11,
+    "sub": "Pajak Masukan",
+    "q": "Dalam satu masa Pajak Keluaran Rp120.000.000 dan Pajak Masukan yang dapat dikreditkan Rp85.000.000. Berapa PPN kurang bayar (dalam rupiah)?",
+    "o": [
+      "Rp205.000.000",
+      "Rp85.000.000",
+      "Rp120.000.000",
+      "Rp35.000.000"
+    ],
+    "ans": 3,
+    "exp": "PPN kurang bayar = Rp120.000.000 − Rp85.000.000 = Rp35.000.000."
+  },
+  {
+    "n": 12,
+    "sub": "Pajak Masukan",
+    "q": "Dalam satu masa Pajak Keluaran Rp40.000.000 dan Pajak Masukan yang dapat dikreditkan Rp55.000.000. Berapa PPN lebih bayar (dalam rupiah)?",
+    "o": [
+      "Rp95.000.000",
+      "Rp40.000.000",
+      "Rp15.000.000",
+      "Rp55.000.000"
+    ],
+    "ans": 2,
+    "exp": "Lebih bayar = Rp55.000.000 − Rp40.000.000 = Rp15.000.000, dikompensasikan atau direstitusi."
+  },
+  {
+    "n": 13,
+    "sub": "Pajak Masukan",
+    "q": "Pajak Masukan yang belum dikreditkan pada masa pajak yang sama dapat dikreditkan paling lama pada ...",
+    "o": [
+      "1 masa pajak berikutnya",
+      "3 masa pajak berikutnya",
+      "6 masa pajak berikutnya",
+      "12 masa pajak berikutnya"
+    ],
+    "ans": 1,
+    "exp": "Pengkreditan dapat ditunda paling lama 3 masa pajak berikutnya."
+  },
+  {
+    "n": 14,
+    "sub": "Pajak Masukan",
+    "q": "Pajak Masukan atas perolehan sebelum pengukuhan PKP dapat dikreditkan dengan pedoman ...",
+    "o": [
+      "80% dari Pajak Keluaran",
+      "100% dari Pajak Keluaran",
+      "50% dari Pajak Keluaran",
+      "Tidak dapat dikreditkan"
+    ],
+    "ans": 0,
+    "exp": "Perolehan sebelum pengukuhan PKP dapat dikreditkan dengan pedoman 80% dari Pajak Keluaran."
+  },
+  {
+    "n": 15,
+    "sub": "Pajak Masukan",
+    "q": "Kelebihan Pajak Masukan pada umumnya dikompensasikan atau direstitusi ...",
+    "o": [
+      "Setiap masa pajak untuk semua PKP",
+      "Tidak pernah dapat direstitusi",
+      "Hanya setelah 5 tahun",
+      "Pada akhir tahun buku, kecuali PKP tertentu seperti eksportir yang dapat tiap masa"
+    ],
+    "ans": 3,
+    "exp": "Restitusi pada akhir tahun buku; PKP tertentu seperti eksportir dapat restitusi tiap masa."
+  },
+  {
+    "n": 16,
+    "sub": "PPN orang pribadi",
+    "q": "Impor BKP oleh orang pribadi bukan PKP ...",
+    "o": [
+      "Tidak terutang PPN",
+      "Dibebaskan karena bukan PKP",
+      "Tetap terutang PPN impor",
+      "Dikenai PPN hanya jika bernilai lebih dari Rp100 juta"
+    ],
+    "ans": 2,
+    "exp": "Impor BKP terutang PPN tanpa memandang status PKP."
+  },
+  {
+    "n": 17,
+    "sub": "PPN orang pribadi",
+    "q": "Penjualan barang pribadi (misalnya sepeda motor bekas) oleh orang yang bukan pengusaha ...",
+    "o": [
+      "Objek PPN 11%",
+      "Bukan objek PPN",
+      "Objek PPN 12%",
+      "Objek PPN final"
+    ],
+    "ans": 1,
+    "exp": "Penjualan barang pribadi oleh non-pengusaha bukan penyerahan dalam rangka kegiatan usaha dan bukan objek PPN."
+  },
+  {
+    "n": 18,
+    "sub": "PPN orang pribadi",
+    "q": "Orang pribadi membangun rumah 250 m² dengan konstruksi beton, biaya Rp500.000.000 (tanpa tanah). Berapa PPN KMS yang terutang dengan tarif efektif 2,2% (dalam rupiah)?",
+    "o": [
+      "Rp11.000.000",
+      "Rp55.000.000",
+      "Rp60.000.000",
+      "Rp5.500.000"
+    ],
+    "ans": 0,
+    "exp": "KMS terutang karena luas minimal 200 m². PPN = 2,2% × Rp500.000.000 = Rp11.000.000."
+  }
+]

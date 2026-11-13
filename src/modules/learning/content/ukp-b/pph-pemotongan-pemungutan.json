@@ -1,0 +1,223 @@
+[
+  {
+    "n": 1,
+    "sub": "PPh 22",
+    "q": "Tarif PPh Pasal 22 impor bagi importir ber-API adalah ...",
+    "o": [
+      "1,5% dari nilai impor",
+      "2,5% dari nilai impor",
+      "7,5% dari nilai impor",
+      "10% dari nilai impor"
+    ],
+    "ans": 1,
+    "exp": "Impor dengan API dikenai 2,5% dari nilai impor."
+  },
+  {
+    "n": 2,
+    "sub": "PPh 22",
+    "q": "PT Alfa ber-API mengimpor barang dengan nilai impor Rp400.000.000. Berapa PPh Pasal 22 impor (dalam rupiah)?",
+    "o": [
+      "Rp10.000.000",
+      "Rp30.000.000",
+      "Rp6.000.000",
+      "Rp4.000.000"
+    ],
+    "ans": 0,
+    "exp": "2,5% × Rp400.000.000 = Rp10.000.000."
+  },
+  {
+    "n": 3,
+    "sub": "PPh 22",
+    "q": "PT Beta tanpa API mengimpor barang dengan nilai impor Rp400.000.000. Berapa PPh Pasal 22 impor (dalam rupiah)?",
+    "o": [
+      "Rp10.000.000",
+      "Rp20.000.000",
+      "Rp40.000.000",
+      "Rp30.000.000"
+    ],
+    "ans": 3,
+    "exp": "Impor tanpa API 7,5% × Rp400.000.000 = Rp30.000.000."
+  },
+  {
+    "n": 4,
+    "sub": "PPh 22",
+    "q": "Bendahara pemerintah membeli barang Rp111.000.000 sudah termasuk PPN 11%. Berapa PPh Pasal 22 yang dipungut (dalam rupiah)?",
+    "o": [
+      "Rp1.665.000",
+      "Rp1.110.000",
+      "Rp1.500.000",
+      "Rp2.775.000"
+    ],
+    "ans": 2,
+    "exp": "Dasar pungutan adalah harga tanpa PPN: Rp111.000.000 / 1,11 = Rp100.000.000. PPh 22 = 1,5% × Rp100.000.000 = Rp1.500.000."
+  },
+  {
+    "n": 5,
+    "sub": "PPh 22",
+    "q": "Badan menjual barang sangat mewah dengan harga jual Rp2.000.000.000 (tanpa PPN dan PPnBM). Berapa PPh Pasal 22 yang dipungut (dalam rupiah)?",
+    "o": [
+      "Rp30.000.000",
+      "Rp100.000.000",
+      "Rp50.000.000",
+      "Rp20.000.000"
+    ],
+    "ans": 1,
+    "exp": "Penjualan barang sangat mewah oleh badan dikenai 5% × Rp2.000.000.000 = Rp100.000.000."
+  },
+  {
+    "n": 6,
+    "sub": "PPh 23",
+    "q": "PT Alfa membayar jasa manajemen Rp150.000.000 kepada PT Beta (ber-NPWP). Berapa PPh Pasal 23 yang dipotong (dalam rupiah)?",
+    "o": [
+      "Rp3.000.000",
+      "Rp22.500.000",
+      "Rp1.500.000",
+      "Rp4.500.000"
+    ],
+    "ans": 0,
+    "exp": "Jasa manajemen dikenai 2% × Rp150.000.000 = Rp3.000.000."
+  },
+  {
+    "n": 7,
+    "sub": "PPh 23",
+    "q": "PT Alfa membayar sewa mesin Rp60.000.000 kepada PT Beta (ber-NPWP). Berapa PPh Pasal 23 yang dipotong (dalam rupiah)?",
+    "o": [
+      "Rp9.000.000",
+      "Rp6.000.000",
+      "Rp600.000",
+      "Rp1.200.000"
+    ],
+    "ans": 3,
+    "exp": "Sewa harta selain tanah/bangunan dikenai 2% × Rp60.000.000 = Rp1.200.000."
+  },
+  {
+    "n": 8,
+    "sub": "PPh 23",
+    "q": "PPh Pasal 23 terutang pada ...",
+    "o": [
+      "Saat faktur diterbitkan",
+      "Akhir tahun pajak",
+      "Akhir bulan pembayaran, disediakan untuk dibayarkan, atau jatuh tempo, mana yang lebih dahulu",
+      "Saat SPT Tahunan disampaikan"
+    ],
+    "ans": 2,
+    "exp": "PPh 23 terutang pada akhir bulan pembayaran, disediakan untuk dibayarkan, atau jatuh tempo pembayaran, mana yang lebih dahulu."
+  },
+  {
+    "n": 9,
+    "sub": "PPh 23",
+    "q": "Penghasilan berikut yang tidak dipotong PPh Pasal 23 adalah ...",
+    "o": [
+      "Royalti kepada WP dalam negeri",
+      "Dividen yang dibayar kepada badan dalam negeri",
+      "Jasa konsultan kepada badan",
+      "Sewa mesin kepada badan"
+    ],
+    "ans": 1,
+    "exp": "Dividen kepada badan DN termasuk yang tidak dipotong PPh 23."
+  },
+  {
+    "n": 10,
+    "sub": "PPh 4(2)",
+    "q": "PT Alfa menyewa tanah dan bangunan dengan sewa Rp240.000.000 setahun. Berapa PPh final Pasal 4 ayat (2) (dalam rupiah)?",
+    "o": [
+      "Rp24.000.000",
+      "Rp4.800.000",
+      "Rp36.000.000",
+      "Rp2.400.000"
+    ],
+    "ans": 0,
+    "exp": "Sewa tanah/bangunan dikenai PPh final 10% × Rp240.000.000 = Rp24.000.000."
+  },
+  {
+    "n": 11,
+    "sub": "PPh 4(2)",
+    "q": "Kontraktor kualifikasi kecil menerima pembayaran Rp800.000.000. Berapa PPh final konstruksi (dalam rupiah)?",
+    "o": [
+      "Rp21.200.000",
+      "Rp8.000.000",
+      "Rp32.000.000",
+      "Rp14.000.000"
+    ],
+    "ans": 3,
+    "exp": "Kualifikasi kecil dikenai 1,75% × Rp800.000.000 = Rp14.000.000."
+  },
+  {
+    "n": 12,
+    "sub": "PPh 4(2)",
+    "q": "Orang pribadi menjual tanah dan bangunan dengan nilai pengalihan Rp2.000.000.000 (bukan rumah sederhana). Berapa PPh final yang terutang (dalam rupiah)?",
+    "o": [
+      "Rp20.000.000",
+      "Rp100.000.000",
+      "Rp50.000.000",
+      "Rp5.000.000"
+    ],
+    "ans": 2,
+    "exp": "Pengalihan hak atas tanah/bangunan dikenai 2,5% × Rp2.000.000.000 = Rp50.000.000."
+  },
+  {
+    "n": 13,
+    "sub": "PPh 21 pegawai dan bukan pegawai",
+    "q": "Pegawai berstatus K/3 termasuk TER kategori ...",
+    "o": [
+      "A",
+      "C",
+      "B",
+      "D"
+    ],
+    "ans": 1,
+    "exp": "Kategori C hanya untuk K/3. Kategori A: TK/0, TK/1, K/0. Kategori B: TK/2, TK/3, K/1, K/2."
+  },
+  {
+    "n": 14,
+    "sub": "PPh 21 pegawai dan bukan pegawai",
+    "q": "PPh 21 untuk masa pajak Desember pegawai tetap dihitung ...",
+    "o": [
+      "Dengan tarif Pasal 17 atas penghasilan neto setahun, dikurangi PPh yang telah dipotong",
+      "Dengan TER bulanan sama seperti Januari–November",
+      "Dengan tarif final 5%",
+      "Tidak dipotong lagi"
+    ],
+    "ans": 0,
+    "exp": "Masa Desember dihitung dengan tarif Pasal 17 atas penghasilan neto setahun. Kelebihan potong dikembalikan."
+  },
+  {
+    "n": 15,
+    "sub": "PPh 21 pegawai dan bukan pegawai",
+    "q": "Penghasilan bruto tenaga ahli (bukan pegawai) dipotong PPh 21 dengan dasar ...",
+    "o": [
+      "Tarif Pasal 17 × 100% × bruto",
+      "TER harian",
+      "Tarif final 10%",
+      "Tarif Pasal 17 × 50% × bruto"
+    ],
+    "ans": 3,
+    "exp": "Bukan pegawai: tarif Pasal 17 × 50% × bruto."
+  },
+  {
+    "n": 16,
+    "sub": "PPh 26",
+    "q": "Tanpa DGT Form yang sah, penghasilan dari Indonesia yang dibayar kepada WP luar negeri dikenai PPh 26 sebesar ...",
+    "o": [
+      "10% dari bruto",
+      "15% dari bruto",
+      "20% dari bruto",
+      "5% dari bruto"
+    ],
+    "ans": 2,
+    "exp": "Tanpa DGT Form yang sah, tarif P3B tidak berlaku dan tarif umum PPh 26 adalah 20%."
+  },
+  {
+    "n": 17,
+    "sub": "PPh 26",
+    "q": "PT Alfa membayar royalti Rp300.000.000 kepada WP luar negeri tanpa P3B. Berapa PPh Pasal 26 yang dipotong (dalam rupiah)?",
+    "o": [
+      "Rp45.000.000",
+      "Rp60.000.000",
+      "Rp30.000.000",
+      "Rp15.000.000"
+    ],
+    "ans": 1,
+    "exp": "20% × Rp300.000.000 = Rp60.000.000."
+  }
+]

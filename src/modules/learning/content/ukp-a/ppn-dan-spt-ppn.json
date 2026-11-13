@@ -1,0 +1,249 @@
+[
+  {
+    "n": 1,
+    "sub": "Objek PPN",
+    "q": "Syarat penyerahan BKP yang terutang PPN adalah ...",
+    "o": [
+      "BKP, di luar Daerah Pabean, dalam rangka kegiatan usaha",
+      "BKP, di dalam Daerah Pabean, dalam rangka kegiatan usaha atau pekerjaan",
+      "Barang apa pun, dibeli oleh PKP",
+      "BKP, di dalam Daerah Pabean, hanya jika pembelinya PKP"
+    ],
+    "ans": 1,
+    "exp": "Status pembeli tidak menjadi syarat. Yang menentukan adalah BKP, di dalam Daerah Pabean, dalam rangka kegiatan usaha atau pekerjaan."
+  },
+  {
+    "n": 2,
+    "sub": "Objek PPN",
+    "q": "Pemakaian sendiri BKP oleh pengusaha ...",
+    "o": [
+      "Termasuk penyerahan yang terutang PPN",
+      "Bukan penyerahan, tidak terutang PPN",
+      "Dikenai PPh final",
+      "Dibebaskan dari PPN"
+    ],
+    "ans": 0,
+    "exp": "Pemakaian sendiri dan pemberian cuma-cuma BKP termasuk penyerahan BKP."
+  },
+  {
+    "n": 3,
+    "sub": "Objek PPN",
+    "q": "Manakah yang BUKAN merupakan BKP?",
+    "o": [
+      "Laptop",
+      "Mobil",
+      "Mesin produksi",
+      "Makanan dan minuman yang disajikan di restoran"
+    ],
+    "ans": 3,
+    "exp": "Makanan dan minuman di hotel dan restoran bukan BKP."
+  },
+  {
+    "n": 4,
+    "sub": "Objek PPN",
+    "q": "Manakah yang BUKAN merupakan JKP?",
+    "o": [
+      "Jasa konsultan",
+      "Jasa persewaan kendaraan",
+      "Jasa keagamaan",
+      "Jasa pengiriman barang"
+    ],
+    "ans": 2,
+    "exp": "Jasa keagamaan, kesenian dan hiburan, perhotelan, pemerintahan umum, parkir, serta katering bukan JKP."
+  },
+  {
+    "n": 5,
+    "sub": "Objek PPN",
+    "q": "Jasa berikut yang dibebaskan dari PPN (Pasal 16B) adalah ...",
+    "o": [
+      "Jasa konsultan manajemen",
+      "Jasa pendidikan",
+      "Jasa konstruksi",
+      "Jasa persewaan mobil"
+    ],
+    "ans": 1,
+    "exp": "JKP yang dibebaskan antara lain jasa kesehatan, pendidikan, dan keuangan."
+  },
+  {
+    "n": 6,
+    "sub": "DPP dan tarif",
+    "q": "Untuk BKP non-mewah dengan tarif 12% dan DPP nilai lain 11/12, PPN yang efektif dibayar adalah ...",
+    "o": [
+      "11% dari harga jual",
+      "12% dari harga jual",
+      "1% dari harga jual",
+      "0% dari harga jual"
+    ],
+    "ans": 0,
+    "exp": "PPN = 12% × 11/12 × harga jual = 11% dari harga jual."
+  },
+  {
+    "n": 7,
+    "sub": "DPP dan tarif",
+    "q": "PKP menjual BKP non-mewah dengan harga jual Rp200.000.000. Berapa PPN yang terutang (dalam rupiah)?",
+    "o": [
+      "Rp24.000.000",
+      "Rp20.000.000",
+      "Rp2.200.000",
+      "Rp22.000.000"
+    ],
+    "ans": 3,
+    "exp": "PPN = 11% × Rp200.000.000 = Rp22.000.000."
+  },
+  {
+    "n": 8,
+    "sub": "DPP dan tarif",
+    "q": "PKP menjual barang mewah dengan harga jual Rp500.000.000. Berapa PPN yang terutang, di luar PPnBM (dalam rupiah)?",
+    "o": [
+      "Rp55.000.000",
+      "Rp66.000.000",
+      "Rp60.000.000",
+      "Rp6.000.000"
+    ],
+    "ans": 2,
+    "exp": "Barang mewah: PPN = 12% × harga jual = Rp60.000.000. PPnBM dihitung terpisah."
+  },
+  {
+    "n": 9,
+    "sub": "DPP dan tarif",
+    "q": "Ekspor BKP dikenai PPN dengan tarif ...",
+    "o": [
+      "12% tanpa kredit Pajak Masukan",
+      "0%, dan Pajak Masukan tetap dapat dikreditkan",
+      "5%",
+      "Tidak dikenai PPN dan Pajak Masukan tidak dapat dikreditkan"
+    ],
+    "ans": 1,
+    "exp": "Ekspor BKP dikenai tarif 0%, dan Pajak Masukan tetap dapat dikreditkan."
+  },
+  {
+    "n": 10,
+    "sub": "DPP dan tarif",
+    "q": "DPP atas impor BKP adalah ...",
+    "o": [
+      "Nilai pabean (CIF) ditambah pungutan kepabeanan dan cukai",
+      "Harga jual di dalam negeri",
+      "Nilai FOB saja",
+      "Nilai pabean ditambah PPN dan PPh 22"
+    ],
+    "ans": 0,
+    "exp": "DPP impor = nilai pabean + pungutan kepabeanan dan cukai, tidak termasuk PPN, PPnBM, dan PPh 22."
+  },
+  {
+    "n": 11,
+    "sub": "Faktur pajak",
+    "q": "Faktur pajak dibuat pada saat ...",
+    "o": [
+      "Penandatanganan kontrak saja",
+      "Akhir tahun pajak",
+      "Pelaporan SPT Masa",
+      "Penyerahan, penerimaan pembayaran sebelum penyerahan, atau penerimaan termin"
+    ],
+    "ans": 3,
+    "exp": "Faktur dibuat saat penyerahan, penerimaan pembayaran sebelum penyerahan, atau penerimaan termin."
+  },
+  {
+    "n": 12,
+    "sub": "Faktur pajak",
+    "q": "Faktur pajak yang salah isi dibetulkan dengan ...",
+    "o": [
+      "Faktur pajak baru tanpa menandai",
+      "Pembatalan faktur pajak",
+      "Faktur pajak pengganti",
+      "Dibiarkan saja"
+    ],
+    "ans": 2,
+    "exp": "Faktur yang salah dibetulkan dengan faktur pajak pengganti."
+  },
+  {
+    "n": 13,
+    "sub": "Faktur pajak",
+    "q": "Transaksi yang sudah dibuatkan faktur pajak kemudian batal dibuktikan dengan ...",
+    "o": [
+      "Faktur pajak pengganti",
+      "Pembatalan faktur pajak",
+      "Faktur pajak gabungan",
+      "Surat teguran"
+    ],
+    "ans": 1,
+    "exp": "Transaksi yang batal dibuktikan dengan pembatalan faktur pajak."
+  },
+  {
+    "n": 14,
+    "sub": "Faktur pajak",
+    "q": "PKP tidak membuat faktur pajak atas penyerahan BKP dengan DPP Rp300.000.000. Berapa denda yang dikenakan melalui STP (dalam rupiah)?",
+    "o": [
+      "Rp3.000.000",
+      "Rp300.000",
+      "Rp3.300.000",
+      "Rp6.000.000"
+    ],
+    "ans": 0,
+    "exp": "Denda tidak membuat faktur pajak 1% × DPP = Rp3.000.000."
+  },
+  {
+    "n": 15,
+    "sub": "Pajak Masukan",
+    "q": "Pajak Masukan dikreditkan pada masa pajak yang sama, atau dapat ditunda paling lama ...",
+    "o": [
+      "1 masa pajak berikutnya",
+      "6 masa pajak berikutnya",
+      "12 masa pajak berikutnya",
+      "3 masa pajak berikutnya"
+    ],
+    "ans": 3,
+    "exp": "Pengkreditan dapat ditunda paling lama 3 masa pajak berikutnya."
+  },
+  {
+    "n": 16,
+    "sub": "Pajak Masukan",
+    "q": "Pajak Masukan yang TIDAK dapat dikreditkan adalah atas perolehan ...",
+    "o": [
+      "Mesin produksi",
+      "Bahan baku",
+      "Sedan yang bukan barang dagangan atau disewakan",
+      "Barang dagangan"
+    ],
+    "ans": 2,
+    "exp": "Sedan atau station wagon yang bukan barang dagangan atau disewakan Pajak Masukannya tidak dapat dikreditkan."
+  },
+  {
+    "n": 17,
+    "sub": "Pajak Masukan",
+    "q": "Dalam satu masa pajak Pajak Keluaran PKP Rp50.000.000 dan Pajak Masukan yang dapat dikreditkan Rp30.000.000. Berapa PPN yang harus disetor (dalam rupiah)?",
+    "o": [
+      "Rp80.000.000",
+      "Rp20.000.000",
+      "Rp30.000.000",
+      "Rp50.000.000"
+    ],
+    "ans": 1,
+    "exp": "PPN yang disetor = Pajak Keluaran − Pajak Masukan = Rp50.000.000 − Rp30.000.000 = Rp20.000.000."
+  },
+  {
+    "n": 18,
+    "sub": "PPN orang pribadi",
+    "q": "Pengusaha kecil dengan peredaran bruto setahun sampai Rp4,8 miliar ...",
+    "o": [
+      "Tidak wajib dikukuhkan sebagai PKP, tetapi dapat memilih",
+      "Wajib dikukuhkan sebagai PKP",
+      "Dilarang menjadi PKP",
+      "Dibebaskan dari semua pajak"
+    ],
+    "ans": 0,
+    "exp": "Pengusaha kecil (peredaran bruto sampai Rp4,8 miliar) tidak wajib dikukuhkan PKP, tetapi dapat memilih."
+  },
+  {
+    "n": 19,
+    "sub": "PPN orang pribadi",
+    "q": "Kegiatan membangun sendiri (KMS) terutang PPN bila luas bangunan minimal ...",
+    "o": [
+      "50 m²",
+      "100 m²",
+      "500 m²",
+      "200 m²"
+    ],
+    "ans": 3,
+    "exp": "KMS terutang PPN bila konstruksi utama kayu/beton/batu bata/baja, untuk tempat tinggal atau usaha, dengan luas minimal 200 m²."
+  }
+]

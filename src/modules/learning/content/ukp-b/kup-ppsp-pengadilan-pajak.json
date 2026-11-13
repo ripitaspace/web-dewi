@@ -1,0 +1,210 @@
+[
+  {
+    "n": 1,
+    "sub": "STP dan SKP",
+    "q": "Bunga atas SKPKB dihitung sejak ...",
+    "o": [
+      "Tanggal SPT disampaikan sampai 12 bulan",
+      "Berakhirnya tahun pajak sampai SKP diterbitkan, maksimal 24 bulan",
+      "Tanggal pemeriksaan dimulai tanpa batas waktu",
+      "Jatuh tempo pelunasan sampai 36 bulan"
+    ],
+    "ans": 1,
+    "exp": "Bunga SKPKB dihitung sejak berakhirnya tahun pajak sampai SKP terbit, maksimal 24 bulan, bagian bulan dihitung penuh."
+  },
+  {
+    "n": 2,
+    "sub": "STP dan SKP",
+    "q": "SKPKB diterbitkan karena wajib pajak tidak menyelenggarakan pembukuan; pajak kurang dibayar Rp80.000.000. Abaikan bunga. Berapa total yang harus dilunasi (dalam rupiah)?",
+    "o": [
+      "Rp140.000.000",
+      "Rp60.000.000",
+      "Rp80.000.000",
+      "Rp160.000.000"
+    ],
+    "ans": 0,
+    "exp": "Kenaikan 75% × Rp80.000.000 = Rp60.000.000. Total Rp140.000.000."
+  },
+  {
+    "n": 3,
+    "sub": "STP dan SKP",
+    "q": "SKPKBT diterbitkan karena ada data baru. Kekurangan pajak Rp50.000.000, ditambah kenaikan 100%. Berapa total yang harus dilunasi (dalam rupiah)?",
+    "o": [
+      "Rp50.000.000",
+      "Rp75.000.000",
+      "Rp150.000.000",
+      "Rp100.000.000"
+    ],
+    "ans": 3,
+    "exp": "Kenaikan 100% × Rp50.000.000 = Rp50.000.000. Total Rp100.000.000."
+  },
+  {
+    "n": 4,
+    "sub": "STP dan SKP",
+    "q": "Surat ketetapan pajak atas permohonan restitusi diterbitkan paling lama ...",
+    "o": [
+      "1 bulan",
+      "3 bulan",
+      "12 bulan sejak permohonan lengkap diterima",
+      "24 bulan"
+    ],
+    "ans": 2,
+    "exp": "Surat ketetapan restitusi diterbitkan paling lama 12 bulan sejak permohonan lengkap diterima."
+  },
+  {
+    "n": 5,
+    "sub": "Pembetulan & keberatan",
+    "q": "Syarat sebelum mengajukan keberatan atas SKP adalah ...",
+    "o": [
+      "Membayar seluruh sanksi yang mungkin timbul",
+      "Melunasi paling sedikit jumlah yang disetujui dalam pembahasan akhir hasil pemeriksaan",
+      "Tidak perlu membayar apa pun",
+      "Membayar 50% dari SKP"
+    ],
+    "ans": 1,
+    "exp": "Sebelum keberatan, wajib pajak harus melunasi paling sedikit jumlah yang disetujui dalam pembahasan akhir."
+  },
+  {
+    "n": 6,
+    "sub": "Pembetulan & keberatan",
+    "q": "Pasal 36 ayat (1) huruf b UU KUP (pengurangan atau pembatalan SKP yang tidak benar) hanya dapat dipakai untuk SKP yang ...",
+    "o": [
+      "Tidak diajukan keberatan",
+      "Telah diputus banding",
+      "Telah diajukan keberatan",
+      "Telah ditagih dengan Surat Paksa"
+    ],
+    "ans": 0,
+    "exp": "Pasal 36 ayat (1) huruf b hanya untuk SKP yang tidak diajukan keberatan."
+  },
+  {
+    "n": 7,
+    "sub": "Pembetulan & keberatan",
+    "q": "Pembetulan SPT atas kemauan sendiri dapat dilakukan ...",
+    "o": [
+      "Setelah SKP diterbitkan",
+      "Hanya setelah ada pemeriksaan",
+      "Kapan pun tanpa batas waktu",
+      "Sebelum DJP melakukan pemeriksaan"
+    ],
+    "ans": 3,
+    "exp": "Pembetulan atas kemauan sendiri dapat dilakukan sebelum DJP memeriksa."
+  },
+  {
+    "n": 8,
+    "sub": "Sanksi",
+    "q": "Denda atas keberatan yang ditolak atau dikabulkan sebagian adalah ...",
+    "o": [
+      "60% dari pajak menurut SKP",
+      "100% dari pajak menurut keputusan",
+      "30% dari jumlah pajak menurut keputusan keberatan dikurangi yang telah dibayar sebelum keberatan",
+      "15% dari pajak menurut keputusan"
+    ],
+    "ans": 2,
+    "exp": "Denda keberatan 30% dihitung dari pajak menurut keputusan dikurangi yang telah dibayar sebelum keberatan."
+  },
+  {
+    "n": 9,
+    "sub": "Sanksi",
+    "q": "Keberatan ditolak. Pajak menurut keputusan keberatan Rp200.000.000, sudah dibayar sebelum keberatan Rp50.000.000. Berapa denda keberatan (dalam rupiah)?",
+    "o": [
+      "Rp60.000.000",
+      "Rp45.000.000",
+      "Rp90.000.000",
+      "Rp15.000.000"
+    ],
+    "ans": 1,
+    "exp": "30% × (Rp200.000.000 − Rp50.000.000) = Rp45.000.000."
+  },
+  {
+    "n": 10,
+    "sub": "Sanksi",
+    "q": "Banding ditolak seluruhnya. Pajak menurut keputusan keberatan Rp200.000.000, sudah dibayar sebelum keberatan Rp50.000.000. Berapa denda banding (dalam rupiah)?",
+    "o": [
+      "Rp90.000.000",
+      "Rp45.000.000",
+      "Rp120.000.000",
+      "Rp60.000.000"
+    ],
+    "ans": 0,
+    "exp": "Denda banding 60% × (Rp200.000.000 − Rp50.000.000) = Rp90.000.000."
+  },
+  {
+    "n": 11,
+    "sub": "Sanksi",
+    "q": "Denda keberatan sebesar 30% ...",
+    "o": [
+      "Tetap dikenakan bersama denda banding",
+      "Dikenakan dua kali",
+      "Menjadi 60% secara otomatis tanpa banding",
+      "Tidak dikenakan bila wajib pajak mengajukan banding"
+    ],
+    "ans": 3,
+    "exp": "Denda keberatan tidak dikenakan bila wajib pajak mengajukan banding."
+  },
+  {
+    "n": 12,
+    "sub": "Sanksi",
+    "q": "Berapa denda atas keterlambatan SPT Tahunan PPh Orang Pribadi (dalam rupiah)?",
+    "o": [
+      "Rp500.000",
+      "Rp1.000.000",
+      "Rp100.000",
+      "Rp50.000"
+    ],
+    "ans": 2,
+    "exp": "Denda keterlambatan SPT Tahunan PPh Orang Pribadi adalah Rp100.000."
+  },
+  {
+    "n": 13,
+    "sub": "PPSP",
+    "q": "Penyitaan (SPMP) dilaksanakan setelah Surat Paksa diberitahukan lewat ...",
+    "o": [
+      "7 hari",
+      "2 × 24 jam",
+      "14 hari",
+      "30 hari"
+    ],
+    "ans": 1,
+    "exp": "Penyitaan dilaksanakan 2 × 24 jam setelah Surat Paksa diberitahukan."
+  },
+  {
+    "n": 14,
+    "sub": "PPSP",
+    "q": "Penyanderaan wajib pajak dapat dilakukan untuk utang pajak minimal ...",
+    "o": [
+      "Rp100 juta, dengan itikad baik yang diragukan, atas izin Menteri atau Gubernur",
+      "Rp10 juta, tanpa izin",
+      "Rp1 miliar, tanpa izin",
+      "Rp50 juta, atas izin Kepala KPP"
+    ],
+    "ans": 0,
+    "exp": "Penyanderaan hanya untuk utang pajak minimal Rp100 juta dan itikad baik yang diragukan, atas izin Menteri atau Gubernur."
+  },
+  {
+    "n": 15,
+    "sub": "PPSP",
+    "q": "Penagihan seketika dan sekaligus dapat dilakukan ...",
+    "o": [
+      "Hanya setelah lelang",
+      "Hanya setelah Surat Paksa",
+      "Hanya pada akhir tahun pajak",
+      "Sebelum jatuh tempo, misalnya bila wajib pajak akan meninggalkan Indonesia selamanya"
+    ],
+    "ans": 3,
+    "exp": "Penagihan seketika dan sekaligus dapat dilakukan sebelum jatuh tempo, contohnya wajib pajak akan meninggalkan Indonesia selamanya."
+  },
+  {
+    "n": 16,
+    "sub": "PPSP",
+    "q": "Jangka waktu daluwarsa penagihan pajak adalah ...",
+    "o": [
+      "2 tahun",
+      "3 tahun",
+      "5 tahun sejak penerbitan surat ketetapan",
+      "10 tahun"
+    ],
+    "ans": 2,
+    "exp": "Hak penagihan daluwarsa 5 tahun sejak penerbitan surat ketetapan."
+  }
+]

@@ -10,7 +10,7 @@ import { ppnSpec } from "./ukp-c-specs/ppn-dan-spt-ppn";
 import { buildUkpModule, type UkpModuleSpec } from "./ukp-c-builder";
 import type { LearningModule } from "../types";
 
-const pemotonganSpec: UkpModuleSpec = {
+export const pemotonganSpec: UkpModuleSpec = {
   number: 8,
   slug: "pph-pemotongan-pemungutan",
   title: "PPh Pemotongan/Pemungutan",

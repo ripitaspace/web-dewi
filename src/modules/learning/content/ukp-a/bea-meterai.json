@@ -1,0 +1,262 @@
+[
+  {
+    "n": 1,
+    "sub": "Objek",
+    "q": "Manakah dokumen berikut yang menjadi objek Bea Meterai tanpa batasan nilai?",
+    "o": [
+      "Konosemen",
+      "Ijazah",
+      "Surat perjanjian",
+      "Bukti penerimaan uang negara"
+    ],
+    "ans": 2,
+    "exp": "Surat perjanjian, surat keterangan, dan pernyataan dikenai Bea Meterai tanpa batasan nilai (Pasal 3 UU 10/2020). Konosemen, ijazah, dan bukti penerimaan uang negara termasuk dokumen yang dikecualikan."
+  },
+  {
+    "n": 2,
+    "sub": "Objek",
+    "q": "PT Maju menandatangani perjanjian sewa dalam bentuk dokumen elektronik. Bagaimana perlakuan Bea Meterai atas dokumen tersebut?",
+    "o": [
+      "Tidak terutang karena hanya dokumen kertas yang menjadi objek",
+      "Terutang karena dokumen elektronik juga menjadi objek Bea Meterai",
+      "Terutang hanya jika dicetak terlebih dahulu",
+      "Terutang hanya jika nilainya lebih dari Rp5.000.000"
+    ],
+    "ans": 1,
+    "exp": "Dokumen dalam UU 10/2020 mencakup bentuk kertas maupun elektronik, sehingga perjanjian elektronik tetap menjadi objek Bea Meterai."
+  },
+  {
+    "n": 3,
+    "sub": "Objek",
+    "q": "Dokumen yang menyatakan jumlah uang menjadi objek Bea Meterai jika nilainya ...",
+    "o": [
+      "Berapa pun nilainya",
+      "Lebih dari Rp1.000.000",
+      "Sama dengan atau kurang dari Rp5.000.000",
+      "Lebih dari Rp5.000.000"
+    ],
+    "ans": 3,
+    "exp": "Dokumen yang menyatakan jumlah uang menjadi objek Bea Meterai bila nilainya lebih dari Rp5.000.000."
+  },
+  {
+    "n": 4,
+    "sub": "Objek",
+    "q": "Toko Sentosa menerbitkan kuitansi pembayaran barang senilai Rp3.500.000 kepada pelanggan. Bagaimana Bea Meterai atas kuitansi tersebut?",
+    "o": [
+      "Terutang bila kuitansi dibuat lebih dari satu lembar",
+      "Terutang Rp10.000 karena kuitansi selalu menjadi objek",
+      "Terutang Rp20.000 untuk kuitansi dan salinannya",
+      "Tidak terutang karena nilainya tidak melebihi Rp5.000.000"
+    ],
+    "ans": 3,
+    "exp": "Kuitansi termasuk dokumen yang menyatakan jumlah uang. Karena nilainya Rp3.500.000 dan tidak melebihi Rp5.000.000, dokumen itu bukan objek Bea Meterai."
+  },
+  {
+    "n": 5,
+    "sub": "Tarif",
+    "q": "Berapakah tarif Bea Meterai atas dokumen yang menjadi objeknya menurut UU 10/2020?",
+    "o": [
+      "Tarif tetap Rp10.000 per dokumen",
+      "Tarif tetap Rp3.000 atau Rp6.000 sesuai nilai dokumen",
+      "0,1% dari nilai dokumen",
+      "Tarif progresif sesuai nilai transaksi"
+    ],
+    "ans": 0,
+    "exp": "Pasal 5 UU 10/2020 menetapkan tarif tetap Rp10.000 per dokumen, tidak dipengaruhi nilai transaksi."
+  },
+  {
+    "n": 6,
+    "sub": "Tarif",
+    "q": "Sebuah surat perjanjian dibuat dalam 3 rangkap dan setiap rangkap dibubuhi tanda tangan. Berapa total Bea Meterai yang terutang atas seluruh rangkap tersebut (dalam rupiah)?",
+    "o": [
+      "Rp10.000",
+      "Rp20.000",
+      "Rp30.000",
+      "Rp60.000"
+    ],
+    "ans": 2,
+    "exp": "Surat perjanjian beserta rangkapnya masing-masing dihitung sebagai satu dokumen. Tiga dokumen × Rp10.000 = Rp30.000."
+  },
+  {
+    "n": 7,
+    "sub": "Tarif",
+    "q": "Perubahan batas nilai dan tarif Bea Meterai dilakukan dengan ...",
+    "o": [
+      "Peraturan Pemerintah setelah dikonsultasikan dengan DPR",
+      "Keputusan Presiden tanpa konsultasi",
+      "Peraturan Menteri Keuangan tanpa pembahasan lain",
+      "Peraturan Direktur Jenderal Pajak"
+    ],
+    "ans": 0,
+    "exp": "Tarif dan batas nilai dapat diubah dengan Peraturan Pemerintah setelah dikonsultasikan dengan Dewan Perwakilan Rakyat."
+  },
+  {
+    "n": 8,
+    "sub": "Tarif",
+    "q": "Bea Meterai yang tidak atau kurang dibayar dilunasi melalui pemeteraian kemudian. Berapa sanksi administratif yang dikenakan?",
+    "o": [
+      "10% dari Bea Meterai yang kurang dibayar",
+      "50% dari Bea Meterai yang kurang dibayar",
+      "100% dari Bea Meterai yang kurang dibayar",
+      "200% dari Bea Meterai yang kurang dibayar"
+    ],
+    "ans": 2,
+    "exp": "Pemeteraian kemudian dikenai sanksi administratif sebesar 100% dari Bea Meterai yang tidak atau kurang dibayar."
+  },
+  {
+    "n": 9,
+    "sub": "Saat terutang",
+    "q": "Bea Meterai atas surat perjanjian terutang pada saat ...",
+    "o": [
+      "Dokumen diajukan ke pengadilan",
+      "Dokumen dibubuhi tanda tangan",
+      "Dokumen digunakan di Indonesia",
+      "Dokumen selesai dibuat"
+    ],
+    "ans": 1,
+    "exp": "Untuk surat perjanjian, akta notaris, dan akta PPAT, Bea Meterai terutang pada saat dokumen dibubuhi tanda tangan (Pasal 8)."
+  },
+  {
+    "n": 10,
+    "sub": "Saat terutang",
+    "q": "Bea Meterai atas surat berharga terutang pada saat ...",
+    "o": [
+      "Dokumen selesai dibuat",
+      "Dokumen ditandatangani para pihak",
+      "Dokumen diserahkan kepada pihak penerima",
+      "Dokumen jatuh tempo"
+    ],
+    "ans": 0,
+    "exp": "Bea Meterai atas surat berharga dan dokumen transaksinya terutang pada saat dokumen selesai dibuat."
+  },
+  {
+    "n": 11,
+    "sub": "Saat terutang",
+    "q": "Dokumen yang digunakan sebagai alat bukti di pengadilan terutang Bea Meterai pada saat ...",
+    "o": [
+      "Dokumen diajukan ke pengadilan",
+      "Putusan pengadilan dibacakan",
+      "Dokumen dibuat",
+      "Dokumen ditandatangani"
+    ],
+    "ans": 0,
+    "exp": "Untuk dokumen yang digunakan sebagai alat bukti di pengadilan, Bea Meterai terutang saat dokumen diajukan ke pengadilan."
+  },
+  {
+    "n": 12,
+    "sub": "Saat terutang",
+    "q": "Hak negara untuk menagih Bea Meterai yang terutang kedaluwarsa setelah ...",
+    "o": [
+      "2 tahun sejak saat terutang",
+      "3 tahun sejak saat terutang",
+      "10 tahun sejak saat terutang",
+      "5 tahun sejak saat terutang"
+    ],
+    "ans": 3,
+    "exp": "Hak negara atas Bea Meterai kedaluwarsa 5 tahun sejak saat terutang."
+  },
+  {
+    "n": 13,
+    "sub": "Pihak terutang",
+    "q": "Kuitansi pembayaran dibuat sepihak oleh penjual. Siapa pihak yang terutang Bea Meterai?",
+    "o": [
+      "Penjual yang membuat kuitansi",
+      "Pihak yang menerima kuitansi",
+      "Notaris yang menyaksikan",
+      "Direktorat Jenderal Pajak"
+    ],
+    "ans": 1,
+    "exp": "Untuk dokumen yang dibuat sepihak seperti kuitansi, pihak yang terutang adalah pihak yang menerima dokumen."
+  },
+  {
+    "n": 14,
+    "sub": "Pihak terutang",
+    "q": "Siapa pihak yang terutang Bea Meterai atas surat berharga?",
+    "o": [
+      "Pihak yang menerima surat berharga",
+      "Pihak yang menerbitkan surat berharga",
+      "Bank yang mengadministrasikan",
+      "Pihak yang mengajukannya ke pengadilan"
+    ],
+    "ans": 1,
+    "exp": "Atas surat berharga, pihak yang terutang adalah pihak yang menerbitkan surat berharga."
+  },
+  {
+    "n": 15,
+    "sub": "Pihak terutang",
+    "q": "Perjanjian dibuat oleh dua pihak dan masing-masing menerima satu dokumen. Siapa yang terutang Bea Meterai?",
+    "o": [
+      "Masing-masing pihak atas dokumen yang diterimanya",
+      "Notaris yang membuat perjanjian",
+      "Pihak pertama saja atas semua dokumen",
+      "Pihak kedua saja atas semua dokumen"
+    ],
+    "ans": 0,
+    "exp": "Untuk dokumen yang dibuat oleh dua pihak atau lebih, masing-masing pihak terutang atas dokumen yang diterimanya."
+  },
+  {
+    "n": 16,
+    "sub": "Pihak terutang",
+    "q": "Penjual dan pembeli sepakat bahwa Bea Meterai atas perjanjian jual beli ditanggung penjual. Bagaimana kesepakatan tersebut?",
+    "o": [
+      "Tidak boleh karena pihak terutang ditetapkan mutlak oleh UU",
+      "Boleh, karena pihak yang terutang dapat ditentukan lain berdasarkan kesepakatan",
+      "Boleh hanya dengan izin Direktorat Jenderal Pajak",
+      "Boleh hanya jika nilai perjanjian di atas Rp5.000.000"
+    ],
+    "ans": 1,
+    "exp": "Pihak yang terutang Bea Meterai dapat ditentukan lain berdasarkan kesepakatan para pihak."
+  },
+  {
+    "n": 17,
+    "sub": "Pengecualian",
+    "q": "Manakah dokumen berikut yang dikecualikan dari Bea Meterai?",
+    "o": [
+      "Konosemen",
+      "Surat berharga",
+      "Surat perjanjian utang",
+      "Akta notaris"
+    ],
+    "ans": 0,
+    "exp": "Dokumen lalu lintas orang dan barang, termasuk konosemen, tidak dikenai Bea Meterai (Pasal 7)."
+  },
+  {
+    "n": 18,
+    "sub": "Pengecualian",
+    "q": "Dokumen berikut tidak dikenai Bea Meterai, kecuali ...",
+    "o": [
+      "Ijazah",
+      "Tanda terima pembayaran gaji",
+      "Surat pernyataan yang dibuat untuk keperluan perdata",
+      "Bukti penerimaan uang negara"
+    ],
+    "ans": 2,
+    "exp": "Ijazah, tanda terima pembayaran gaji, dan bukti penerimaan uang negara dikecualikan. Surat pernyataan untuk keperluan perdata tetap menjadi objek Bea Meterai."
+  },
+  {
+    "n": 19,
+    "sub": "Pengecualian",
+    "q": "Tanda terima pembayaran gaji pegawai oleh perusahaan ...",
+    "o": [
+      "Dikecualikan dari Bea Meterai",
+      "Terutang Rp10.000 jika nilainya lebih dari Rp5.000.000",
+      "Terutang Rp10.000 dan dibayar oleh pegawai",
+      "Terutang Rp10.000 dan dibayar oleh perusahaan"
+    ],
+    "ans": 0,
+    "exp": "Tanda terima pembayaran gaji dan pembayaran lain terkait hubungan kerja termasuk dokumen yang dikecualikan dari Bea Meterai."
+  },
+  {
+    "n": 20,
+    "sub": "Pengecualian",
+    "q": "Fasilitas pembebasan Bea Meterai dapat diberikan untuk ...",
+    "o": [
+      "Penjualan barang mewah",
+      "Pembelian kendaraan pribadi",
+      "Perjanjian sewa kantor swasta",
+      "Penanganan bencana alam"
+    ],
+    "ans": 3,
+    "exp": "Pasal 22 UU 10/2020 memungkinkan pembebasan Bea Meterai antara lain untuk penanganan bencana alam, kegiatan keagamaan atau sosial nonkomersial, dan pelaksanaan perjanjian internasional."
+  }
+]

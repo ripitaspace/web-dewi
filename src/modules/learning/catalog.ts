@@ -1,6 +1,8 @@
 import asetTetap from "./content/aset-tetap.plf.json";
 import { auditMicroModulesBySlug } from "./content/audit-micro-modules";
 import { auditSmeModule } from "./content/audit-sme.plf";
+import { ukpAModulesBySlug } from "./content/ukp-a-modules";
+import { ukpBModulesBySlug } from "./content/ukp-b-modules";
 import { ukpCModulesBySlug } from "./content/ukp-c-modules";
 import selfLearningTemplate from "./content/template-self-learning.plf.json";
 import { getPublishedModuleCards } from "./registry";
@@ -11,6 +13,8 @@ const modules: Record<string, LearningModule> = {
   "template-self-learning": selfLearningTemplate as LearningModule,
   ...auditMicroModulesBySlug,
   "audit-sme": auditSmeModule,
+  ...ukpAModulesBySlug,
+  ...ukpBModulesBySlug,
   ...ukpCModulesBySlug,
 };
 

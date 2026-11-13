@@ -49,3 +49,35 @@ describe("UKP C modules", () => {
     expect(rupiahValue("10% dari harga jual")).toBeNull();
   });
 });
+
+describe("UKP A and B modules", () => {
+  it("builds every original-practice module with valid keys, counts, and a verification warning", async () => {
+    const { ukpAModulesBySlug } = await import("./content/ukp-a-modules");
+    const { ukpBModulesBySlug } = await import("./content/ukp-b-modules");
+    expect(Object.keys(ukpAModulesBySlug)).toHaveLength(5);
+    expect(Object.keys(ukpBModulesBySlug)).toHaveLength(8);
+    for (const [slug, module] of Object.entries({ ...ukpAModulesBySlug, ...ukpBModulesBySlug })) {
+      const blocks = module.pages.flatMap((page) => page.blocks);
+      const ids = blocks.map((block) => block.id);
+      expect(new Set(ids).size, slug).toBe(ids.length);
+      const questions = blocks.filter((block) => /-soal-\d{2}$/.test(block.id));
+      expect(questions.length, slug).toBeGreaterThanOrEqual(15);
+      expect(questions.map((block) => Number(block.id.slice(-2))), slug).toEqual(questions.map((_, i) => i + 1));
+      for (const block of questions) {
+        if (block.type === "single_choice") {
+          expect(block.options, block.id).toHaveLength(4);
+          expect(block.options!.map((option) => option.id)).toContain(block.grading!.correctOptionId);
+        } else {
+          expect(block.type, block.id).toBe("number_input");
+          expect(Number.isFinite(block.grading!.correctValue), block.id).toBe(true);
+        }
+      }
+      expect(blocks.some((block) => block.type === "callout" && block.content?.includes("Perlu Verifikasi")), slug).toBe(true);
+      const registration = learningModuleRegistry.find((entry) => entry.slug === slug);
+      expect(registration, slug).toBeDefined();
+      expect(registration!.activityCount, slug).toBe(blocks.filter((block) => block.grading).length);
+      expect(registration!.learningUnitCount, slug).toBe(module.learningUnits!.length);
+      expect(getLearningModule(slug)).toBe(module);
+    }
+  });
+});

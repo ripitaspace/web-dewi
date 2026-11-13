@@ -1,0 +1,223 @@
+[
+  {
+    "n": 1,
+    "sub": "STP dan SKP",
+    "q": "Surat ketetapan apa yang diterbitkan bila hasil pemeriksaan menunjukkan pajak kurang dibayar?",
+    "o": [
+      "SKPLB",
+      "SKPKB",
+      "SKPN",
+      "STP"
+    ],
+    "ans": 1,
+    "exp": "Kurang bayar hasil pemeriksaan diterbitkan SKPKB. SKPLB untuk lebih bayar, SKPN untuk nihil, dan SKPKBT bila ditemukan data baru."
+  },
+  {
+    "n": 2,
+    "sub": "STP dan SKP",
+    "q": "Surat ketetapan yang diterbitkan bila kredit pajak lebih besar daripada pajak yang terutang adalah ...",
+    "o": [
+      "SKPLB",
+      "SKPKB",
+      "SKPKBT",
+      "SKPN"
+    ],
+    "ans": 0,
+    "exp": "Kredit pajak yang lebih besar dari pajak terutang menghasilkan lebih bayar, sehingga diterbitkan SKPLB."
+  },
+  {
+    "n": 3,
+    "sub": "STP dan SKP",
+    "q": "Pelunasan pajak yang terutang menurut STP, SKPKB, dan SKPKBT dilakukan paling lama ...",
+    "o": [
+      "7 hari sejak surat diterbitkan",
+      "2 bulan sejak surat diterbitkan",
+      "3 bulan sejak surat diterbitkan",
+      "1 bulan sejak surat diterbitkan"
+    ],
+    "ans": 3,
+    "exp": "STP, SKPKB, dan SKPKBT harus dilunasi paling lama 1 bulan sejak diterbitkan."
+  },
+  {
+    "n": 4,
+    "sub": "STP dan SKP",
+    "q": "SKPKB yang diterbitkan karena SPT tidak disampaikan setelah ditegur dikenai kenaikan sebesar ...",
+    "o": [
+      "25% dari pajak yang kurang dibayar",
+      "50% dari pajak yang kurang dibayar",
+      "75% dari pajak yang kurang dibayar",
+      "100% dari pajak yang kurang dibayar"
+    ],
+    "ans": 2,
+    "exp": "Kenaikan 75% berlaku untuk SKPKB karena SPT tidak disampaikan setelah ditegur atau tidak menyelenggarakan pembukuan."
+  },
+  {
+    "n": 5,
+    "sub": "STP dan SKP",
+    "q": "SKPKBT yang diterbitkan dalam 5 tahun karena ditemukan data baru dikenai kenaikan sebesar ...",
+    "o": [
+      "25% dari kekurangan pajak",
+      "100% dari kekurangan pajak",
+      "50% dari kekurangan pajak",
+      "75% dari kekurangan pajak"
+    ],
+    "ans": 1,
+    "exp": "SKPKBT dikenai kenaikan 100% dari kekurangan pajak."
+  },
+  {
+    "n": 6,
+    "sub": "STP dan SKP",
+    "q": "Wajib pajak menerima SKPKB karena tidak menyelenggarakan pembukuan. Pajak kurang dibayar Rp40.000.000. Abaikan bunga. Berapa total yang harus dilunasi setelah kenaikan 75% (dalam rupiah)?",
+    "o": [
+      "Rp70.000.000",
+      "Rp30.000.000",
+      "Rp40.000.000",
+      "Rp80.000.000"
+    ],
+    "ans": 0,
+    "exp": "Kenaikan 75% × Rp40.000.000 = Rp30.000.000. Total = Rp40.000.000 + Rp30.000.000 = Rp70.000.000."
+  },
+  {
+    "n": 7,
+    "sub": "Pembetulan & keberatan",
+    "q": "Terhadap STP, wajib pajak ...",
+    "o": [
+      "Dapat mengajukan keberatan dalam 3 bulan",
+      "Dapat langsung mengajukan banding",
+      "Tidak mempunyai upaya hukum apa pun",
+      "Tidak dapat mengajukan keberatan; upayanya melalui Pasal 36 UU KUP"
+    ],
+    "ans": 3,
+    "exp": "Atas STP tidak dapat diajukan keberatan. Upayanya melalui Pasal 36, misalnya pengurangan atau penghapusan sanksi."
+  },
+  {
+    "n": 8,
+    "sub": "Pembetulan & keberatan",
+    "q": "Keberatan atas surat ketetapan pajak diajukan dalam jangka waktu ...",
+    "o": [
+      "1 bulan sejak SKP dikirim",
+      "6 bulan sejak SKP dikirim",
+      "3 bulan sejak SKP dikirim",
+      "12 bulan sejak SKP dikirim"
+    ],
+    "ans": 2,
+    "exp": "Keberatan diajukan paling lama 3 bulan sejak SKP dikirim."
+  },
+  {
+    "n": 9,
+    "sub": "Pembetulan & keberatan",
+    "q": "Jika DJP tidak memutus keberatan dalam 12 bulan sejak diterima, maka keberatan ...",
+    "o": [
+      "Dianggap ditolak",
+      "Dianggap dikabulkan",
+      "Dianggap ditarik",
+      "Wajib diulang dari awal"
+    ],
+    "ans": 1,
+    "exp": "DJP memutus keberatan dalam 12 bulan. Jika terlewati, keberatan dianggap dikabulkan."
+  },
+  {
+    "n": 10,
+    "sub": "Pembetulan & keberatan",
+    "q": "Banding ke Pengadilan Pajak diajukan paling lama ...",
+    "o": [
+      "3 bulan sejak keputusan keberatan diterima",
+      "1 bulan sejak keputusan keberatan diterima",
+      "6 bulan sejak keputusan keberatan diterima",
+      "12 bulan sejak keputusan keberatan diterima"
+    ],
+    "ans": 0,
+    "exp": "Banding diajukan dalam 3 bulan sejak keputusan keberatan diterima."
+  },
+  {
+    "n": 11,
+    "sub": "Sanksi",
+    "q": "Berapa denda atas keterlambatan penyampaian SPT Masa PPN (dalam rupiah)?",
+    "o": [
+      "Rp100.000",
+      "Rp1.000.000",
+      "Rp50.000",
+      "Rp500.000"
+    ],
+    "ans": 3,
+    "exp": "Denda keterlambatan SPT Masa PPN adalah Rp500.000."
+  },
+  {
+    "n": 12,
+    "sub": "Sanksi",
+    "q": "Berapa denda atas keterlambatan penyampaian SPT Tahunan PPh Badan (dalam rupiah)?",
+    "o": [
+      "Rp100.000",
+      "Rp500.000",
+      "Rp1.000.000",
+      "Rp2.000.000"
+    ],
+    "ans": 2,
+    "exp": "Denda keterlambatan SPT Tahunan PPh Badan adalah Rp1.000.000."
+  },
+  {
+    "n": 13,
+    "sub": "Sanksi",
+    "q": "Bunga sanksi administrasi dengan tarif KMK bulanan dikenakan paling lama ...",
+    "o": [
+      "12 bulan, bagian bulan diabaikan",
+      "24 bulan, bagian bulan dihitung penuh",
+      "36 bulan, bagian bulan diabaikan",
+      "24 bulan, bagian bulan diabaikan"
+    ],
+    "ans": 1,
+    "exp": "Bunga dihitung paling lama 24 bulan dan bagian bulan dihitung penuh 1 bulan."
+  },
+  {
+    "n": 14,
+    "sub": "PPSP",
+    "q": "Urutan tindakan penagihan pajak yang benar adalah ...",
+    "o": [
+      "Surat Teguran, Surat Paksa, penyitaan, pengumuman lelang, lelang",
+      "Surat Paksa, Surat Teguran, penyitaan, lelang, pengumuman lelang",
+      "Penyitaan, Surat Teguran, Surat Paksa, pengumuman lelang, lelang",
+      "Surat Teguran, penyitaan, Surat Paksa, lelang, pengumuman lelang"
+    ],
+    "ans": 0,
+    "exp": "Urutan: Surat Teguran, Surat Paksa, SPMP/penyitaan, pengumuman lelang, lalu lelang."
+  },
+  {
+    "n": 15,
+    "sub": "PPSP",
+    "q": "Surat Teguran diterbitkan ...",
+    "o": [
+      "Pada hari jatuh tempo",
+      "14 hari setelah jatuh tempo",
+      "21 hari setelah jatuh tempo",
+      "7 hari setelah tanggal jatuh tempo pembayaran"
+    ],
+    "ans": 3,
+    "exp": "Surat Teguran diterbitkan 7 hari setelah jatuh tempo."
+  },
+  {
+    "n": 16,
+    "sub": "PPSP",
+    "q": "Surat Paksa dapat diterbitkan setelah Surat Teguran lewat ...",
+    "o": [
+      "7 hari",
+      "14 hari",
+      "21 hari",
+      "30 hari"
+    ],
+    "ans": 2,
+    "exp": "Surat Paksa diterbitkan 21 hari setelah Surat Teguran."
+  },
+  {
+    "n": 17,
+    "sub": "PPSP",
+    "q": "Hak untuk melakukan penagihan pajak daluwarsa setelah ...",
+    "o": [
+      "2 tahun sejak penerbitan surat ketetapan",
+      "5 tahun sejak penerbitan surat ketetapan",
+      "3 tahun sejak penerbitan surat ketetapan",
+      "10 tahun sejak penerbitan surat ketetapan"
+    ],
+    "ans": 1,
+    "exp": "Hak penagihan daluwarsa 5 tahun sejak penerbitan surat ketetapan."
+  }
+]

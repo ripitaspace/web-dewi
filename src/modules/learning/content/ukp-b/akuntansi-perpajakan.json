@@ -1,0 +1,223 @@
+[
+  {
+    "n": 1,
+    "sub": "Jurnal PPh Pot/Put",
+    "q": "PPh Pasal 21 yang dipotong dari gaji pegawai dan belum disetor dicatat oleh pemberi kerja sebagai ...",
+    "o": [
+      "Pajak dibayar di muka",
+      "Utang pajak",
+      "Beban pajak",
+      "Pendapatan lain-lain"
+    ],
+    "ans": 1,
+    "exp": "PPh yang dipotong pemberi kerja adalah utang pajak sampai disetor ke kas negara."
+  },
+  {
+    "n": 2,
+    "sub": "Jurnal PPh Pot/Put",
+    "q": "PPh Pasal 23 yang dipotong pihak lain atas penghasilan jasa perusahaan dicatat sebagai ...",
+    "o": [
+      "Pajak dibayar di muka (kredit pajak)",
+      "Utang pajak",
+      "Beban operasional",
+      "Pengurang pendapatan"
+    ],
+    "ans": 0,
+    "exp": "PPh yang dipotong pihak lain atas penghasilan kita adalah kredit pajak, dicatat sebagai pajak dibayar di muka."
+  },
+  {
+    "n": 3,
+    "sub": "Jurnal PPh Pot/Put",
+    "q": "PPh 21 yang ditanggung perusahaan dan bukan merupakan tunjangan PPh merupakan ...",
+    "o": [
+      "Koreksi fiskal negatif (beda tetap)",
+      "Beda temporer",
+      "Tidak ada koreksi",
+      "Koreksi fiskal positif (beda tetap)"
+    ],
+    "ans": 3,
+    "exp": "PPh yang ditanggung pemberi kerja bukan tunjangan PPh tidak boleh dibebankan: koreksi positif, beda tetap."
+  },
+  {
+    "n": 4,
+    "sub": "Jurnal PPh Pot/Put",
+    "q": "PT Alfa menerima pembayaran jasa Rp100.000.000 setelah dipotong PPh 23 2%. Jurnal penerimaannya adalah ...",
+    "o": [
+      "Kas Rp98.000.000 di debit; Pendapatan Rp98.000.000 di kredit",
+      "Kas Rp100.000.000 di debit; Utang PPh 23 Rp2.000.000 di kredit",
+      "Kas Rp98.000.000 dan Pajak Dibayar di Muka PPh 23 Rp2.000.000 di debit; Pendapatan Rp100.000.000 di kredit",
+      "Kas Rp98.000.000 dan Beban Pajak Rp2.000.000 di debit; Pendapatan Rp100.000.000 di kredit"
+    ],
+    "ans": 2,
+    "exp": "Pendapatan diakui bruto Rp100.000.000. PPh 23 Rp2.000.000 adalah pajak dibayar di muka, dan kas yang diterima Rp98.000.000."
+  },
+  {
+    "n": 5,
+    "sub": "Jurnal PPh Pot/Put",
+    "q": "PT Alfa menagih jasa Rp100.000.000 dan pelanggan memotong PPh 23 sebesar 2%. Berapa kas yang diterima (dalam rupiah)?",
+    "o": [
+      "Rp100.000.000",
+      "Rp98.000.000",
+      "Rp102.000.000",
+      "Rp96.000.000"
+    ],
+    "ans": 1,
+    "exp": "Kas yang diterima = Rp100.000.000 − 2% × Rp100.000.000 = Rp98.000.000."
+  },
+  {
+    "n": 6,
+    "sub": "Aspek pajak akun neraca",
+    "q": "Pembentukan cadangan kerugian piutang (CKPN) oleh perusahaan non-bank pada umumnya ...",
+    "o": [
+      "Tidak boleh dibebankan sampai terjadi penghapusan riil; koreksi positif dan beda temporer",
+      "Boleh dibebankan penuh; tidak ada koreksi",
+      "Koreksi negatif dan beda tetap",
+      "Koreksi positif dan beda tetap"
+    ],
+    "ans": 0,
+    "exp": "Cadangan pada umumnya tidak boleh dibebankan sampai realisasi, sehingga menjadi koreksi positif dan beda temporer."
+  },
+  {
+    "n": 7,
+    "sub": "Aspek pajak akun neraca",
+    "q": "Sanksi administrasi perpajakan (bunga dan denda) merupakan ...",
+    "o": [
+      "Beda temporer",
+      "Koreksi negatif",
+      "Biaya yang boleh dikurangkan",
+      "Beda tetap yang dikoreksi positif"
+    ],
+    "ans": 3,
+    "exp": "Sanksi administrasi perpajakan tidak boleh dibebankan: beda tetap, koreksi positif."
+  },
+  {
+    "n": 8,
+    "sub": "Aspek pajak akun neraca",
+    "q": "Metode penilaian persediaan yang diperkenankan menurut ketentuan pajak adalah ...",
+    "o": [
+      "LIFO",
+      "Harga pasar saja",
+      "Rata-rata atau FIFO",
+      "Harga jual"
+    ],
+    "ans": 2,
+    "exp": "Persediaan dinilai dengan rata-rata atau FIFO."
+  },
+  {
+    "n": 9,
+    "sub": "Aspek pajak akun neraca",
+    "q": "Penyusutan komersial lebih besar daripada penyusutan fiskal menimbulkan ...",
+    "o": [
+      "Beda tetap",
+      "Beda temporer yang menghasilkan aset pajak tangguhan",
+      "Liabilitas pajak tangguhan",
+      "Koreksi negatif tetap"
+    ],
+    "ans": 1,
+    "exp": "Beban komersial melebihi fiskal berarti koreksi positif sementara: beda temporer dan aset pajak tangguhan."
+  },
+  {
+    "n": 10,
+    "sub": "Pendapatan & biaya",
+    "q": "Penghasilan yang telah dikenai PPh final dalam rekonsiliasi fiskal diperlakukan ...",
+    "o": [
+      "Koreksi negatif; biaya terkait dikoreksi positif",
+      "Koreksi positif; biaya terkait dikoreksi negatif",
+      "Tetap dihitung dalam PKP",
+      "Dikoreksi positif beserta biayanya"
+    ],
+    "ans": 0,
+    "exp": "Penghasilan final dikeluarkan dari PKP (koreksi negatif), dan biaya untuk memperolehnya tidak boleh dikurangkan (koreksi positif)."
+  },
+  {
+    "n": 11,
+    "sub": "Pendapatan & biaya",
+    "q": "Biaya entertainment dapat dibebankan secara fiskal bila ...",
+    "o": [
+      "Dibayar tunai",
+      "Dilaporkan dalam SPT Masa",
+      "Telah dipotong PPh 21",
+      "Dibuat daftar nominatif"
+    ],
+    "ans": 3,
+    "exp": "Entertainment boleh dibebankan bila ada daftar nominatif."
+  },
+  {
+    "n": 12,
+    "sub": "Rekonsiliasi fiskal",
+    "q": "Laba komersial Rp500.000.000, koreksi fiskal positif Rp80.000.000, koreksi fiskal negatif Rp30.000.000. Berapa penghasilan kena pajak (dalam rupiah)?",
+    "o": [
+      "Rp450.000.000",
+      "Rp610.000.000",
+      "Rp550.000.000",
+      "Rp500.000.000"
+    ],
+    "ans": 2,
+    "exp": "PKP = Rp500.000.000 + Rp80.000.000 − Rp30.000.000 = Rp550.000.000."
+  },
+  {
+    "n": 13,
+    "sub": "Rekonsiliasi fiskal",
+    "q": "PT Beta berperedaran bruto Rp60 miliar (tidak berhak Pasal 31E) dengan PKP Rp550.000.000. Berapa PPh Badan terutang dengan tarif 22% (dalam rupiah)?",
+    "o": [
+      "Rp110.000.000",
+      "Rp121.000.000",
+      "Rp137.500.000",
+      "Rp12.100.000"
+    ],
+    "ans": 1,
+    "exp": "22% × Rp550.000.000 = Rp121.000.000. Peredaran di atas Rp50 miliar tidak berhak fasilitas Pasal 31E."
+  },
+  {
+    "n": 14,
+    "sub": "Rekonsiliasi fiskal",
+    "q": "PPh Badan terutang Rp121.000.000. Kredit pajak: PPh 22 Rp10.000.000, PPh 23 Rp15.000.000, PPh 25 Rp60.000.000. Berapa PPh Pasal 29 yang harus dibayar (dalam rupiah)?",
+    "o": [
+      "Rp36.000.000",
+      "Rp46.000.000",
+      "Rp85.000.000",
+      "Rp21.000.000"
+    ],
+    "ans": 0,
+    "exp": "PPh 29 = Rp121.000.000 − (Rp10.000.000 + Rp15.000.000 + Rp60.000.000) = Rp36.000.000."
+  },
+  {
+    "n": 15,
+    "sub": "Rekonsiliasi fiskal",
+    "q": "Beban pajak penghasilan total dalam laporan laba rugi komersial adalah ...",
+    "o": [
+      "Hanya beban pajak kini",
+      "Hanya pajak tangguhan",
+      "PPh 25 yang dibayar selama tahun berjalan",
+      "Beban pajak kini ± beban/manfaat pajak tangguhan"
+    ],
+    "ans": 3,
+    "exp": "Beban pajak total = beban pajak kini ± pajak tangguhan."
+  },
+  {
+    "n": 16,
+    "sub": "Jasa konstruksi",
+    "q": "Kontraktor kualifikasi menengah/besar bersertifikat menerima pembayaran jasa konstruksi Rp1.000.000.000. Berapa PPh final jasa konstruksi (dalam rupiah)?",
+    "o": [
+      "Rp17.500.000",
+      "Rp40.000.000",
+      "Rp26.500.000",
+      "Rp35.000.000"
+    ],
+    "ans": 2,
+    "exp": "Tarif 2,65% × Rp1.000.000.000 = Rp26.500.000."
+  },
+  {
+    "n": 17,
+    "sub": "Jasa konstruksi",
+    "q": "PPh final jasa konstruksi terutang atas ...",
+    "o": [
+      "Pendapatan menurut persentase penyelesaian",
+      "Pembayaran yang diterima",
+      "Laba bersih kontrak",
+      "Nilai kontrak saat ditandatangani"
+    ],
+    "ans": 1,
+    "exp": "PP 9/2022: terutang atas pembayaran yang diterima, bukan atas persentase penyelesaian."
+  }
+]

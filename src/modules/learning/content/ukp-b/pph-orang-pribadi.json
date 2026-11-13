@@ -1,0 +1,197 @@
+[
+  {
+    "n": 1,
+    "sub": "PTKP",
+    "q": "Berapa PTKP wajib pajak berstatus K/3 dalam setahun (dalam rupiah)?",
+    "o": [
+      "Rp67.500.000",
+      "Rp72.000.000",
+      "Rp63.000.000",
+      "Rp58.500.000"
+    ],
+    "ans": 1,
+    "exp": "Rp54.000.000 + Rp4.500.000 (kawin) + 3 × Rp4.500.000 = Rp72.000.000."
+  },
+  {
+    "n": 2,
+    "sub": "PTKP",
+    "q": "Jika penghasilan istri digabung dengan suami, berapa tambahan PTKP untuk istri dalam setahun (dalam rupiah)?",
+    "o": [
+      "Rp54.000.000",
+      "Rp4.500.000",
+      "Rp27.000.000",
+      "Rp58.500.000"
+    ],
+    "ans": 0,
+    "exp": "Istri yang penghasilannya digabung mendapat tambahan PTKP Rp54.000.000."
+  },
+  {
+    "n": 3,
+    "sub": "Tarif",
+    "q": "Penghasilan kena pajak orang pribadi Rp400.000.000. Berapa PPh terutang (dalam rupiah)?",
+    "o": [
+      "Rp100.000.000",
+      "Rp60.000.000",
+      "Rp120.000.000",
+      "Rp69.000.000"
+    ],
+    "ans": 3,
+    "exp": "Rp3.000.000 + Rp28.500.000 + 25% × Rp150.000.000 = Rp69.000.000."
+  },
+  {
+    "n": 4,
+    "sub": "Tarif",
+    "q": "Penghasilan kena pajak orang pribadi Rp600.000.000. Berapa PPh terutang (dalam rupiah)?",
+    "o": [
+      "Rp180.000.000",
+      "Rp94.000.000",
+      "Rp124.000.000",
+      "Rp150.000.000"
+    ],
+    "ans": 2,
+    "exp": "Sampai Rp500 juta: Rp3 juta + Rp28,5 juta + Rp62,5 juta = Rp94 juta. Sisa Rp100 juta × 30% = Rp30 juta. Total Rp124.000.000."
+  },
+  {
+    "n": 5,
+    "sub": "Tarif",
+    "q": "Lapisan tarif 30% berlaku untuk PKP ...",
+    "o": [
+      "Di atas Rp250 juta sampai Rp500 juta",
+      "Di atas Rp500 juta sampai Rp5 miliar",
+      "Di atas Rp5 miliar",
+      "Di atas Rp60 juta sampai Rp250 juta"
+    ],
+    "ans": 1,
+    "exp": "Tarif 30% berlaku untuk PKP di atas Rp500 juta sampai Rp5 miliar."
+  },
+  {
+    "n": 6,
+    "sub": "Penghitungan - pegawai",
+    "q": "Pegawai K/1 berpenghasilan bruto Rp150.000.000 setahun, dengan iuran pensiun/JHT yang dibayar sendiri Rp3.000.000. Berapa PPh terutang setahun (dalam rupiah)?",
+    "o": [
+      "Rp5.700.000",
+      "Rp5.475.000",
+      "Rp6.150.000",
+      "Rp6.375.000"
+    ],
+    "ans": 0,
+    "exp": "Biaya jabatan 5% = Rp7,5 juta, dibatasi Rp6 juta. Neto = Rp150 juta − Rp6 juta − Rp3 juta = Rp141 juta. PTKP K/1 Rp63 juta, PKP Rp78 juta. PPh = Rp3 juta + 15% × Rp18 juta = Rp5.700.000."
+  },
+  {
+    "n": 7,
+    "sub": "Penghitungan - pegawai",
+    "q": "Seorang pensiunan menerima uang pensiun Rp60.000.000 setahun. Berapa biaya pensiun yang dapat dikurangkan (dalam rupiah)?",
+    "o": [
+      "Rp3.000.000",
+      "Rp6.000.000",
+      "Rp60.000",
+      "Rp2.400.000"
+    ],
+    "ans": 3,
+    "exp": "5% × Rp60.000.000 = Rp3.000.000, tetapi dibatasi maksimal Rp2.400.000."
+  },
+  {
+    "n": 8,
+    "sub": "Penghitungan - pegawai",
+    "q": "Pengurang penghasilan bruto pegawai tetap meliputi ...",
+    "o": [
+      "Biaya makan dan transportasi pribadi",
+      "PPh 21 yang telah dipotong",
+      "Biaya jabatan, iuran pensiun/JHT yang dibayar pegawai, serta zakat atau sumbangan keagamaan wajib melalui pemberi kerja",
+      "Cicilan rumah"
+    ],
+    "ans": 2,
+    "exp": "Pengurang: biaya jabatan, iuran pensiun/JHT yang dibayar pegawai, dan zakat/sumbangan keagamaan wajib melalui pemberi kerja."
+  },
+  {
+    "n": 9,
+    "sub": "Penghitungan - norma",
+    "q": "Dokter praktik mandiri yang peredaran brutonya kurang dari Rp4,8 miliar ...",
+    "o": [
+      "Wajib memakai PPh final 0,5%",
+      "Tidak dapat memakai PPh final 0,5% PP 55/2022 karena menjalankan pekerjaan bebas",
+      "Dapat memakai PPh final 0,5% tanpa syarat",
+      "Bebas PPh"
+    ],
+    "ans": 1,
+    "exp": "Pekerjaan bebas tidak dapat memakai PPh final 0,5% PP 55/2022."
+  },
+  {
+    "n": 10,
+    "sub": "Penghitungan - norma",
+    "q": "Pedagang orang pribadi (PPh final 0,5%) berperedaran bruto Rp1.000.000.000 setahun. Berapa PPh final terutang (dalam rupiah)?",
+    "o": [
+      "Rp2.500.000",
+      "Rp5.000.000",
+      "Rp500.000",
+      "Rp7.500.000"
+    ],
+    "ans": 0,
+    "exp": "Peredaran Rp500 juta pertama tidak dikenai pajak. Sisa Rp500.000.000 × 0,5% = Rp2.500.000."
+  },
+  {
+    "n": 11,
+    "sub": "Penghitungan - keluarga",
+    "q": "Pasangan suami istri berstatus pisah harta (PH). PPh atas penghasilan gabungan ...",
+    "o": [
+      "Dibebankan seluruhnya kepada suami",
+      "Dibagi dua sama rata",
+      "Dihitung terpisah tanpa penggabungan",
+      "Dibagi sebanding penghasilan neto masing-masing"
+    ],
+    "ans": 3,
+    "exp": "Pada status PH, PPh atas penghasilan neto gabungan dibagi sebanding neto masing-masing."
+  },
+  {
+    "n": 12,
+    "sub": "Penghitungan - keluarga",
+    "q": "Suami istri hidup berpisah berdasarkan putusan hakim (HB) ...",
+    "o": [
+      "Penghasilannya digabung",
+      "Hanya suami yang mendapat PTKP",
+      "Dikenai pajak secara terpisah dengan PTKP masing-masing",
+      "Dikenai pajak final"
+    ],
+    "ans": 2,
+    "exp": "Status HB dikenai pajak secara terpisah, dengan PTKP masing-masing."
+  },
+  {
+    "n": 13,
+    "sub": "Penghitungan - keluarga",
+    "q": "Penghasilan anak yang belum dewasa ...",
+    "o": [
+      "Dikenai PPh final",
+      "Digabung dengan penghasilan orang tuanya",
+      "Tidak dikenai pajak",
+      "Dihitung terpisah dengan PTKP penuh"
+    ],
+    "ans": 1,
+    "exp": "Penghasilan anak yang belum dewasa digabung dengan penghasilan orang tuanya."
+  },
+  {
+    "n": 14,
+    "sub": "Penghitungan - lain",
+    "q": "Bila penghasilan neto sama dengan PTKP, maka ...",
+    "o": [
+      "PKP dan PPh terutang nihil",
+      "PPh terutang 5% dari neto",
+      "PPh terutang Rp100.000",
+      "PPh dikenakan atas PTKP"
+    ],
+    "ans": 0,
+    "exp": "Neto sama dengan PTKP berarti PKP nol sehingga PPh terutang nihil."
+  },
+  {
+    "n": 15,
+    "sub": "Penghitungan - lain",
+    "q": "Warisan yang belum terbagi ...",
+    "o": [
+      "Mendapat PTKP penuh",
+      "Mendapat PTKP setengah",
+      "Dikenai PPh final 10%",
+      "Tidak mendapat PTKP"
+    ],
+    "ans": 3,
+    "exp": "Warisan belum terbagi sebagai subjek pajak pengganti tidak mendapat PTKP."
+  }
+]

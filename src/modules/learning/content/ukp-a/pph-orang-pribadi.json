@@ -1,0 +1,223 @@
+[
+  {
+    "n": 1,
+    "sub": "PTKP",
+    "q": "PTKP ditentukan berdasarkan keadaan wajib pajak pada ...",
+    "o": [
+      "Akhir tahun pajak (31 Desember)",
+      "Awal tahun pajak (1 Januari)",
+      "Saat SPT Tahunan disampaikan",
+      "Pertengahan tahun pajak"
+    ],
+    "ans": 1,
+    "exp": "PTKP ditentukan menurut keadaan awal tahun pajak."
+  },
+  {
+    "n": 2,
+    "sub": "PTKP",
+    "q": "Berapa PTKP wajib pajak berstatus K/2 (kawin, dua tanggungan) dalam setahun (dalam rupiah)?",
+    "o": [
+      "Rp67.500.000",
+      "Rp63.000.000",
+      "Rp72.000.000",
+      "Rp58.500.000"
+    ],
+    "ans": 0,
+    "exp": "PTKP = Rp54.000.000 diri sendiri + Rp4.500.000 status kawin + 2 × Rp4.500.000 tanggungan = Rp67.500.000."
+  },
+  {
+    "n": 3,
+    "sub": "PTKP",
+    "q": "Jumlah tanggungan yang dapat diperhitungkan dalam PTKP paling banyak ...",
+    "o": [
+      "1 orang",
+      "2 orang",
+      "4 orang",
+      "3 orang"
+    ],
+    "ans": 3,
+    "exp": "Tanggungan dihitung paling banyak 3 orang."
+  },
+  {
+    "n": 4,
+    "sub": "PTKP",
+    "q": "Siapa yang TIDAK dapat dihitung sebagai tanggungan PTKP?",
+    "o": [
+      "Mertua yang menjadi tanggungan",
+      "Anak angkat",
+      "Adik kandung (garis keturunan menyamping)",
+      "Anak tiri"
+    ],
+    "ans": 2,
+    "exp": "Tanggungan terbatas pada keluarga sedarah/semenda garis lurus satu derajat dan anak angkat. Garis menyamping seperti adik atau kakak tidak dihitung."
+  },
+  {
+    "n": 5,
+    "sub": "Tarif",
+    "q": "Tarif Pasal 17 untuk lapisan penghasilan kena pajak sampai Rp60 juta adalah ...",
+    "o": [
+      "10%",
+      "5%",
+      "15%",
+      "25%"
+    ],
+    "ans": 1,
+    "exp": "Lapisan pertama sampai Rp60 juta dikenai tarif 5%."
+  },
+  {
+    "n": 6,
+    "sub": "Tarif",
+    "q": "Tarif 35% berlaku untuk penghasilan kena pajak ...",
+    "o": [
+      "Di atas Rp5 miliar",
+      "Di atas Rp500 juta",
+      "Di atas Rp1 miliar",
+      "Di atas Rp2,5 miliar"
+    ],
+    "ans": 0,
+    "exp": "Lapisan 35% hanya berlaku untuk PKP di atas Rp5 miliar."
+  },
+  {
+    "n": 7,
+    "sub": "Tarif",
+    "q": "Penghasilan kena pajak seorang wajib pajak orang pribadi Rp200.000.000. Berapa PPh terutang (dalam rupiah)?",
+    "o": [
+      "Rp30.000.000",
+      "Rp10.000.000",
+      "Rp25.000.000",
+      "Rp24.000.000"
+    ],
+    "ans": 3,
+    "exp": "Rp60.000.000 × 5% = Rp3.000.000. Sisa Rp140.000.000 × 15% = Rp21.000.000. Total Rp24.000.000."
+  },
+  {
+    "n": 8,
+    "sub": "Tarif",
+    "q": "Penghasilan kena pajak Rp300.000.000. Berapa PPh terutang (dalam rupiah)?",
+    "o": [
+      "Rp45.000.000",
+      "Rp75.000.000",
+      "Rp44.000.000",
+      "Rp31.500.000"
+    ],
+    "ans": 2,
+    "exp": "Rp60 juta × 5% = Rp3 juta; Rp190 juta × 15% = Rp28,5 juta; Rp50 juta × 25% = Rp12,5 juta. Total Rp44.000.000."
+  },
+  {
+    "n": 9,
+    "sub": "Tarif",
+    "q": "Sebelum diterapkan tarif, penghasilan kena pajak dibulatkan ...",
+    "o": [
+      "Ke atas dalam ribuan rupiah penuh",
+      "Ke bawah dalam ribuan rupiah penuh",
+      "Ke bawah dalam jutaan rupiah penuh",
+      "Tidak dibulatkan"
+    ],
+    "ans": 1,
+    "exp": "PKP dibulatkan ke bawah dalam ribuan rupiah penuh."
+  },
+  {
+    "n": 10,
+    "sub": "Penghitungan - pegawai",
+    "q": "Biaya jabatan bagi pegawai tetap adalah ...",
+    "o": [
+      "5% dari penghasilan bruto, maksimal Rp6.000.000 setahun",
+      "10% dari penghasilan bruto, maksimal Rp6.000.000 setahun",
+      "5% dari penghasilan bruto, maksimal Rp2.400.000 setahun",
+      "5% dari penghasilan bruto tanpa batas"
+    ],
+    "ans": 0,
+    "exp": "Biaya jabatan 5% dari penghasilan bruto dengan maksimal Rp6.000.000 setahun."
+  },
+  {
+    "n": 11,
+    "sub": "Penghitungan - pegawai",
+    "q": "Pegawai TK/0 menerima penghasilan bruto Rp80.000.000 setahun, tanpa iuran. Berapa PPh terutang setahun (dalam rupiah)?",
+    "o": [
+      "Rp4.000.000",
+      "Rp1.300.000",
+      "Rp3.300.000",
+      "Rp1.100.000"
+    ],
+    "ans": 3,
+    "exp": "Biaya jabatan 5% = Rp4.000.000, neto Rp76.000.000. PKP = Rp76.000.000 − Rp54.000.000 = Rp22.000.000 × 5% = Rp1.100.000."
+  },
+  {
+    "n": 12,
+    "sub": "Penghitungan - pegawai",
+    "q": "Seorang pegawai berpenghasilan bruto Rp200.000.000 setahun. Berapa biaya jabatan yang dapat dikurangkan (dalam rupiah)?",
+    "o": [
+      "Rp10.000.000",
+      "Rp2.400.000",
+      "Rp6.000.000",
+      "Rp12.000.000"
+    ],
+    "ans": 2,
+    "exp": "5% × Rp200.000.000 = Rp10.000.000, tetapi dibatasi maksimal Rp6.000.000 setahun."
+  },
+  {
+    "n": 13,
+    "sub": "Penghitungan - pegawai",
+    "q": "Biaya pensiun bagi pensiunan adalah ...",
+    "o": [
+      "5% dari penghasilan bruto, maksimal Rp6.000.000 setahun",
+      "5% dari penghasilan bruto, maksimal Rp2.400.000 setahun",
+      "10% dari penghasilan bruto, maksimal Rp2.400.000 setahun",
+      "Tidak ada pengurang"
+    ],
+    "ans": 1,
+    "exp": "Pensiunan memperoleh biaya pensiun 5% dengan maksimal Rp2.400.000 setahun."
+  },
+  {
+    "n": 14,
+    "sub": "Penghitungan - norma",
+    "q": "Norma penghitungan penghasilan neto dapat dipakai oleh wajib pajak orang pribadi dengan peredaran bruto ...",
+    "o": [
+      "Kurang dari Rp4,8 miliar",
+      "Kurang dari Rp500 juta",
+      "Kurang dari Rp1 miliar",
+      "Berapa pun"
+    ],
+    "ans": 0,
+    "exp": "Syarat norma: peredaran bruto kurang dari Rp4,8 miliar dan memberitahukan DJP."
+  },
+  {
+    "n": 15,
+    "sub": "Penghitungan - norma",
+    "q": "Pemberitahuan penggunaan norma penghitungan disampaikan dalam ...",
+    "o": [
+      "1 bulan pertama tahun pajak",
+      "6 bulan pertama tahun pajak",
+      "Akhir tahun pajak",
+      "3 bulan pertama tahun pajak"
+    ],
+    "ans": 3,
+    "exp": "Pemberitahuan norma disampaikan dalam 3 bulan pertama tahun pajak."
+  },
+  {
+    "n": 16,
+    "sub": "Penghitungan - norma",
+    "q": "Pada PPh final 0,5% (PP 55/2022), peredaran bruto yang tidak dikenai pajak bagi OP adalah sampai ...",
+    "o": [
+      "Rp50 juta setahun",
+      "Rp4,8 miliar setahun",
+      "Rp500 juta setahun",
+      "Rp1 miliar setahun"
+    ],
+    "ans": 2,
+    "exp": "Peredaran bruto sampai Rp500 juta setahun tidak dikenai PPh final 0,5%."
+  },
+  {
+    "n": 17,
+    "sub": "Penghitungan - lain",
+    "q": "Dividen yang diterima OP dan tidak diinvestasikan dikenai ...",
+    "o": [
+      "Tarif Pasal 17 dan digabung dengan penghasilan lain",
+      "PPh final 10% dan tidak digabung dengan penghasilan lain",
+      "PPh final 20% dan digabung",
+      "Tidak dikenai pajak"
+    ],
+    "ans": 1,
+    "exp": "Dividen yang tidak diinvestasikan dikenai PPh final 10%, sehingga tidak digabung dengan penghasilan yang dikenai tarif Pasal 17."
+  }
+]

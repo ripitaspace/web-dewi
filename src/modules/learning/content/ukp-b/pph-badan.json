@@ -1,0 +1,223 @@
+[
+  {
+    "n": 1,
+    "sub": "Objek dan pengecualian",
+    "q": "Dividen yang diterima WP badan dalam negeri dari badan dalam negeri ...",
+    "o": [
+      "Dikenai PPh final 10%",
+      "Dikecualikan dari objek PPh",
+      "Dikenai PPh 23",
+      "Dikenai PPh 26"
+    ],
+    "ans": 1,
+    "exp": "Dividen DN yang diterima WP badan DN dikecualikan dari objek PPh."
+  },
+  {
+    "n": 2,
+    "sub": "Objek dan pengecualian",
+    "q": "Keuntungan karena pembebasan utang bagi WP badan ...",
+    "o": [
+      "Merupakan objek PPh",
+      "Dikecualikan dari objek PPh",
+      "Dikenai bea meterai",
+      "Dikenai PPN"
+    ],
+    "ans": 0,
+    "exp": "Keuntungan karena pembebasan utang termasuk objek PPh."
+  },
+  {
+    "n": 3,
+    "sub": "Biaya yang dikurangkan",
+    "q": "Pajak Penghasilan yang terutang oleh perusahaan ...",
+    "o": [
+      "Boleh dikurangkan seluruhnya",
+      "Boleh dikurangkan 50%",
+      "Boleh dikurangkan bila dibayar tepat waktu",
+      "Tidak boleh dikurangkan dari penghasilan bruto"
+    ],
+    "ans": 3,
+    "exp": "Pajak Penghasilan tidak boleh dikurangkan dari penghasilan bruto."
+  },
+  {
+    "n": 4,
+    "sub": "Biaya yang dikurangkan",
+    "q": "Sumbangan tertentu menurut PP 93/2010 dapat dikurangkan paling tinggi ...",
+    "o": [
+      "10% dari peredaran bruto",
+      "5% dari laba komersial tahun berjalan",
+      "5% dari penghasilan neto fiskal tahun sebelumnya",
+      "Tanpa batas"
+    ],
+    "ans": 2,
+    "exp": "Sumbangan PP 93/2010 paling tinggi 5% dari penghasilan neto fiskal tahun sebelumnya."
+  },
+  {
+    "n": 5,
+    "sub": "Biaya yang dikurangkan",
+    "q": "Fasilitas pengurangan penghasilan bruto untuk kegiatan vokasi dan litbang tertentu masing-masing paling tinggi ...",
+    "o": [
+      "100% dan 200% dari biaya",
+      "200% dan 300% dari biaya",
+      "300% dan 200% dari biaya",
+      "150% dan 250% dari biaya"
+    ],
+    "ans": 1,
+    "exp": "Vokasi sampai 200% dan litbang tertentu sampai 300% dari biaya."
+  },
+  {
+    "n": 6,
+    "sub": "Fasilitas Pasal 31E",
+    "q": "PT Alfa berperedaran bruto Rp4.000.000.000 dengan PKP Rp800.000.000. Berapa PPh Badan terutang dengan fasilitas Pasal 31E (dalam rupiah)?",
+    "o": [
+      "Rp88.000.000",
+      "Rp176.000.000",
+      "Rp44.000.000",
+      "Rp100.000.000"
+    ],
+    "ans": 0,
+    "exp": "Peredaran sampai Rp4,8 miliar, seluruh PKP mendapat diskon 50%. Tarif efektif 11% × Rp800.000.000 = Rp88.000.000."
+  },
+  {
+    "n": 7,
+    "sub": "Fasilitas Pasal 31E",
+    "q": "PT Beta berperedaran bruto Rp10.000.000.000 dengan PKP Rp1.000.000.000. Berapa PPh Badan terutang dengan fasilitas Pasal 31E (dalam rupiah)?",
+    "o": [
+      "Rp220.000.000",
+      "Rp110.000.000",
+      "Rp114.400.000",
+      "Rp167.200.000"
+    ],
+    "ans": 3,
+    "exp": "PKP berfasilitas = 4,8/10 × Rp1 miliar = Rp480 juta, dikenai 11% = Rp52,8 juta. Sisa Rp520 juta × 22% = Rp114,4 juta. Total Rp167.200.000."
+  },
+  {
+    "n": 8,
+    "sub": "Fasilitas Pasal 31E",
+    "q": "Fasilitas Pasal 31E dapat dinikmati WP badan dalam negeri dengan peredaran bruto ...",
+    "o": [
+      "Sampai Rp4,8 miliar, diskon 100%",
+      "Di atas Rp50 miliar, diskon 50%",
+      "Sampai Rp50 miliar, dengan diskon tarif 50% untuk bagian sampai Rp4,8 miliar",
+      "Berapa pun, diskon 25%"
+    ],
+    "ans": 2,
+    "exp": "Fasilitas untuk peredaran sampai Rp50 miliar: diskon 50% atas PKP dari bagian peredaran sampai Rp4,8 miliar."
+  },
+  {
+    "n": 9,
+    "sub": "Penyusutan dan hubungan istimewa",
+    "q": "Mesin kelompok I mempunyai masa manfaat ... dan tarif penyusutan garis lurus ...",
+    "o": [
+      "8 tahun dan 12,5%",
+      "4 tahun dan 25%",
+      "16 tahun dan 6,25%",
+      "20 tahun dan 5%"
+    ],
+    "ans": 1,
+    "exp": "Kelompok I: masa manfaat 4 tahun, garis lurus 25%, saldo menurun 50%."
+  },
+  {
+    "n": 10,
+    "sub": "Penyusutan dan hubungan istimewa",
+    "q": "Mesin kelompok II harga perolehan Rp80.000.000 disusutkan dengan garis lurus. Berapa penyusutan fiskal setahun (dalam rupiah)?",
+    "o": [
+      "Rp10.000.000",
+      "Rp20.000.000",
+      "Rp5.000.000",
+      "Rp12.000.000"
+    ],
+    "ans": 0,
+    "exp": "Kelompok II garis lurus 12,5% × Rp80.000.000 = Rp10.000.000."
+  },
+  {
+    "n": 11,
+    "sub": "Penyusutan dan hubungan istimewa",
+    "q": "Peralatan kelompok I harga perolehan Rp40.000.000 disusutkan dengan saldo menurun. Berapa penyusutan fiskal tahun pertama (dalam rupiah)?",
+    "o": [
+      "Rp10.000.000",
+      "Rp5.000.000",
+      "Rp8.000.000",
+      "Rp20.000.000"
+    ],
+    "ans": 3,
+    "exp": "Kelompok I saldo menurun 50% × Rp40.000.000 = Rp20.000.000."
+  },
+  {
+    "n": 12,
+    "sub": "Penyusutan dan hubungan istimewa",
+    "q": "Harga perolehan harta dalam tukar-menukar dinilai berdasarkan ...",
+    "o": [
+      "Nilai buku",
+      "Nilai pajak sebelumnya",
+      "Harga pasar",
+      "Nilai nominal"
+    ],
+    "ans": 2,
+    "exp": "Tukar-menukar dan inbreng dinilai berdasarkan harga pasar."
+  },
+  {
+    "n": 13,
+    "sub": "Kompensasi, tarif, dan kredit pajak",
+    "q": "Kerugian fiskal dapat dikompensasikan secara berurutan paling lama ...",
+    "o": [
+      "2 tahun",
+      "5 tahun",
+      "3 tahun",
+      "7 tahun"
+    ],
+    "ans": 1,
+    "exp": "Kompensasi kerugian paling lama 5 tahun (fasilitas tertentu 10 tahun)."
+  },
+  {
+    "n": 14,
+    "sub": "Kompensasi, tarif, dan kredit pajak",
+    "q": "Tarif PPh Badan bagi WP badan dalam negeri adalah ...",
+    "o": [
+      "22%",
+      "20%",
+      "25%",
+      "17%"
+    ],
+    "ans": 0,
+    "exp": "Tarif PPh Badan dalam negeri dan BUT adalah 22%."
+  },
+  {
+    "n": 15,
+    "sub": "Kompensasi, tarif, dan kredit pajak",
+    "q": "PPh terutang tahun lalu Rp240.000.000. Kredit PPh 22 Rp12.000.000 dan PPh 23 Rp24.000.000. Berapa angsuran PPh Pasal 25 per bulan (dalam rupiah)?",
+    "o": [
+      "Rp20.000.000",
+      "Rp18.000.000",
+      "Rp15.000.000",
+      "Rp17.000.000"
+    ],
+    "ans": 3,
+    "exp": "PPh 25 = (Rp240.000.000 − Rp12.000.000 − Rp24.000.000) / 12 = Rp17.000.000."
+  },
+  {
+    "n": 16,
+    "sub": "Kompensasi, tarif, dan kredit pajak",
+    "q": "SPT Tahunan PPh Badan disampaikan paling lambat ...",
+    "o": [
+      "3 bulan setelah akhir tahun pajak tanpa perpanjangan",
+      "6 bulan setelah akhir tahun pajak",
+      "4 bulan setelah akhir tahun pajak, dapat diperpanjang 2 bulan dengan pemberitahuan",
+      "Akhir tahun pajak"
+    ],
+    "ans": 2,
+    "exp": "SPT Tahunan Badan: 4 bulan setelah akhir tahun pajak, perpanjangan 2 bulan."
+  },
+  {
+    "n": 17,
+    "sub": "Kompensasi, tarif, dan kredit pajak",
+    "q": "Tahun 1 rugi fiskal Rp100.000.000. Tahun 2 laba fiskal Rp40.000.000, tahun 3 laba fiskal Rp200.000.000. Berapa PKP tahun 3 setelah kompensasi kerugian (dalam rupiah)?",
+    "o": [
+      "Rp100.000.000",
+      "Rp140.000.000",
+      "Rp200.000.000",
+      "Rp160.000.000"
+    ],
+    "ans": 1,
+    "exp": "Rugi Rp100 juta dikompensasi Rp40 juta pada tahun 2, sisa Rp60 juta pada tahun 3. PKP tahun 3 = Rp200 juta − Rp60 juta = Rp140.000.000."
+  }
+]

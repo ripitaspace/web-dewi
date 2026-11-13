@@ -1,0 +1,210 @@
+[
+  {
+    "n": 1,
+    "sub": "Subjek & objek",
+    "q": "Subjek pajak PBB-P5L adalah orang atau badan yang ...",
+    "o": [
+      "Namanya tercantum dalam akta saja",
+      "Secara nyata mempunyai hak atas bumi, memperoleh manfaat dari bumi, atau memiliki/menguasai bangunan",
+      "Hanya pemilik hak milik",
+      "Hanya WP badan"
+    ],
+    "ans": 1,
+    "exp": "Subjek pajak adalah yang secara nyata mempunyai hak atas bumi, memperoleh manfaat dari bumi, atau memiliki/menguasai bangunan."
+  },
+  {
+    "n": 2,
+    "sub": "Subjek & objek",
+    "q": "Keadaan objek yang menentukan pajak terutang PBB adalah keadaan pada ...",
+    "o": [
+      "1 Januari",
+      "31 Desember",
+      "Tanggal SPPT diterbitkan",
+      "Tanggal pembayaran"
+    ],
+    "ans": 0,
+    "exp": "Keadaan objek pada 1 Januari menentukan pajak terutang."
+  },
+  {
+    "n": 3,
+    "sub": "Subjek & objek",
+    "q": "SPOP harus diisi dan dikembalikan paling lambat ...",
+    "o": [
+      "7 hari sejak diterima",
+      "14 hari sejak diterima",
+      "3 bulan sejak diterima",
+      "30 hari sejak diterima"
+    ],
+    "ans": 3,
+    "exp": "SPOP dikembalikan paling lambat 30 hari sejak diterima."
+  },
+  {
+    "n": 4,
+    "sub": "Subjek & objek",
+    "q": "Manakah yang tidak dikenakan PBB?",
+    "o": [
+      "Perkebunan swasta",
+      "Jalan tol",
+      "Hutan lindung dan taman nasional",
+      "Pertambangan minerba"
+    ],
+    "ans": 2,
+    "exp": "Hutan lindung, hutan suaka alam, hutan wisata, dan taman nasional tidak dikenakan PBB."
+  },
+  {
+    "n": 5,
+    "sub": "Subjek & objek",
+    "q": "PBB sektor perdesaan dan perkotaan merupakan ...",
+    "o": [
+      "Pajak pusat",
+      "Pajak daerah",
+      "PPh final",
+      "Bea masuk"
+    ],
+    "ans": 1,
+    "exp": "PBB perdesaan dan perkotaan adalah pajak daerah, sedangkan PBB-P5L pajak pusat."
+  },
+  {
+    "n": 6,
+    "sub": "Pengenaan",
+    "q": "NJOPTKP setinggi-tingginya ...",
+    "o": [
+      "Rp12.000.000 per wajib pajak",
+      "Rp1.200.000",
+      "Rp120.000.000",
+      "Rp5.000.000"
+    ],
+    "ans": 0,
+    "exp": "NJOPTKP setinggi-tingginya Rp12.000.000 per wajib pajak."
+  },
+  {
+    "n": 7,
+    "sub": "Pengenaan",
+    "q": "Objek PBB perkebunan dengan NJOP Rp5.000.000.000. NJOPTKP Rp12.000.000, NJKP 40%, tarif 0,5%. Berapa PBB terutang (dalam rupiah)?",
+    "o": [
+      "Rp10.000.000",
+      "Rp12.500.000",
+      "Rp4.988.000",
+      "Rp9.976.000"
+    ],
+    "ans": 3,
+    "exp": "NJKP = 40% × (Rp5.000.000.000 − Rp12.000.000) = Rp1.995.200.000. PBB = 0,5% × Rp1.995.200.000 = Rp9.976.000."
+  },
+  {
+    "n": 8,
+    "sub": "Pengenaan",
+    "q": "Objek PBB sektor lainnya dengan NJOP Rp800.000.000. NJOPTKP Rp12.000.000, NJKP 20% (NJOP kurang dari Rp1 miliar), tarif 0,5%. Berapa PBB terutang (dalam rupiah)?",
+    "o": [
+      "Rp800.000",
+      "Rp1.576.000",
+      "Rp788.000",
+      "Rp3.940.000"
+    ],
+    "ans": 2,
+    "exp": "NJKP = 20% × Rp788.000.000 = Rp157.600.000. PBB = 0,5% × Rp157.600.000 = Rp788.000."
+  },
+  {
+    "n": 9,
+    "sub": "Pengenaan",
+    "q": "Objek PBB sektor lainnya dengan NJOP Rp2.012.000.000. NJOPTKP Rp12.000.000, NJKP 40% (NJOP Rp1 miliar atau lebih), tarif 0,5%. Berapa PBB terutang (dalam rupiah)?",
+    "o": [
+      "Rp2.000.000",
+      "Rp4.000.000",
+      "Rp5.000.000",
+      "Rp10.060.000"
+    ],
+    "ans": 1,
+    "exp": "NJKP = 40% × Rp2.000.000.000 = Rp800.000.000. PBB = 0,5% × Rp800.000.000 = Rp4.000.000."
+  },
+  {
+    "n": 10,
+    "sub": "Pengenaan",
+    "q": "SPPT PBB-P5L harus dilunasi paling lambat ...",
+    "o": [
+      "6 bulan sejak SPPT diterima",
+      "1 bulan sejak diterima",
+      "3 bulan sejak diterima",
+      "12 bulan sejak diterima"
+    ],
+    "ans": 0,
+    "exp": "SPPT dilunasi paling lambat 6 bulan sejak diterima."
+  },
+  {
+    "n": 11,
+    "sub": "Pengenaan",
+    "q": "PBB terutang Rp4.000.000 dibayar terlambat 3 bulan 10 hari. Denda 2% per bulan, bagian bulan dihitung penuh. Berapa denda (dalam rupiah)?",
+    "o": [
+      "Rp240.000",
+      "Rp80.000",
+      "Rp160.000",
+      "Rp320.000"
+    ],
+    "ans": 3,
+    "exp": "Keterlambatan 3 bulan 10 hari dihitung 4 bulan. Denda = 2% × 4 × Rp4.000.000 = Rp320.000."
+  },
+  {
+    "n": 12,
+    "sub": "Pengenaan",
+    "q": "SKP PBB yang diterbitkan karena SPOP tidak disampaikan dikenai tambahan ...",
+    "o": [
+      "Denda 2% per bulan tanpa batas",
+      "Denda 100% dari pokok",
+      "Denda 25% dari pokok",
+      "Bunga 24 bulan"
+    ],
+    "ans": 2,
+    "exp": "SKP karena SPOP tidak disampaikan atau pemeriksaan: pokok ditambah denda 25%."
+  },
+  {
+    "n": 13,
+    "sub": "Upaya non-keberatan",
+    "q": "Keberatan atas SPPT diajukan dalam ...",
+    "o": [
+      "1 bulan sejak SPPT diterima",
+      "3 bulan sejak SPPT diterima",
+      "6 bulan sejak SPPT diterima",
+      "12 bulan sejak SPPT diterima"
+    ],
+    "ans": 1,
+    "exp": "Keberatan diajukan dalam 3 bulan sejak SPPT diterima."
+  },
+  {
+    "n": 14,
+    "sub": "Upaya non-keberatan",
+    "q": "Manakah yang BUKAN upaya non-keberatan?",
+    "o": [
+      "Banding",
+      "Pembetulan SPPT",
+      "Pengurangan PBB",
+      "Pembatalan SPPT yang tidak benar"
+    ],
+    "ans": 0,
+    "exp": "Banding bukan upaya non-keberatan."
+  },
+  {
+    "n": 15,
+    "sub": "Upaya non-keberatan",
+    "q": "Pengurangan PBB karena bencana alam atau sebab luar biasa dapat diberikan paling tinggi ...",
+    "o": [
+      "25%",
+      "50%",
+      "75%",
+      "100%"
+    ],
+    "ans": 3,
+    "exp": "Pengurangan karena bencana alam atau sebab luar biasa paling tinggi 100%."
+  },
+  {
+    "n": 16,
+    "sub": "Upaya non-keberatan",
+    "q": "Wajib pajak menerima dua SPPT untuk objek yang sama. Upaya yang tepat adalah ...",
+    "o": [
+      "Permohonan pengurangan 75%",
+      "Banding ke Pengadilan Pajak",
+      "Permohonan pembatalan SPPT ganda",
+      "Pembayaran kedua SPPT"
+    ],
+    "ans": 2,
+    "exp": "SPPT ganda atau salah diselesaikan dengan pembatalan, bukan pengurangan."
+  }
+]

@@ -6,6 +6,10 @@ export type UkpQuestion = { n: number; sub: string; q: string; o: string[]; ans:
 export type UkpSummary = { title: string; markdown: string; table?: { title: string; columns: string[]; rows: string[][] } };
 
 export type UkpModuleSpec = {
+  /** UKP tier; defaults to "C" so existing specs stay unchanged. */
+  tier?: "A" | "B" | "C";
+  /** Shown as a warning callout when the questions are not yet verified against official sources. */
+  verificationNote?: string;
   /** Mata uji number (1-9). */
   number: number;
   slug: string;
@@ -61,7 +65,8 @@ function questionBlock(spec: UkpModuleSpec, question: UkpQuestion, competencyId:
 }
 
 export function buildUkpModule(spec: UkpModuleSpec): LearningModule {
-  const id = `ukp-c-${spec.slug}`;
+  const tier = spec.tier ?? "C";
+  const id = `ukp-${tier.toLowerCase()}-${spec.slug}`;
   const competencyId = `kompetensi-${id}`;
   const groups: { sub: string; questions: UkpQuestion[] }[] = [];
   for (const question of spec.questions) {
@@ -74,8 +79,8 @@ export function buildUkpModule(spec: UkpModuleSpec): LearningModule {
     id: `${id}-pengantar`,
     title: "Pengantar mata uji",
     blocks: [
-      { id: `${id}-pengantar-materi`, type: "reading" as const, role: "discover" as const, required: false, title: `UKP C · ${spec.title}`, competencyIds: [competencyId], markdown: spec.intro },
-      { id: `${id}-pengantar-catatan`, type: "callout" as const, role: "understand" as const, required: false, variant: "warning" as const, title: "Bahan latihan", content: "Soal dan pembahasan disusun dari bank soal latihan UKP Tingkat C berdasarkan ketentuan per Oktober 2026. Ini bukan soal ujian asli; periksa kembali peraturan terbaru sebelum ujian." },
+      { id: `${id}-pengantar-materi`, type: "reading" as const, role: "discover" as const, required: false, title: `UKP ${tier} · ${spec.title}`, competencyIds: [competencyId], markdown: spec.intro },
+      { id: `${id}-pengantar-catatan`, type: "callout" as const, role: "understand" as const, required: false, variant: "warning" as const, title: "Bahan latihan", content: spec.verificationNote ?? `Soal dan pembahasan disusun dari bank soal latihan UKP Tingkat ${tier} berdasarkan ketentuan per Oktober 2026. Ini bukan soal ujian asli; periksa kembali peraturan terbaru sebelum ujian.` },
     ],
   };
 
@@ -120,10 +125,10 @@ export function buildUkpModule(spec: UkpModuleSpec): LearningModule {
     schemaVersion: "1.1.0",
     id,
     revision: 1,
-    metadata: { title: `UKP C · ${spec.title}`, summary: spec.summary, subject: "Pajak", level: "advanced", estimatedMinutes: spec.minutes, tags: ["pajak", "UKP", "UKP C", spec.slug], author: "PuspitaCore Belajar" },
+    metadata: { title: `UKP ${tier} · ${spec.title}`, summary: spec.summary, subject: "Pajak", level: tier === "A" ? "beginner" : tier === "B" ? "intermediate" : "advanced", estimatedMinutes: spec.minutes, tags: ["pajak", "UKP", `UKP ${tier}`, spec.slug], author: "PuspitaCore Belajar" },
     experience: { profile: "mixed", navigation: "flexible", allowResume: false },
-    prerequisites: { moduleIds: [], competencyIds: [], notes: "Disarankan memahami dasar perpajakan sebelum mengerjakan bank soal Tingkat C." },
-    competencies: [{ id: competencyId, title: `Menjawab soal UKP Tingkat C pada mata uji ${spec.title}` }],
+    prerequisites: { moduleIds: [], competencyIds: [], notes: `Disarankan memahami dasar perpajakan sebelum mengerjakan bank soal Tingkat ${tier}.` },
+    competencies: [{ id: competencyId, title: `Menjawab soal UKP Tingkat ${tier} pada mata uji ${spec.title}` }],
     learningPolicy: { allowRetry: true, feedbackTiming: "after_submit", hintMode: "guided_only", timerMode: "advisory", allowSkip: true, remediationEnabled: true, solutionsAfterAttempt: true },
     assessment: { passingScore: 70, requireAllRequired: true, attemptPolicy: "best" },
     reportPolicy: { scope: "learning_unit", formats: ["json", "print"], downloadOnCompletion: false, dataLocation: "client_only" },
