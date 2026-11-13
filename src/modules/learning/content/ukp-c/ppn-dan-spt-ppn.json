@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "DN - Objek",
+  "q": "Penyerahan BKP yang terutang PPN harus memenuhi syarat kumulatif berikut, KECUALI...",
+  "o": [
+   "Barang yang diserahkan merupakan BKP",
+   "Penyerahan dilakukan dalam kegiatan usaha atau pekerjaannya",
+   "Penyerahan dilakukan di dalam Daerah Pabean",
+   "Pembeli harus PKP"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4 ayat (1) huruf a UU PPN dan penjelasannya: syarat penyerahan BKP terutang adalah BKP, di dalam Daerah Pabean, dan dalam rangka kegiatan usaha/pekerjaan pengusaha. Status pembeli tidak menjadi syarat."
+ },
+ {
+  "n": 2,
+  "sub": "DN - Objek",
+  "q": "Berdasarkan UU HPP, yang termasuk jenis barang yang TIDAK dikenai PPN (bukan BKP) adalah ...",
+  "o": [
+   "Beras dan gabah",
+   "Emas perhiasan",
+   "Batubara",
+   "Makanan dan minuman yang disajikan di restoran (objek pajak daerah)"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4A ayat (2) UU PPN s.t.d.t.d. UU HPP: bukan BKP adalah makanan/minuman yang disajikan di hotel/restoran dan sejenisnya, uang dan emas batangan untuk cadangan devisa, serta surat berharga. Barang kebutuhan pokok dan hasil tambang (termasuk batubara) kini BKP, sebagian mendapat fasilitas dibebaskan (Pasal 16B)."
+ },
+ {
+  "n": 3,
+  "sub": "DN - Objek",
+  "q": "Jenis jasa yang TIDAK dikenai PPN (bukan JKP) menurut UU HPP adalah ...",
+  "o": [
+   "Jasa keagamaan dan jasa penyediaan tempat parkir",
+   "Jasa keuangan",
+   "Jasa pendidikan",
+   "Jasa pelayanan kesehatan medis"
+  ],
+  "ans": 0,
+  "exp": "Pasal 4A ayat (3) UU HPP: bukan JKP meliputi jasa keagamaan, jasa kesenian dan hiburan, jasa perhotelan, jasa pemerintahan umum, jasa penyediaan tempat parkir, dan jasa boga/katering. Jasa kesehatan, pendidikan, dan keuangan menjadi JKP yang dibebaskan (Pasal 16B)."
+ },
+ {
+  "n": 4,
+  "sub": "DN - Objek",
+  "q": "PT Rasa (PKP) memakai sendiri produknya untuk konsumsi karyawan dan memberikan sampel produk secara cuma-cuma kepada calon pelanggan. Perlakuan PPN atas kedua transaksi tersebut adalah .",
+  "o": [
+   "Keduanya bukan penyerahan",
+   "Hanya pemakaian sendiri yang terutang",
+   "Keduanya termasuk penyerahan BKP yang terutang PPN",
+   "Hanya pemberian cuma-cuma yang terutang"
+  ],
+  "ans": 2,
+  "exp": "Pasal 1A ayat (1) huruf d UU PPN: pemakaian sendiri dan/atau pemberian cuma-cuma atas BKP termasuk dalam pengertian penyerahan BKP."
+ },
+ {
+  "n": 5,
+  "sub": "DN - Objek",
+  "q": "Pengalihan BKP dalam rangka penggabungan usaha atau sebagai setoran modal pengganti saham (inbreng) TIDAK termasuk penyerahan BKP apabila ...",
+  "o": [
+   "Pihak yang mengalihkan dan yang menerima pengalihan adalah PKP",
+   "Disetujui RUPS",
+   "Nilainya di bawah Rp1 miliar",
+   "Dilakukan di bursa"
+  ],
+  "ans": 0,
+  "exp": "Penggabungan, peleburan, pemekaran, pemecahan, pengambilalihan usaha, serta setoran modal pengganti saham tidak termasuk penyerahan dengan syarat kedua pihak PKP."
+ },
+ {
+  "n": 6,
+  "sub": "DN - Objek",
+  "q": "PT Teknik memanfaatkan jasa konsultan dari Singapura senilai Rp200 juta untuk kegiatan usahanya di Indonesia. PPN yang terutang adalah ...",
+  "o": [
+   "Tidak terutang karena penyedia di luar negeri",
+   "Rp20.000.000",
+   "Rp24.000.000 dipungut penyedia jasa",
+   "Rp22.000.000 dan wajib dipungut serta disetor sendiri oleh PT Teknik"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4 ayat (1) huruf e UU PPN: pemanfaatan JKP dari luar DP di dalam DP terutang PPN, dipungut oleh pihak yang memanfaatkan. DPP nilai lain 11/12 x 200 jt; PPN = 12% x 11/12 × 200 jt = 22 jt (PMK 131/2024). Dapat dikreditkan sebagai PM bila berhubungan dengan usaha."
+ },
+ {
+  "n": 7,
+  "sub": "DN - Objek",
+  "q": "Ekspor JKP oleh PKP yang dikenai tarif 0% berdasarkan PMK 32/PMK.010/2019 antara lain ...",
+  "o": [
+   "Jasa katering untuk kedutaan",
+   "Jasa maklon dan jasa penelitian dan pengembangan yang dimanfaatkan di luar Daerah Pabean",
+   "Jasa konsultansi hukum atas sengketa di Indonesia",
+   "Jasa sewa gedung di Jakarta kepada perusahaan asing"
+  ],
+  "ans": 1,
+  "exp": "PMK 32/2019 membatasi ekspor JKP yang dikenai 0% pada jenis tertentu, antara lain jasa maklon, litbang, persewaan alat angkut untuk kegiatan internasional, konsultansi tertentu terkait proyek di luar DP, jasa perdagangan, interkoneksi/satelit, dan jasa terkait BKP ekspor/impor."
+ },
+ {
+  "n": 8,
+  "sub": "DN - Objek",
+  "q": "PT Usaha (PKP) menjual truk operasional bekas yang dahulu Pajak Masukannya telah dikreditkan, seharga Rp300 juta. PPN yang terutang adalah ...",
+  "o": [
+   "Rp36.000.000",
+   "Tidak terutang karena bukan barang dagangan",
+   "Rp3.300.000",
+   "Rp33.000.000"
+  ],
+  "ans": 3,
+  "exp": "Pasal 16D UU PPN: penyerahan aktiva yang menurut tujuan semula tidak untuk diperjualbelikan terutang PPN sepanjang PM atas perolehannya dapat dikreditkan. PPN = 12% x 11/12 x 300 jt = 33 jt."
+ },
+ {
+  "n": 9,
+  "sub": "DN - Objek",
+  "q": "PT Gedung (PKP) menjual mobil sedan direksi yang Pajak Masukan atas perolehannya tidak dapat dikreditkan. Atas penjualan tersebut ...",
+  "o": [
+   "Tidak terutang PPN berdasarkan Pasal 16D",
+   "Terutang PPN besaran tertentu",
+   "Terutang PPnBM",
+   "Terutang PPN 12%"
+  ],
+  "ans": 0,
+  "exp": "Pasal 16D UU PPN: tidak terutang PPN atas penyerahan aktiva yang PM-nya tidak dapat dikreditkan karena Pasal 9 ayat (8) huruf b dan c (tidak berhubungan langsung dengan usaha; sedan/station wagon)."
+ },
+ {
+  "n": 10,
+  "sub": "DN - DPP & tarif",
+  "q": "PT Abadi (PKP) menjual BKP yang bukan barang mewah dengan harga jual Rp100.000.000 pada 2026. Berdasarkan PMK 131/2024, DPP dan PPN terutang adalah ...",
+  "o": [
+   "DPP Rp100.000.000; PPN Rp12.000.000",
+   "DPP Rp91.666.667; PPN Rp11.000.000",
+   "DPP Rp100.000.000; PPN Rp11.000.000",
+   "DPP Rp91.666.667; PPN Rp12.000.000"
+  ],
+  "ans": 1,
+  "exp": "PMK 131/2024: tarif 12% (UU HPP) dengan DPP nilai lain 11/12 x harga jual untuk BKP/JKP selain barang mewah. DPP = 91.666.667; PPN = 12% x 91.666.667 = 11.000.000."
+ },
+ {
+  "n": 11,
+  "sub": "DN - DPP & tarif",
+  "q": "PT Mewah (PKP) menjual BKP yang tergolong mewah (dikenai PPnBM) dengan harga jual Rp100.000.000. PPN terutang adalah...",
+  "o": [
+   "Rp10.000.000",
+   "Rp12.000.000",
+   "Rp11.000.000",
+   "Rp0"
+  ],
+  "ans": 1,
+  "exp": "PMK 131/2024: atas BKP yang tergolong mewah, PPN = 12% x harga jual = 12.000.000 (ditambah PPnBM sesuai tarifnya)."
+ },
+ {
+  "n": 12,
+  "sub": "DN - DPP & tarif",
+  "q": "Dasar Pengenaan Pajak untuk impor BKP adalah ...",
+  "o": [
+   "Nilai impor, yaitu nilai pabean (CIF) ditambah pungutan berdasarkan ketentuan kepabeanan dan cukal",
+   "Nilai ekspor",
+   "Nilai penggantian",
+   "Harga jual"
+  ],
+  "ans": 0,
+  "exp": "Pasal 1 angka 19 UU PPN: nilai impor adalah nilai berupa uang yang menjadi dasar penghitungan bea masuk ditambah pungutan berdasarkan ketentuan kepabeanan dan cukai, tidak termasuk PPN, PPnBM, dan PPh 22."
+ },
+ {
+  "n": 13,
+  "sub": "DN - DPP & tarif",
+  "q": "PT Impor mengimpor BKP (bukan barang mewah) dengan CIF Rp500 juta dan bea masuk Rp50 juta. PPN impor adalah...",
+  "o": [
+   "Rp66.000.000",
+   "Rp60.500.000",
+   "Rp60.000.000",
+   "Rp55.000.000"
+  ],
+  "ans": 1,
+  "exp": "Nilai impor 550 jt; PPN = 12% x 11/12 × 550 jt = 60,5 jt (DPP nilai lain PMK 131/2024 juga berlaku untuk impor)."
+ },
+ {
+  "n": 14,
+  "sub": "DN - DPP & tarif",
+  "q": "Dasar Pengenaan Pajak untuk penyerahan JKP adalah ...",
+  "o": [
+   "Nilai impor",
+   "Harga jual",
+   "Nilai ekspor",
+   "Penggantian (nilai penggantian)"
+  ],
+  "ans": 3,
+  "exp": "Pasal 1 angka 18 UU PPN: penggantian adalah nilai berupa uang, termasuk semua biaya yang diminta atau seharusnya diminta oleh pengusaha karena penyerahan JKP, tidak termasuk PPN dan potongan harga dalam faktur."
+ },
+ {
+  "n": 15,
+  "sub": "DN - DPP & tarif",
+  "q": "Tarif PPN atas ekspor BKP berwujud, ekspor BKP tidak berwujud, dan ekspor JKP adalah ….",
+  "o": [
+   "5%",
+   "0%",
+   "11%",
+   "12%"
+  ],
+  "ans": 1,
+  "exp": "Pasal 7 ayat (2) UU PPN: tarif 0% diterapkan atas ekspor BKP berwujud, BKP tidak berwujud, dan JKP. PM tetap dapat dikreditkan."
+ },
+ {
+  "n": 16,
+  "sub": "DN - DPP & tarif",
+  "q": "Potongan harga yang dicantumkan dalam faktur pajak ...",
+  "o": [
+   "Hanya boleh untuk ekspor",
+   "Dikenai PPN tersendiri",
+   "Mengurangi harga jual sehingga tidak termasuk DPP",
+   "Tetap termasuk dalam harga jual"
+  ],
+  "ans": 2,
+  "exp": "Pasal 1 angka 18 UU PPN: harga jual tidak termasuk potongan harga yang dicantumkan dalam faktur pajak."
+ },
+ {
+  "n": 17,
+  "sub": "DN - DPP & tarif",
+  "q": "Pengertian PPN 'besaran tertentu' sebagaimana Pasal 9A UU HPP adalah ...",
+  "o": [
+   "PPN dengan tarif 0%",
+   "Tarif progresif sesuai nilai transaksi",
+   "PPN yang dihitung dengan persentase tertentu dari peredaran usaha atau dari DPP untuk jenis BKP/JKP tertentu, ditetapkan dengan PMK",
+   "PPN yang tidak dipungut"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9A UU PPN s.t.d.t.d. UU HPP: PKP tertentu (peredaran tertentu, kegiatan tertentu, atau BKP/JKP tertentu) dapat memungut dan menyetor PPN dengan besaran tertentu, misalnya KMS, kendaraan bekas, jasa agen perjalanan."
+ },
+ {
+  "n": 18,
+  "sub": "DN - Faktur",
+  "q": "Fungsi faktur pajak bagi PKP pembeli adalah ...",
+  "o": [
+   "Bukti pengiriman barang",
+   "Bukti pembayaran PPh",
+   "Pengganti kuitansi",
+   "Bukti pungutan pajak oleh penjual dan sarana untuk mengkreditkan Pajak Masukan"
+  ],
+  "ans": 3,
+  "exp": "Faktur pajak merupakan bukti pungutan pajak oleh PKP penjual dan bagi pembeli menjadi sarana pengkreditan PM (Pasal 13 dan Pasal 9 UU PPN)."
+ },
+ {
+  "n": 19,
+  "sub": "DN - Faktur",
+  "q": "Faktur pajak wajib dibuat pada saat berikut, KECUALI ...",
+  "o": [
+   "Saat penyerahan BKP/JKP",
+   "Saat penerimaan pembayaran termin dalam penyerahan sebagian tahap pekerjaan",
+   "Saat penerimaan pembayaran apabila pembayaran diterima sebelum penyerahan",
+   "Saat penandatanganan kontrak tanpa pembayaran dan tanpa penyerahan"
+  ],
+  "ans": 3,
+  "exp": "Pasal 13 ayat (1a) UU PPN: saat penyerahan, saat penerimaan pembayaran sebelum penyerahan, saat penerimaan pembayaran termin, atau saat lain yang ditetapkan PMK. Penandatanganan kontrak tanpa penyerahan/pembayaran belum menimbulkan kewajiban faktur."
+ },
+ {
+  "n": 20,
+  "sub": "DN - Faktur",
+  "q": "Keterangan yang wajib dicantumkan dalam faktur pajak menurut Pasal 13 ayat (5) UU PPN s.t.d.t.d. UU",
+  "o": [
+   "Nomor rekening bank pembeli",
+   "Nama, alamat, NPWP penjual",
+   "Nama dan tanda tangan pejabat yang berhak",
+   "Identitas pembeli (NPWP atau NIK/nomor paspor/identitas lain)"
+  ],
+  "ans": 0,
+  "exp": "Pasal 13 ayat (5): identitas penjual dan pembeli, jenis barang/jasa, jumlah harga jual/penggantian, potongan harga, PPN dan PPnBM, kode-nomor seri-tanggal, serta nama dan tanda tangan. UU HPP memungkinkan identitas pembeli berupa NIK/nomor paspor."
+ },
+ {
+  "n": 21,
+  "sub": "DN - Faktur",
+  "q": "PKP penjual menemukan kesalahan pengisian harga jual pada faktur pajak yang telah dilaporkan. Tindakan yang tepat adalah...",
+  "o": [
+   "Membatalkan faktur tanpa pengganti",
+   "Membuat faktur pajak pengganti dan melakukan pembetulan SPT Masa PPN",
+   "Membiarkan dan memperbaiki di SPT Tahunan",
+   "Membuat nota retur"
+  ],
+  "ans": 1,
+  "exp": "Faktur pajak yang salah dalam pengisian dibetulkan dengan faktur pajak pengganti (PER-03/PJ/2022 dan ketentuan Coretax); bila sudah dilaporkan, SPT Masa PPN dibetulkan."
+ },
+ {
+  "n": 22,
+  "sub": "DN - Faktur",
+  "q": "Apabila transaksi penyerahan BKP dibatalkan seluruhnya setelah faktur pajak dibuat, PKP harus .",
+  "o": [
+   "Membuat nota retur",
+   "Melakukan pembatalan faktur pajak",
+   "Membuat faktur pengganti",
+   "Membuat faktur pajak baru"
+  ],
+  "ans": 1,
+  "exp": "Pembatalan faktur pajak dilakukan bila terjadi pembatalan transaksi (atau kesalahan identitas pembeli tertentu), didukung dokumen pembatalan."
+ },
+ {
+  "n": 23,
+  "sub": "DN - Faktur",
+  "q": "PT Beli (PKP) mengembalikan sebagian BKP yang dibeli pada April (DPP Rp20 juta, PPN Rp2,2 juta) kepada penjual pada Juni dengan nota retur. Akibatnya ...",
+  "o": [
+   "PM PT Beli Masa April dibetulkan",
+   "PM PT Beli Masa Juni dikurangi Rp2,2 juta dan PK penjual Masa Juni dikurangi Rp2,2 juta",
+   "PT Beli wajib membuat faktur pajak",
+   "Tidak ada pengaruh"
+  ],
+  "ans": 1,
+  "exp": "Pasal 5A UU PPN: PPN atas BKP yang dikembalikan mengurangi PK penjual dan PM pembeli dalam masa pajak terjadinya pengembalian (masa nota retur)."
+ },
+ {
+  "n": 24,
+  "sub": "DN - Faktur",
+  "q": "Faktur pajak yang tidak diisi secara lengkap, jelas, dan benar ...",
+  "o": [
+   "Tidak dapat dikreditkan sebagai Pajak Masukan bagi pembeli dan penjual dikenai denda 1% dari DPP",
+   "Tetap dapat dikreditkan",
+   "Dapat dikreditkan 50%",
+   "Otomatis menjadi faktur pengganti"
+  ],
+  "ans": 0,
+  "exp": "Pasal 9 ayat (8) huruf f UU PPN: PM atas faktur pajak yang tidak memenuhi Pasal 13 ayat (5)/(9) tidak dapat dikreditkan; Pasal 14 ayat (4) UU KUP: penjual dikenai denda 1% DPP."
+ },
+ {
+  "n": 25,
+  "sub": "DN - Pajak Masukan",
+  "q": "Prinsip dasar pengkreditan Pajak Masukan adalah ...",
+  "o": [
+   "PM selalu dibebankan sebagai biaya",
+   "PM dikreditkan saat pembayaran kepada penjual",
+   "PM dikreditkan dengan PK dalam masa pajak yang sama",
+   "PM dikreditkan di akhir tahun buku"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9 ayat (2) UU PPN: PM dalam suatu masa pajak dikreditkan dengan PK dalam masa pajak yang sama."
+ },
+ {
+  "n": 26,
+  "sub": "DN - Pajak Masukan",
+  "q": "Faktur pajak masukan bertanggal Februari 2026 belum dikreditkan pada Masa Februari. Batas akhir masa pengkreditannya adalah ...",
+  "o": [
+   "Maret 2026",
+   "Desember 2026",
+   "Mei 2026",
+   "Agustus 2026"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9 ayat (9) UU PPN: PM dapat dikreditkan pada masa pajak berikutnya paling lama 3 masa pajak setelah berakhirnya masa pajak saat faktur dibuat (Maret, April, Mei), sepanjang belum dibebankan sebagai biaya dan belum dilakukan pemeriksaan."
+ },
+ {
+  "n": 27,
+  "sub": "DN - Pajak Masukan",
+  "q": "Total PM PT Cemerlang Masa Juli Rp100 juta, termasuk PM atas sedan untuk direksi Rp10 juta dan PM dari faktur pajak cacat Rp5 juta. PM yang dapat dikreditkan adalah ...",
+  "o": [
+   "Rp95 juta",
+   "Rp100 juta",
+   "Rp85 juta",
+   "Rp90 juta"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9 ayat (8) huruf c dan f: PM sedan/station wagon (bukan barang dagangan/disewakan) dan faktur yang tidak lengkap tidak dapat dikreditkan. 100 - 10 - 5 = 85 jt."
+ },
+ {
+  "n": 28,
+  "sub": "DN - Pajak Masukan",
+  "q": "Melanjutkan soal sebelumnya, Pajak Keluaran Masa Juli Rp150 juta. PPN yang harus disetor Masa Juli adalah ...",
+  "o": [
+   "Rp60 juta",
+   "Rp65 juta",
+   "Rp150 juta",
+   "Rp50 juta"
+  ],
+  "ans": 1,
+  "exp": "PPN kurang bayar = PK - PM yang dapat dikreditkan = 150 - 85 = 65 jt, disetor sebelum SPT Masa PPN disampaikan."
+ },
+ {
+  "n": 29,
+  "sub": "DN - Pajak Masukan",
+  "q": "PM atas perolehan BKP yang digunakan untuk menghasilkan penyerahan yang mendapat fasilitas dibebaskan dari pengenaan PPN (Pasal 16B) ...",
+  "o": [
+   "Dapat direstitusi",
+   "Dapat dikreditkan",
+   "Tidak dapat dikreditkan",
+   "Dapat dikreditkan 80%"
+  ],
+  "ans": 2,
+  "exp": "Pasal 16B ayat (3) UU PPN: PM atas perolehan BKP/JKP yang atas penyerahannya dibebaskan dari PPN tidak dapat dikreditkan. Sebaliknya, PM untuk penyerahan yang mendapat fasilitas tidak dipungut tetap dapat dikreditkan (Pasal 16B ayat (2))."
+ },
+ {
+  "n": 30,
+  "sub": "DN - Pajak Masukan",
+  "q": "PM atas perolehan BKP/JKP sebelum pengusaha dikukuhkan sebagai PKP, berdasarkan UU HPP ...",
+  "o": [
+   "Dapat dikreditkan dengan pedoman pengkreditan sebesar 80% dari PK",
+   "Hanya dapat dibiayakan",
+   "Dapat dikreditkan penuh sesuai faktur",
+   "Sama sekali tidak dapat dikreditkan"
+  ],
+  "ans": 0,
+  "exp": "Pasal 9 ayat (9a) UU PPN s.t.d.t.d. UU HPP: PM sebelum pengukuhan dapat dikreditkan menggunakan pedoman pengkreditan PM sebesar 80% dari PK atas penyerahan yang terutang PPN."
+ },
+ {
+  "n": 31,
+  "sub": "DN - Pajak Masukan",
+  "q": "Apabila dalam suatu masa pajak PM lebih besar daripada PK, selisihnya ...",
+  "o": [
+   "Dibebankan sebagai biaya",
+   "Dikreditkan ke PPh Badan",
+   "Dikompensasikan ke masa pajak berikutnya atau dapat dimintakan restitusi pada akhir tahun buku (atau setiap masa bagi PKP tertentu)",
+   "Hangus"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9 ayat (4), (4a), (4b) UU PPN: kelebihan dikompensasikan ke masa berikutnya; restitusi diajukan pada akhir tahun buku, kecuali PKP tertentu (eksportir, penyerahan ke pemungut, tidak dipungut, PKP dalam tahap belum berproduksi) yang dapat mengajukan setiap masa."
+ },
+ {
+  "n": 32,
+  "sub": "OP - Objek",
+  "q": "Tuan Andi (pengusaha OP) memiliki peredaran bruto Rp3 miliar setahun dan belum dikukuhkan sebagai PKP. Kewajibannya terkait PPN adalah ...",
+  "o": [
+   "Wajib memungut PPN tanpa dikukuhkan",
+   "Wajib dikukuhkan sebagai PKP",
+   "Wajib menerbitkan faktur pajak",
+   "Tidak wajib dikukuhkan karena termasuk pengusaha kecil (≤ Rp4,8 miliar), tetapi dapat memilih menjadi PKP"
+  ],
+  "ans": 3,
+  "exp": "Ketentuan batasan pengusaha kecil PPN (PMK 197/PMK.03/2013, kini diatur dalam PMK 81/2024): pengusaha kecil dengan peredaran bruto ≤ Rp4,8 M dalam 1 tahun buku tidak wajib dikukuhkan, tetapi dapat memilih menjadi PKP; bila memilih, seluruh ketentuan PPN berlaku."
+ },
+ {
+  "n": 33,
+  "sub": "OP - Objek",
+  "q": "Ny. Bunga (bukan pengusaha) menjual mobil pribadinya kepada tetangga. Atas penjualan tersebut ...",
+  "o": [
+   "Bukan objek PPN karena tidak dilakukan dalam kegiatan usaha atau pekerjaannya",
+   "Terutang PPN 12%",
+   "Terutang PPN besaran tertentu",
+   "Terutang PPnBM"
+  ],
+  "ans": 0,
+  "exp": "Salah satu syarat penyerahan terutang adalah dilakukan dalam kegiatan usaha atau pekerjaan pengusaha (Pasal 4 ayat (1) huruf a). Penjualan barang pribadi oleh non-pengusaha bukan objek PPN."
+ },
+ {
+  "n": 34,
+  "sub": "OP - Objek",
+  "q": "Tuan Candra (OP, bukan PKP) mengimpor sebuah mesin dari Jepang untuk usahanya. Atas impor tersebut...",
+  "o": [
+   "Tidak terutang PPN karena bukan PKP",
+   "Hanya terutang PPh 22",
+   "Terutang PPN impor yang dipungut Direktorat Jenderal Bea dan Cukai",
+   "Terutang PPN hanya jika nilainya > Rp1 miliar"
+  ],
+  "ans": 2,
+  "exp": "Pasal 4 ayat (1) huruf b UU PPN: PPN dikenakan atas impor BKP oleh siapa pun yang memasukkan BKP ke dalam Daerah Pabean, tanpa memandang status PKP."
+ },
+ {
+  "n": 35,
+  "sub": "OP - Objek",
+  "q": "Dr. Dewi (OP) berlangganan jasa konsultasi bisnis dari penyedia di luar negeri untuk kliniknya. Atas pemanfaatan JKP tersebut ...",
+  "o": [
+   "Terutang PPh 26 saja",
+   "Wajib dipungut penyedia luar negeri",
+   "Terutang PPN dan wajib dipungut serta disetor sendiri oleh Dr. Dewi sebagai pihak yang memanfaatkan",
+   "Bukan objek PPN"
+  ],
+  "ans": 2,
+  "exp": "Pasal 4 ayat (1) huruf e UU PPN: setiap orang pribadi atau badan yang memanfaatkan JKP dari luar DP di dalam DP wajib memungut PPN, terlepas dari status PKP (kecuali melalui PMSE yang PPN-nya dipungut pemungut PMSE)."
+ },
+ {
+  "n": 36,
+  "sub": "OP - Objek",
+  "q": "Kegiatan membangun sendiri (KMS) oleh orang pribadi terutang PPN apabila bangunan yang didirikan memenuhi kriteria ...",
+  "o": [
+   "Bertingkat minimal 3 lantai",
+   "Konstruksi utama kayu/beton/batu bata/baja, untuk tempat tinggal atau kegiatan usaha, dengan luas paling sedikit 200 m2",
+   "Luas minimal 100 m2",
+   "Nilai minimal Rp1 miliar"
+  ],
+  "ans": 1,
+  "exp": "Pasal 16C UU PPN jo. PMK 81/2024 (sebelumnya PMK 61/PMK.03/2022): kriteria bangunan KMS adalah konstruksi utama kayu, beton, pasangan batu bata atau sejenis, dan/atau baja; diperuntukkan bagi tempat tinggal atau kegiatan usaha; dengan luas ≥ 200 m2."
+ },
+ {
+  "n": 37,
+  "sub": "OP - Objek",
+  "q": "Tuan Eko membangun rumah tinggal seluas 300 m2 tanpa kontraktor dengan biaya (tidak termasuk tanah) Rp1,5 miliar pada 2026. PPN KMS yang terutang adalah ...",
+  "o": [
+   "Rp33.000.000",
+   "Rp36.000.000",
+   "Rp165.000.000",
+   "Rp30.000.000"
+  ],
+  "ans": 0,
+  "exp": "PMK 81/2024 s.t.d.d. PMK 11/2025: PPN KMS = 20% x 11/12 × 12% x jumlah biaya (efektif 2,2%) = 2,2% x 1,5 M = 33 jt. Dasar biaya tidak termasuk harga perolehan tanah."
+ },
+ {
+  "n": 38,
+  "sub": "OP - Objek",
+  "q": "Tuan Fajar (PKP OP) mengekspor kerajinan tangan ke Australia. Perlakuan PPN atas ekspor tersebut adalah...",
+  "o": [
+   "Bukan objek",
+   "Dibebaskan sehingga PM tidak dapat dikreditkan",
+   "Terutang PPN 12%",
+   "Terutang PPN 0% dan PM tetap dapat dikreditkan"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4 ayat (1) huruf f dan Pasal 7 ayat (2) UU PPN: ekspor BKP berwujud oleh PKP dikenai tarif 0%; PM yang berkaitan tetap dapat dikreditkan dan kelebihan dapat direstitusi."
+ },
+ {
+  "n": 39,
+  "sub": "OP - Objek",
+  "q": "Ny. Gita (PKP OP, toko bangunan) mengambil semen dari tokonya untuk renovasi rumah pribadi. Atas transaksi tersebut ...",
+  "o": [
+   "Merupakan pemakaian sendiri BKP yang terutang PPN",
+   "Bukan penyerahan",
+   "Hanya terutang PPh",
+   "Dibebaskan PPN"
+  ],
+  "ans": 0,
+  "exp": "Pasal 1A ayat (1) huruf d UU PPN: pemakaian sendiri BKP untuk kepentingan pengusaha sendiri, pengurus, atau karyawan termasuk penyerahan BKP yang terutang PPN."
+ },
+ {
+  "n": 40,
+  "sub": "OP - Objek",
+  "q": "Tuan Hadi (PKP OP) menjual komputer bekas operasional usahanya yang PM perolehannya dahulu dikreditkan, seharga Rp12 juta. PPN yang terutang adalah ...",
+  "o": [
+   "Rp0",
+   "Rp1.440.000",
+   "Rp132.000",
+   "Rp1.320.000"
+  ],
+  "ans": 3,
+  "exp": "Pasal 16D UU PPN: penyerahan aktiva yang tujuan semula tidak untuk diperjualbelikan terutang PPN bila PM-nya dapat dikreditkan. PPN = 12% x 11/12 x 12 jt = 1.320.000."
+ }
+]

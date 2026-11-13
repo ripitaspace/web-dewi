@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "STP dan SKP",
+  "q": "Surat Tagihan Pajak (STP) dapat diterbitkan apabila ...",
+  "o": [
+   "Jumlah kredit pajak lebih besar dari pajak terutang",
+   "Berdasarkan hasil pemeriksaan terdapat pajak kurang bayar",
+   "WP dikenai sanksi administratif berupa denda dan/atau bunga",
+   "Ditemukan data baru yang mengakibatkan penambahan pajak"
+  ],
+  "ans": 2,
+  "exp": "Pasal 14 ayat (1) UU KUP: STP diterbitkan antara lain jika PPh tahun berjalan tidak/kurang dibayar, terdapat kekurangan karena salah tulis/hitung, WP dikenai sanksi denda/bunga, serta pelanggaran faktur pajak. Kurang bayar hasil pemeriksaan → SKPKB; data baru → SKPKBT; kredit > terutang → SKPLB."
+ },
+ {
+  "n": 2,
+  "sub": "STP dan SKP",
+  "q": "Berdasarkan hasil pemeriksaan atas PPh Badan Tahun Pajak 2024 PT Arka (tahun buku = tahun kalender), terdapat kurang bayar Rp100.000.000. SKPKB terbit 15 Oktober 2026. Tarif bunga per bulan Pasal 13 ayat (2) (KMK) 1,60%. Sanksi bunga dalam SKPKB adalah .",
+  "o": [
+   "Rp33.600.000",
+   "Rp35.200.000",
+   "Rp24.000.000",
+   "Rp38.400.000"
+  ],
+  "ans": 1,
+  "exp": "Pasal 13 ayat (2) UU KUP s.t.d.t.d. UU HPP: bunga dihitung sejak berakhirnya Tahun Pajak (1 Januari 2025) sampai diterbitkannya SKPKB (15 Oktober 2026), maksimal 24 bulan, bagian bulan dihitung penuh: 12 + 10 = 22 bulan. Bunga = 100 jt x 1,60% x 22 = 35,2 jt. Tarif Pasal 13(2) = (suku bunga acuan + 15%)/12."
+ },
+ {
+  "n": 3,
+  "sub": "STP dan SKP",
+  "q": "SKPKB yang diterbitkan karena WP tidak menyelenggarakan pembukuan sebagaimana diatur Pasal 28 UU KUP sehingga pajak terutang tidak dapat diketahui, dikenai sanksi ...",
+  "o": [
+   "Denda 50%",
+   "Bunga paling lama 24 bulan",
+   "Kenaikan 100%",
+   "Kenaikan 75% dari pajak kurang dibayar"
+  ],
+  "ans": 3,
+  "exp": "Pasal 13 ayat (3) UU KUP s.t.d.t.d. UU HPP: SKPKB karena SPT tidak disampaikan setelah ditegur (13(1)b), PPN tidak seharusnya dikompensasikan/tarif 0% (13(1)c), atau kewajiban pembukuan tidak dipenuhi (13(1)d) dikenai kenaikan 75%."
+ },
+ {
+  "n": 4,
+  "sub": "STP dan SKP",
+  "q": "Melanjutkan kasus tersebut, jika pokok pajak kurang bayar dalam SKPKB jabatan Rp200.000.000, jumlah yang harus dibayar adalah ...",
+  "o": [
+   "Rp350.000.000",
+   "Rp400.000.000",
+   "Rp300.000.000",
+   "Rp200.000.000"
+  ],
+  "ans": 0,
+  "exp": "Kenaikan 75% x 200 jt = 150 jt. Total SKPKB = 200 jt + 150 jt = 350 jt (Pasal 13 ayat (3) UU HPP)."
+ },
+ {
+  "n": 5,
+  "sub": "STP dan SKP",
+  "q": "SKPKBT diterbitkan apabila ditemukan data baru yang mengakibatkan penambahan pajak terutang, dalam jangka waktu ...",
+  "o": [
+   "Kapan saja tanpa batas",
+   "2 tahun setelah saat terutang",
+   "10 tahun",
+   "5 tahun setelah saat terutangnya pajak atau berakhirnya Masa/Tahun Pajak"
+  ],
+  "ans": 3,
+  "exp": "Pasal 15 ayat (1) UU KUP: SKPKBT dapat diterbitkan dalam jangka waktu 5 tahun setelah saat terutangnya pajak atau berakhirnya Masa Pajak, bagian Tahun Pajak, atau Tahun Pajak, apabila ditemukan data baru dan/atau data yang semula belum terungkap."
+ },
+ {
+  "n": 6,
+  "sub": "STP dan SKP",
+  "q": "Kekurangan pajak dalam SKPKBT PT Bima Rp40.000.000 (tidak diungkapkan sendiri sebelum pemeriksaan). Jumlah yang harus dibayar adalah ...",
+  "o": [
+   "Rp80.000.000",
+   "Rp60.000.000",
+   "Rp40.000.000",
+   "Rp70.000.000"
+  ],
+  "ans": 0,
+  "exp": "Pasal 15 ayat (2) UU KUP: jumlah kekurangan pajak dalam SKPKBT ditambah sanksi kenaikan 100%. 40 jt + 40 jt = 80 jt."
+ },
+ {
+  "n": 7,
+  "sub": "STP dan SKP",
+  "q": "Surat Ketetapan Pajak Nihil (SKPN) diterbitkan apabila .",
+  "o": [
+   "WP terlambat menyampaikan SPT",
+   "Jumlah kredit pajak sama dengan pajak terutang, atau tidak ada pajak terutang dan tidak ada kredit pajak",
+   "Kredit pajak lebih besar dari pajak terutang",
+   "Pajak terutang lebih besar dari kredit pajak"
+  ],
+  "ans": 1,
+  "exp": "Pasal 17A UU KUP: SKPN diterbitkan apabila jumlah kredit pajak atau pajak yang dibayar sama dengan jumlah pajak terutang, atau pajak tidak terutang dan tidak ada kredit pajak/pembayaran pajak."
+ },
+ {
+  "n": 8,
+  "sub": "STP dan SKP",
+  "q": "Atas permohonan restitusi (SPT Lebih Bayar), DJP harus menerbitkan surat ketetapan pajak paling lama •..",
+  "o": [
+   "24 bulan",
+   "12 bulan sejak permohonan diterima lengkap",
+   "1 bulan",
+   "6 bulan sejak permohonan diterima lengkap"
+  ],
+  "ans": 1,
+  "exp": "Pasal 17B ayat (1) UU KUP: setelah pemeriksaan, DJP menerbitkan SKP paling lama 12 bulan sejak permohonan diterima secara lengkap. Jika terlampaui, permohonan dianggap dikabulkan dan SKPLB diterbitkan paling lama 1 bulan setelah jangka waktu berakhir (Pasal 17B ayat (2))."
+ },
+ {
+  "n": 9,
+  "sub": "STP dan SKP",
+  "q": "PT Citra (PKP) tidak menerbitkan faktur pajak atas penyerahan dengan DPP Rp200.000.000. Sanksi dalam STP adalah ...",
+  "o": [
+   "Rp500.000",
+   "Rp4.000.000 (denda 2% x DPP)",
+   "Rp2.000.000 (denda 1% x DPP)",
+   "Rp22.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 14 ayat (4) UU KUP s.t.d.t.d. UU HPP: PKP yang tidak membuat faktur pajak, tidak tepat waktu, tidak mengisi lengkap, atau melaporkan tidak sesuai masa dikenai denda 1% dari DPP (sebelum HPP 2%). 1% x 200 jt = 2 jt."
+ },
+ {
+  "n": 10,
+  "sub": "STP dan SKP",
+  "q": "Jangka waktu jatuh tempo pelunasan STP, SKPKB, dan SKPKBT bagi Wajib Pajak pada umumnya adalah",
+  "o": [
+   "14 hari sejak diterbitkan",
+   "1 bulan sejak tanggal diterbitkan",
+   "3 bulan sejak diterima",
+   "6 bulan sejak diterbitkan"
+  ],
+  "ans": 1,
+  "exp": "Pasal 9 ayat (3) UU KUP: STP, SKPKB, SKPKBT, serta SK Pembetulan/Keberatan/Putusan Banding/PK yang menyebabkan tambahan pajak harus dilunasi paling lama 1 bulan sejak tanggal diterbitkan (dapat diperpanjang paling lama 2 bulan untuk WP usaha kecil/daerah tertentu, Pasal 9 ayat (3a))."
+ },
+ {
+  "n": 11,
+  "sub": "Pembetulan & keberatan",
+  "q": "WP dapat membetulkan SPT yang telah disampaikan atas kemauan sendiri dengan syarat ...",
+  "o": [
+   "DJP belum melakukan tindakan pemeriksaan",
+   "Belum diterbitkan STP",
+   "Hanya untuk SPT kurang bayar",
+   "Paling lambat 3 bulan setelah SPT disampaikan"
+  ],
+  "ans": 0,
+  "exp": "Pasal 8 ayat (1) UU KUP: WP dengan kemauan sendiri dapat membetulkan SPT yang telah disampaikan dengan menyampaikan pernyataan tertulis, dengan syarat DJP belum melakukan tindakan pemeriksaan."
+ },
+ {
+  "n": 12,
+  "sub": "Pembetulan & keberatan",
+  "q": "Pembetulan SPT yang mengakibatkan rugi atau lebih bayar harus disampaikan paling lama ...",
+  "o": [
+   "2 tahun sebelum daluwarsa penetapan",
+   "Setiap saat sepanjang belum diperiksa",
+   "3 tahun setelah tahun pajak berakhir",
+   "1 tahun sejak SPT disampaikan"
+  ],
+  "ans": 0,
+  "exp": "Pasal 8 ayat (1a) UU KUP: dalam hal pembetulan SPT menyatakan rugi atau lebih bayar, pembetulan harus disampaikan paling lama 2 tahun sebelum daluwarsa penetapan."
+ },
+ {
+  "n": 13,
+  "sub": "Pembetulan & keberatan",
+  "q": "Keberatan atas SKPKB harus diajukan dalam jangka waktu ...",
+  "o": [
+   "3 bulan sejak tanggal dikirim SKP",
+   "12 bulan sejak SKP diterbitkan",
+   "1 bulan sejak SKP diterima",
+   "6 bulan sejak SKP diterbitkan"
+  ],
+  "ans": 0,
+  "exp": "Pasal 25 ayat (3) UU KUP: keberatan diajukan dalam jangka waktu 3 bulan sejak tanggal dikirim surat ketetapan pajak atau sejak tanggal pemotongan/pemungutan, kecuali WP dapat menunjukkan bahwa jangka waktu tidak dapat dipenuhi karena keadaan di luar kekuasaannya."
+ },
+ {
+  "n": 14,
+  "sub": "Pembetulan & keberatan",
+  "q": "Syarat pembayaran sebelum mengajukan keberatan atas SKPKB adalah WP melunasi ...",
+  "o": [
+   "50% dari jumlah dalam SKPKB",
+   "Tidak ada kewajiban pembayaran",
+   "Seluruh jumlah pajak dalam SKPKB",
+   "Paling sedikit sejumlah yang telah disetujui dalam pembahasan akhir hasil pemeriksaan"
+  ],
+  "ans": 3,
+  "exp": "Pasal 25 ayat (3a) UU KUP: dalam hal WP mengajukan keberatan atas SKP, WP wajib melunasi pajak yang masih harus dibayar paling sedikit sejumlah yang telah disetujui WP dalam pembahasan akhir hasil pemeriksaan sebelum surat keberatan disampaikan."
+ },
+ {
+  "n": 15,
+  "sub": "Pembetulan & keberatan",
+  "q": "DJP wajib memberi keputusan atas keberatan dalam jangka waktu ...",
+  "o": [
+   "6 bulan sejak surat keberatan diterima",
+   "18 bulan",
+   "24 bulan",
+   "12 bulan sejak surat keberatan diterima"
+  ],
+  "ans": 3,
+  "exp": "Pasal 26 ayat (1) UU KUP: paling lama 12 bulan sejak surat keberatan diterima. Jika terlampaui tanpa keputusan, keberatan dianggap dikabulkan (Pasal 26 ayat (5))."
+ },
+ {
+  "n": 16,
+  "sub": "Pembetulan & keberatan",
+  "q": "Atas dokumen berikut, yang TIDAK dapat diajukan keberatan adalah ...",
+  "o": [
+   "Pemotongan PPh oleh pihak ketiga",
+   "Surat Tagihan Pajak",
+   "SKPLB",
+   "SKPKB"
+  ],
+  "ans": 1,
+  "exp": "Pasal 25 ayat (1) UU KUP: keberatan dapat diajukan atas SKPKB, SKPKBT, SKPLB, SKPN, dan pemotongan/pemungutan oleh pihak ketiga. Atas STP tidak dapat diajukan keberatan; upaya yang tersedia adalah Pasal 36 ayat (1) huruf a atau c."
+ },
+ {
+  "n": 17,
+  "sub": "Pembetulan & keberatan",
+  "q": "Permohonan pengurangan atau pembatalan SKP yang tidak benar berdasarkan Pasal 36 ayat (1) huruf b UU KUP dapat diajukan dengan syarat ...",
+  "o": [
+   "WP tidak mengajukan keberatan atas SKP tersebut (atau keberatan tidak dipertimbangkan)",
+   "SKP diterbitkan lebih dari 5 tahun lalu",
+   "WP telah mengajukan keberatan atas SKP yang sama",
+   "Telah ada putusan banding"
+  ],
+  "ans": 0,
+  "exp": "Permohonan Pasal 36 ayat (1) huruf b hanya untuk SKP yang tidak diajukan keberatan, atau keberatannya tidak dipertimbangkan karena tidak memenuhi syarat formal (diatur dalam PMK 118/2024 yang berlaku sejak 1 Januari 2025)."
+ },
+ {
+  "n": 18,
+  "sub": "Pembetulan & keberatan",
+  "q": "Pembatalan hasil pemeriksaan atau SKP hasil pemeriksaan dapat dimohonkan berdasarkan Pasal 36 ayat (1) huruf d apabila ...",
+  "o": [
+   "Jumlah koreksi di atas Rp1 miliar",
+   "SKP diterima lewat 3 bulan",
+   "WP tidak setuju dengan koreksi pemeriksa",
+   "Pemeriksaan dilaksanakan tanpa penyampaian SPHP atau tanpa pembahasan akhir hasil pemeriksaan dengan WP"
+  ],
+  "ans": 3,
+  "exp": "Pasal 36 ayat (1) huruf d: DJP dapat membatalkan hasil pemeriksaan pajak atau SKP dari hasil pemeriksaan yang dilaksanakan tanpa penyampaian surat pemberitahuan hasil pemeriksaan atau tanpa pembahasan akhir hasil pemeriksaan dengan WP."
+ },
+ {
+  "n": 19,
+  "sub": "Pembetulan & keberatan",
+  "q": "Banding ke Pengadilan Pajak atas keputusan keberatan diajukan paling lama ...",
+  "o": [
+   "1 bulan sejak keputusan diterima",
+   "12 bulan",
+   "6 bulan",
+   "3 bulan sejak keputusan keberatan diterima"
+  ],
+  "ans": 3,
+  "exp": "Pasal 27 ayat (3) UU KUP dan Pasal 35 UU 14/2002: banding diajukan dalam jangka waktu 3 bulan sejak keputusan keberatan diterima, dilampiri salinan keputusan."
+ },
+ {
+  "n": 20,
+  "sub": "Pembetulan & keberatan",
+  "q": "Pembetulan ketetapan berdasarkan Pasal 16 UU KUP dilakukan atas ...",
+  "o": [
+   "Kesalahan tulis, kesalahan hitung, dan/atau kekeliruan penerapan ketentuan tertentu",
+   "Perbedaan pendapat mengenai koreksi fiskal",
+   "Sanksi yang dianggap terlalu berat",
+   "Penundaan pembayaran SANKSI"
+  ],
+  "ans": 0,
+  "exp": "Pasal 16 ayat (1) UU KUP: DJP karena jabatan atau atas permohonan WP dapat membetulkan SKP/STP/keputusan yang dalam penerbitannya terdapat kesalahan tulis, kesalahan hitung, dan/atau kekeliruan penerapan ketentuan tertentu."
+ },
+ {
+  "n": 21,
+  "sub": "Sanksi",
+  "q": "PT Dana terlambat menyampaikan SPT Masa PPN, SPT Masa PPh Pasal 21, dan SPT Tahunan PPh Badan. Total sanksi denda Pasal 7 UU KUP adalah ...",
+  "o": [
+   "Rp700.000",
+   "Rp1.200.000",
+   "Rp1.600.000",
+   "Rp2.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 7 ayat (1) UU KUP: SPT Masa PPN Rp500.000; SPT Masa lainnya Rp100.000; SPT Tahunan PPh Badan Rp1.000.000; SPT Tahunan PPh OP Rp100.000. Total = 500.000 + 100.000 + 1.000.000 = 1.600.000."
+ },
+ {
+  "n": 22,
+  "sub": "Sanksi",
+  "q": "PPh Pasal 21 Masa April 2026 PT Elang Rp50.000.000 jatuh tempo penyetoran 15 Mei 2026, baru disetor 20 Juli 2026. Tarif bunga per bulan Pasal 9 ayat (2a) (KMK) 0,65%. Sanksi bunga adalah ...",
+  "o": [
+   "Rp1.300.000",
+   "Rp975.000",
+   "Rp650.000",
+   "Rp1.000.000"
+  ],
+  "ans": 1,
+  "exp": "Pasal 9 ayat (2a) UU KUP: bunga dihitung dari jatuh tempo pembayaran sampai tanggal pembayaran, bagian bulan dihitung penuh. 16 Mei-15 Jun (1), 16 Jun-15 Jul (2), 16-20 Jul (3) = 3 bulan. 50 jt x 0,65% x 3 = 975.000. Tarif Pasal 9(2a) = (suku bunga acuan + 5%)/12."
+ },
+ {
+  "n": 23,
+  "sub": "Sanksi",
+  "q": "Keberatan PT Fajar atas SKPKB Rp500 juta ditolak sebagian; jumlah pajak menurut keputusan keberatan Rp400 juta. Sebelum keberatan, PT Fajar telah melunasi Rp100 juta. PT Fajar tidak mengajukan banding. Sanksi denda keberatan adalah .",
+  "o": [
+   "Rp120 juta",
+   "Rp90 juta",
+   "Rp150 juta",
+   "Rp0"
+  ],
+  "ans": 1,
+  "exp": "Pasal 25 ayat (9) UU KUP s.t.d.t.d. UU HPP: denda 30% dari jumlah pajak berdasarkan keputusan keberatan dikurangi pajak yang telah dibayar sebelum mengajukan keberatan. 30% x (400 - 100) = 90 jt."
+ },
+ {
+  "n": 24,
+  "sub": "Sanksi",
+  "q": "Seandainya PT Fajar mengajukan banding dan putusan banding menetapkan pajak terutang Rp350 juta (sebelum keberatan telah dibayar Rp100 juta), sanksi yang dikenakan adalah …..",
+  "o": [
+   "Denda 30% = Rp75 juta",
+   "Denda 100% = Rp250 juta",
+   "Denda 60% = Rp150 juta",
+   "Denda 30% dan 60% = Rp225 juta"
+  ],
+  "ans": 2,
+  "exp": "Pasal 27 ayat (5d) UU KUP s.t.d.t.d. UU HPP: banding ditolak/dikabulkan sebagian dikenai denda 60% dari jumlah pajak berdasarkan putusan banding dikurangi pembayaran sebelum keberatan. 60% x (350 - 100) = 150 jt. Denda 30% keberatan tidak dikenakan bila WP mengajukan banding (Pasal 25 ayat (10))."
+ },
+ {
+  "n": 25,
+  "sub": "Sanksi",
+  "q": "WP yang mengungkapkan ketidakbenaran perbuatan atas kemauan sendiri saat pemeriksaan bukti permulaan (sebelum penyidikan) sebagaimana Pasal 8 ayat (3) UU KUP wajib melunasi pokok pajak ditambah denda sebesar ...",
+  "o": [
+   "150%",
+   "200%",
+   "100%",
+   "50%"
+  ],
+  "ans": 2,
+  "exp": "Pasal 8 ayat (3a) UU KUP s.t.d.t.d. UU HPP: pengungkapan ketidakbenaran disertai pelunasan kekurangan pajak beserta denda 100% dari jumlah pajak kurang dibayar (sebelumnya 150%)."
+ },
+ {
+  "n": 26,
+  "sub": "Sanksi",
+  "q": "Penghentian penyidikan tindak pidana perpajakan berdasarkan Pasal 44B UU KUP untuk tindak pidana Pasal 39 (misalnya tidak menyetorkan pajak yang telah dipotong) mensyaratkan pelunasan kerugian pada pendapatan negara ditambah sanksi denda sebesar ...",
+  "o": [
+   "3 kali",
+   "4 kali",
+   "1 kali",
+   "2 kali"
+  ],
+  "ans": 0,
+  "exp": "Pasal 44B ayat (2) UU KUP s.t.d.t.d. UU HPP: pelunasan kerugian negara ditambah denda 1 kali (Pasal 38), 3 kali (Pasal 39), atau 4 kali jumlah pajak dalam faktur pajak (Pasal 39A)."
+ },
+ {
+  "n": 27,
+  "sub": "Sanksi",
+  "q": "Batas maksimum pengenaan sanksi bunga pada Pasal 8 ayat (2), Pasal 9 ayat (2a), dan Pasal 13 ayat (2) UU KUP adalah ...",
+  "o": [
+   "24 bulan",
+   "Tidak dibatasi",
+   "36 bulan",
+   "12 bulan"
+  ],
+  "ans": 0,
+  "exp": "Ketentuan bunga dalam UU KUP s.t.d.t.d. UU HPP dikenakan paling lama 24 bulan serta bagian dari bulan dihitung penuh 1 bulan."
+ },
+ {
+  "n": 28,
+  "sub": "Sanksi",
+  "q": "Tarif bunga per bulan sebagai sanksi administratif sejak UU Cipta Kerja/UU HPP ditetapkan berdasarkan",
+  "o": [
+   "Tarif tetap 2% per bulan",
+   "Suku bunga deposito bank BUMN",
+   "BI Rate tanpa penyesuaian, ditetapkan tahunan",
+   "Suku bunga acuan ditambah uplift tertentu dibagi 12, ditetapkan Menteri Keuangan setiap bulan PPSP"
+  ],
+  "ans": 3,
+  "exp": "Tarif bunga sanksi = (suku bunga acuan + uplift)/12 dan ditetapkan Menteri Keuangan per bulan melalui KMK; uplift berbeda menurut jenis pelanggaran (misalnya 5% untuk Pasal 8(2)/(2a), 9(2a)/(2b); 15% untuk Pasal 13(2)). Tarif tetap 2% berlaku sebelum UU Cipta Kerja."
+ },
+ {
+  "n": 29,
+  "sub": "PPSP",
+  "q": "Surat Teguran diterbitkan apabila utang pajak tidak dilunasi setelah ... sejak jatuh tempo pembayaran.",
+  "o": [
+   "3 hari",
+   "14 hari",
+   "7 hari",
+   "21 hari"
+  ],
+  "ans": 2,
+  "exp": "UU PPSP s.t.d.t.d. UU 19/2000 jo. PMK 61/2023: Surat Teguran/peringatan diterbitkan apabila Penanggung Pajak tidak melunasi utang pajak setelah lewat 7 hari sejak jatuh tempo pembayaran."
+ },
+ {
+  "n": 30,
+  "sub": "PPSP",
+  "q": "Surat Paksa diterbitkan apabila utang pajak tidak dilunasi dalam jangka waktu …. setelah Surat Teguran diterbitkan.",
+  "o": [
+   "14 hari",
+   "7 hari",
+   "21 hari",
+   "1 bulan"
+  ],
+  "ans": 2,
+  "exp": "Pasal 8 UU PPSP jo. PMK 61/2023: Surat Paksa diterbitkan apabila Penanggung Pajak tidak melunasi utang pajak sampai dengan 21 hari sejak tanggal Surat Teguran."
+ },
+ {
+  "n": 31,
+  "sub": "PPSP",
+  "q": "Apabila utang pajak tidak dilunasi dalam waktu .. setelah Surat Paksa diberitahukan, Pejabat menerbitkan Surat Perintah Melaksanakan Penyitaan.",
+  "o": [
+   "14 hari",
+   "7 hari",
+   "2 × 24 jam",
+   "1 × 24 jam"
+  ],
+  "ans": 2,
+  "exp": "Pasal 12 UU PPSP: apabila utang pajak tidak dilunasi dalam waktu 2 × 24 jam sesudah tanggal pemberitahuan Surat Paksa, Pejabat menerbitkan SPMP."
+ },
+ {
+  "n": 32,
+  "sub": "PPSP",
+  "q": "Urutan tindakan penagihan pajak yang benar adalah ...",
+  "o": [
+   "Surat Paksa - Surat Teguran - Penyitaan - Lelang",
+   "Surat Teguran - Surat Paksa - Penyitaan - Pengumuman Lelang - Lelang",
+   "Surat Teguran - Penyitaan - Surat Paksa - Lelang",
+   "Pengumuman Lelang - Surat Teguran - Penyitaan - Surat Paksa"
+  ],
+  "ans": 1,
+  "exp": "Tahapan PPSP: Surat Teguran → Surat Paksa → SPMP/penyitaan → pengumuman lelang (paling singkat 14 hari setelah penyitaan) → lelang (paling singkat 14 hari setelah pengumuman)."
+ },
+ {
+  "n": 33,
+  "sub": "PPSP",
+  "q": "Penyanderaan (gijzeling) terhadap Penanggung Pajak hanya dapat dilakukan apabila ...",
+  "o": [
+   "Utang pajak berapa pun setelah Surat Teguran",
+   "Utang pajak paling sedikit Rp100 juta dan diragukan itikad baiknya, dengan izin tertulis Menteri Keuangan/Gubernur",
+   "Utang pajak paling sedikit Rp1 miliar tanpa syarat lain",
+   "Penanggung Pajak tidak hadir dalam pemeriksaan"
+  ],
+  "ans": 1,
+  "exp": "Pasal 33 UU PPSP: penyanderaan hanya terhadap Penanggung Pajak dengan utang pajak sekurang-kurangnya Rp100.000.000 dan diragukan itikad baiknya, berdasarkan surat perintah penyanderaan dengan izin tertulis Menteri/Gubernur; paling lama 6 bulan dan dapat diperpanjang paling lama 6 bulan."
+ },
+ {
+  "n": 34,
+  "sub": "PPSP",
+  "q": "Penagihan seketika dan sekaligus dapat dilakukan sebelum jatuh tempo apabila ...",
+  "o": [
+   "WP terlambat menyampaikan SPT",
+   "WP mengajukan angsuran pembayaran",
+   "Penanggung Pajak akan meninggalkan Indonesia untuk selama-lamanya atau berniat untuk itu",
+   "WP mengajukan keberatan"
+  ],
+  "ans": 2,
+  "exp": "Pasal 20 ayat (2) UU KUP dan Pasal 6 UU PPSP: penagihan seketika antara lain jika Penanggung Pajak akan meninggalkan Indonesia untuk selama-lamanya,memindahtangankan barang,menunjukkan tanda pembubaran/akan dibubarkan, atau terjadi penyitaan oleh pihak ketiga/kepailitan."
+ },
+ {
+  "n": 35,
+  "sub": "PPSP",
+  "q": "Hak untuk melakukan penagihan pajak (termasuk bunga, denda, kenaikan, dan biaya penagihan) daluwarsa setelah ...",
+  "o": [
+   "5 tahun terhitung sejak penerbitan STP, SKPKB, SKPKBT, atau keputusan/putusan yang menambah jumlah pajak",
+   "Tidak ada daluwarsa",
+   "10 tahun",
+   "3 tahun sejak penerbitan STP/SKP"
+  ],
+  "ans": 0,
+  "exp": "Pasal 22 ayat (1) UU KUP: daluwarsa penagihan 5 tahun sejak penerbitan STP/SKPKB/SKPKBT/SK Pembetulan/SK Keberatan/Putusan Banding/PK. Daluwarsa tertangguh antara lain bila diterbitkan Surat Paksa, ada pengakuan utang pajak, atau dilakukan penyidikan (Pasal 22 ayat (2))."
+ },
+ {
+  "n": 36,
+  "sub": "OP - STP dan SKP",
+  "q": "Tuan Gilang (WP OP) terlambat menyampaikan SPT Tahunan PPh OP Tahun Pajak 2025. Atas keterlambatan tersebut diterbitkan STP dengan denda sebesar ...",
+  "o": [
+   "Rp1.000.000",
+   "Rp100.000",
+   "Rp500.000",
+   "Rp50.000"
+  ],
+  "ans": 1,
+  "exp": "Pasal 7 ayat (1) UU KUP: denda keterlambatan SPT Tahunan PPh Orang Pribadi Rp100.000, ditagih dengan STP (Pasal 14 ayat (1) huruf c)."
+ },
+ {
+  "n": 37,
+  "sub": "OP - STP dan SKP",
+  "q": "Ny. Hana (pengusaha OP) terlambat membayar angsuran PPh Pasal 25 Rp4.000.000 selama 2 bulan lebih 3 hari. Tarif bunga per bulan Pasal 9 ayat (2a) 0,60%. Sanksi bunga dalam STP adalah ...",
+  "o": [
+   "Rp48.000",
+   "Rp24.000",
+   "Rp72.000",
+   "Rp96.000"
+  ],
+  "ans": 2,
+  "exp": "Bagian bulan dihitung penuh, sehingga 2 bulan 3 hari = 3 bulan. Bunga = 4.000.000 x 0,60% x 3 = 72.000 (Pasal 9 ayat (2a) UU KUP)."
+ },
+ {
+  "n": 38,
+  "sub": "OP - STP dan SKP",
+  "q": "Tuan Iman (OP, tidak menjalankan usaha) menyampaikan SPT Tahunan lebih bayar karena kelebihan pemotongan PPh 21. Atas permohonannya, pengembalian pendahuluan dapat diberikan melalui penelitian dengan menerbitkan ...",
+  "o": [
+   "SKPN",
+   "STP",
+   "SKPKB",
+   "Surat Keputusan Pengembalian Pendahuluan Kelebihan Pajak (SKPPKP)"
+  ],
+  "ans": 3,
+  "exp": "Pasal 17D UU KUP jo. PMK 39/2018 s.t.d.t.d. PMK 209/2021: WP OP yang tidak menjalankan usaha/pekerjaan bebas (dan OP usaha/badan/PKP dengan batas tertentu) dapat diberikan pengembalian pendahuluan melalui penelitian; produknya SKPPKP. DJP tetap dapat memeriksa dan menerbitkan SKP kemudian."
+ },
+ {
+  "n": 39,
+  "sub": "OP - STP dan SKP",
+  "q": "Atas SKPKB OP dengan pokok Rp20.000.000 yang tidak dilunasi sampai jatuh tempo, WP dikenai bunga dalam STP berdasarkan ...",
+  "o": [
+   "Pasal 25 ayat (9), denda 30%",
+   "Pasal 13 ayat (2), tarif suku bunga acuan + 15%",
+   "Pasal 7, denda tetap Rp100.000",
+   "Pasal 19 ayat (1), dihitung dari jatuh tempo sampai tanggal pelunasan atau diterbitkannya STP, paling lama 24 bulan"
+  ],
+  "ans": 3,
+  "exp": "Pasal 19 ayat (1) UU KUP: apabila SKPKB/SKPKBT/keputusan yang menambah pajak tidak atau kurang dibayar pada saat jatuh tempo, dikenai bunga atas jumlah yang tidak/kurang dibayar, dihitung dari jatuh tempo sampai tanggal pelunasan atau tanggal STP, paling lama 24 bulan."
+ },
+ {
+  "n": 40,
+  "sub": "OP - STP dan SKP",
+  "q": "Tuan Joko (OP) tidak menyampaikan SPT Tahunan dan setelah ditegur secara tertulis tetap tidak menyampaikan dalam waktu yang ditentukan. DJP menerbitkan SKPKB secara jabatan dengan kurang bayar Rp10.000.000. Total SKPKB adalah ...",
+  "o": [
+   "Rp20.000.000",
+   "Rp10.000.000",
+   "Rp15.000.000",
+   "Rp17.500.000"
+  ],
+  "ans": 3,
+  "exp": "Pasal 13 ayat (1) huruf b jo. ayat (3) UU KUP s.t.d.t.d. UU HPP: kenaikan 75% x 10 jt = 7,5 jt. Total 17,5 jt."
+ }
+]

@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Sinar membayar gaji pegawai bulan Maret 2026 dengan penghasilan bruto Rp150.000.000. PPh Pasal 21 yang dipotong Rp7.500.000. Jurnal yang tepat pada saat pembayaran gaji adalah ..",
+  "o": [
+   "Beban Gaji 150.000.000 / Kas 142.500.000; PPh 21 Dibayar di Muka 7.500.000",
+   "Beban Gaji 150.000.000 / Kas 142.500.000; Utang PPh Pasal 21 7.500.000",
+   "Beban Gaji 142.500.000; Beban PPh 21 7.500.000 / Kas 150.000.000",
+   "Beban Gaji 150.000.000 / Kas 150.000.000"
+  ],
+  "ans": 1,
+  "exp": "PPh 21 dipotong dari penghasilan pegawai sehingga bagi pemberi kerja merupakan kewajiban (utang) sampai disetor. Saat penyetoran: Utang PPh 21 / Kas. Mencatatnya sebagai PPh 21 Dibayar di Muka keliru karena PPh 21 bukan hak (kredit pajak) pemberi kerja."
+ },
+ {
+  "n": 2,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Arta menanggung PPh Pasal 21 pegawainya (bukan dalam bentuk tunjangan PPh) sebesar Rp30.000.000 dan mencatatnya sebagai Beban PPh 21. Perlakuan fiskal atas beban tersebut adalah ...",
+  "o": [
+   "Koreksi fiskal negatif Rp30.000.000",
+   "Koreksi fiskal positif Rp30.000.000 (beda temporer)",
+   "Boleh dibebankan karena merupakan bagian dari biaya pegawai",
+   "Koreksi fiskal positif Rp30.000.000 (beda tetap)"
+  ],
+  "ans": 3,
+  "exp": "PPh yang ditanggung pemberi kerja termasuk Pajak Penghasilan yang tidak boleh dibebankan (Pasal 9 ayat (1) huruf h UU PPh). Berbeda dengan tunjangan PPh (gross-up) yang menambah penghasilan bruto pegawai dan boleh dibiayakan. Karena tidak akan pernah menjadi biaya fiskal, perbedaannya bersifat tetap."
+ },
+ {
+  "n": 3,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Andalas (penyedia jasa teknik) menerbitkan tagihan jasa sebesar Rp50.000.000 (abaikan PPN). Pengguna jasa memotong PPh Pasal 23 sebesar 2%. Jurnal pada PT Andalas saat menerima pembayaran adalah ...",
+  "o": [
+   "Kas 49.000.000; Beban PPh 23 1.000.000 / Pendapatan Jasa 50.000.000",
+   "Kas 49.000.000 / Pendapatan Jasa 49.000.000",
+   "Kas 50.000.000 / Pendapatan Jasa 50.000.000",
+   "Kas 49.000.000; PPh 23 Dibayar di Muka 1.000.000 / Pendapatan Jasa 50.000.000"
+  ],
+  "ans": 3,
+  "exp": "Bagi penerima penghasilan, PPh 23 yang dipotong merupakan kredit pajak (Pasal 28 UU PPh) yang dapat dikurangkan dari PPh terutang dalam SPT Tahunan, sehingga dicatat sebagai aset (Pajak Dibayar di Muka). Pendapatan diakui sebesar bruto Rp50.000.000."
+ },
+ {
+  "n": 4,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Gemilang sebagai pengguna jasa membayar jasa konsultan manajemen kepada PT Prima sebesar Rp80.000.000 (abaikan PPN). Jurnal PT Gemilang saat membayar adalah ...",
+  "o": [
+   "Beban Konsultan 80.000.000 / Kas 76.000.000; Utang PPh 4(2) 4.000.000",
+   "Beban Konsultan 80.000.000 / Kas 78.400.000; Utang PPh 23 1.600.000",
+   "Beban Konsultan 78.400.000; Utang PPh 23 1.600.000 / Kas 80.000.000",
+   "Beban Konsultan 80.000.000 / Kas 72.000.000; Utang PPh 23 8.000.000"
+  ],
+  "ans": 1,
+  "exp": "Jasa konsultan manajemen merupakan objek PPh 23 tarif 2% dari bruto (PMK 141/PMK.03/2015). PPh 23 = 2% x 80.000.000 = 1.600.000, dicatat sebagai utang pajak sampai disetor."
+ },
+ {
+  "n": 5,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Bahari (memiliki API) mengimpor bahan baku dengan nilai impor Rp400.000.000. Perlakuan akuntansi yang tepat atas PPh Pasal 22 impor adalah ...",
+  "o": [
+   "Rp10.000.000 dikapitalisasi ke harga perolehan persediaan",
+   "Rp30.000.000 dicatat sebagai PPh 22 Dibayar di Muka",
+   "Rp10.000.000 dicatat sebagai PPh 22 Dibayar di Muka",
+   "Rp10.000.000 dicatat sebagai beban pajak periode berjalan"
+  ],
+  "ans": 2,
+  "exp": "PPh 22 impor dengan API = 2,5% x nilai impor = 2,5% x 400.000.000 = 10.000.000 (tanpa API 7,5%). PPh 22 impor (tidak final) merupakan kredit pajak tahun berjalan, sehingga dicatat sebagai aset, bukan bagian harga perolehan persediaan."
+ },
+ {
+  "n": 6,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Cemara menyewa gedung kantor selama 2 tahun mulai 1 Juli 2026 dan membayar sekaligus nilai sewa bruto Rp400.000.000. Besarnya utang PPh Pasal 4 ayat (2) dan beban sewa tahun 2026 adalah ...",
+  "o": [
+   "Rp40.000.000 dan Rp100.000.000",
+   "Rp40.000.000 dan Rp400.000.000",
+   "Rp40.000.000 dan Rp200.000.000",
+   "Rp8.000.000 dan Rp100.000.000"
+  ],
+  "ans": 0,
+  "exp": "Sewa tanah/bangunan dikenai PPh final 10% dari bruto (PP 34/2017) = 40.000.000. Jurnal: Sewa Dibayar di Muka 400.000.000 / Kas 360.000.000; Utang PPh 4(2) 40.000.000. Beban 2026 = 400.000.000 x 6/24 = 100.000.000. Secara fiskal penyewa membebankan sesuai masa manfaat, sehingga tidak ada koreksi."
+ },
+ {
+  "n": 7,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "PT Delta (WP DN) menerima royalti dari Negara X sebesar Rp1.000.000.000 yang telah dipotong pajak di Negara X 10%. Jurnal penerimaan yang tepat adalah ...",
+  "o": [
+   "Kas 1.000.000.000 / Pendapatan Royalti 1.000.000.000",
+   "Kas 900.000.000; PPh 24 Dibayar di Muka 100.000.000 / Pendapatan Royalti 1.000.000.000",
+   "Kas 900.000.000 / Pendapatan Royalti 900.000.000",
+   "Kas 900.000.000; Beban Pajak LN 100.000.000 / Pendapatan Royalti 1.000.000.000 dan seluruhnya dapat dibiayakan"
+  ],
+  "ans": 1,
+  "exp": "Pajak yang dibayar di luar negeri dapat dikreditkan sebagai PPh Pasal 24 (sepanjang tidak melebihi batas maksimum kredit). Penghasilan diakui bruto. Bagian pajak LN yang melebihi batas kredit tidak dapat dikreditkan dan juga tidak dapat dibebankan sebagai biaya (Pasal 9 ayat (1) huruf h)."
+ },
+ {
+  "n": 8,
+  "sub": "Jurnal PPh Pot/Put",
+  "q": "Pada akhir tahun, PPh 22 Dibayar di Muka Rp60 juta, PPh 23 Dibayar di Muka Rp80 juta, PPh 25 Rp180 juta, dan PPh Badan terutang Rp440 juta. Jurnal pengakuan beban pajak kini adalah ...",
+  "o": [
+   "Beban Pajak Kini 120 jt / Utang PPh 29 120 jt",
+   "Beban Pajak Kini 320 jt; Utang PPh 29 120 jt / Kas 440 jt",
+   "Beban Pajak Kini 440 jt / PPh 22, 23, 25 Dibayar di Muka 320 jt; Utang PPh 29 120 jt",
+   "Beban Pajak Kini 440 jt / Utang PPh 29 440 jt"
+  ],
+  "ans": 2,
+  "exp": "Beban pajak kini = PPh terutang 440 jt. Kredit pajak (22+23+25 = 320 jt) dikreditkan dari akun pajak dibayar di muka, sisanya 120 jt menjadi Utang PPh Pasal 29 yang wajib dilunasi sebelum SPT disampaikan."
+ },
+ {
+  "n": 9,
+  "sub": "Aspek pajak akun neraca",
+  "q": "PT Kirana (bukan bank) membentuk CKPN piutang usaha tahun 2026 Rp80 juta. Piutang yang nyata- nyata tidak dapat ditagih dan memenuhi syarat Pasal 6 ayat (1) huruf h UU PPh dihapus dari cadangan Rp30 juta. Koreksi fiskal yang tepat adalah ...",
+  "o": [
+   "Tidak ada koreksi",
+   "Positif Rp50 juta",
+   "Negatif Rp30 juta",
+   "Positif Rp80 juta"
+  ],
+  "ans": 1,
+  "exp": "Pembentukan cadangan tidak boleh dibebankan bagi WP selain yang diatur Pasal 9 ayat (1) huruf c. Biaya fiskal hanya penghapusan riil yang memenuhi syarat (dibebankan di LK komersial, daftar piutang diserahkan ke DJP, dan ada proses hukum/pengakuan tertulis/publikasi). Komersial 80 jt, fiskal 30 jt → koreksi positif 50 jt (beda temporer)."
+ },
+ {
+  "n": 10,
+  "sub": "Aspek pajak akun neraca",
+  "q": "Syarat penghapusan piutang tak tertagih agar dapat dibebankan secara fiskal BUKAN termasuk ...",
+  "o": [
+   "Telah diserahkan ke pengadilan/instansi pemerintah yang menangani piutang negara, atau ada pengakuan/perjanjian tertulis, atau dipublikasikan",
+   "Telah dibentuk cadangan piutang minimal 5% dari saldo piutang",
+   "Telah dibebankan sebagai biaya dalam laporan laba rugi komersial",
+   "Daftar piutang yang dihapus disampaikan kepada DJP"
+  ],
+  "ans": 1,
+  "exp": "Syarat Pasal 6 ayat (1) huruf h UU PPh (dan PMK 207/PMK.010/2015 untuk piutang kecil) tidak mensyaratkan pembentukan cadangan. Justru cadangan piutang tidak boleh dibebankan bagi WP umum."
+ },
+ {
+  "n": 11,
+  "sub": "Aspek pajak akun neraca",
+  "q": "Metode penilaian persediaan yang diperkenankan secara fiskal menurut Pasal 10 ayat (6) UU PPh adalah",
+  "o": [
+   "Metode identifikasi khusus saja",
+   "Rata-rata atau FIFO",
+   "LIFO atau rata-rata",
+   "FIFO atau LIFO"
+  ],
+  "ans": 1,
+  "exp": "Persediaan dan pemakaiannya dinilai berdasarkan harga perolehan dengan metode rata-rata atau masuk pertama keluar pertama (FIFO). Metode yang dipilih harus diterapkan secara taat asas."
+ },
+ {
+  "n": 12,
+  "sub": "Aspek pajak akun neraca",
+  "q": "PT Laras mencatat kerugian penurunan nilai persediaan (ke NRV) Rp25 juta. Dampak fiskal dan pajak tangguhan (tarif 22%) adalah...",
+  "o": [
+   "Tidak ada koreksi; tidak ada pajak tangguhan",
+   "Koreksi negatif Rp25 juta; liabilitas pajak tangguhan Rp5,5 juta",
+   "Koreksi positif Rp25 juta; aset pajak tangguhan Rp5,5 juta",
+   "Koreksi positif Rp25 juta; liabilitas pajak tangguhan Rp5,5 juta"
+  ],
+  "ans": 2,
+  "exp": "Fiskal mengakui persediaan sebesar harga perolehan; penyisihan penurunan nilai merupakan cadangan yang tidak boleh dibebankan → koreksi positif. Karena akan menjadi biaya saat persediaan dijual/dimusnahkan, timbul beda temporer yang dapat dikurangkan → aset pajak tangguhan 22% x 25 jt = 5,5 jt."
+ },
+ {
+  "n": 13,
+  "sub": "Aspek pajak akun neraca",
+  "q": "PT Bumi membayar premi asuransi gedung pada 1 Oktober 2026 sebesar Rp120 juta untuk 12 bulan. Biaya yang dapat dibebankan secara fiskal tahun 2026 adalah",
+  "o": [
+   "Rp90 juta",
+   "Rp0",
+   "Rp30 juta",
+   "Rp120 juta"
+  ],
+  "ans": 2,
+  "exp": "Pengeluaran yang mempunyai masa manfaat lebih dari 1 tahun/periode dibebankan sesuai masa manfaatnya (Pasal 6 ayat (1) huruf a dan prinsip akrual). Beban 2026 = 3/12 × 120 jt = 30 jt; sisanya Biaya Dibayar di Muka. Komersial dan fiskal sama, tidak ada koreksi."
+ },
+ {
+  "n": 14,
+  "sub": "Aspek pajak akun neraca",
+  "q": "Mesin dibeli Januari 2026 seharga Rp800 juta. Komersial: garis lurus 5 tahun. Fiskal: kelompok || (8 tahun) garis lurus. Koreksi fiskal 2026 dan pajak tangguhan (22%) adalah ...",
+  "o": [
+   "Koreksi positif Rp60 juta; liabilitas pajak tangguhan Rp13,2 juta",
+   "Koreksi positif Rp60 juta; aset pajak tangguhan Rp13,2 juta",
+   "Koreksi positif Rp100 juta; aset pajak tangguhan Rp22 juta",
+   "Koreksi negatif Rp60 juta; liabilitas pajak tangguhan Rp13,2 juta"
+  ],
+  "ans": 1,
+  "exp": "Penyusutan komersial 800/5 = 160 jt; fiskal 12,5% x 800 = 100 jt. Selisih 60 jt dikoreksi positif. Nilai buku fiskal lebih tinggi dari komersial → beda temporer dapat dikurangkan → aset pajak tangguhan 22% x 60 jt = 13,2 jt."
+ },
+ {
+  "n": 15,
+  "sub": "Aspek pajak akun neraca",
+  "q": "Atas aset tetap berupa bangunan permanen, masa manfaat dan tarif penyusutan fiskal garis lurus menurut Pasal 11 UU PPh adalah ...",
+  "o": [
+   "30 tahun; 3,33%",
+   "10 tahun; 10%",
+   "20 tahun; 5%",
+   "16 tahun; 6,25%"
+  ],
+  "ans": 2,
+  "exp": "Bangunan permanen: 20 tahun, tarif 5% (garis lurus). Bangunan tidak permanen: 10 tahun, 10%. UU HPP membuka kemungkinan masa manfaat lebih dari 20 tahun sesuai masa manfaat sebenarnya berdasarkan pembukuan WP, namun ketentuan umum yang diuji adalah 20 tahun/5%."
+ },
+ {
+  "n": 16,
+  "sub": "Aspek pajak akun neraca",
+  "q": "PT Citra membeli usaha dan mengakui goodwill Rp2 miliar. Tahun 2026 komersial mencatat rugi penurunan nilai goodwill Rp300 juta. Secara fiskal goodwill diamortisasi kelompok 4 (20 tahun, garis lurus). Koreksi fiskal tahun 2026 adalah ...",
+  "o": [
+   "Positif Rp300 juta",
+   "Negatif Rp100 juta",
+   "Tidak ada koreksi",
+   "Positif Rp200 juta"
+  ],
+  "ans": 3,
+  "exp": "Pasal 11A UU PPh: muhibah (goodwill) yang bermasa manfaat lebih dari 1 tahun diamortisasi. Amortisasi fiskal = 5% × 2 M = 100 jt. Rugi impairment bukan biaya fiskal. Komersial 300 jt vs fiskal 100 jt → koreksi positif 200 jt."
+ },
+ {
+  "n": 17,
+  "sub": "Aspek pajak akun neraca",
+  "q": "PT Dirga mencatat beban imbalan pascakerja (PSAK 219, d/h PSAK 24) Rp200 juta melalui pembentukan liabilitas. Pembayaran aktual pesangon tahun berjalan Rp50 juta dibebankan ke liabilitas tersebut. Koreksi fiskal neto adalah ...",
+  "o": [
+   "Negatif Rp50 juta",
+   "Positif Rp250 juta",
+   "Positif Rp200 juta",
+   "Positif Rp150 juta"
+  ],
+  "ans": 3,
+  "exp": "Pembentukan cadangan imbalan kerja tidak boleh dibebankan (Pasal 9 ayat (1) huruf c). Biaya fiskal adalah pembayaran riil Rp50 juta. Komersial 200 jt, fiskal 50 jt → koreksi positif neto 150 jt (beda temporer, menimbulkan aset pajak tangguhan)."
+ },
+ {
+  "n": 18,
+  "sub": "Aspek pajak akun neraca",
+  "q": "Pembagian dividen oleh PT kepada pemegang sahamnya, dari sisi akuntansi ekuitas dan fiskal pihak pembagi, bersifat ...",
+  "o": [
+   "Pembagian laba yang tidak boleh dikurangkan (Pasal 9 ayat (1) huruf a)",
+   "Beban yang boleh dikurangkan sepanjang dipotong PPh",
+   "Beban yang boleh dikurangkan sebesar 50%",
+   "Beban yang boleh dikurangkan karena mengurangi laba"
+  ],
+  "ans": 0,
+  "exp": "Dividen adalah distribusi laba (mengurangi saldo laba di ekuitas, bukan beban). Pasal 9 ayat (1) huruf a: pembagian laba dengan nama dan dalam bentuk apa pun tidak boleh dikurangkan dari penghasilan bruto."
+ },
+ {
+  "n": 19,
+  "sub": "Aspek pajak akun neraca",
+  "q": "PT Elang menerima setoran modal dari pemegang saham Rp5 miliar dan agio saham Rp1 miliar. Perlakuan PPh atas penerimaan tersebut bagi PT Elang adalah ...",
+  "o": [
+   "Bukan objek PPh (Pasal 4 ayat (3) huruf c)",
+   "Agio saham merupakan objek PPh",
+   "Seluruhnya objek PPh karena menambah ekuitas",
+   "Objek PPh final 10%"
+  ],
+  "ans": 0,
+  "exp": "Penerimaan berupa harta (termasuk setoran tunai) oleh badan sebagai pengganti saham atau penyertaan modal dikecualikan dari objek PPh (Pasal 4 ayat (3) huruf c UU PPh), termasuk agio saham."
+ },
+ {
+  "n": 20,
+  "sub": "Organisasi nirlaba",
+  "q": "Yayasan pendidikan memperoleh sisa lebih Rp500 juta dan menanamkannya kembali dalam bentuk sarana dan prasarana pendidikan dalam jangka waktu 4 tahun. Perlakuan PPh atas sisa lebih tersebut",
+  "o": [
+   "Dikecualikan dari objek PPh",
+   "Objek PPh tarif 22%",
+   "Objek PPh final 10%",
+   "Objek PPh dengan fasilitas 50% tarif"
+  ],
+  "ans": 0,
+  "exp": "Pasal 4 ayat (3) huruf m UU PPh jo. PMK 68/PMK.03/2020: sisa lebih badan/lembaga nirlaba di bidang pendidikan dan/atau litbang yang ditanamkan kembali paling lama 4 tahun sejak diperoleh dikecualikan dari"
+ },
+ {
+  "n": 21,
+  "sub": "Organisasi nirlaba",
+  "q": "Standar akuntansi yang saat ini digunakan untuk pelaporan keuangan entitas berorientasi nonlaba di Indonesia adalah ...",
+  "o": [
+   "PSAK 109",
+   "PSAK 45",
+   "SAK EMKM",
+   "ISAK 35"
+  ],
+  "ans": 3,
+  "exp": "ISAK 35 'Penyajian Laporan Keuangan Entitas Berorientasi Nonlaba' menggantikan PSAK 45 sejak 1 Januari 2020. Aset neto disajikan menurut ada/tidaknya pembatasan dari pemberi sumber daya."
+ },
+ {
+  "n": 22,
+  "sub": "Pendapatan & biaya",
+  "q": "PT Fajar menerima bunga deposito bruto Rp100 juta (PPh final 20% dipotong bank) dan mencatat: Kas 80 jt; Beban Pajak Final 20 jt / Pendapatan Bunga 100 jt. Perlakuan dalam rekonsiliasi fiskal adalah ...",
+  "o": [
+   "Koreksi negatif Rp100 juta atas pendapatan bunga dan koreksi positif Rp20 juta atas beban pajak final",
+   "Koreksi negatif Rp80 juta saja",
+   "Koreksi positif Rp100 juta",
+   "Tidak ada koreksi"
+  ],
+  "ans": 0,
+  "exp": "Penghasilan yang telah dikenai PPh final dikeluarkan dari perhitungan PKP (koreksi negatif). PPh final yang dibebankan termasuk PPh yang tidak boleh dikurangkan (Pasal 9 ayat (1) huruf h) → koreksi positif. Neto koreksi negatif 80 jt."
+ },
+ {
+  "n": 23,
+  "sub": "Pendapatan & biaya",
+  "q": "Biaya entertainment Rp200 juta yang TIDAK dilengkapi daftar nominatif, menurut ketentuan perpajakan ...",
+  "o": [
+   "Boleh dibebankan sepanjang ada bukti pembayaran",
+   "Boleh dibebankan 50%",
+   "Boleh dibebankan seluruhnya",
+   "Tidak boleh dibebankan (koreksi positif Rp200 juta)"
+  ],
+  "ans": 3,
+  "exp": "Biaya entertainment/representasi/jamuan tamu boleh dibebankan sepanjang dibuat daftar nominatif sesuai SE- 27/PJ.22/1986 dan PMK 02/PMK.03/2010 (untuk promosi). Tanpa daftar nominatif tidak dapat dibebankan."
+ },
+ {
+  "n": 24,
+  "sub": "Pendapatan & biaya",
+  "q": "PT Gita memberikan natura berupa fasilitas tempat tinggal (bukan komunal) kepada direkturnya senilai Rp120 juta setahun. Perlakuan pada PT Gita sejak berlakunya UU HPP adalah ...",
+  "o": [
+   "Boleh dibebankan 50%",
+   "Boleh dibebankan; bagi direktur bukan objek PPh",
+   "Boleh dibebankan; bagi direktur merupakan objek PPh 21",
+   "Tidak boleh dibebankan karena natura"
+  ],
+  "ans": 2,
+  "exp": "UU HPP (Pasal 6 ayat (1) huruf n dan Pasal 4 ayat (1) huruf a) dan PMK 66/2023: natura/kenikmatan boleh dibiayakan oleh pemberi kerja dan merupakan penghasilan bagi penerima. Tempat tinggal individu bukan termasuk pengecualian (yang dikecualikan adalah tempat tinggal komunal)."
+ },
+ {
+  "n": 25,
+  "sub": "Pendapatan & biaya",
+  "q": "PT Hana mencatat laba selisih kurs yang belum direalisasi Rp50 juta. Perlakuan fiskal jika PT Hana TIDAK menggunakan pembukuan berdasarkan kurs tetap/ketentuan khusus adalah ...",
+  "o": [
+   "Dapat diakui sebagai penghasilan sesuai standar akuntansi yang diterapkan secara taat asas",
+   "Dikenai PPh final 10%",
+   "Hanya diakui jika disetujui DJP",
+   "Selalu dikoreksi negatif"
+  ],
+  "ans": 0,
+  "exp": "Keuntungan selisih kurs adalah objek PPh (Pasal 4 ayat (1) huruf I). Pengakuannya mengikuti sistem pembukuan yang dianut sesuai standar akuntansi keuangan secara taat asas (Pasal 6 ayat (1) huruf e dan penjelasannya)."
+ },
+ {
+  "n": 26,
+  "sub": "Pendapatan & biaya",
+  "q": "Penghasilan sewa bangunan Rp200 juta (bruto) telah dipotong PPh final. Beban penyusutan gedung yang disewakan Rp40 juta. Perlakuan rekonsiliasi fiskal yang tepat adalah ...",
+  "o": [
+   "Koreksi negatif Rp200 juta dan koreksi positif Rp40 juta",
+   "Koreksi negatif Rp200 juta; beban penyusutan tetap dibebankan",
+   "Koreksi negatif Rp160 juta saja dan tidak ada koreksi lain",
+   "Tidak ada koreksi"
+  ],
+  "ans": 0,
+  "exp": "Penghasilan final dikeluarkan dari PKP (koreksi negatif). Biaya untuk mendapatkan, menagih, memelihara penghasilan yang dikenai PPh final tidak boleh dikurangkan (prinsip 3M Pasal 6 ayat (1) UU PPh jo. Pasal 16 PP 94/2010), sehingga penyusutan gedung disewakan dikoreksi positif."
+ },
+ {
+  "n": 27,
+  "sub": "Rekonsiliasi fiskal",
+  "q": "Data PT Indah 2026: laba komersial Rp2.000 jt; sumbangan ke panti asuhan (tidak memenuhi PP 93/2010) Rp100 jt; sanksi bunga STP Rp50 jt; penyusutan komersial melebihi fiskal Rp150 jt; entertainment tanpa daftar nominatif Rp200 jt; bunga deposito bruto Rp300 jt; sewa bangunan bruto (final) Rp200 jt. Penghasilan Kena Pajak adalah ...",
+  "o": [
+   "Rp2.500 juta",
+   "Rp2.000 juta",
+   "Rp1.500 juta",
+   "Rp2.150 juta"
+  ],
+  "ans": 1,
+  "exp": "Koreksi positif: 100 + 50 + 150 + 200 = 500 jt. Koreksi negatif (penghasilan final): 300 + 200 = 500 jt. PKP = 2.000 + 500 - 500 = 2.000 jt."
+ },
+ {
+  "n": 28,
+  "sub": "Rekonsiliasi fiskal",
+  "q": "Melanjutkan soal sebelumnya, peredaran bruto PT Indah Rp60 miliar; kredit pajak PPh 22 Rp60 jt, PPh 23 Rp80 jt, PPh 25 Rp180 jt. PPh Pasal 29 adalah ...",
+  "o": [
+   "Rp0",
+   "Rp440 juta",
+   "Rp9,6 juta (kurang bayar setelah fasilitas)",
+   "Rp120 juta"
+  ],
+  "ans": 3,
+  "exp": "Peredaran bruto > Rp50 M sehingga tidak berhak fasilitas Pasal 31E. PPh = 22% x 2.000 jt = 440 jt. Kredit 320 jt. PPh 29 = 120 jt."
+ },
+ {
+  "n": 29,
+  "sub": "Rekonsiliasi fiskal",
+  "q": "Masih PT Indah: satu-satunya beda temporer adalah penyusutan (komersial > fiskal Rp150 jt). Total beban pajak penghasilan di laporan laba rugi adalah ...",
+  "o": [
+   "Rp440 juta",
+   "Rp330 juta",
+   "Rp407 juta",
+   "Rp473 juta"
+  ],
+  "ans": 2,
+  "exp": "Beban pajak kini 440 jt. Beda temporer dapat dikurangkan 150 jt → aset pajak tangguhan 22% x 150 = 33 jt (manfaat pajak tangguhan). Total beban pajak = 440 - 33 = 407 jt. Jurnal: Aset Pajak Tangguhan 33 / Manfaat Pajak Tangguhan 33."
+ },
+ {
+  "n": 30,
+  "sub": "Rekonsiliasi fiskal",
+  "q": "Manakah yang merupakan beda TETAP dalam rekonsiliasi fiskal?",
+  "o": [
+   "Perbedaan metode penyusutan aset tetap",
+   "Penyisihan penurunan nilai persediaan",
+   "Sanksi administrasi perpajakan",
+   "Cadangan imbalan pascakerja"
+  ],
+  "ans": 2,
+  "exp": "Sanksi administrasi tidak akan pernah menjadi biaya fiskal (Pasal 9 ayat (1) huruf k) → beda tetap. Opsi lain adalah beda temporer karena akan menjadi biaya fiskal pada periode lain."
+ },
+ {
+  "n": 31,
+  "sub": "Rekonsiliasi fiskal",
+  "q": "Jurnal yang tepat apabila terjadi beda temporer kena pajak (liabilitas pajak tangguhan) sebesar Rp22 juta adalah ...",
+  "o": [
+   "Beban Pajak Tangguhan 22 jt / Liabilitas Pajak Tangguhan 22 jt",
+   "Aset Pajak Tangguhan 22 jt / Manfaat Pajak Tangguhan 22 jt",
+   "Beban Pajak Kini 22 jt / Utang PPh 29 22 jt",
+   "Liabilitas Pajak Tangguhan 22 jt / Beban Pajak Tangguhan 22 jt"
+  ],
+  "ans": 0,
+  "exp": "Beda temporer kena pajak (mis. penyusutan fiskal lebih cepat) menimbulkan liabilitas pajak tangguhan (PSAK 212, d/h PSAK 46) yang dicatat dengan mendebit beban pajak tangguhan."
+ },
+ {
+  "n": 32,
+  "sub": "Lembaga keuangan",
+  "q": "Pembentukan cadangan kerugian penurunan nilai (CKPN) piutang/kredit oleh bank secara fiskal ...",
+  "o": [
+   "Tidak boleh dibebankan sama sekali",
+   "Boleh dibebankan sepanjang sesuai ketentuan (Pasal 9 ayat (1) huruf c UU PPh jo. PMK 81/PMK.03/2009 s.t.d.d. PMK 219/PMK.011/2012)",
+   "Boleh dibebankan maksimum 5% dari saldo kredit",
+   "Boleh dibebankan hanya untuk kredit macet yang telah lunas"
+  ],
+  "ans": 1,
+  "exp": "Bank termasuk WP yang diperbolehkan membentuk cadangan piutang tak tertagih yang dapat dibebankan, sepanjang sesuai batasan dalam PMK. Jika cadangan dikembalikan/berlebih, harus diakui sebagai penghasilan."
+ },
+ {
+  "n": 33,
+  "sub": "Lembaga keuangan",
+  "q": "Perusahaan pembiayaan (lessor) dengan transaksi sewa guna usaha dengan hak opsi (finance lease). Bagi lessor, penghasilan yang menjadi objek pajak adalah ...",
+  "o": [
+   "Hanya nilai sisa",
+   "Seluruh angsuran (pokok + bunga)",
+   "Bukan objek pajak",
+   "Bagian imbalan jasa/bunga sewa guna usaha"
+  ],
+  "ans": 3,
+  "exp": "KMK 1169/KMK.01/1991: dalam finance lease, lessor tidak menyusutkan barang modal; penghasilan lessor adalah bagian imbalan jasa (bunga). Lessee menyusutkan barang modal setelah opsi dilaksanakan; angsuran bukan biaya, kecuali bagian bunga."
+ },
+ {
+  "n": 34,
+  "sub": "Jasa konstruksi",
+  "q": "PT Karya (kualifikasi menengah, bersertifikat) memiliki kontrak Rp5 miliar. Tahun 2026 progres fisik 40%, sedangkan termin yang diterima Rp1,5 miliar (DPP, di luar PPN). PPh final jasa konstruksi tahun 2026 adalah...",
+  "o": [
+   "Rp60 juta",
+   "Rp26,25 juta",
+   "Rp39,75 juta",
+   "Rp53 juta"
+  ],
+  "ans": 2,
+  "exp": "PP 9/2022: pekerjaan konstruksi oleh penyedia kualifikasi menengah/besar bersertifikat 2,65%. PPh final terutang atas pembayaran (termin) yang diterima, bukan atas pendapatan PSAK 115 (persentase penyelesaian). 2,65% × 1,5 M = 39,75 jt."
+ },
+ {
+  "n": 35,
+  "sub": "Jasa konstruksi",
+  "q": "Dalam rekonsiliasi fiskal kontraktor yang seluruh penghasilannya dikenai PPh final, perlakuan atas pendapatan dan biaya konstruksi adalah ...",
+  "o": [
+   "Hanya pendapatan yang dikoreksi negatif",
+   "Hanya biaya yang dikoreksi positif",
+   "Pendapatan dikoreksi negatif dan biaya terkait dikoreksi positif",
+   "Pendapatan dan biaya tetap masuk perhitungan PKP tarif 22%"
+  ],
+  "ans": 2,
+  "exp": "Karena penghasilan jasa konstruksi dikenai PPh final, penghasilan tersebut dikeluarkan dari PKP dan biaya untuk memperolehnya tidak boleh dikurangkan dari penghasilan yang dikenai tarif umum."
+ },
+ {
+  "n": 36,
+  "sub": "Jasa konstruksi",
+  "q": "Tarif PPh final untuk jasa konsultansi konstruksi oleh penyedia jasa yang TIDAK memiliki sertifikat badan usaha adalah ...",
+  "o": [
+   "6%",
+   "4%",
+   "2,65%",
+   "3,5%"
+  ],
+  "ans": 0,
+  "exp": "PP 9/2022: konsultansi konstruksi bersertifikat 3,5%; tanpa sertifikat 6%. Pekerjaan konstruksi tanpa sertifikat 4%; terintegrasi bersertifikat 2,65%, tanpa sertifikat 4%."
+ },
+ {
+  "n": 37,
+  "sub": "Merger & likuidasi",
+  "q": "Dalam penggabungan usaha menggunakan nilai buku (PMK 56/PMK.010/2021), pernyataan yang benar adalah...",
+  "o": [
+   "Kerugian fiskal pihak yang digabungkan dapat dikompensasikan oleh pihak yang menerima penggabungan",
+   "Tidak perlu memenuhi persyaratan apa pun",
+   "Wajib menggunakan nilai pasar tanpa pengecualian",
+   "Harus lolos uji tujuan bisnis (business purpose test) dan kerugian fiskal pihak yang digabungkan tidak dapat dikompensasikan"
+  ],
+  "ans": 3,
+  "exp": "PMK 56/2021: penggunaan nilai buku dalam merger/peleburan/pemekaran mensyaratkan business purpose test. Sisa kerugian fiskal pihak yang menggabungkan diri tidak dapat dikompensasikan oleh pihak penerima penggabungan."
+ },
+ {
+  "n": 38,
+  "sub": "Merger & likuidasi",
+  "q": "PT Mawar dilikuidasi. Sisa harta yang dibagikan kepada pemegang saham orang pribadi DN Rp3 miliar, sedangkan modal disetornya Rp1 miliar dan tidak diinvestasikan kembali di Indonesia. PPh atas pembagian tersebut adalah ...",
+  "o": [
+   "Rp300 juta",
+   "Rp200 juta (final 10% atas dividen Rp2 miliar)",
+   "Rp440 juta (22%)",
+   "Rp0 karena likuidasi bukan objek"
+  ],
+  "ans": 1,
+  "exp": "Penjelasan Pasal 4 ayat (1) huruf g: pembagian sisa hasil likuidasi yang melebihi modal disetor termasuk dividen. Dividen kepada OP DN yang tidak diinvestasikan kembali dikenai PPh final 10% (Pasal 17 ayat (2c)): 10% × 2 M = 200 jt."
+ },
+ {
+  "n": 39,
+  "sub": "Merger & likuidasi",
+  "q": "Dalam laporan keuangan konsolidasian grup, kewajiban pelaporan SPT Tahunan PPh Badan dilakukan ...",
+  "o": [
+   "Oleh masing-masing entitas sebagai WP terpisah (tidak dikenal konsolidasi fiskal)",
+   "Oleh entitas anak terbesar",
+   "Atas pilihan grup",
+   "LAtas dasar laporan konsolidasian oleh entitas induk saja"
+  ],
+  "ans": 0,
+  "exp": "UU PPh tidak mengenal konsolidasi fiskal (group taxation). Setiap badan merupakan subjek pajak tersendiri sehingga menghitung dan melaporkan PPh masing-masing; laporan konsolidasian hanya untuk tujuan komersial."
+ },
+ {
+  "n": 40,
+  "sub": "LK fiskal vs komersial",
+  "q": "Pernyataan yang benar mengenai hubungan laporan keuangan fiskal dan komersial adalah ...",
+  "o": [
+   "Ketentuan perpajakan selalu mengikuti PSAK",
+   "PSAK wajib mengikuti ketentuan perpajakan",
+   "WP wajib menyusun dua pembukuan terpisah",
+   "Laporan keuangan fiskal disusun dari laporan komersial melalui koreksi fiskal (rekonsiliasi) sesuai ketentuan perpajakan"
+  ],
+  "ans": 3,
+  "exp": "Pasal 28 ayat (7) UU KUP dan penjelasannya: pembukuan diselenggarakan dengan prinsip taat asas dan stelsel akrual/kas; apabila ada perbedaan dengan ketentuan perpajakan, dilakukan koreksi fiskal dalam SPT (lampiran rekonsiliasi), tanpa perlu pembukuan ganda."
+ }
+]

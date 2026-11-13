@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "Pengertian",
+  "q": "Pajak internasional pada hakikatnya adalah ...",
+  "o": [
+   "Ketentuan pajak domestik suatu negara dan perjanjian antarnegara yang mengatur aspek perpajakan atas transaksi lintas batas negara",
+   "Pajak yang dipungut oleh organisasi internasional",
+   "Pajak yang dipungut berdasarkan konvensi PBB saja",
+   "Pajak yang hanya dikenakan atas ekspor-impor"
+  ],
+  "ans": 0,
+  "exp": "Pajak internasional mencakup ketentuan domestik yang mengatur unsur asing (mis. Pasal 2, 5, 18, 24, 26 UU PPh) serta ketentuan perjanjian internasional (P3B/tax treaty, MLI, konvensi bantuan administrasi). Tidak ada otoritas pajak supranasional."
+ },
+ {
+  "n": 2,
+  "sub": "Pengertian",
+  "q": "Asas pemajakan yang dianut Indonesia atas Wajib Pajak dalam negeri (pada umumnya) adalah ...",
+  "o": [
+   "Asas domisili/world-wide income",
+   "Asas kewarganegaraan saja",
+   "Asas tempat pembayaran",
+   "Asas sumber saja (territorial)"
+  ],
+  "ans": 0,
+  "exp": "Pasal 4 ayat (1) UU PPh: objek pajak adalah setiap tambahan kemampuan ekonomis yang diterima/diperoleh WP, baik dari Indonesia maupun dari luar Indonesia (world-wide income) bagi WP dalam negeri. Bagi WP luar negeri berlaku asas sumber."
+ },
+ {
+  "n": 3,
+  "sub": "Ruang lingkup",
+  "q": "Orang pribadi warga negara asing yang menjadi Subjek Pajak DN dan memiliki keahlian tertentu, berdasarkan UU HPP dikenai PPh ...",
+  "o": [
+   "Atas world-wide income sejak hari pertama",
+   "Hanya atas penghasilan dari luar negeri",
+   "Hanya atas penghasilan dari Indonesia selama 4 tahun pajak sejak menjadi SPDN",
+   "Dengan tarif final 20%"
+  ],
+  "ans": 2,
+  "exp": "Pasal 4 ayat (1a) UU PPh s.t.d.t.d. UU HPP jo. PMK 18/2021: WNA yang menjadi SPDN dan memiliki keahlian tertentu dikenai PPh hanya atas penghasilan yang diterima/diperoleh dari Indonesia, berlaku 4 tahun pajak sejak menjadi SPDN."
+ },
+ {
+  "n": 4,
+  "sub": "Ruang lingkup",
+  "q": "Warga negara Indonesia dapat menjadi Subjek Pajak Luar Negeri berdasarkan UU HPP apabila ...",
+  "o": [
+   "Memiliki paspor ganda",
+   "Berada di Indonesia tidak lebih dari 183 hari dalam 12 bulan dan memenuhi persyaratan tertentu (tempat tinggal, pusat kegiatan utama, kebiasaan, status subjek pajak)",
+   "Tidak memiliki NPWP",
+   "Bekerja di perusahaan asing di Indonesia"
+  ],
+  "ans": 1,
+  "exp": "Pasal 2 ayat (3) jo. ayat (4a) UU PPh s.t.d.t.d. UU HPP: WNI yang berada di Indonesia ≤ 183 hari dalam 12 bulan dan memenuhi persyaratan tertentu dapat menjadi SPLN (diatur PMK 18/2021)."
+ },
+ {
+  "n": 5,
+  "sub": "Ruang lingkup",
+  "q": "PT Nusa (WP DN) menerima dividen dari anak perusahaan nonbursa di luar negeri. Dividen tersebut dikecualikan dari objek PPh apabila ...",
+  "o": [
+   "Diterima dalam mata uang rupiah",
+   "Diinvestasikan di Indonesia paling sedikit 30% dari laba setelah pajak dalam jangka waktu tertentu sesuai ketentuan",
+   "Telah dipotong pajak di negara sumber",
+   "Kepemilikan di atas 10%"
+  ],
+  "ans": 1,
+  "exp": "Pasal 4 ayat (3) huruf f angka 2 UU PPh s.t.d.t.d. UU Cipta Kerja jo. PMK 18/2021: dividen dari luar negeri atas saham yang tidak diperdagangkan di bursa dikecualikan bila diinvestasikan di Indonesia paling sedikit 30% dari laba setelah pajak (atau sebesar dividen bila saham diperdagangkan di bursa), dalam jangka waktu tertentu."
+ },
+ {
+  "n": 6,
+  "sub": "Ruang lingkup",
+  "q": "Penghasilan WP luar negeri yang tidak memiliki BUT di Indonesia atas bunga yang diterima dari Indonesia dipotong PPh Pasal 26 sebesar ...",
+  "o": [
+   "20% dari bruto atau tarif P3B",
+   "10% dari bruto final",
+   "15% dari bruto",
+   "20% dari neto"
+  ],
+  "ans": 0,
+  "exp": "Pasal 26 ayat (1) UU PPh: dividen, bunga, royalti, imbalan jasa, hadiah, dll. yang dibayarkan kepada WPLN selain BUT dipotong 20% dari jumlah bruto, kecuali diturunkan berdasarkan P3B dengan memenuhi syarat DGT Form (PER-25/PJ/2018)."
+ },
+ {
+  "n": 7,
+  "sub": "Ruang lingkup",
+  "q": "Bagi WP luar negeri yang menerima penghasilan dari Indonesia melalui BUT, PPh dikenakan ...",
+  "o": [
+   "Hanya PPh Pasal 22",
+   "Bebas pajak",
+   "Final 20% atas bruto",
+   "Seperti WP dalam negeri: atas penghasilan neto dengan tarif umum, ditambah PPh atas laba setelah pajak (branch profit tax)"
+  ],
+  "ans": 3,
+  "exp": "BUT diperlakukan sebagai subjek pajak badan (Pasal 2 ayat (1) huruf c) yang dikenai PPh atas penghasilan neto dengan tarif Pasal 17 ayat (1) huruf b (22%), lalu atas PKP setelah dikurangi PPh dikenai PPh Pasal 26 ayat (4) (branch profit tax) 20% atau tarif P3B."
+ },
+ {
+  "n": 8,
+  "sub": "Ruang lingkup",
+  "q": "Istilah 'beneficial owner' dalam konteks P3B berarti ...",
+  "o": [
+   "Pemegang saham mayoritas pembayar",
+   "Bank penerima transfer",
+   "Pemilik manfaat ekonomis yang sebenarnya atas penghasilan, yang memiliki hak penuh untuk menikmati penghasilan tersebut dan bukan agen/nominee/conduit",
+   "Pihak yang namanya tercantum dalam kontrak P3B"
+  ],
+  "ans": 2,
+  "exp": "PER-25/PJ/2018: penerima penghasilan dapat menikmati tarif P3B atas dividen, bunga, royalti bila merupakan beneficial owner, yaitu bukan agen, nominee, atau conduit company, dan memiliki kendali atas penghasilan."
+ },
+ {
+  "n": 9,
+  "sub": "P3B",
+  "q": "Tujuan utama Persetujuan Penghindaran Pajak Berganda (P3B) adalah ...",
+  "o": [
+   "Menggantikan undang-undang domestik",
+   "Menghapus semua pajak atas transaksi lintas negara",
+   "Menetapkan tarif pajak seragam",
+   "Mengatur pembagian hak pemajakan antarnegara untuk menghindari pemajakan berganda dan mencegah penghindaran/pengelakan pajak"
+  ],
+  "ans": 3,
+  "exp": "P3B mengalokasikan hak pemajakan antara negara domisili dan sumber, menyediakan metode eliminasi pajak berganda, serta mekanisme MAP dan pertukaran informasi untuk mencegah penghindaran pajak. P3B berlaku sebagai lex specialis namun tidak menciptakan pajak baru."
+ },
+ {
+  "n": 10,
+  "sub": "P3B",
+  "q": "Urutan tie breaker rule bagi orang pribadi yang menjadi subjek pajak dalam negeri di dua negara menurut OECD/UN Model adalah ...",
+  "o": [
+   "Pusat kepentingan vital - kewarganegaraan - tempat tinggal tetap - MAP",
+   "Tempat tinggal tetap - pusat kepentingan vital - tempat biasa tinggal (habitual abode) - kewarganegaraan - persetujuan bersama",
+   "Kewarganegaraan - tempat tinggal tetap - pusat kepentingan vital - kebiasaan",
+   "Habitual abode - kewarganegaraan - tempat tinggal tetap - MAP"
+  ],
+  "ans": 1,
+  "exp": "Pasal 4 ayat (2) OECD/UN Model: permanent home → centre of vital interests → habitual abode → nationality → mutual agreement."
+ },
+ {
+  "n": 11,
+  "sub": "P3B",
+  "q": "Tuan Kim memiliki rumah tetap di Indonesia dan di Negara Y. Keluarga, pekerjaan utama, dan aset utamanya di Indonesia. Berdasarkan tie breaker rule, ia dianggap residen ...",
+  "o": [
+   "Ditentukan melalui MAP terlebih dahulu",
+   "Kedua negara",
+   "Negara Y karena kewarganegaraan",
+   "Indonesia karena pusat kepentingan vital"
+  ],
+  "ans": 3,
+  "exp": "Karena memiliki tempat tinggal tetap di kedua negara, uji berlanjut ke centre of vital interests (hubungan pribadi dan ekonomi terdekat), yang berada di Indonesia."
+ },
+ {
+  "n": 12,
+  "sub": "P3B",
+  "q": "Untuk subjek pajak selain orang pribadi (badan) yang berstatus residen di dua negara, P3B umumnya menentukan status residen berdasarkan ...",
+  "o": [
+   "Tempat bank utama",
+   "Kewarganegaraan pemegang saham",
+   "Tempat kedudukan manajemen efektif (place of effective management) atau persetujuan bersama otoritas (MAP)",
+   "Tempat pendirian saja"
+  ],
+  "ans": 2,
+  "exp": "Pasal 4 ayat (3) OECD Model (versi sebelum 2017) menggunakan place of effective management; OECD Model 2017/MLI Pasal 4 menggunakan persetujuan bersama dengan mempertimbangkan POEM, tempat pendirian, dan faktor relevan lain."
+ },
+ {
+  "n": 13,
+  "sub": "P3B",
+  "q": "Menurut Pasal 2 ayat (5) UU PPh, pemberian jasa oleh pegawai atau orang lain merupakan BUT apabila dilakukan lebih dari ...",
+  "o": [
+   "90 hari dalam 12 bulan",
+   "60 hari dalam 12 bulan",
+   "30 hari dalam 12 bulan",
+   "183 hari dalam 12 bulan"
+  ],
+  "ans": 1,
+  "exp": "Pasal 2 ayat (5) huruf n UU PPh: pemberian jasa dalam bentuk apa pun oleh pegawai atau orang lain, sepanjang dilakukan lebih dari 60 hari dalam jangka waktu 12 bulan, merupakan BUT. Ketentuan P3B dapat menetapkan jangka waktu berbeda (mis. 90 atau 183 hari)."
+ },
+ {
+  "n": 14,
+  "sub": "P3B",
+  "q": "BUT yang timbul karena adanya tempat usaha tetap seperti kantor cabang, pabrik, atau bengkel disebut",
+  "o": [
+   "Agency PE",
+   "Asset-type/fixed place PE",
+   "Service PE",
+   "Insurance PE"
+  ],
+  "ans": 1,
+  "exp": "Jenis BUT: (1) fixed place/asset-type PE (kantor, cabang, pabrik, tambang); (2) activity-type PE (proyek konstruksi, service PE); (3) agency PE (agen tidak bebas); (4) insurance PE (penerimaan premi/penanggungan risiko di Indonesia)."
+ },
+ {
+  "n": 15,
+  "sub": "P3B",
+  "q": "Seseorang di Indonesia yang bertindak atas nama perusahaan luar negeri dan secara rutin berwenang menutup kontrak atas nama perusahaan tersebut dapat menimbulkan ...",
+  "o": [
+   "Subjek Pajak OP DN biasa saja",
+   "Dependent agent PE (BUT agen tidak bebas)",
+   "Service PE",
+   "Bukan BUT karena tidak ada tempat usaha"
+  ],
+  "ans": 1,
+  "exp": "Pasal 2 ayat (5) huruf | UU PPh dan Pasal 5 ayat (5) OECD Model: orang atau badan yang bertindak sebagai agen yang kedudukannya tidak bebas dan berwenang menutup kontrak atas nama perusahaan asing menimbulkan BUT."
+ },
+ {
+  "n": 16,
+  "sub": "P3B",
+  "q": "Menurut OECD Model, kegiatan berikut pada umumnya TIDAK menimbulkan BUT ...",
+  "o": [
+   "Kantor cabang yang menjual produk",
+   "Fasilitas yang semata-mata untuk penyimpanan, pameran, atau pengiriman barang milik perusahaan (preparatory/auxiliary)",
+   "Agen tidak bebas",
+   "Proyek konstruksi melebihi batas waktu P3B"
+  ],
+  "ans": 1,
+  "exp": "Pasal 5 ayat (4) OECD Model: penggunaan fasilitas semata-mata untuk penyimpanan, pameran, pengiriman, pembelian, atau kegiatan lain yang bersifat persiapan/penunjang (preparatory or auxiliary) dikecualikan dari BUT."
+ },
+ {
+  "n": 17,
+  "sub": "P3B",
+  "q": "Hak pemajakan penuh bagi negara sumber (tanpa pembatasan tarif) dalam P3B antara lain berlaku atas",
+  "o": [
+   "Dividen",
+   "Bunga",
+   "Laba usaha yang diperoleh melalui BUT dan penghasilan dari harta tak gerak",
+   "Royalti"
+  ],
+  "ans": 2,
+  "exp": "Atas laba usaha yang dapat diatribusikan kepada BUT (Pasal 7) dan penghasilan dari harta tak gerak (Pasal 6), negara sumber berhak memajaki penuh sesuai ketentuan domestik. Dividen, bunga, royalti merupakan hak pemajakan terbatas."
+ },
+ {
+  "n": 18,
+  "sub": "P3B",
+  "q": "Pemajakan atas dividen, bunga, dan royalti oleh negara sumber berdasarkan P3B umumnya merupakan",
+  "o": [
+   "Hak eksklusif negara domisili",
+   "Hak pemajakan penuh",
+   "Pelepasan hak pemajakan",
+   "Hak pemajakan terbatas (dengan tarif maksimum tertentu)"
+  ],
+  "ans": 3,
+  "exp": "Pasal 10, 11, dan 12 P3B umumnya membatasi tarif pajak negara sumber (mis. 10%-15%), sedangkan negara domisili tetap berhak memajaki dan memberikan kredit pajak."
+ },
+ {
+  "n": 19,
+  "sub": "P3B",
+  "q": "PT Indo membayar royalti Rp1 miliar kepada XCo (residen Negara X, beneficial owner, DGT Form lengkap). Tarif royalti dalam P3B Indonesia-Negara X 10%. PPh Pasal 26 yang dipotong adalah ...",
+  "o": [
+   "Rp200.000.000",
+   "Rp150.000.000",
+   "Rp100.000.000",
+   "Rp0"
+  ],
+  "ans": 2,
+  "exp": "Tarif domestik Pasal 26 sebesar 20% diturunkan sesuai P3B karena syarat administratif (DGT Form, beneficial owner, tidak menyalahgunakan P3B) terpenuhi: 10% x 1 M = 100 jt. Tanpa DGT Form yang sah, dipotong 20% = 200 jt."
+ },
+ {
+  "n": 20,
+  "sub": "P3B",
+  "q": "Laba usaha perusahaan residen Negara X yang menjual barang ke Indonesia tanpa memiliki BUT di Indonesia, berdasarkan P3B...",
+  "o": [
+   "Hanya dapat dipajaki di Negara X (Indonesia melepaskan hak pemajakan)",
+   "Dipajaki di kedua negara dengan tarif penuh",
+   "Dipajaki penuh di Indonesia",
+   "Dipajaki 20% di Indonesia"
+  ],
+  "ans": 0,
+  "exp": "Pasal 7 ayat (1) P3B: laba usaha hanya dapat dikenakan pajak di negara domisili kecuali perusahaan menjalankan usaha melalui BUT di negara sumber. Tanpa BUT, Indonesia melepaskan hak pemajakan."
+ },
+ {
+  "n": 21,
+  "sub": "P3B",
+  "q": "Ketentuan khusus dalam P3B yang melarang perlakuan pajak yang lebih memberatkan bagi warga negara/perusahaan negara mitra dibandingkan warga negara sendiri dalam keadaan yang sama disebut",
+  "o": [
+   "Limitation on benefits",
+   "Assistance in collection",
+   "Non-discrimination",
+   "Exchange of information"
+  ],
+  "ans": 2,
+  "exp": "Pasal 24 OECD Model (Non-Discrimination) melarang perlakuan diskriminatif berdasarkan kewarganegaraan, terhadap BUT, dan atas pengurangan biaya tertentu."
+ },
+ {
+  "n": 22,
+  "sub": "Metode P3B",
+  "q": "Metode penghindaran pajak berganda yang dianut Indonesia untuk penghasilan luar negeri WP DN berdasarkan Pasal 24 UU PPh adalah ...",
+  "o": [
+   "Ordinary credit dengan pembatasan per negara (per country limitation)",
+   "Deduction method",
+   "Full exemption",
+   "Full credit tanpa batas"
+  ],
+  "ans": 0,
+  "exp": "Pasal 24 UU PPh: pajak yang dibayar di luar negeri dapat dikreditkan, tetapi tidak melebihi PPh terutang di Indonesia atas penghasilan tersebut, dan dihitung untuk setiap negara (per country limitation)."
+ },
+ {
+  "n": 23,
+  "sub": "Metode P3B",
+  "q": "PT Raya: PKP dalam negeri Rp3 miliar dan penghasilan dari Negara Z Rp1 miliar (pajak di Negara Z 30% = Rp300 juta). Peredaran bruto > Rp50 miliar. PPh Pasal 24 yang dapat dikreditkan adalah ...",
+  "o": [
+   "Rp220 juta",
+   "Rp880 juta",
+   "Rp300 juta",
+   "Rp200 juta"
+  ],
+  "ans": 0,
+  "exp": "PKP total Rp4 M; PPh terutang 22% × 4 M = 880 jt. Batas maksimum = (1/4) × 880 jt = 220 jt. Kredit = terendah antara pajak LN (300 jt) dan batas (220 jt) = 220 jt. Kelebihan 80 jt tidak dapat dikreditkan maupun dibebankan."
+ },
+ {
+  "n": 24,
+  "sub": "Metode P3B",
+  "q": "Metode di mana negara domisili membebaskan penghasilan luar negeri tetapi memperhitungkannya untuk menentukan tarif progresif atas penghasilan lainnya disebut ..",
+  "o": [
+   "Exemption with progression",
+   "Tax sparing",
+   "Ordinary credit",
+   "Full exemption"
+  ],
+  "ans": 0,
+  "exp": "Exemption with progression: penghasilan LN tidak dipajaki, tetapi diperhitungkan dalam menentukan tarif atas penghasilan lainnya. Tax sparing adalah pemberian kredit atas pajak yang 'diampuni' oleh negara sumber karena insentif."
+ },
+ {
+  "n": 25,
+  "sub": "Anti-avoidance",
+  "q": "Berdasarkan PMK 107/PMK.03/2017, ketentuan Controlled Foreign Corporation (CFC) berlaku apabila WP DN memiliki penyertaan modal pada badan usaha luar negeri nonbursa paling rendah ...",
+  "o": [
+   "25% dari jumlah modal disetor",
+   "100%",
+   "10% dari jumlah modal disetor",
+   "50% dari jumlah modal disetor (sendiri atau bersama-sama dengan WP DN lain)"
+  ],
+  "ans": 3,
+  "exp": "Pasal 18 ayat (2) UU PPh jo. PMK 107/2017: kepemilikan paling rendah 50% dari jumlah saham yang disetor, baik sendiri maupun bersama-sama, pada BULN selain yang sahamnya diperdagangkan di bursa."
+ },
+ {
+  "n": 26,
+  "sub": "Anti-avoidance",
+  "q": "Saat diperolehnya dividen CFC (deemed dividend) apabila negara domisili CFC mempunyai batas waktu penyampaian SPT adalah ...",
+  "o": [
+   "Bulan ketujuh setelah tahun pajak berakhir",
+   "Akhir tahun pajak CFC",
+   "Saat dividen benar-benar dibayarkan",
+   "Bulan keempat setelah berakhirnya batas waktu penyampaian SPT di negara tersebut"
+  ],
+  "ans": 3,
+  "exp": "PMK 107/2017: bulan keempat setelah berakhirnya batas waktu penyampaian SPT Tahunan PPh di negara domisili CFC, atau bulan ketujuh setelah berakhirnya tahun pajak apabila negara tersebut tidak mempunyai ketentuan batas waktu SPT."
+ },
+ {
+  "n": 27,
+  "sub": "Anti-avoidance",
+  "q": "PT Laju memiliki rata-rata utang Rp10 miliar, rata-rata ekuitas Rp2 miliar, dan biaya bunga Rp1 miliar. Berdasarkan PMK 169/PMK.010/2015, biaya pinjaman yang dapat dibebankan adalah ….",
+  "o": [
+   "Rp800 juta",
+   "Rp400 juta",
+   "Rp200 juta",
+   "Rp1.000 juta"
+  ],
+  "ans": 0,
+  "exp": "DER maksimum 4:1. DER PT Laju 5:1 sehingga biaya pinjaman yang dapat dibebankan = (4 × 2 M)/10 M x 1 M = 800 jt. Sisanya 200 jt dikoreksi positif."
+ },
+ {
+  "n": 28,
+  "sub": "Anti-avoidance",
+  "q": "Treaty shopping adalah ...",
+  "o": [
+   "Penyampaian DGT Form tepat waktu",
+   "Membandingkan tarif P3B antarnegara secara legal untuk investasi langsung",
+   "Upaya residen negara ketiga memperoleh manfaat P3B dengan menggunakan entitas antara (conduit) di negara mitra yang tidak memiliki substansi ekonomi",
+   "Penjualan barang ke negara yang memiliki P3B"
+  ],
+  "ans": 2,
+  "exp": "Treaty shopping: penyalahgunaan P3B oleh pihak yang sebenarnya tidak berhak (bukan residen/BO) melalui conduit company. Penangkalnya antara lain uji beneficial owner, LOB, dan Principal Purpose Test (MLI Pasal 7)."
+ },
+ {
+  "n": 29,
+  "sub": "Anti-avoidance",
+  "q": "Hubungan istimewa karena kepemilikan modal menurut Pasal 18 ayat (4) UU PPh terjadi apabila WP mempunyai penyertaan modal langsung atau tidak langsung paling rendah ...",
+  "o": [
+   "20%",
+   "50%",
+   "10%",
+   "25%"
+  ],
+  "ans": 3,
+  "exp": "Pasal 18 ayat (4) huruf a UU PPh: penyertaan modal langsung/tidak langsung paling rendah 25%. Hubungan istimewa juga terjadi karena penguasaan (manajemen/teknologi) dan hubungan keluarga sedarah/semenda satu derajat."
+ },
+ {
+  "n": 30,
+  "sub": "Anti-avoidance",
+  "q": "Dalam PMK 172 Tahun 2023, pemilihan metode penentuan harga transfer dilakukan berdasarkan ...",
+  "o": [
+   "Hierarki: CUP harus dipakai pertama",
+   "Selalu TNMM",
+   "Pilihan bebas WP tanpa analisis",
+   "Metode yang paling sesuai (most appropriate method) dengan fakta dan kondisi transaksi"
+  ],
+  "ans": 3,
+  "exp": "PMK 172/2023 menerapkan Prinsip Kewajaran dan Kelaziman Usaha (PKKU) dengan memilih metode yang paling sesuai berdasarkan analisis kesebandingan (CUP, RPM, CPM, PSM, TNMM, serta metode lain seperti CUT, tradable goods, penilaian)."
+ },
+ {
+  "n": 31,
+  "sub": "TP Docs",
+  "q": "Berdasarkan PMK 172/2023, WP wajib menyelenggarakan Dokumen Induk dan Dokumen Lokal apabila (salah satunya) ...",
+  "o": [
+   "Peredaran bruto tahun berjalan lebih dari Rp10 miliar",
+   "Merupakan perusahaan terbuka",
+   "Memiliki transaksi afiliasi berapa pun",
+   "Peredaran bruto tahun pajak sebelumnya lebih dari Rp50 miliar"
+  ],
+  "ans": 3,
+  "exp": "Kriteria: (a) peredaran bruto tahun pajak sebelumnya > Rp50 M; (b) transaksi afiliasi tahun pajak sebelumnya > Rp20 M (barang berwujud) atau > Rp5 M (jasa, bunga, pemanfaatan barang tidak berwujud, lainnya); atau (c) bertransaksi dengan pihak afiliasi di negara/yurisdiksi dengan tarif PPh lebih rendah dari tarif Pasal 17 ayat (1) huruf b."
+ },
+ {
+  "n": 32,
+  "sub": "TP Docs",
+  "q": "Dokumen Induk dan Dokumen Lokal wajib tersedia paling lama ...",
+  "o": [
+   "Saat SPT Tahunan disampaikan",
+   "4 bulan setelah akhir tahun pajak",
+   "12 bulan setelah akhir tahun pajak",
+   "1 bulan setelah tahun pajak berakhir"
+  ],
+  "ans": 1,
+  "exp": "PMK 172/2023: Dokumen Induk dan Dokumen Lokal harus tersedia paling lama 4 bulan setelah akhir tahun pajak dan disampaikan paling lama 1 bulan sejak permintaan DJP; ikhtisarnya dilampirkan pada SPT Tahunan."
+ },
+ {
+  "n": 33,
+  "sub": "TP Docs",
+  "q": "Laporan per negara (Country-by-Country Report) wajib disampaikan oleh entitas induk grup usaha dengan peredaran bruto konsolidasi tahun sebelumnya paling sedikit ...",
+  "o": [
+   "Rp5 triliun",
+   "Rp50 triliun",
+   "Rp1 triliun",
+   "Rp11 triliun"
+  ],
+  "ans": 3,
+  "exp": "PMK 172/2023: entitas induk dengan peredaran bruto konsolidasi paling sedikit Rp11 triliun wajib menyelenggarakan CbCR, yang disampaikan paling lama 12 bulan setelah akhir tahun pajak."
+ },
+ {
+  "n": 34,
+  "sub": "MAP & APA",
+  "q": "Prosedur Persetujuan Bersama (MAP) dapat diajukan WP DN apabila ...",
+  "o": [
+   "WP ingin menunda pembayaran pajak",
+   "Terdapat tindakan otoritas pajak negara mitra yang mengakibatkan atau akan mengakibatkan pengenaan pajak yang tidak sesuai dengan P3B",
+   "WP tidak setuju dengan tarif domestik",
+   "WP ingin memperoleh APA unilateral"
+  ],
+  "ans": 1,
+  "exp": "Pasal 25 P3B dan PMK 172/2023: MAP diajukan bila ada pemajakan yang tidak sesuai P3B (mis. pajak berganda akibat koreksi TP), dalam jangka waktu sesuai P3B (umumnya 3 tahun sejak pemberitahuan pertama tindakan tersebut)."
+ },
+ {
+  "n": 35,
+  "sub": "MAP & APA",
+  "q": "Kesepakatan Harga Transfer (Advance Pricing Agreement) menurut PMK 172/2023 berlaku untuk jangka waktu paling lama ...",
+  "o": [
+   "10 tahun pajak",
+   "5 tahun pajak, dan dapat diberlakukan untuk tahun pajak sebelumnya (roll-back) dengan syarat",
+   "3 tahun pajak",
+   "1 tahun pajak"
+  ],
+  "ans": 1,
+  "exp": "APA (unilateral atau bilateral) berlaku paling lama 5 tahun pajak setelah tahun pajak pengajuan, dan dapat diberlakukan atas tahun-tahun pajak sebelumnya (roll-back) sepanjang memenuhi persyaratan."
+ },
+ {
+  "n": 36,
+  "sub": "MAP & APA",
+  "q": "Perbedaan APA unilateral dan bilateral adalah ..",
+  "o": [
+   "APA unilateral disepakati antara WP dan DJP; APA bilateral disepakati DJP dengan otoritas pajak negara mitra P3B atas permintaan WP",
+   "Tidak ada perbedaan",
+   "APA unilateral melibatkan dua otoritas pajak",
+   "APA bilateral tidak memerlukan P3B"
+  ],
+  "ans": 0,
+  "exp": "APA bilateral dilakukan melalui MAP antara DJP dan otoritas negara mitra, sehingga memberikan kepastian di kedua negara dan menghindarkan pajak berganda; unilateral hanya mengikat di Indonesia."
+ },
+ {
+  "n": 37,
+  "sub": "EoI & AiC",
+  "q": "Dalam pertukaran informasi otomatis (AEol) atas rekening keuangan, lembaga jasa keuangan wajib melaporkan rekening keuangan orang pribadi untuk kepentingan domestik dengan saldo agregat paling sedikit ...",
+  "o": [
+   "Rp1 miliar",
+   "Rp5 miliar",
+   "Rp500 juta",
+   "Rp200 juta"
+  ],
+  "ans": 0,
+  "exp": "UU 9/2017 jo. PMK 70/PMK.03/2017 s.t.d.d. PMK 19/PMK.03/2018 (dan perubahannya): batas saldo agregat rekening keuangan OP untuk pelaporan domestik paling sedikit Rp1.000.000.000. Untuk kepentingan pertukaran informasi dengan yurisdiksi lain mengikuti standar CRS."
+ },
+ {
+  "n": 38,
+  "sub": "EoI & AiC",
+  "q": "Pertukaran informasi yang dilakukan karena adanya permintaan spesifik dari otoritas pajak negara mitra untuk kasus tertentu disebut ...",
+  "o": [
+   "Automatic exchange of information",
+   "Spontaneous exchange of information",
+   "Exchange of information on request",
+   "Country-by-country exchange"
+  ],
+  "ans": 2,
+  "exp": "Eol on request: informasi dipertukarkan berdasarkan permintaan atas kasus tertentu yang dapat diperkirakan relevan (foreseeably relevant). AEol dilakukan secara periodik tanpa permintaan; spontaneous bila otoritas memberikan informasi atas inisiatif sendiri."
+ },
+ {
+  "n": 39,
+  "sub": "EoI & AiC",
+  "q": "Global Information Return (GIR) dalam kerangka Pajak Minimum Global (PMK 136/2024) berkaitan dengan grup PMN dengan omzet konsolidasi tahunan paling sedikit ...",
+  "o": [
+   "USD 1 miliar",
+   "EUR 250 juta",
+   "EUR 750 juta dalam paling sedikit 2 dari 4 tahun pajak sebelumnya",
+   "Rp11 triliun"
+  ],
+  "ans": 2,
+  "exp": "PMK 136/2024 (berlaku tahun pajak 2025) menerapkan Pilar Dua (IIR, UTPR, DMTT) dengan tarif minimum efektif 15% bagi grup PMN beromzet ≥ EUR 750 juta dalam minimal 2 dari 4 tahun sebelumnya; GIR berisi informasi perhitungan pajak tambahan dan dapat dipertukarkan secara otomatis."
+ },
+ {
+  "n": 40,
+  "sub": "EoI & AiC",
+  "q": "Bantuan penagihan pajak (assistance in collection) dalam kerja sama perpajakan internasional adalah …",
+  "o": [
+   "Penagihan PPh Pasal 26 oleh pemotong",
+   "Penghapusan utang pajak WP asing",
+   "Kerja sama otoritas pajak untuk menagih utang pajak WP di negara mitra berdasarkan P3B/konvensi multilateral",
+   "Pemberian pinjaman kepada negara lain untuk membayar pajak"
+  ],
+  "ans": 2,
+  "exp": "Pasal 27 OECD Model dan Convention on Mutual Administrative Assistance in Tax Matters memungkinkan suatu negara meminta negara mitra menagih utang pajak WP yang aset/keberadaannya berada di negara mitra."
+ }
+]

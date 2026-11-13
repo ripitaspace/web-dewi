@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "Subjek & objek",
+  "q": "Subjek Pajak PBB menurut Pasal 4 UU PBB adalah orang atau badan yang ...",
+  "o": [
+   "Tercantum sebagai pemilik dalam sertifikat saja",
+   "Berdomisili di lokasi objek pajak",
+   "Membayar PBB tahun sebelumnya",
+   "Secara nyata mempunyai suatu hak atas bumi dan/atau memperoleh manfaat atas bumi, dan/atau memiliki, menguasai, dan/atau memperoleh manfaat atas bangunan"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4 ayat (1) UU 12/1985 s.t.d.d. UU 12/1994. Penekanan pada 'secara nyata' sehingga penyewa/pemegang hak pengusahaan juga dapat menjadi WP."
+ },
+ {
+  "n": 2,
+  "sub": "Subjek & objek",
+  "q": "Ruang lingkup PBB-P5L yang dikelola oleh DJP meliputi sektor berikut, KECUALI ...",
+  "o": [
+   "Perdesaan dan perkotaan untuk rumah tinggal",
+   "Perkebunan",
+   "Pertambangan mineral atau batubara",
+   "Perhutanan"
+  ],
+  "ans": 0,
+  "exp": "PBB-P5L meliputi perkebunan, perhutanan, pertambangan migas, pertambangan panas bumi, pertambangan minerba, dan sektor lainnya (PMK 186/2019 s.t.d.d. PMK 234/2022). PBB Perdesaan dan Perkotaan (PBB-P2) merupakan pajak daerah (UU 1/2022 HKPD)."
+ },
+ {
+  "n": 3,
+  "sub": "Subjek & objek",
+  "q": "Yang termasuk PBB-P5L 'sektor lainnya' adalah objek pajak berupa ...",
+  "o": [
+   "Toko di pusat kota",
+   "Jaringan pipa, kabel telekomunikasi/listrik, jalan tol, serta perikanan tangkap/budidaya",
+   "Rumah susun",
+   "Kantor pemerintah daerah"
+  ],
+  "ans": 1,
+  "exp": "Sektor lainnya dalam PMK 186/2019 s.t.d.d. PMK 234/2022 mencakup antara lain perikanan tangkap, pembudidayaan ikan, jaringan pipa, kabel telekomunikasi, kabel listrik, jalan tol, dan objek lain di luar kawasan P2 yang ditetapkan."
+ },
+ {
+  "n": 4,
+  "sub": "Subjek & objek",
+  "q": "Objek pajak yang TIDAK dikenakan PBB menurut Pasal 3 UU PBB adalah ...",
+  "o": [
+   "Areal produktif perkebunan sawit",
+   "Emplasemen perkebunan",
+   "Hutan lindung dan taman nasional",
+   "Kantor pusat perusahaan tambang"
+  ],
+  "ans": 2,
+  "exp": "Pasal 3 ayat (1) huruf c UU PBB: hutan lindung, hutan suaka alam, hutan wisata, taman nasional, tanah penggembalaan yang dikuasai desa, dan tanah negara yang belum dibebani suatu hak tidak dikenakan PBB."
+ },
+ {
+  "n": 5,
+  "sub": "Subjek & objek",
+  "q": "Masjid yang berada di dalam areal emplasemen perkebunan dan digunakan semata-mata untuk ibadah tanpa tujuan memperoleh keuntungan ...",
+  "o": [
+   "Tidak dikenakan PBB",
+   "Tetap objek PBB-P5L karena berada di areal perkebunan",
+   "Dikenakan PBB-P2",
+   "Dikenakan PBB dengan NJKP 20%"
+  ],
+  "ans": 0,
+  "exp": "Pasal 3 ayat (1) huruf a UU PBB: objek yang digunakan semata-mata untuk melayani kepentingan umum di bidang ibadah, sosial, kesehatan, pendidikan, dan kebudayaan nasional yang tidak dimaksudkan memperoleh keuntungan tidak dikenakan PBB."
+ },
+ {
+  "n": 6,
+  "sub": "Subjek & objek",
+  "q": "Rumah sakit milik perusahaan perkebunan yang melayani masyarakat umum dengan tarif komersial ...",
+  "o": [
+   "Bebas PBB jika luas < 1 ha",
+   "Tidak dikenakan PBB karena bidang kesehatan",
+   "Hanya bangunannya yang dikecualikan",
+   "Tetap merupakan objek PBB karena dimaksudkan memperoleh keuntungan"
+  ],
+  "ans": 3,
+  "exp": "Pengecualian Pasal 3 ayat (1) huruf a hanya untuk objek yang 'tidak dimaksudkan untuk memperoleh keuntungan'. Rumah sakit komersial tetap objek PBB."
+ },
+ {
+  "n": 7,
+  "sub": "Subjek & objek",
+  "q": "Bumi dan/atau bangunan yang digunakan oleh perwakilan diplomatik dan konsulat ...",
+  "o": [
+   "Tidak dikenakan PBB berdasarkan asas perlakuan timbal balik",
+   "Dikenakan PBB-P2 oleh pemda",
+   "Dikenakan PBB 50%",
+   "Selalu dikenakan PBB"
+  ],
+  "ans": 0,
+  "exp": "Pasal 3 ayat (1) huruf d UU PBB: objek yang digunakan oleh perwakilan diplomatik/konsulat berdasarkan asas perlakuan timbal balik, serta huruf e: digunakan badan/perwakilan organisasi internasional yang ditetapkan Menteri Keuangan."
+ },
+ {
+  "n": 8,
+  "sub": "Subjek & objek",
+  "q": "Tanah negara yang belum dibebani suatu hak dan tidak dimanfaatkan oleh pihak mana pun ...",
+  "o": [
+   "Objek PBB yang terutang oleh pemerintah",
+   "Tidak dikenakan PBB",
+   "Objek PBB sektor lainnya",
+   "Objek PBB perhutanan"
+  ],
+  "ans": 1,
+  "exp": "Pasal 3 ayat (1) huruf c UU PBB. Namun, apabila tanah negara tersebut secara nyata dimanfaatkan pihak tertentu, pihak yang memanfaatkan dapat menjadi subjek pajak (Pasal 4)."
+ },
+ {
+  "n": 9,
+  "sub": "Subjek & objek",
+  "q": "Dalam PBB perkebunan, bagian bumi yang digunakan untuk kantor, perumahan, gudang, dan pabrik disebut ...",
+  "o": [
+   "Areal emplasemen",
+   "Areal produktif",
+   "Areal tidak produktif",
+   "Areal belum produktif"
+  ],
+  "ans": 0,
+  "exp": "Klasifikasi bumi perkebunan: areal produktif, areal belum produktif, areal tidak produktif, areal pengaman, dan areal emplasemen (untuk bangunan/fasilitas pendukung seperti kantor, perumahan, pabrik)."
+ },
+ {
+  "n": 10,
+  "sub": "Subjek & objek",
+  "q": "Pernyataan yang benar mengenai saat yang menentukan pajak terutang PBB adalah ...",
+  "o": [
+   "Keadaan objek pada tanggal 1 Januari",
+   "Saat SPPT diterima",
+   "Keadaan objek pada tanggal 31 Desember",
+   "Saat SPOP disampaikan"
+  ],
+  "ans": 0,
+  "exp": "Pasal 8 UU PBB: saat yang menentukan pajak terutang adalah menurut keadaan objek pajak pada tanggal 1 Januari. Tahun pajak adalah jangka waktu satu tahun takwim."
+ },
+ {
+  "n": 11,
+  "sub": "Subjek & objek",
+  "q": "PT Tambang membeli areal pertambangan pada 1 Februari 2026. Atas PBB tahun 2026, subjek pajak yang terutang adalah ...",
+  "o": [
+   "PT Tambang sejak Februari secara proporsional",
+   "Pemilik lama, karena keadaan objek pada 1 Januari 2026",
+   "Dibagi dua",
+   "Tidak terutang tahun 2026"
+  ],
+  "ans": 1,
+  "exp": "Karena saat terutang ditentukan keadaan 1 Januari (Pasal 8 UU PBB), PBB 2026 terutang atas nama pihak yang menguasai/memanfaatkan pada 1 Januari 2026. Pengalihan kewajiban di antara para pihak bersifat perdata."
+ },
+ {
+  "n": 12,
+  "sub": "Subjek & objek",
+  "q": "WP PBB-P5L wajib mengisi dan mengembalikan Surat Pemberitahuan Objek Pajak (SPOP) paling lambat",
+  "o": [
+   "3 bulan sejak diterima",
+   "7 hari sejak diterima",
+   "30 hari sejak diterima",
+   "6 bulan sejak diterima"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9 ayat (2) UU PBB: SPOP harus diisi dengan jelas, benar, lengkap, ditandatangani, dan disampaikan paling lambat 30 hari setelah tanggal diterimanya SPOP oleh Subjek Pajak."
+ },
+ {
+  "n": 13,
+  "sub": "Pengenaan",
+  "q": "Rumus PBB terutang P5L adalah ...",
+  "o": [
+   "Tarif 0,3% x (NJOP - NJOPTKP)",
+   "Tarif 0,5% x NJKP, dengan NJKP = persentase tertentu x (NJOP - NJOPTKP)",
+   "Tarif 1% x NJKP",
+   "Tarif x NJOP"
+  ],
+  "ans": 1,
+  "exp": "Pasal 5 dan 6 UU PBB: tarif tunggal 0,5%; dasar perhitungan adalah NJKP yang ditetapkan 20%-100% dari NJOP setelah dikurangi NJOPTKP (PP 25/2002)."
+ },
+ {
+  "n": 14,
+  "sub": "Pengenaan",
+  "q": "Besarnya NJKP berdasarkan PP 25/2002 untuk objek pajak perkebunan dan perhutanan adalah ...",
+  "o": [
+   "40%",
+   "100%",
+   "20%",
+   "60%"
+  ],
+  "ans": 0,
+  "exp": "PP 25/2002: NJKP 40% dari NJOP untuk objek pajak perkebunan dan perhutanan (kehutanan), serta untuk objek pajak lainnya dengan NJOP ≥ Rp1 miliar; 20% untuk objek pajak lainnya dengan NJOP < Rp1 miliar."
+ },
+ {
+  "n": 15,
+  "sub": "Pengenaan",
+  "q": "NJKP untuk objek PBB sektor lainnya dengan NJOP kurang dari Rp1.000.000.000 adalah ..",
+  "o": [
+   "20%",
+   "50%",
+   "100%",
+   "40%"
+  ],
+  "ans": 0,
+  "exp": "PP 25/2002: NJKP 20% untuk objek pajak (selain perkebunan/perhutanan/pertambangan) dengan NJOP kurang dari Rp1 miliar."
+ },
+ {
+  "n": 16,
+  "sub": "Pengenaan",
+  "q": "Besarnya NJOPTKP menurut UU PBB ditetapkan .",
+  "o": [
+   "Tidak ada NJOPTKP pada PBB",
+   "Rp10.000.000 untuk setiap objek",
+   "Rp60.000.000 untuk setiap objek",
+   "Paling tinggi Rp12.000.000 untuk setiap Wajib Pajak"
+  ],
+  "ans": 3,
+  "exp": "Pasal 3 ayat (3) UU 12/1994 (perubahan UU PBB): NJOPTKP ditetapkan setinggi-tingginya Rp12.000.000 untuk setiap WP. (Ketentuan NJOPTKP minimal Rp10 juta dalam UU HKPD berlaku untuk PBB-P2 daerah.)"
+ },
+ {
+  "n": 17,
+  "sub": "Pengenaan",
+  "q": "PT Sawit memiliki objek perkebunan dengan NJOP bumi Rp8 miliar dan NJOP bangunan Rp2 miliar. NJOPTKP yang diberikan Rp12.000.000. PBB terutang adalah ..",
+  "o": [
+   "Rp9.988.000",
+   "Rp20.000.000",
+   "Rp50.000.000",
+   "Rp19.976.000"
+  ],
+  "ans": 3,
+  "exp": "NJOP = 10.000.000.000; NJOP kena pajak = 10.000.000.000 - 12.000.000 = 9.988.000.000. NJKP 40% = 3.995.200.000. PBB = 0,5% x 3.995.200.000 = 19.976.000."
+ },
+ {
+  "n": 18,
+  "sub": "Pengenaan",
+  "q": "Objek PBB sektor lainnya (jaringan pipa) milik PT Alir memiliki NJOP Rp800.000.000; NJOPTKP Rp12.000.000. PBB terutang adalah ..",
+  "o": [
+   "Rp1.576.000",
+   "Rp788.000",
+   "Rp394.000",
+   "Rp4.000.000"
+  ],
+  "ans": 1,
+  "exp": "NJOP < Rp1 M → NJKP 20%. (800.000.000 - 12.000.000) x 20% x 0,5% = 788.000.000 x 0,1% = 788.000."
+ },
+ {
+  "n": 19,
+  "sub": "Pengenaan",
+  "q": "PT Rimba (perhutanan) memiliki NJOP bumi Rp50 miliar dan NJOP bangunan Rp5 miliar; NJOPTKP Rp12.000.000. PBB terutang adalah ..",
+  "o": [
+   "Rp109.976.000",
+   "Rp54.988.000",
+   "Rp110.000.000",
+   "Rp275.000.000"
+  ],
+  "ans": 0,
+  "exp": "(55.000.000.000 - 12.000.000) x 40% x 0,5% = 54.988.000.000 x 0,2% = 109.976.000."
+ },
+ {
+  "n": 20,
+  "sub": "Pengenaan",
+  "q": "Dengan NJKP 40% dan tarif 0,5%, tarif efektif PBB-P5L terhadap NJOP (setelah NJOPTKP) adalah ...",
+  "o": [
+   "0,4%",
+   "0,2%",
+   "0,5%",
+   "0,1%"
+  ],
+  "ans": 1,
+  "exp": "Tarif efektif = 0,5% x 40% = 0,2%. Untuk NJKP 20%, tarif efektif 0,1%."
+ },
+ {
+  "n": 21,
+  "sub": "Pengenaan",
+  "q": "Penetapan NJOP dilakukan setiap ...",
+  "o": [
+   "3 tahun, kecuali untuk daerah tertentu ditetapkan setiap tahun sesuai perkembangan daerahnya",
+   "Saat terjadi transaksi",
+   "5 tahun",
+   "Tahun untuk semua daerah"
+  ],
+  "ans": 0,
+  "exp": "Pasal 6 ayat (2) UU PBB: besarnya NJOP ditetapkan setiap 3 tahun oleh Menteri Keuangan, kecuali untuk daerah tertentu ditetapkan setiap tahun sesuai dengan perkembangan daerahnya."
+ },
+ {
+  "n": 22,
+  "sub": "Pengenaan",
+  "q": "Apabila harga pasar objek sejenis tidak tersedia, NJOP dapat ditentukan melalui ….",
+  "o": [
+   "Harga yang dilaporkan WP saja",
+   "Nilai buku komersial",
+   "Harga lelang terakhir",
+   "Nilai perolehan baru atau Nilai Jual Objek Pajak pengganti"
+  ],
+  "ans": 3,
+  "exp": "Pasal 1 angka 3 UU PBB: NJOP adalah harga rata-rata transaksi jual beli yang wajar; bila tidak ada transaksi, ditentukan melalui perbandingan harga dengan objek lain yang sejenis, nilai perolehan baru, atau NJOP pengganti."
+ },
+ {
+  "n": 23,
+  "sub": "Pengenaan",
+  "q": "PBB dalam SPPT harus dilunasi paling lambat ...",
+  "o": [
+   "1 bulan sejak SPPT diterima",
+   "Akhir tahun pajak",
+   "3 bulan sejak SPPT diterbitkan",
+   "6 bulan sejak tanggal diterimanya SPPT"
+  ],
+  "ans": 3,
+  "exp": "Pasal 11 ayat (1) UU PBB: pajak terutang berdasarkan SPPT harus dilunasi selambat-lambatnya 6 bulan sejak tanggal diterimanya SPPT. Untuk SKP: 1 bulan sejak diterima (Pasal 11 ayat (2))."
+ },
+ {
+  "n": 24,
+  "sub": "Pengenaan",
+  "q": "PBB dalam SPPT PT Kopi Rp20.000.000 dibayar terlambat 3 bulan 10 hari setelah jatuh tempo. Denda administrasi dalam STP PBB adalah ..",
+  "o": [
+   "Rp1.200.000",
+   "Rp1.600.000",
+   "Rp2.000.000",
+   "Rp1.333.333"
+  ],
+  "ans": 1,
+  "exp": "Pasal 11 ayat (3) UU PBB: denda 2% per bulan dari pajak terutang, dihitung dari jatuh tempo sampai hari pembayaran, paling lama 24 bulan; bagian bulan dihitung penuh. 4 bulan x 2% x 20 jt = 1.600.000."
+ },
+ {
+  "n": 25,
+  "sub": "Pengenaan",
+  "q": "PBB PT Teh Rp10.000.000 belum dibayar selama 30 bulan setelah jatuh tempo. Denda maksimum yang dapat dikenakan adalah ...",
+  "o": [
+   "Rp2.400.000",
+   "Rp4.800.000",
+   "Rp6.000.000",
+   "Rp10.000.000"
+  ],
+  "ans": 1,
+  "exp": "Denda 2% per bulan paling lama 24 bulan = 48% x 10.000.000 = 4.800.000."
+ },
+ {
+  "n": 26,
+  "sub": "Pengenaan",
+  "q": "PT Batu tidak mengembalikan SPOP dan setelah ditegur secara tertulis tetap tidak mengembalikan dalam jangka waktu yang ditentukan. Pokok pajak hasil penetapan Rp10.000.000. Jumlah dalam SKP PBB adalah ...",
+  "o": [
+   "Rp10.000.000",
+   "Rp15.000.000",
+   "Rp12.500.000",
+   "Rp12.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 10 UU PBB: SKP diterbitkan bila SPOP tidak disampaikan setelah ditegur; jumlah pajak terutang adalah pokok pajak ditambah denda administrasi 25% dari pokok. 10 jt + 2,5 jt = 12,5 jt."
+ },
+ {
+  "n": 27,
+  "sub": "Pengenaan",
+  "q": "Berdasarkan SPOP, PBB PT Garam Rp30 juta. Hasil pemeriksaan menunjukkan PBB terutang Rp40 juta. Jumlah dalam SKP PBB adalah ...",
+  "o": [
+   "Rp50.000.000",
+   "Rp10.000.000",
+   "Rp12.500.000",
+   "Rp40.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 10 UU PBB: bila hasil pemeriksaan pajak terutang lebih besar dari yang dihitung berdasarkan SPOP, SKP memuat selisih (10 jt) ditambah denda administrasi 25% dari selisih (2,5 jt) = 12,5 jt."
+ },
+ {
+  "n": 28,
+  "sub": "Pengenaan",
+  "q": "Bagi pertambangan migas lepas pantai (offshore), objek bumi PBB-P5L meliputi ...",
+  "o": [
+   "Tidak termasuk objek PBB",
+   "Bumi berupa wilayah perairan (tubuh bumi di bawah laut) dalam wilayah kerja, serta bangunan di atasnya",
+   "Hanya daratan di sekitar pantai",
+   "Hanya bangunan anjungan"
+  ],
+  "ans": 1,
+  "exp": "Bumi meliputi permukaan bumi (tanah dan perairan pedalaman serta laut wilayah Indonesia) dan tubuh bumi di bawahnya (Pasal 1 angka 1 UU PBB). Karena itu wilayah kerja migas offshore merupakan objek PBB-P5L sektor migas."
+ },
+ {
+  "n": 29,
+  "sub": "Upaya non-keberatan",
+  "q": "Berikut yang termasuk upaya hukum non-keberatan dalam PBB-P5L, KECUALI ...",
+  "o": [
+   "Pembetulan SPPT/SKP/STP PBB karena kesalahan tulis/hitung/penerapan ketentuan",
+   "Pembatalan SPPT/SKP/STP PBB yang tidak benar",
+   "Banding ke Pengadilan Pajak",
+   "Pengurangan PBB terutang"
+  ],
+  "ans": 2,
+  "exp": "Upaya non-keberatan meliputi pembetulan, pengurangan PBB, pengurangan/penghapusan denda administrasi, serta pembatalan SPPT/SKP/STP yang tidak benar (UU PBB jo. PMK 118/2024 dan PMK 129/2023). Banding merupakan kelanjutan keberatan."
+ },
+ {
+  "n": 30,
+  "sub": "Upaya non-keberatan",
+  "q": "Pengurangan PBB karena kondisi tertentu objek pajak yang ada hubungannya dengan subjek pajak (PMK 129 Tahun 2023) dapat diberikan paling tinggi ...",
+  "o": [
+   "75%",
+   "90%",
+   "100%",
+   "50%"
+  ],
+  "ans": 0,
+  "exp": "PMK 129/2023: pengurangan karena kondisi tertentu (WP badan mengalami kerugian komersial dan kesulitan likuiditas 2 tahun berturut-turut) paling tinggi 75% dari PBB yang masih harus dibayar dalam SPPT/SKP PBB."
+ },
+ {
+  "n": 31,
+  "sub": "Upaya non-keberatan",
+  "q": "Pengurangan PBB karena objek pajak terkena bencana alam atau sebab lain yang luar biasa dapat diberikan paling tinggi ...",
+  "o": [
+   "90%",
+   "50%",
+   "100%",
+   "75%"
+  ],
+  "ans": 2,
+  "exp": "PMK 129/2023: pengurangan karena bencana alam/sebab luar biasa paling tinggi 100% dari PBB terutang dalam SPPT, SKP, atau STP PBB. Pengurangan juga dapat diberikan secara jabatan bila ada penetapan status bencana oleh pemerintah."
+ },
+ {
+  "n": 32,
+  "sub": "Upaya non-keberatan",
+  "q": "Dalam PMK 129/2023, kriteria 'kesulitan likuiditas' bagi WP badan adalah ….",
+  "o": [
+   "Laba bersih menurun",
+   "Peredaran bruto turun 10%",
+   "Utang bank lebih dari modal",
+   "WP tidak dapat memenuhi kewajiban jangka pendek dengan aktiva lancarnya (current ratio < 1)"
+  ],
+  "ans": 3,
+  "exp": "Kerugian komersial: beban operasi lebih besar dari laba kotor; kesulitan likuiditas: kewajiban jangka pendek tidak dapat dipenuhi dengan aktiva lancar. Keduanya harus terjadi dua tahun berturut-turut."
+ },
+ {
+  "n": 33,
+  "sub": "Upaya non-keberatan",
+  "q": "Permohonan pengurangan PBB karena kondisi tertentu atas SPPT harus diajukan paling lama ….",
+  "o": [
+   "Kapan saja dalam tahun pajak",
+   "6 bulan sejak SPPT diterima",
+   "1 bulan sejak SPPT diterima",
+   "3 bulan sejak tanggal diterimanya SPPT"
+  ],
+  "ans": 3,
+  "exp": "PMK 129/2023: 3 bulan sejak SPPT diterima; 1 bulan sejak SKP PBB diterima atau sejak SK Pembetulan diterima. Untuk bencana alam, diajukan pada tahun terjadinya bencana."
+ },
+ {
+  "n": 34,
+  "sub": "Upaya non-keberatan",
+  "q": "SPPT PBB-P5L PT Alam memuat luas areal 1.500 ha, padahal SPOP yang disampaikan 1.050 ha akibat kesalahan pengetikan petugas. Upaya yang paling tepat adalah ..",
+  "o": [
+   "Pengurangan PBB",
+   "Keberatan",
+   "Gugatan ke Pengadilan Pajak",
+   "Permohonan pembetulan SPPT karena kesalahan tulis"
+  ],
+  "ans": 3,
+  "exp": "Kesalahan tulis/hitung/kekeliruan penerapan ketentuan dalam SPPT diselesaikan melalui pembetulan (UU PBB jo. PMK 118/2024), tanpa perlu menyengketakan substansi melalui keberatan."
+ },
+ {
+  "n": 35,
+  "sub": "Upaya non-keberatan",
+  "q": "Atas satu objek pajak yang sama diterbitkan dua SPPT PBB-P5L untuk tahun pajak yang sama. Upaya hukum yang tepat adalah ...",
+  "o": [
+   "Membayar keduanya lalu meminta restitusi",
+   "Pengurangan PBB 50%",
+   "Permohonan pembatalan SPPT yang tidak benar",
+   "Banding"
+  ],
+  "ans": 2,
+  "exp": "SPPT ganda merupakan SPPT yang tidak benar sehingga diajukan pembatalan (UU PBB jo. PMK 118/2024)."
+ },
+ {
+  "n": 36,
+  "sub": "Upaya non-keberatan",
+  "q": "Pengurangan atau penghapusan denda administrasi PBB dapat diberikan apabila denda dikenakan karena ...",
+  "o": [
+   "Objek pajak dijual",
+   "WP tidak memiliki dana",
+   "WP mengajukan keberatan",
+   "Kekhilafan WP atau bukan karena kesalahan WP"
+  ],
+  "ans": 3,
+  "exp": "UU PBB jo. PMK 118/2024: denda administrasi PBB dapat dikurangkan/dihapuskan apabila dikenakan karena kekhilafan atau bukan karena kesalahan WP, termasuk dalam hal kesulitan keuangan sesuai kriteria PMK."
+ },
+ {
+  "n": 37,
+  "sub": "Upaya non-keberatan",
+  "q": "Berdasarkan PMK 118/2024, apabila keberatan atas SPPT PBB-P5L ditolak, WP ...",
+  "o": [
+   "Dikenai denda 30%",
+   "Dikenai denda 60%",
+   "Tidak dikenai sanksi denda 30% sebagaimana berlaku pada keberatan pajak lainnya",
+   "Dikenai denda 25%"
+  ],
+  "ans": 2,
+  "exp": "PMK 118/2024 Pasal 20: sanksi denda 30% (Pasal 25 ayat (9) UU KUP) tidak berlaku untuk keputusan keberatan atas SPPT/SKP PBB; demikian pula denda atas putusan banding/PK terkait SPPT/SKP PBB."
+ },
+ {
+  "n": 38,
+  "sub": "Upaya non-keberatan",
+  "q": "Perbedaan mendasar antara keberatan dan permohonan pengurangan PBB adalah ...",
+  "o": [
+   "Pengurangan hanya bisa diajukan setelah keberatan ditolak",
+   "Tidak ada perbedaan",
+   "Keberatan menyengketakan kebenaran penetapan (luas, NJOP, subjek), sedangkan pengurangan diajukan karena kondisi tertentu WP/objek tanpa mempersoalkan kebenaran ketetapan",
+   "Keberatan diajukan karena WP tidak mampu membayar"
+  ],
+  "ans": 2,
+  "exp": "Keberatan (Pasal 15 UU PBB) mempersoalkan ketidaksesuaian ketetapan; pengurangan (PMK 129/2023) adalah fasilitas karena kondisi keuangan/bencana, bukan sengketa ketetapan."
+ },
+ {
+  "n": 39,
+  "sub": "Upaya non-keberatan",
+  "q": "Pengurangan PBB secara jabatan karena bencana alam dapat diberikan dengan syarat ...",
+  "o": [
+   "WP tidak memiliki tunggakan pajak lain",
+   "Terdapat penetapan status bencana alam oleh pemerintah pusat atau daerah",
+   "Kerugian di atas 50%",
+   "WP mengajukan permohonan dalam 1 bulan"
+  ],
+  "ans": 1,
+  "exp": "PMK 129/2023: pengurangan secara jabatan atas objek terdampak bencana alam dapat diberikan paling tinggi 100% berdasarkan penetapan status bencana oleh pemerintah; kewenangan dapat dilimpahkan kepada Kepala Kanwil DJP."
+ },
+ {
+  "n": 40,
+  "sub": "Upaya non-keberatan",
+  "q": "Keberatan atas SPPT PBB diajukan dalam jangka waktu ...",
+  "o": [
+   "1 bulan sejak SPPT diterima",
+   "12 bulan",
+   "3 bulan sejak tanggal diterimanya SPPT",
+   "6 bulan sejak SPPT diterbitkan"
+  ],
+  "ans": 2,
+  "exp": "Pasal 15 ayat (3) UU PBB: keberatan diajukan dalam jangka waktu 3 bulan sejak tanggal diterimanya SPPT/SKP, kecuali WP dapat menunjukkan keadaan di luar kekuasaannya. Keberatan tidak menunda kewajiban membayar pajak."
+ }
+]

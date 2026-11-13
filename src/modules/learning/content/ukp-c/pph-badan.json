@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "DN - Objek dan pengecualian",
+  "q": "Berikut ini yang merupakan objek PPh bagi PT Mandiri Jaya (WP badan DN) adalah ….",
+  "o": [
+   "Setoran modal dari pemegang saham",
+   "Harta hibahan dari pihak yang tidak mempunyai hubungan usaha",
+   "Dividen dari PT dalam negeri",
+   "Keuntungan karena pembebasan utang"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4 ayat (1) huruf k UU PPh: keuntungan karena pembebasan utang (kecuali sampai jumlah tertentu) adalah objek. Setoran modal (Pasal 4(3) huruf c), dividen DN (Pasal 4(3) huruf f), dan hibah tanpa hubungan usaha (Pasal 4(3) huruf a) dikecualikan."
+ },
+ {
+  "n": 2,
+  "sub": "DN - Objek dan pengecualian",
+  "q": "PT Baru menjual mesin dengan harga Rp300 juta. Harga perolehan Rp500 juta dan akumulasi penyusutan fiskal Rp350 juta. Perlakuan fiskal atas transaksi tersebut adalah .",
+  "o": [
+   "Kerugian Rp200 juta",
+   "Keuntungan Rp150 juta sebagai objek PPh",
+   "Bukan objek PPh",
+   "Keuntungan Rp300 juta"
+  ],
+  "ans": 1,
+  "exp": "Nilai sisa buku fiskal = 500 - 350 = 150 jt. Keuntungan pengalihan harta = 300 - 150 = 150 jt, objek PPh (Pasal 4 ayat (1) huruf d dan Pasal 11 ayat (8))."
+ },
+ {
+  "n": 3,
+  "sub": "DN - Objek dan pengecualian",
+  "q": "PT Sejahtera (WP badan DN) menerima dividen dari PT Makmur (WP badan DN) Rp1 miliar. Perlakuan PPh-nya adalah ...",
+  "o": [
+   "PPh final 10%",
+   "Dipotong PPh 23 15%",
+   "Dikecualikan hanya jika kepemilikan ≥ 25%",
+   "Dikecualikan dari objek PPh tanpa syarat kepemilikan minimal"
+  ],
+  "ans": 3,
+  "exp": "Pasal 4 ayat (3) huruf f angka 1 UU PPh s.t.d.t.d. UU Cipta Kerja: dividen dari dalam negeri yang diterima WP badan DN dikecualikan dari objek pajak tanpa syarat kepemilikan 25% (syarat ini dihapus)."
+ },
+ {
+  "n": 4,
+  "sub": "DN - Objek dan pengecualian",
+  "q": "Bagian laba yang diterima PT sebagai anggota dari perseroan komanditer yang modalnya tidak terbagi atas saham, persekutuan, firma, dan kongsi ...",
+  "o": [
+   "Objek PPh tarif umum",
+   "Objek PPh final 10%",
+   "Dikecualikan dari objek pajak",
+   "Objek PPh 23"
+  ],
+  "ans": 2,
+  "exp": "Pasal 4 ayat (3) huruf i UU PPh: bagian laba anggota persekutuan/firma/kongsi/CV (termasuk pemegang unit penyertaan kontrak investasi kolektif) dikecualikan karena telah dipajaki di tingkat badan."
+ },
+ {
+  "n": 5,
+  "sub": "DN - Objek dan pengecualian",
+  "q": "Iuran yang diterima atau diperoleh dana pensiun yang pendiriannya telah disahkan OJK, baik dari pemberi kerja maupun pegawai ...",
+  "o": [
+   "Objek PPh final 5%",
+   "Dikecualikan dari objek PPh",
+   "Objek PPh",
+   "Objek PPh hanya bagian pemberi kerja"
+  ],
+  "ans": 1,
+  "exp": "Pasal 4 ayat (3) huruf g UU PPh: iuran yang diterima/diperoleh dana pensiun yang pendiriannya telah disahkan otoritas berwenang dikecualikan dari objek pajak."
+ },
+ {
+  "n": 6,
+  "sub": "DN - Biaya yang dikurangkan",
+  "q": "PT Cakra memberikan sumbangan untuk pembangunan infrastruktur sosial Rp150 juta (memenuhi syarat PP 93/2010). Penghasilan neto fiskal tahun sebelumnya Rp2 miliar. Koreksi fiskal atas sumbangan adalah",
+  "o": [
+   "Tidak ada koreksi",
+   "Positif Rp150 juta",
+   "Positif Rp100 juta",
+   "Positif Rp50 juta"
+  ],
+  "ans": 3,
+  "exp": "PP 93/2010: sumbangan penanggulangan bencana nasional, litbang, infrastruktur sosial, fasilitas pendidikan, dan pembinaan olahraga dapat dibebankan paling tinggi 5% dari penghasilan neto fiskal tahun sebelumnya (dan tidak menyebabkan rugi). Batas = 5% x 2 M = 100 jt; koreksi 50 jt."
+ },
+ {
+  "n": 7,
+  "sub": "DN - Biaya yang dikurangkan",
+  "q": "Pengeluaran berikut yang TIDAK boleh dikurangkan dari penghasilan bruto PT adalah ...",
+  "o": [
+   "Biaya natura berupa makanan untuk seluruh pegawai",
+   "Biaya beasiswa, magang, dan pelatihan",
+   "Pajak Penghasilan Badan",
+   "Biaya promosi dengan daftar nominatif"
+  ],
+  "ans": 2,
+  "exp": "Pasal 9 ayat (1) huruf h UU PPh: Pajak Penghasilan tidak boleh dikurangkan. Natura (Pasal 6 ayat (1) huruf n UU HPP), biaya promosi (PMK 02/2010), dan beasiswa/magang/pelatihan (Pasal 6 ayat (1) huruf g) boleh dikurangkan."
+ },
+ {
+  "n": 8,
+  "sub": "DN - Biaya yang dikurangkan",
+  "q": "PT Delta mengeluarkan biaya kegiatan praktik kerja/pemagangan (vokasi) Rp100 juta yang memenuhi syarat PP 45/2019 jo. PMK 128/PMK.010/2019. Jumlah maksimum yang dapat dikurangkan dari penghasilan bruto adalah ...",
+  "o": [
+   "Rp150 juta",
+   "Rp200 juta",
+   "Rp300 juta",
+   "Rp100 juta"
+  ],
+  "ans": 1,
+  "exp": "Fasilitas super deduction vokasi: pengurangan penghasilan bruto paling tinggi 200% dari biaya (100% biaya riil + tambahan pengurangan paling tinggi 100%). Untuk litbang tertentu (PMK 153/2020) paling tinggi 300%."
+ },
+ {
+  "n": 9,
+  "sub": "DN - Biaya yang dikurangkan",
+  "q": "Biaya yang dikeluarkan untuk kepentingan pribadi pemegang saham (misalnya biaya liburan keluarga pemegang saham) yang dibebankan perusahaan ...",
+  "o": [
+   "Boleh dikurangkan 50%",
+   "Boleh dikurangkan",
+   "Dikenai PPh final",
+   "Tidak boleh dikurangkan dan dapat dianggap dividen terselubung"
+  ],
+  "ans": 3,
+  "exp": "Pasal 9 ayat (1) huruf b UU PPh: biaya untuk kepentingan pribadi pemegang saham, sekutu, atau anggota tidak boleh dikurangkan; secara substansi dapat dianggap pembagian laba (dividen terselubung, Penjelasan Pasal 4 ayat (1) huruf g)."
+ },
+ {
+  "n": 10,
+  "sub": "DN - Tarif dan fasilitas Pasal 31E",
+  "q": "PT Elok (peredaran bruto Rp30 miliar) memiliki PKP Rp6 miliar. PPh Badan terutang dengan fasilitas Pasal 31E adalah ...",
+  "o": [
+   "Rp1.320.000.000",
+   "Rp660.000.000",
+   "Rp1.214.400.000",
+   "Rp1.108.800.000"
+  ],
+  "ans": 2,
+  "exp": "PKP yang memperoleh fasilitas = (4,8 M/30 M) x 6 M = 960 jt → 50% x 22% x 960 jt = 105,6 jt. PKP tanpa fasilitas = 5.040 jt x 22% = 1.108,8 jt. Total = 1.214,4 jt."
+ },
+ {
+  "n": 11,
+  "sub": "DN - Tarif dan fasilitas Pasal 31E",
+  "q": "PT Fajar (peredaran bruto Rp4 miliar) memiliki PKP Rp500 juta dan tidak menggunakan skema PPh final PP 55/2022. PPh terutang adalah ...",
+  "o": [
+   "Rp20.000.000",
+   "Rp88.000.000",
+   "Rp110.000.000",
+   "Rp55.000.000"
+  ],
+  "ans": 3,
+  "exp": "Peredaran bruto ≤ Rp4,8 M sehingga seluruh PKP memperoleh fasilitas 50% tarif Pasal 31E: 50% x 22% x 500 jt = 55 jt."
+ },
+ {
+  "n": 12,
+  "sub": "TI - Subjek dan kewajiban subjektif",
+  "q": "Subjek pajak luar negeri yang menjalankan usaha melalui bentuk usaha tetap (BUT) di Indonesia diperlakukan ...",
+  "o": [
+   "Sebagai WP final 20%",
+   "Sebagai subjek pajak badan (persamaan perlakuan dengan WP badan DN)",
+   "Bukan subjek pajak",
+   "Sama dengan WP OP DN"
+  ],
+  "ans": 1,
+  "exp": "Pasal 2 ayat (1) huruf c dan Penjelasan: BUT merupakan subjek pajak tersendiri yang perlakuan perpajakannya dipersamakan dengan subjek pajak badan."
+ },
+ {
+  "n": 13,
+  "sub": "TI - Subjek dan kewajiban subjektif",
+  "q": "Badan yang didirikan di Singapura dan menerima bunga dari Indonesia tanpa melalui BUT merupakan ...",
+  "o": [
+   "Bukan subjek pajak",
+   "BUT",
+   "Subjek pajak dalam negeri",
+   "Subjek pajak luar negeri yang dikenai PPh Pasal 26"
+  ],
+  "ans": 3,
+  "exp": "Pasal 2 ayat (4) huruf b UU PPh: badan yang tidak didirikan/bertempat kedudukan di Indonesia yang menerima penghasilan dari Indonesia tidak melalui BUT adalah SPLN; pajaknya melalui pemotongan PPh Pasal 26."
+ },
+ {
+  "n": 14,
+  "sub": "TI - Subjek dan kewajiban subjektif",
+  "q": "Kewajiban pajak subjektif BUT dimulai pada saat ...",
+  "o": [
+   "BUT mendaftarkan NPWP",
+   "Orang pribadi/badan luar negeri menjalankan usaha atau melakukan kegiatan melalui BUT di Indonesia",
+   "BUT memperoleh laba pertama",
+   "Badan luar negeri didirikan di negaranya"
+  ],
+  "ans": 1,
+  "exp": "Pasal 2A ayat (4) UU PPh: kewajiban subjektif SPLN yang menjalankan usaha melalui BUT dimulai saat menjalankan usaha/kegiatan melalui BUT dan berakhir saat tidak lagi menjalankan usaha melalui BUT."
+ },
+ {
+  "n": 15,
+  "sub": "TI - Subjek dan kewajiban subjektif",
+  "q": "Kewajiban pajak subjektif SPLN yang menerima penghasilan dari Indonesia tanpa melalui BUT dimulai pada saat ...",
+  "o": [
+   "Menandatangani kontrak",
+   "Hari pertama berada di Indonesia",
+   "Memiliki rekening bank di Indonesia",
+   "Menerima atau memperoleh penghasilan dari Indonesia"
+  ],
+  "ans": 3,
+  "exp": "Pasal 2A ayat (5) UU PPh: dimulai saat orang pribadi/badan tersebut menerima atau memperoleh penghasilan dari Indonesia dan berakhir saat tidak lagi menerima/memperoleh penghasilan tersebut."
+ },
+ {
+  "n": 16,
+  "sub": "TI - Subjek dan kewajiban subjektif",
+  "q": "Yang TIDAK termasuk subjek pajak menurut Pasal 3 UU PPh adalah ...",
+  "o": [
+   "Kantor perwakilan dagang asing yang melakukan penjualan",
+   "BUT perusahaan konstruksi asing",
+   "Kantor cabang bank asing",
+   "Organisasi internasional yang ditetapkan Menteri Keuangan, dengan syarat Indonesia menjadi anggota dan tidak menjalankan usaha selain memberi pinjaman kepada pemerintah dari iuran anggota"
+  ],
+  "ans": 3,
+  "exp": "Pasal 3 ayat (1) huruf c UU PPh (jo. PMK yang menetapkan daftar organisasi internasional). Kantor perwakilan negara asing dan pejabat diplomatik juga dikecualikan dengan syarat timbal balik. Cabang bank asing dan proyek konstruksi asing merupakan BUT."
+ },
+ {
+  "n": 17,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "Kantor pusat ACo (Jepang) menjual langsung ke pelanggan di Indonesia barang sejenis dengan yang dijual BUT ACo di Indonesia. Atas penghasilan tersebut ...",
+  "o": [
+   "Dikenai PPh 26 20%",
+   "Dianggap penghasilan BUT (force of attraction, Pasal 5 ayat (1) huruf b)",
+   "Bebas pajak berdasarkan P3B dalam segala hal",
+   "Bukan penghasilan BUT"
+  ],
+  "ans": 1,
+  "exp": "Pasal 5 ayat (1) huruf b UU PPh menerapkan force of attraction: penghasilan kantor pusat dari usaha, penjualan barang, atau pemberian jasa di Indonesia yang sejenis dengan yang dijalankan BUT diatribusikan kepada BUT. Ketentuan P3B dapat membatasi penerapannya."
+ },
+ {
+  "n": 18,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "Penghasilan berikut termasuk objek pajak BUT menurut Pasal 5 ayat (1) UU PPh, KECUALI ...",
+  "o": [
+   "Royalti yang diterima BUT dari kantor pusatnya",
+   "Penghasilan Pasal 26 yang diterima kantor pusat sepanjang terdapat hubungan efektif dengan BUT",
+   "Penghasilan kantor pusat dari usaha sejenis yang dijalankan BUT",
+   "Penghasilan dari usaha atau kegiatan BUT dan dari harta yang dimiliki/dikuasai"
+  ],
+  "ans": 0,
+  "exp": "Penjelasan Pasal 5 ayat (3): pembayaran royalti, imbalan manajemen, dan bunga antara BUT dan kantor pusat tidak diperhitungkan sebagai biaya maupun penghasilan BUT (kecuali bunga pada usaha perbankan)."
+ },
+ {
+  "n": 19,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "BUT XCo memiliki PKP Rp2 miliar dan tidak menanamkan kembali labanya di Indonesia. Tanpa P3B, total PPh Badan dan PPh Pasal 26 ayat (4) adalah ...",
+  "o": [
+   "Rp840 juta",
+   "Rp752 juta",
+   "Rp400 juta",
+   "Rp440 juta"
+  ],
+  "ans": 1,
+  "exp": "PPh Badan = 22% x 2 M = 440 jt. PKP setelah pajak = 1.560 jt. Branch profit tax 20% x 1.560 jt = 312 jt. Total = 752 jt."
+ },
+ {
+  "n": 20,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "BUT bank asing menerima sewa atas bangunan yang dimilikinya Rp500 juta. Perlakuan PPh-nya adalah",
+  "o": [
+   "Tarif umum 22% melalui SPT",
+   "Bukan objek",
+   "PPh final 10% atas bruto",
+   "PPh 26 20%"
+  ],
+  "ans": 2,
+  "exp": "Penghasilan sewa tanah/bangunan dikenai PPh final 10% (PP 34/2017) tanpa membedakan apakah penerimanya WP badan DN atau BUT."
+ },
+ {
+  "n": 21,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "Bunga deposito yang diterima BUT (bukan bank) dari bank di Indonesia dikenai ...",
+  "o": [
+   "PPh final 20% (PP 123/2015)",
+   "PPh 26 20% non-final",
+   "PPh 23 15%",
+   "Tarif umum melalui SPT"
+  ],
+  "ans": 0,
+  "exp": "Bunga deposito dan tabungan yang diterima WP DN dan BUT dikenai PPh final 20%, kecuali diterima bank yang didirikan/bertempat kedudukan di Indonesia atau cabang bank luar negeri di Indonesia, serta dana pensiun tertentu."
+ },
+ {
+  "n": 22,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "Dalam konteks transaksi internasional, penghasilan berikut yang dikecualikan dari objek PPh bagi WP badan DN adalah ...",
+  "o": [
+   "Dividen dari luar negeri yang diinvestasikan di Indonesia sesuai persyaratan",
+   "Royalti dari luar negeri",
+   "Keuntungan penjualan saham perusahaan luar negeri",
+   "Bunga pinjaman kepada afiliasi luar negeri"
+  ],
+  "ans": 0,
+  "exp": "Pasal 4 ayat (3) huruf f angka 2 UU PPh s.t.d.t.d. UU Cipta Kerja jo. PMK 18/2021: dividen dari luar negeri dikecualikan bila diinvestasikan di Indonesia dalam jumlah dan jangka waktu tertentu."
+ },
+ {
+  "n": 23,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "BUT membayar 'imbalan jasa manajemen' kepada kantor pusatnya Rp300 juta. Perlakuan fiskal pada BUT adalah...",
+  "o": [
+   "Boleh dikurangkan 50%",
+   "Boleh dikurangkan sepanjang wajar",
+   "Tidak boleh dikurangkan (Pasal 5 ayat (3) UU PPh)",
+   "Boleh dikurangkan dan dipotong PPh 26"
+  ],
+  "ans": 2,
+  "exp": "Pasal 5 ayat (3) UU PPh: biaya berupa royalti/imbalan atas penggunaan harta, imbalan jasa manajemen dan jasa lainnya, serta bunga (kecuali usaha perbankan) yang dibayarkan BUT kepada kantor pusat tidak boleh dikurangkan."
+ },
+ {
+  "n": 24,
+  "sub": "TI - Penghasilan dan biaya BUT",
+  "q": "Biaya administrasi kantor pusat yang dialokasikan ke BUT ...",
+  "o": [
+   "Tidak boleh dibebankan sama sekali",
+   "Dikenai PPh 26",
+   "Boleh dibebankan sepanjang berkaitan dengan usaha/kegiatan BUT dan sesuai ketentuan DJP",
+   "Boleh dibebankan tanpa batas"
+  ],
+  "ans": 2,
+  "exp": "Pasal 5 ayat (2) UU PPh: dalam menentukan laba BUT, biaya administrasi kantor pusat yang berkaitan dengan usaha atau kegiatan BUT boleh dibebankan, besarnya ditetapkan DJP."
+ },
+ {
+  "n": 25,
+  "sub": "TI - Harga perolehan, hubungan istimewa, dan penyusutan",
+  "q": "PT Mega menukar mesin (nilai sisa buku fiskal Rp300 juta, nilai pasar Rp450 juta) dengan mesin milik pihak lain. Keuntungan yang menjadi objek PPh adalah ...",
+  "o": [
+   "Rp150 juta",
+   "Rp300 juta",
+   "Rp0",
+   "Rp450 juta"
+  ],
+  "ans": 0,
+  "exp": "Pasal 10 ayat (2) UU PPh: harga perolehan/penjualan dalam tukar-menukar adalah harga pasar. Keuntungan = 450 - 300 = 150 jt."
+ },
+ {
+  "n": 26,
+  "sub": "TI - Harga perolehan, hubungan istimewa, dan penyusutan",
+  "q": "Harta yang diterima PT dari pemegang saham sebagai penyertaan modal (inbreng) dinilai berdasarkan ...",
+  "o": [
+   "Nilai yang disepakati tanpa batas",
+   "Nilai pasar",
+   "Nilai NJOP",
+   "Nilai buku pemegang saham"
+  ],
+  "ans": 1,
+  "exp": "Pasal 10 ayat (5) UU PPh: harga perolehan harta berwujud yang diterima sebagai pengganti saham atau penyertaan modal adalah jumlah yang seharusnya dikeluarkan/diterima berdasarkan harga pasar."
+ },
+ {
+  "n": 27,
+  "sub": "TI - Harga perolehan, hubungan istimewa, dan penyusutan",
+  "q": "PT A menjual bahan baku kepada afiliasinya di Negara Y dengan harga di bawah harga pasar. Kewenangan DJP berdasarkan Pasal 18 ayat (3) UU PPh adalah ...",
+  "o": [
+   "Mengenakan PPh final",
+   "Menentukan kembali besarnya penghasilan/pengurangan sesuai prinsip kewajaran dan kelaziman usaha",
+   "Tidak dapat melakukan apa pun",
+   "Membatalkan transaksi"
+  ],
+  "ans": 1,
+  "exp": "Pasal 18 ayat (3) UU PPh: DJP berwenang menentukan kembali besarnya penghasilan dan pengurangan serta menentukan utang sebagai modal dalam transaksi pihak-pihak yang mempunyai hubungan istimewa sesuai prinsip kewajaran dan kelaziman usaha."
+ },
+ {
+  "n": 28,
+  "sub": "TI - Harga perolehan, hubungan istimewa, dan penyusutan",
+  "q": "PT Prima membeli komputer (kelompok I) seharga Rp80 juta pada Juli 2025 dan memilih metode saldo menurun. Penyusutan fiskal tahun 2026 adalah ...",
+  "o": [
+   "Rp30 juta",
+   "Rp40 juta",
+   "Rp20 juta",
+   "Rp10 juta"
+  ],
+  "ans": 0,
+  "exp": "Kelompok | saldo menurun 50%. 2025: 80 jt x 50% x 6/12 = 20 jt (mulai bulan pengeluaran). 2026: (80 - 20) x 50% = 30 jt."
+ },
+ {
+  "n": 29,
+  "sub": "TI - Harga perolehan, hubungan istimewa, dan penyusutan",
+  "q": "Tarif penyusutan garis lurus dan saldo menurun untuk harta berwujud bukan bangunan kelompok I|I adalah ...",
+  "o": [
+   "12,5% dan 25%",
+   "5% dan 10%",
+   "6,25% dan 12,5%",
+   "25% dan 50%"
+  ],
+  "ans": 2,
+  "exp": "Pasal 11 ayat (6) UU PPh: kelompok | 4 th (25%/50%), kelompok || 8 th (12,5%/25%), kelompok ||I 16 th (6,25%/12,5%), kelompok IV 20 th (5%/10%)."
+ },
+ {
+  "n": 30,
+  "sub": "TI - Harga perolehan, hubungan istimewa, dan penyusutan",
+  "q": "Pengeluaran untuk biaya pendirian dan biaya perluasan modal suatu perusahaan secara fiskal ...",
+  "o": [
+   "Dapat dibebankan pada tahun terjadinya pengeluaran atau diamortisasi sesuai Pasal 11A",
+   "Hanya boleh dibebankan 50%",
+   "Tidak boleh dibebankan",
+   "Wajib dikapitalisasi dan diamortisasi 20 tahun"
+  ],
+  "ans": 0,
+  "exp": "Pasal 11A ayat (3) UU PPh: pengeluaran untuk biaya pendirian dan biaya perluasan modal dibebankan pada tahun terjadinya pengeluaran atau diamortisasi sesuai ketentuan amortisasi."
+ },
+ {
+  "n": 31,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "Kerugian fiskal PT Utama (dalam juta): 2021 rugi 1.000; 2022 laba 300; 2023 laba 200; 2024 rugi 100; 2025 laba 400; 2026 laba 500. PKP tahun 2026 adalah ...",
+  "o": [
+   "Rp300 juta",
+   "Rp200 juta",
+   "Rp500 juta",
+   "Rp400 juta"
+  ],
+  "ans": 0,
+  "exp": "Kompensasi 5 tahun dan dilakukan berurutan (FIFO). Rugi 2021 terpakai: 2022 300, 2023 200, 2025 400 (sisa 100). 2026: 500 - sisa rugi 2021 (100, tahun terakhir) - rugi 2024 (100) = 300."
+ },
+ {
+  "n": 32,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "Jangka waktu kompensasi kerugian fiskal bagi WP badan pada umumnya adalah ...",
+  "o": [
+   "Tidak terbatas",
+   "10 tahun",
+   "5 tahun berturut-turut sesudah tahun terjadinya kerugian",
+   "3 tahun"
+  ],
+  "ans": 2,
+  "exp": "Pasal 6 ayat (2) UU PPh: kerugian dikompensasikan dengan penghasilan mulai tahun pajak berikutnya berturut- turut sampai dengan 5 tahun. Fasilitas tertentu (tax allowance, KEK, daerah tertentu) dapat memperpanjang hingga 10 tahun."
+ },
+ {
+  "n": 33,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "Tarif PPh WP badan DN dan BUT sejak Tahun Pajak 2022 berdasarkan UU HPP adalah ...",
+  "o": [
+   "20%",
+   "25%",
+   "19%",
+   "22%"
+  ],
+  "ans": 3,
+  "exp": "Pasal 17 ayat (1) huruf b UU PPh s.t.d.t.d. UU HPP: 22% berlaku mulai Tahun Pajak 2022."
+ },
+ {
+  "n": 34,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "BUT mencatat beban bunga kepada kantor pusat Rp200 juta dan beban bunga kepada bank lokal Rp100 juta. Usaha BUT bukan perbankan. Koreksi fiskal positif adalah ...",
+  "o": [
+   "Rp200 juta",
+   "Rp0",
+   "Rp100 juta",
+   "Rp300 juta"
+  ],
+  "ans": 0,
+  "exp": "Bunga kepada kantor pusat tidak boleh dikurangkan (Pasal 5 ayat (3)) → koreksi 200 jt. Bunga ke bank lokal boleh dibebankan (sepanjang memenuhi ketentuan DER dan 3M)."
+ },
+ {
+  "n": 35,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "WP badan berbentuk Perseroan Terbuka dapat memperoleh tarif 3% lebih rendah dari tarif umum apabila •••",
+  "o": [
+   "Membagikan dividen setiap tahun",
+   "Paling sedikit 40% saham disetor diperdagangkan di bursa Indonesia dan memenuhi persyaratan tertentu (antara lain dimiliki ≥300 pihak, masing-masing < 5%, selama ≥183 hari)",
+   "Sahamnya tercatat di bursa berapa pun jumlahnya",
+   "Memiliki aset > Rp1 triliun"
+  ],
+  "ans": 1,
+  "exp": "Pasal 17 ayat (2b) UU PPh s.t.d.t.d. UU HPP jo. PP 30/2020 s.t.d.d. PP 55/2022: tarif 19% bagi Tbk dengan saham beredar ≥40% dan persyaratan kepemilikan publik."
+ },
+ {
+  "n": 36,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "Fasilitas Pasal 31E UU PPh berlaku bagi WP badan DN dengan peredaran bruto ...",
+  "o": [
+   "Sampai dengan Rp50 miliar, berupa pengurangan tarif 50% atas PKP dari bagian peredaran bruto sampai Rp4,8 miliar",
+   "Di atas Rp50 miliar",
+   "Semua WP tanpa batas",
+   "Sampai dengan Rp4,8 miliar"
+  ],
+  "ans": 0,
+  "exp": "Pasal 31E UU PPh: WP badan DN dengan peredaran bruto sampai Rp50 miliar mendapat fasilitas pengurangan tarif 50% atas PKP dari bagian peredaran bruto sampai Rp4,8 miliar. BUT tidak termasuk penerima fasilitas ini (WP badan DN)."
+ },
+ {
+  "n": 37,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "PT Asia: PKP Rp5 miliar terdiri atas DN Rp3 miliar, Negara X Rp1,2 miliar (pajak dibayar di X Rp300 juta), Negara Y Rp0,8 miliar (pajak dibayar di Y Rp80 juta). Tarif 22%. PPh Pasal 24 yang dapat dikreditkan adalah ...",
+  "o": [
+   "Rp344 juta",
+   "Rp264 juta",
+   "Rp440 juta",
+   "Rp380 juta"
+  ],
+  "ans": 0,
+  "exp": "PPh terutang = 1.100 jt. Batas X = 1,2/5 x 1.100 = 264 jt → kredit 264 jt (pajak X 300 jt). Batas Y = 0,8/5 × 1.100 = 176 jt → kredit 80 jt. Total = 344 jt (per country limitation, Pasal 24 ayat (2))."
+ },
+ {
+  "n": 38,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "Apabila PKP lebih kecil daripada penghasilan luar negeri karena adanya kerugian dalam negeri, batas maksimum kredit PPh Pasal 24 adalah ...",
+  "o": [
+   "Sebesar 22% dari penghasilan luar negeri",
+   "Nol",
+   "Sebesar PPh terutang atas PKP (tidak melebihi PPh terutang atas seluruh PKP)",
+   "Sebesar pajak yang dibayar di luar negeri"
+  ],
+  "ans": 2,
+  "exp": "Ketentuan pelaksanaan Pasal 24 (PP 55/2022 dan PMK terkait): dalam hal PKP lebih kecil dari penghasilan LN, batas kredit dihitung atas PKP; kredit tidak boleh melebihi PPh terutang atas seluruh PKP."
+ },
+ {
+  "n": 39,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "PPh terutang PT Bima tahun 2025 Rp1.100 juta; kredit PPh 22 Rp100 juta dan PPh 23 Rp60 juta (tidak ada PPh 24). Angsuran PPh Pasal 25 per bulan untuk tahun 2026 adalah ..",
+  "o": [
+   "Rp83.333.333",
+   "Rp86.666.667",
+   "Rp91.666.667",
+   "Rp78.333.333"
+  ],
+  "ans": 3,
+  "exp": "Pasal 25 ayat (1) UU PPh: (PPh terutang - PPh dipotong/dipungut Pasal 21, 22, 23 dan PPh 24 yang dikreditkan)/12 = (1.100 - 160)/12 = 78.333.333."
+ },
+ {
+  "n": 40,
+  "sub": "TI - Kompensasi, tarif, kredit pajak, dan SPT",
+  "q": "Batas waktu penyampaian SPT Tahunan PPh Badan dan perpanjangannya adalah ...",
+  "o": [
+   "3 bulan; diperpanjang 1 bulan",
+   "6 bulan; tidak dapat diperpanjang",
+   "4 bulan setelah akhir tahun pajak; dapat diperpanjang paling lama 2 bulan dengan pemberitahuan",
+   "4 bulan; diperpanjang 3 bulan"
+  ],
+  "ans": 2,
+  "exp": "Pasal 3 ayat (3) huruf c dan ayat (4) UU KUP: paling lama 4 bulan setelah akhir tahun pajak; dapat diperpanjang paling lama 2 bulan dengan pemberitahuan tertulis/elektronik disertai penghitungan sementara."
+ }
+]

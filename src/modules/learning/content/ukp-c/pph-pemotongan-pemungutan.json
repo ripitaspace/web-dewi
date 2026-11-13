@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "DN - Objek PPh 21",
+  "q": "Berdasarkan PMK 66 Tahun 2023, natura/kenikmatan berikut yang merupakan objek pemotongan PPh Pasal 21 adalah ...",
+  "o": [
+   "Seragam dan alat keselamatan kerja",
+   "Laptop dan telepon seluler untuk menunjang pekerjaan",
+   "Makanan dan minuman yang disediakan bagi seluruh pegawai",
+   "Fasilitas tempat tinggal bagi direktur secara individual (bukan komunal)"
+  ],
+  "ans": 3,
+  "exp": "PMK 66/2023 mengecualikan antara lain makanan/minuman bagi seluruh pegawai, natura yang wajib untuk pelaksanaan pekerjaan (seragam, APD), sarana dan fasilitas kerja (laptop, HP), serta tempat tinggal komunal. Tempat tinggal individual merupakan objek PPh 21."
+ },
+ {
+  "n": 2,
+  "sub": "DN - Objek PPh 21",
+  "q": "Bingkisan hari raya keagamaan yang diberikan pemberi kerja kepada pegawai dikecualikan dari objek PPh apabila nilainya ...",
+  "o": [
+   "Paling banyak Rp1.000.000 per tahun",
+   "Berapa pun nilainya",
+   "Paling banyak Rp5.000.000 per tahun",
+   "Paling banyak Rp3.000.000 per pegawai per tahun"
+  ],
+  "ans": 3,
+  "exp": "PMK 66/2023: natura berupa bingkisan dari pemberi kerja dalam rangka hari besar keagamaan dikecualikan dengan batasan paling banyak Rp3.000.000 per pegawai per tahun."
+ },
+ {
+  "n": 3,
+  "sub": "DN - Objek PPh 21",
+  "q": "Fasilitas olahraga berikut yang TIDAK termasuk natura yang dikecualikan dari objek PPh menurut PMK 66/2023 adalah ...",
+  "o": [
+   "Fasilitas kebugaran (gym) bagi seluruh pegawai",
+   "Lapangan futsal di lingkungan kantor",
+   "Fasilitas senam bersama",
+   "Fasilitas golf"
+  ],
+  "ans": 3,
+  "exp": "PMK 66/2023 mengecualikan fasilitas kegiatan olahraga, kecuali golf, balap perahu bermotor, pacuan kuda, terbang layang, dan olahraga otomotif."
+ },
+ {
+  "n": 4,
+  "sub": "DN - Objek PPh 21",
+  "q": "Penerima penghasilan berikut yang TIDAK dipotong PPh Pasal 21 adalah ...",
+  "o": [
+   "Tenaga ahli (dokter) bukan pegawai",
+   "Anggota dewan komisaris tidak merangkap pegawai",
+   "Pejabat perwakilan diplomatik negara asing (bukan WNI, timbal balik)",
+   "Peserta lomba yang menerima hadiah"
+  ],
+  "ans": 2,
+  "exp": "PMK 168/2023: tidak termasuk penerima penghasilan yang dipotong PPh 21 antara lain pejabat perwakilan diplomatik/konsulat dan pejabat organisasi internasional tertentu yang bukan WNI dan tidak menjalankan usaha/pekerjaan lain di Indonesia, berdasarkan asas timbal balik."
+ },
+ {
+  "n": 5,
+  "sub": "DN - PPh 22",
+  "q": "PT Jaya (memiliki API) mengimpor barang dengan CIF Rp500 juta dan bea masuk Rp50 juta. PPh Pasal 22 impor adalah ...",
+  "o": [
+   "Rp13.750.000",
+   "Rp12.500.000",
+   "Rp37.500.000",
+   "Rp41.250.000"
+  ],
+  "ans": 0,
+  "exp": "DPP PPh 22 impor = nilai impor (CIF + bea masuk + pungutan lain) = 550 jt. Tarif dengan API 2,5% = 13.750.000. Tanpa API 7,5% = 41.250.000 (PMK 34/2017 s.t.d.d. perubahannya)."
+ },
+ {
+  "n": 6,
+  "sub": "DN - PPh 22",
+  "q": "Bendahara instansi pemerintah membeli ATK dari PT Kertas senilai Rp100 juta (belum termasuk PPN). PPh Pasal 22 yang dipungut adalah ...",
+  "o": [
+   "Rp1.000.000",
+   "Rp1.500.000",
+   "Rp2.500.000",
+   "Rp2.000.000"
+  ],
+  "ans": 1,
+  "exp": "PPh 22 atas pembelian barang oleh bendahara pemerintah 1,5% dari harga pembelian tidak termasuk PPN = 1.500.000."
+ },
+ {
+  "n": 7,
+  "sub": "DN - PPh 22",
+  "q": "Pembelian barang oleh bendahara pemerintah yang dikecualikan dari pemungutan PPh Pasal 22 adalah pembelian dengan nilai ...",
+  "o": [
+   "Paling banyak Rp10.000.000",
+   "Berapa pun bila dibayar tunai",
+   "Paling banyak Rp5.000.000",
+   "Paling banyak Rp2.000.000 dan tidak merupakan pembayaran yang dipecah-pecah"
+  ],
+  "ans": 3,
+  "exp": "PMK 34/2017: dikecualikan antara lain pembayaran pembelian barang oleh pemerintah dengan jumlah paling banyak Rp2.000.000 dan bukan pembayaran yang dipecah-pecah, serta pembayaran BBM, listrik, gas, air minum, dan telepon."
+ },
+ {
+  "n": 8,
+  "sub": "DN - PPh 22",
+  "q": "Atas penjualan barang yang tergolong sangat mewah (misalnya rumah beserta tanahnya dengan harga di atas batas tertentu), PPh Pasal 22 dipungut sebesar ...",
+  "o": [
+   "10% dari harga jual",
+   "2,5% dari harga jual",
+   "1% dari harga jual",
+   "5% dari harga jual tidak termasuk PPN dan PPnBM"
+  ],
+  "ans": 3,
+  "exp": "PMK 34/2017 dan perubahannya: PPh 22 atas penjualan barang sangat mewah dipungut 5% dari harga jual tidak termasuk PPN dan PPnBM, oleh penjual yang merupakan badan."
+ },
+ {
+  "n": 9,
+  "sub": "DN - PPh 22",
+  "q": "Tarif PPh Pasal 22 bagi WP yang tidak memiliki NPWP (dalam hal tidak menggunakan NIK sebagai NPWP) adalah ...",
+  "o": [
+   "Lebih tinggi 50%",
+   "Sama",
+   "Lebih tinggi 100% dari tarif yang berlaku",
+   "Lebih tinggi 20%"
+  ],
+  "ans": 2,
+  "exp": "Pasal 22 ayat (3) UU PPh: besarnya tarif bagi WP yang tidak memiliki NPWP lebih tinggi 100% daripada tarif yang diterapkan terhadap WP yang dapat menunjukkan NPWP."
+ },
+ {
+  "n": 10,
+  "sub": "DN - PPh 23",
+  "q": "PT Andalan membayar royalti kepada PT Cipta (WP badan DN) Rp200 juta. PPh Pasal 23 yang dipotong adalah...",
+  "o": [
+   "Rp40.000.000",
+   "Rp4.000.000",
+   "Rp30.000.000",
+   "Rp20.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 23 ayat (1) huruf a UU PPh: royalti dipotong 15% dari bruto = 30.000.000."
+ },
+ {
+  "n": 11,
+  "sub": "DN - PPh 23",
+  "q": "PT Bara menyewa kendaraan dari PT Rental (bukan sewa dengan hak opsi) Rp30 juta. PPh Pasal 23 yang dipotong adalah ...",
+  "o": [
+   "Rp4.500.000",
+   "Rp3.000.000",
+   "Rp600.000",
+   "Rp300.000"
+  ],
+  "ans": 2,
+  "exp": "Sewa dan penghasilan lain sehubungan dengan penggunaan harta, kecuali sewa tanah/bangunan, dipotong 2% dari bruto (Pasal 23 ayat (1) huruf c angka 1) = 600.000."
+ },
+ {
+  "n": 12,
+  "sub": "DN - PPh 23",
+  "q": "Penghasilan berikut yang TIDAK dipotong PPh Pasal 23 adalah ..",
+  "o": [
+   "Jasa manajemen",
+   "Hadiah penghargaan kepada badan",
+   "Bunga yang dibayarkan kepada bank",
+   "Bunga pinjaman dari perusahaan non-bank"
+  ],
+  "ans": 2,
+  "exp": "Pasal 23 ayat (4) huruf a: penghasilan yang dibayar atau terutang kepada bank dikecualikan dari pemotongan PPh 23. Demikian pula sewa guna usaha dengan hak opsi, dividen kepada badan DN, dan bagian laba anggota persekutuan."
+ },
+ {
+  "n": 13,
+  "sub": "DN - PPh 23",
+  "q": "PT Cahaya membayar jasa konsultan pajak kepada PT Konsultan (tidak dapat menunjukkan NPWP dan tidak memakai NIK) Rp50 juta. PPh Pasal 23 adalah ...",
+  "o": [
+   "Rp1.000.000",
+   "Rp2.000.000",
+   "Rp1.200.000",
+   "Rp7.500.000"
+  ],
+  "ans": 1,
+  "exp": "Tarif jasa 2%; tanpa NPWP dikenakan tarif lebih tinggi 100% (Pasal 23 ayat (1a)) → 4% x 50 jt = 2.000.000."
+ },
+ {
+  "n": 14,
+  "sub": "DN - PPh 23",
+  "q": "Saat terutangnya PPh Pasal 23 adalah ...",
+  "o": [
+   "Akhir bulan dilakukannya pembayaran, disediakannya untuk dibayarkan, atau telah jatuh tempo pembayaran, tergantung peristiwa yang terjadi lebih dahulu",
+   "Saat faktur diterbitkan",
+   "Saat kontrak ditandatangani",
+   "Saat SPT Tahunan disampaikan"
+  ],
+  "ans": 0,
+  "exp": "Pasal 23 ayat (1) UU PPh dan penjelasannya; pemotong wajib menerbitkan bukti potong, menyetor paling lambat tanggal 15 bulan berikutnya, dan melaporkan dalam SPT Masa unifikasi."
+ },
+ {
+  "n": 15,
+  "sub": "DN - PPh 23",
+  "q": "Dividen yang dibayarkan PT kepada pemegang saham berupa WP badan DN …",
+  "o": [
+   "Tidak dipotong PPh 23 karena dikecualikan dari objek pajak",
+   "Dipotong PPh 4(2) 10%",
+   "Dipotong PPh 23 15% jika kepemilikan < 25%",
+   "Dipotong PPh 23 15%"
+  ],
+  "ans": 0,
+  "exp": "Sejak UU Cipta Kerja, dividen DN yang diterima WP badan DN dikecualikan dari objek PPh (Pasal 4 ayat (3) huruf f), sehingga tidak dipotong PPh 23."
+ },
+ {
+  "n": 16,
+  "sub": "DN - PPh 4(2)",
+  "q": "PT Logistik menyewa gudang dari PT Properti dengan nilai sewa bruto Rp150 juta. PPh Pasal 4 ayat (2) yang dipotong adalah ...",
+  "o": [
+   "Rp15.000.000",
+   "Rp22.500.000",
+   "Rp3.000.000",
+   "Rp7.500.000"
+  ],
+  "ans": 0,
+  "exp": "PP 34/2017: PPh final atas sewa tanah/bangunan 10% dari jumlah bruto = 15.000.000, dipotong oleh penyewa yang merupakan pemotong pajak."
+ },
+ {
+  "n": 17,
+  "sub": "DN - PPh 4(2)",
+  "q": "PT Tegar (pengguna jasa) membayar jasa pekerjaan konstruksi kepada CV Bangun (kualifikasi kecil, bersertifikat) Rp400 juta (di luar PPN). PPh final yang dipotong adalah ..",
+  "o": [
+   "Rp7.000.000",
+   "Rp14.000.000",
+   "Rp16.000.000",
+   "Rp10.600.000"
+  ],
+  "ans": 0,
+  "exp": "PP 9/2022: pekerjaan konstruksi oleh penyedia kualifikasi kecil atau orang perseorangan bersertifikat 1,75% x 400 jt = 7.000.000."
+ },
+ {
+  "n": 18,
+  "sub": "DN - PPh 4(2)",
+  "q": "PT Damai menjual tanah dan bangunan (bukan rumah sederhana) kepada PT Abadi seharga Rp2 miliar. PPh final atas pengalihan hak adalah ...",
+  "o": [
+   "Rp40.000.000",
+   "Rp20.000.000",
+   "Rp50.000.000",
+   "Rp100.000.000"
+  ],
+  "ans": 2,
+  "exp": "PP 34/2016: PPh final pengalihan hak atas tanah/bangunan 2,5% dari jumlah bruto nilai pengalihan (1% untuk rumah sederhana/rusun sederhana oleh pengembang; 0% untuk pengalihan kepada pemerintah) = 50.000.000."
+ },
+ {
+  "n": 19,
+  "sub": "DN - PPh 4(2)",
+  "q": "Hadiah undian berupa mobil senilai Rp300 juta yang diberikan PT Bank kepada nasabah dikenai PPh final sebesar ...",
+  "o": [
+   "Rp45.000.000",
+   "Rp60.000.000",
+   "Rp15.000.000",
+   "Rp75.000.000"
+  ],
+  "ans": 3,
+  "exp": "PP 132/2000: PPh final atas hadiah undian 25% dari jumlah bruto = 75.000.000."
+ },
+ {
+  "n": 20,
+  "sub": "DN - PPh 4(2)",
+  "q": "Apabila penyewa bangunan adalah orang pribadi yang tidak ditunjuk sebagai pemotong pajak, PPh final atas sewa bangunan ...",
+  "o": [
+   "Dipotong oleh penyewa OP tersebut",
+   "Dikenai tarif umum",
+   "Tidak terutang",
+   "Wajib disetor sendiri oleh pihak yang menyewakan"
+  ],
+  "ans": 3,
+  "exp": "PP 34/2017: dalam hal penyewa bukan pemotong pajak, PPh final terutang wajib dibayar sendiri oleh pihak yang menerima penghasilan (pemilik/yang menyewakan)."
+ },
+ {
+  "n": 21,
+  "sub": "OP - PPh 21",
+  "q": "Berdasarkan PP 58/2023, pegawai tetap dengan status PTKP K/2 menggunakan tarif efektif rata-rata (TER) bulanan kategori ...",
+  "o": [
+   "A",
+   "B",
+   "TER harian",
+   "C"
+  ],
+  "ans": 1,
+  "exp": "Kategori A: TK/0, TK/1, K/0. Kategori B: TK/2, TK/3, K/1, K/2. Kategori C: K/3."
+ },
+ {
+  "n": 22,
+  "sub": "OP - PPh 21",
+  "q": "Tuan Arya (pegawai tetap, TK/1) menerima penghasilan bruto Februari 2026 Rp10.000.000 (gaji, tunjangan, premi JKK & JKM yang dibayar pemberi kerja). TER kategori A untuk penghasilan bruto tersebut 2%. PPh 21 Februari adalah ...",
+  "o": [
+   "Rp95.000",
+   "Rp150.000",
+   "Rp200.000",
+   "Rp500.000"
+  ],
+  "ans": 2,
+  "exp": "PMK 168/2023: masa Januari-November, PPh 21 = TER bulanan x penghasilan bruto sebulan = 2% x 10.000.000 = 200.000 (tanpa mengurangkan biaya jabatan/iuran)."
+ },
+ {
+  "n": 23,
+  "sub": "OP - PPh 21",
+  "q": "Pada Maret 2026 Tuan Arya menerima gaji Rp10 juta dan bonus Rp20 juta (bruto Maret Rp30 juta). TER kategori A untuk Rp30.000.000 adalah 12%. PPh 21 Maret adalah .",
+  "o": [
+   "Rp3.600.000",
+   "Rp600.000",
+   "Rp2.400.000",
+   "Rp200.000"
+  ],
+  "ans": 0,
+  "exp": "Penghasilan tidak teratur digabung dengan penghasilan teratur pada bulan diterima, lalu dikalikan TER yang sesuai: 12% x 30.000.000 = 3.600.000. Kelebihan/kekurangan diperhitungkan di masa pajak terakhir (Desember)."
+ },
+ {
+  "n": 24,
+  "sub": "OP - PPh 21",
+  "q": "Pegawai tetap TK/1 menerima bruto Rp10.000.000 setiap bulan (Jan-Des) tanpa penghasilan tidak teratur dan membayar iuran JHT Rp200.000/bulan. PPh 21 Jan-Nov telah dipotong 11 x Rp200.000. PPh 21 masa Desember adalah ...",
+  "o": [
+   "Rp2.655.000",
+   "Rp200.000",
+   "Rp0 (lebih bayar)",
+   "Rp455.000"
+  ],
+  "ans": 3,
+  "exp": "Bruto setahun 120 jt; biaya jabatan 6 jt (maks); iuran 2,4 jt; neto 111,6 jt; PTKP TK/1 58,5 jt; PKP 53,1 jt; PPh setahun 5% = 2.655.000. Dikurangi Jan-Nov 2.200.000 → Desember 455.000."
+ },
+ {
+  "n": 25,
+  "sub": "OP - PPh 21",
+  "q": "Ny. Bella (pegawai tetap, TK/0) mengundurkan diri akhir Juni 2026 dan tetap SPDN. Bruto Jan-Jun Rp10 juta/bulan (total Rp60 juta), tanpa iuran; PPh 21 Jan-Mei telah dipotong Rp1.000.000 (TER 2%). Perhitungan PPh 21 masa Juni yang benar adalah ...",
+  "o": [
+   "Lebih dipotong Rp850.000 dan dikembalikan pemberi kerja kepada pegawai",
+   "Nihil",
+   "Kurang bayar Rp1.650.000 karena disetahunkan",
+   "Kurang bayar Rp200.000"
+  ],
+  "ans": 0,
+  "exp": "Masa pajak terakhir: dihitung dengan tarif Pasal 17 atas penghasilan neto Jan-Jun (tidak disetahunkan). Biaya jabatan 5% x 60 jt = 3 jt; neto 57 jt; PTKP 54 jt; PKP 3 jt; PPh 150.000. Telah dipotong 1.000.000 → lebih dipotong 850.000 dikembalikan bersamaan pemberian bukti potong (PMK 168/2023)."
+ },
+ {
+  "n": 26,
+  "sub": "OP - PPh 21",
+  "q": "Dr. Citra (bukan pegawai) menerima honorarium jasa dokter dari rumah sakit Rp20.000.000 dalam satu kali pembayaran. PPh Pasal 21 yang dipotong adalah ...",
+  "o": [
+   "Rp500.000",
+   "Rp3.000.000",
+   "Rp1.000.000",
+   "Rp400.000"
+  ],
+  "ans": 0,
+  "exp": "PMK 168/2023: PPh 21 bukan pegawai = tarif Pasal 17 × 50% x penghasilan bruto = 5% x 10.000.000 = 500.000."
+ },
+ {
+  "n": 27,
+  "sub": "OP - PPh 21",
+  "q": "Tuan Dodi (pegawai tidak tetap) menerima upah harian Rp500.000 yang dibayarkan harian selama 10 hari. TER harian untuk upah > Rp450.000 s.d. Rp2.500.000 adalah 0,5%. Total PPh 21 adalah ...",
+  "o": [
+   "Rp250.000",
+   "Rp0",
+   "Rp25.000",
+   "Rp50.000"
+  ],
+  "ans": 2,
+  "exp": "PP 58/2023: TER harian 0% untuk upah sampai Rp450.000/hari dan 0,5% untuk > Rp450.000 s.d. Rp2.500.000/hari. 0,5% x 500.000 = 2.500/hari x 10 hari = 25.000."
+ },
+ {
+  "n": 28,
+  "sub": "OP - PPh 21",
+  "q": "Pegawai tidak tetap yang menerima upah harian Rp400.000 (dibayar harian) dipotong PPh 21 sebesar ...",
+  "o": [
+   "Rp1.000",
+   "Rp0",
+   "Rp20.000",
+   "Rp2.000"
+  ],
+  "ans": 1,
+  "exp": "TER harian 0% untuk penghasilan bruto harian sampai dengan Rp450.000."
+ },
+ {
+  "n": 29,
+  "sub": "OP - PPh 21",
+  "q": "Tuan Eka (bukan pegawai) menerima honor sebagai narasumber seminar yang dihitung tidak atas dasar banyaknya hari kerja sebesar Rp8.000.000. PPh 21 yang dipotong adalah ...",
+  "o": [
+   "Rp800.000",
+   "Rp200.000",
+   "Rp400.000",
+   "Rp1.200.000"
+  ],
+  "ans": 1,
+  "exp": "Narasumber bukan pegawai: 5% x (50% x 8.000.000) = 200.000 (PMK 168/2023)."
+ },
+ {
+  "n": 30,
+  "sub": "OP - PPh 21",
+  "q": "Ny. Fina menerima hadiah juara lomba (peserta kegiatan) Rp10.000.000. PPh 21 yang dipotong adalah ...",
+  "o": [
+   "Rp500.000",
+   "Rp2.500.000",
+   "Rp1.500.000",
+   "Rp250.000"
+  ],
+  "ans": 0,
+  "exp": "PMK 168/2023: PPh 21 atas peserta kegiatan = tarif Pasal 17 x jumlah penghasilan bruto (tanpa 50%) = 5% x 10.000.000 = 500.000."
+ },
+ {
+  "n": 31,
+  "sub": "OP - PPh 21",
+  "q": "Anggota dewan komisaris yang tidak merangkap sebagai pegawai tetap menerima honorarium bulanan. Penghitungan PPh 21-nya adalah ...",
+  "o": [
+   "PPh final 15%",
+   "TER bulanan x penghasilan bruto",
+   "Tarif Pasal 17 × 50% bruto",
+   "Tidak dipotong"
+  ],
+  "ans": 1,
+  "exp": "PMK 168/2023: PPh 21 atas penghasilan anggota dewan komisaris/pengawas yang tidak merangkap pegawai tetap dihitung dengan TER bulanan x penghasilan bruto."
+ },
+ {
+  "n": 32,
+  "sub": "OP - PPh 21",
+  "q": "Tuan Gilang menerima uang pesangon sekaligus Rp300 juta. PPh 21 final yang dipotong adalah ...",
+  "o": [
+   "Rp37.500.000",
+   "Rp15.000.000",
+   "Rp32.500.000",
+   "Rp45.000.000"
+  ],
+  "ans": 2,
+  "exp": "PP 68/2009: s.d. Rp50 jt 0%; >50-100 jt 5% (2,5 jt); >100-500 jt 15% (200 jt x 15% = 30 jt); >500 jt 25%. Total 32,5 jt."
+ },
+ {
+  "n": 33,
+  "sub": "OP - PPh 21",
+  "q": "Ny. Hani menerima Jaminan Hari Tua yang dibayarkan sekaligus Rp80 juta. PPh 21 final adalah ...",
+  "o": [
+   "Rp0",
+   "Rp2.500.000",
+   "Rp4.000.000",
+   "Rp1.500.000"
+  ],
+  "ans": 3,
+  "exp": "PP 68/2009: uang manfaat pensiun/THT/JHT sekaligus s.d. Rp50 jt 0%, di atas Rp50 jt 5%: 5% x 30 jt = 1.500.000."
+ },
+ {
+  "n": 34,
+  "sub": "TI - PPh 26",
+  "q": "PT Nusa membayar bunga pinjaman Rp500 juta kepada XCo (Negara X) tanpa DGT Form. PPh Pasal 26 yang dipotong adalah ...",
+  "o": [
+   "Rp110.000.000",
+   "Rp100.000.000",
+   "Rp75.000.000",
+   "Rp50.000.000"
+  ],
+  "ans": 1,
+  "exp": "Tanpa DGT Form yang sah, tarif P3B tidak dapat diterapkan; PPh 26 = 20% x 500 jt = 100 jt."
+ },
+ {
+  "n": 35,
+  "sub": "TI - PPh 26",
+  "q": "Syarat administratif agar pemotong dapat menerapkan tarif P3B atas pembayaran kepada WPLN berdasarkan PER-25/PJ/2018 adalah ...",
+  "o": [
+   "Kontrak dalam bahasa Inggris",
+   "WPLN memiliki NPWP Indonesia",
+   "Pembayaran dilakukan melalui bank",
+   "WPLN menyampaikan Surat Keterangan Domisili/DGT Form yang telah diisi lengkap dan disahkan otoritas pajak negara mitra, tidak menyalahgunakan P3B, serta merupakan beneficial owner (untuk dividen, bunga, royalti)"
+  ],
+  "ans": 3,
+  "exp": "PER-25/PJ/2018 mengatur penerapan P3B: SKD dalam bentuk DGT Form, tidak terdapat penyalahgunaan P3B, dan penerima merupakan pemilik manfaat; DGT Form diterima pemotong sebelum batas waktu pelaporan SPT Masa."
+ },
+ {
+  "n": 36,
+  "sub": "TI - Pengecualian PPh 26",
+  "q": "Penghasilan kena pajak sesudah dikurangi PPh dari BUT tidak dikenai PPh Pasal 26 ayat (4) apabila ...",
+  "o": [
+   "BUT berbentuk kantor perwakilan dagang",
+   "BUT merugi tahun sebelumnya",
+   "Ditanamkan kembali di Indonesia dalam bentuk dan jangka waktu sesuai PMK 14/PMK.03/2011",
+   "Disimpan di bank luar negeri"
+  ],
+  "ans": 2,
+  "exp": "Pasal 26 ayat (4) UU PPh jo. PMK 14/2011: tidak dipotong bila ditanamkan kembali, antara lain sebagai penyertaan modal pada perusahaan baru/yang sudah berdiri di Indonesia, pembelian aktiva tetap, atau investasi aktiva tidak berwujud oleh BUT, paling lambat tahun pajak berikutnya dan tidak dialihkan minimal 2 tahun."
+ },
+ {
+  "n": 37,
+  "sub": "TI - Branch profit tax",
+  "q": "BUT YCo memiliki PKP Rp2 miliar. P3B Indonesia-Negara Y mengatur tarif branch profit tax 10%. PPh Pasal 26 ayat (4) adalah ...",
+  "o": [
+   "Rp312.000.000",
+   "Rp156.000.000",
+   "Rp200.000.000",
+   "Rp44.000.000"
+  ],
+  "ans": 1,
+  "exp": "PPh Badan 22% x 2 M = 440 jt; PKP setelah pajak 1.560 jt; branch profit tax 10% x 1.560 jt = 156 jt."
+ },
+ {
+  "n": 38,
+  "sub": "TI - Pengalihan saham",
+  "q": "XCo (residen negara tanpa P3B dengan Indonesia) menjual saham PT Indo (perusahaan nonbursa di Indonesia) seharga Rp10 miliar. PPh Pasal 26 atas penjualan saham tersebut adalah ...",
+  "o": [
+   "Rp2.000.000.000",
+   "Rp500.000.000",
+   "Rp0",
+   "Rp10.000.000"
+  ],
+  "ans": 1,
+  "exp": "Pasal 26 ayat (2) UU PPh jo. PMK 258/PMK.03/2008: PPh 26 = 20% x perkiraan penghasilan neto (25% x harga jual) = 5% x 10 M = 500 jt. Pemotongan oleh pembeli DN; bila pembeli WPLN, disetor oleh emiten."
+ },
+ {
+  "n": 39,
+  "sub": "TI - Dividen & bunga",
+  "q": "PT Maju membagikan dividen Rp1 miliar kepada ZCo (residen Negara Z, kepemilikan 30%, DGT Form sah). P3B mengatur tarif 10% untuk kepemilikan ≥25%, selain itu 15%. PPh Pasal 26 adalah …..",
+  "o": [
+   "Rp100.000.000",
+   "Rp0",
+   "Rp150.000.000",
+   "Rp200.000.000"
+  ],
+  "ans": 0,
+  "exp": "Kepemilikan 30% (≥25%) → tarif P3B 10% x 1 M = 100 jt."
+ },
+ {
+  "n": 40,
+  "sub": "TI - Dividen & bunga",
+  "q": "Bunga obligasi yang diterima WPLN selain BUT berdasarkan PP 91/2021 dikenai PPh final sebesar ...",
+  "o": [
+   "20% atau tarif P3B",
+   "10% atau tarif P3B",
+   "15%",
+   "5%"
+  ],
+  "ans": 1,
+  "exp": "PP 91/2021: tarif PPh atas bunga obligasi yang diterima WPLN selain BUT diturunkan dari 20% menjadi 10% atau sesuai P3B."
+ }
+]

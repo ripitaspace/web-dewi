@@ -1,0 +1,522 @@
+[
+ {
+  "n": 1,
+  "sub": "PTKP",
+  "q": "Besarnya PTKP untuk diri Wajib Pajak orang pribadi per tahun berdasarkan PMK 101/PMK.010/2016 adalah...",
+  "o": [
+   "Rp36.000.000",
+   "Rp58.500.000",
+   "Rp54.000.000",
+   "Rp60.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 7 ayat (1) UU PPh jo. PMK 101/2016: PTKP diri WP Rp54.000.000; tambahan kawin Rp4.500.000; istri yang penghasilannya digabung Rp54.000.000; setiap tanggungan Rp4.500.000 (maksimal 3 orang)."
+ },
+ {
+  "n": 2,
+  "sub": "PTKP",
+  "q": "Tuan Arif menikah dan memiliki 3 orang anak kandung yang menjadi tanggungan sepenuhnya. Istrinya tidak bekerja. PTKP setahun adalah ...",
+  "o": [
+   "Rp72.000.000",
+   "Rp126.000.000",
+   "Rp76.500.000",
+   "Rp67.500.000"
+  ],
+  "ans": 0,
+  "exp": "K/3 = 54.000.000 + 4.500.000 + (3 × 4.500.000) = 72.000.000."
+ },
+ {
+  "n": 3,
+  "sub": "PTKP",
+  "q": "Ny. Bunga belum menikah dan menanggung sepenuhnya 2 orang adik kandung serta ibu kandungnya. PTKP setahun adalah ...",
+  "o": [
+   "Rp63.000.000",
+   "Rp54.000.000",
+   "Rp67.500.000",
+   "Rp58.500.000"
+  ],
+  "ans": 3,
+  "exp": "Tanggungan yang diperhitungkan hanya keluarga sedarah/semenda dalam garis keturunan lurus serta anak angkat (Pasal 7 ayat (1) huruf c). Adik kandung adalah garis menyamping sehingga tidak dihitung. PTKP TK/1 (ibu) = 54 + 4,5 = 58,5 juta."
+ },
+ {
+  "n": 4,
+  "sub": "PTKP",
+  "q": "Tuan Candra menikah, memiliki 2 anak, dan penghasilan istrinya digabung dengan penghasilannya (istri bekerja dari lebih dari satu pemberi kerja). PTKP K/1/2 setahun adalah .",
+  "o": [
+   "Rp121.500.000",
+   "Rp67.500.000",
+   "Rp126.000.000",
+   "Rp117.000.000"
+  ],
+  "ans": 0,
+  "exp": "K/1/2 = 54 + 4,5 (kawin) + 54 (istri digabung) + 9 (2 tanggungan) = 121,5 juta."
+ },
+ {
+  "n": 5,
+  "sub": "PTKP",
+  "q": "Tuan Dimas memiliki 5 orang anak kandung yang menjadi tanggungan dan istri yang tidak bekerja. PTKP- nya adalah ...",
+  "o": [
+   "Rp85.500.000",
+   "Rp76.500.000",
+   "Rp81.000.000",
+   "Rp72.000.000"
+  ],
+  "ans": 3,
+  "exp": "Tanggungan maksimal 3 orang. K/3 = 54 + 4,5 + 13,5 = 72 juta."
+ },
+ {
+  "n": 6,
+  "sub": "PTKP",
+  "q": "Tuan Eko menikah pada 10 Februari 2026. Status PTKP untuk Tahun Pajak 2026 adalah ..",
+  "o": [
+   "K/0",
+   "K/1/O",
+   "K/0 secara proporsional 11/12",
+   "TK/0"
+  ],
+  "ans": 3,
+  "exp": "Pasal 7 ayat (2) UU PPh: penghitungan PTKP ditentukan menurut keadaan pada awal tahun pajak (1 Januari). Pada 1 Januari 2026 Tuan Eko belum kawin sehingga TK/0."
+ },
+ {
+  "n": 7,
+  "sub": "PTKP",
+  "q": "Anak kedua Ny. Fani lahir 5 Januari 2026. Untuk Tahun Pajak 2026, anak tersebut ...",
+  "o": [
+   "Diperhitungkan proporsional",
+   "Tidak diperhitungkan sebagai tanggungan karena lahir setelah awal tahun pajak",
+   "Diperhitungkan jika Ny. Fani memilih",
+   "Diperhitungkan sebagai tanggungan"
+  ],
+  "ans": 1,
+  "exp": "Keadaan awal tahun pajak (1 Januari 2026) menentukan PTKP; anak lahir 5 Januari 2026 baru diperhitungkan untuk Tahun Pajak 2027."
+ },
+ {
+  "n": 8,
+  "sub": "PTKP",
+  "q": "Tuan Gani menanggung sepenuhnya ayah mertuanya. Ayah mertua tersebut ...",
+  "o": [
+   "Dapat menjadi tanggungan istri saja",
+   "Dapat menjadi tanggungan karena keluarga semenda dalam garis keturunan lurus",
+   "Dapat menjadi tanggungan hanya jika tinggal serumah dan berusia di bawah 60 tahun",
+   "Tidak dapat menjadi tanggungan"
+  ],
+  "ans": 1,
+  "exp": "Penjelasan Pasal 7 ayat (1): keluarga semenda dalam garis keturunan lurus satu derajat adalah mertua dan anak tiri; dapat menjadi tanggungan bila ditanggung sepenuhnya."
+ },
+ {
+  "n": 9,
+  "sub": "PTKP",
+  "q": "Ny. Hesti (pegawai tetap, menikah, 2 anak) suaminya juga bekerja. PTKP yang diberikan kepada Ny. Hesti untuk penghitungan PPh Pasal 21 adalah ..",
+  "o": [
+   "TK/0 Rp54.000.000",
+   "K/1/2 Rp121.500.000",
+   "K/2 Rp67.500.000",
+   "K/0 Rp58.500.000"
+  ],
+  "ans": 0,
+  "exp": "PMK 168/2023 (sebelumnya PMK 252/2008): bagi pegawai wanita kawin hanya diberikan PTKP untuk dirinya sendiri, kecuali dapat menunjukkan keterangan tertulis bahwa suaminya tidak menerima atau memperoleh penghasilan."
+ },
+ {
+  "n": 10,
+  "sub": "PTKP",
+  "q": "Warisan yang belum terbagi sebagai satu kesatuan (subjek pajak pengganti) dalam penghitungan PPh- nya...",
+  "o": [
+   "Mendapat PTKP sesuai status pewaris pada saat meninggal",
+   "Mendapat PTKP penuh ahli waris",
+   "Tidak mendapat PTKP",
+   "Mendapat PTKP TK/0 TARIF"
+  ],
+  "ans": 2,
+  "exp": "Warisan belum terbagi menggantikan yang berhak sebagai subjek pajak (Pasal 2 ayat (1) huruf a angka 2), namun PTKP hanya diberikan kepada orang pribadi yang masih hidup sehingga WBT tidak memperoleh PTKP."
+ },
+ {
+  "n": 11,
+  "sub": "Tarif",
+  "q": "Lapisan tarif PPh Pasal 17 ayat (1) huruf a untuk orang pribadi berdasarkan UU HPP yang benar adalah ...",
+  "o": [
+   "0-60 jt 5%; >60-250 jt 15%; >250-500 jt 25%; >500 jt-5 M 30%; >5 M 35%",
+   "0-60 jt 5%; >60-500 jt 15%; >500 jt-5 M 25%; >5 M 30%",
+   "0-60 jt 0%; >60-250 jt 5%; >250-500 jt 15%; >500 jt 25%",
+   "0-50 jt 5%; 50-250 jt 15%; 250-500 jt 25%; > 500 jt 30%"
+  ],
+  "ans": 0,
+  "exp": "UU HPP mengubah lapisan pertama menjadi Rp60 juta dan menambah lapisan 35% untuk PKP di atas Rp5 miliar."
+ },
+ {
+  "n": 12,
+  "sub": "Tarif",
+  "q": "PKP Tuan Indra Rp50.000.000. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp2.500.000",
+   "Rp0",
+   "Rp7.500.000",
+   "Rp3.000.000"
+  ],
+  "ans": 0,
+  "exp": "5% x 50.000.000 = 2.500.000."
+ },
+ {
+  "n": 13,
+  "sub": "Tarif",
+  "q": "PKP Ny. Juwita Rp250.000.000. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp31.500.000",
+   "Rp37.500.000",
+   "Rp62.500.000",
+   "Rp28.500.000"
+  ],
+  "ans": 0,
+  "exp": "5% x 60 jt = 3 jt; 15% x 190 jt = 28,5 jt. Total 31,5 jt."
+ },
+ {
+  "n": 14,
+  "sub": "Tarif",
+  "q": "PKP Tuan Kevin Rp600.000.000. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp94.000.000",
+   "Rp180.000.000",
+   "Rp124.000.000",
+   "Rp150.000.000"
+  ],
+  "ans": 2,
+  "exp": "3 jt (5% x 60) + 28,5 jt (15% x 190) + 62,5 jt (25% x 250) + 30 jt (30% x 100) = 124 jt."
+ },
+ {
+  "n": 15,
+  "sub": "Tarif",
+  "q": "PKP Ny. Laras Rp6.000.000.000. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp1.444.000.000",
+   "Rp2.100.000.000",
+   "Rp1.800.000.000",
+   "Rp1.794.000.000"
+  ],
+  "ans": 3,
+  "exp": "Sampai 500 jt = 94 jt; 4.500 jt x 30% = 1.350 jt; 1.000 jt x 35% = 350 jt. Total 1.794 jt."
+ },
+ {
+  "n": 16,
+  "sub": "Tarif",
+  "q": "PKP Tuan Mario tepat Rp5.000.000.000. PPh terutangnya adalah ...",
+  "o": [
+   "Rp1.444.000.000",
+   "Rp1.750.000.000",
+   "Rp1.500.000.000",
+   "Rp1.350.000.000"
+  ],
+  "ans": 0,
+  "exp": "94 jt (sampai 500 jt) + 30% x 4.500 jt (1.350 jt) = 1.444 jt. Lapisan 35% baru berlaku untuk PKP di atas Rp5 miliar."
+ },
+ {
+  "n": 17,
+  "sub": "Tarif",
+  "q": "Penghasilan Kena Pajak orang pribadi sebesar Rp166.234.567 untuk keperluan penerapan tarif dibulatkan menjadi ...",
+  "o": [
+   "Rp166.235.000",
+   "Rp166.200.000",
+   "Rp166.234.000",
+   "Rp166.000.000"
+  ],
+  "ans": 2,
+  "exp": "Pasal 17 ayat (4) UU PPh: PKP dibulatkan ke bawah dalam ribuan rupiah penuh."
+ },
+ {
+  "n": 18,
+  "sub": "Tarif",
+  "q": "Tarif marginal (lapisan tertinggi yang dikenakan) atas PKP Rp4 miliar adalah ..",
+  "o": [
+   "30%",
+   "15%",
+   "35%",
+   "25%"
+  ],
+  "ans": 0,
+  "exp": "PKP Rp4 miliar berada pada lapisan di atas Rp500 juta s.d. Rp5 miliar dengan tarif 30%."
+ },
+ {
+  "n": 19,
+  "sub": "Penghitungan - pegawai",
+  "q": "Tuan Nanda (K/1) menerima penghasilan bruto setahun dari satu pemberi kerja Rp240 juta dan membayar iuran pensiun/JHT Rp4,8 juta. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp24.000.000",
+   "Rp17.580.000",
+   "Rp20.250.000",
+   "Rp18.930.000"
+  ],
+  "ans": 3,
+  "exp": "Biaya jabatan 5% x 240 = 12 jt, maksimal 6 jt. Neto = 240 - 6 - 4,8 = 229,2 jt. PTKP K/1 = 63 jt. PKP = 166,2 jt. PPh = 3 jt + 15% x 106,2 jt (15,93 jt) = 18,93 jt."
+ },
+ {
+  "n": 20,
+  "sub": "Penghitungan - pegawai",
+  "q": "Ny. Okta (TK/0) memiliki penghasilan bruto pegawai Rp100 juta setahun tanpa iuran pensiun. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp1.750.000",
+   "Rp5.000.000",
+   "Rp2.300.000",
+   "Rp2.050.000"
+  ],
+  "ans": 3,
+  "exp": "Biaya jabatan 5% x 100 = 5 jt. Neto 95 jt - PTKP 54 jt = PKP 41 jt. PPh = 5% x 41 jt = 2.050.000."
+ },
+ {
+  "n": 21,
+  "sub": "Penghitungan - pegawai",
+  "q": "Batas maksimum biaya jabatan bagi pegawai tetap per tahun adalah ...",
+  "o": [
+   "Rp500.000",
+   "Rp12.000.000",
+   "Rp6.000.000",
+   "Rp2.400.000"
+  ],
+  "ans": 2,
+  "exp": "PMK 250/PMK.03/2008 jo. PMK 168/2023: biaya jabatan 5% dari penghasilan bruto, maksimal Rp6.000.000 setahun (Rp500.000 sebulan)."
+ },
+ {
+  "n": 22,
+  "sub": "Penghitungan - pegawai",
+  "q": "Tuan Panji (K/0), pensiunan, menerima uang pensiun bulanan Rp5 juta (Rp60 juta setahun). PPh Pasal 21 terutang setahun adalah ...",
+  "o": [
+   "Rp75.000",
+   "Rp0",
+   "Rp45.000",
+   "Rp105.000"
+  ],
+  "ans": 1,
+  "exp": "Biaya pensiun 5% x 60 jt = 3 jt, maksimal Rp2,4 jt setahun. Neto 57,6 jt < PTKP K/0 58,5 jt sehingga PKP nihil dan PPh nihil."
+ },
+ {
+  "n": 23,
+  "sub": "Penghitungan - pegawai",
+  "q": "Pengurang penghasilan bruto pegawai tetap yang diperkenankan meliputi ...",
+  "o": [
+   "Cicilan KPR",
+   "Biaya jabatan, iuran pensiun/JHT yang dibayar pegawai, serta zakat/sumbangan keagamaan wajib melalui pemberi kerja",
+   "Biaya transportasi ke kantor",
+   "Premi asuransi jiwa yang dibayar pegawai sendiri"
+  ],
+  "ans": 1,
+  "exp": "PMK 168/2023: pengurang meliputi biaya jabatan; iuran pensiun, THT/JHT yang dibayar pegawai; serta zakat/sumbangan keagamaan wajib yang dibayarkan melalui pemberi kerja kepada badan/lembaga resmi."
+ },
+ {
+  "n": 24,
+  "sub": "Penghitungan - pegawai",
+  "q": "Tuan Qori (TK/0) memiliki penghasilan neto setelah biaya jabatan Rp200 juta dan membayar zakat penghasilan melalui BAZNAS Rp5 juta (dengan bukti). PPh terutang setahun adalah ...",
+  "o": [
+   "Rp14.400.000",
+   "Rp15.150.000",
+   "Rp15.900.000",
+   "Rp21.150.000"
+  ],
+  "ans": 1,
+  "exp": "Zakat atas penghasilan yang dibayarkan kepada badan amil zakat resmi dapat dikurangkan dari penghasilan bruto (Pasal 9 ayat (1) huruf g UU PPh jo. PP 60/2010). Neto 195 jt - PTKP 54 jt = PKP 141 jt. PPh = 5% x 60 jt (3 jt) + 15% x 81 jt (12,15 jt) = 15,15 jt."
+ },
+ {
+  "n": 25,
+  "sub": "Penghitungan - norma",
+  "q": "Dr. Rina (TK/0), dokter praktik mandiri, memiliki peredaran bruto Rp1,5 miliar setahun dan menggunakan Norma Penghitungan Penghasilan Neto 50% (telah memberitahukan). PPh terutang adalah ...",
+  "o": [
+   "Rp152.800.000",
+   "Rp7.500.000",
+   "Rp124.000.000",
+   "Rp169.000.000"
+  ],
+  "ans": 0,
+  "exp": "Dokter (pekerjaan bebas) tidak dapat memakai PPh final 0,5% PP 55/2022. Neto = 50% x 1,5 M = 750 jt; PKP = 750 - 54 = 696 jt. PPh = 94 jt + 30% x 196 jt (58,8 jt) = 152,8 jt."
+ },
+ {
+  "n": 26,
+  "sub": "Penghitungan - norma",
+  "q": "Syarat WP orang pribadi dapat menggunakan Norma Penghitungan Penghasilan Neto adalah ...",
+  "o": [
+   "Peredaran bruto berapa pun",
+   "Hanya untuk pegawai",
+   "Memiliki pembukuan lengkap",
+   "Peredaran bruto kurang dari Rp4,8 miliar dan memberitahukan kepada DJP dalam 3 bulan pertama tahun pajak"
+  ],
+  "ans": 3,
+  "exp": "Pasal 14 ayat (2) dan (3) UU PPh s.t.d.t.d. UU HPP: WP OP dengan peredaran bruto kurang dari Rp4,8 M setahun boleh menggunakan norma dengan syarat memberitahukan kepada DJP dalam jangka waktu 3 bulan pertama dari tahun pajak, serta wajib menyelenggarakan pencatatan."
+ },
+ {
+  "n": 27,
+  "sub": "Penghitungan - norma",
+  "q": "Tuan Satria (K/2), pedagang, peredaran bruto Rp4 miliar, memilih tidak menggunakan PPh final PP 55/2022 dan menggunakan norma 20%. PPh terutang adalah .",
+  "o": [
+   "Rp20.000.000",
+   "Rp163.750.000",
+   "Rp183.250.000",
+   "Rp240.000.000"
+  ],
+  "ans": 1,
+  "exp": "Neto 20% x 4 M = 800 jt; PTKP K/2 = 67,5 jt; PKP 732,5 jt. PPh = 94 jt + 30% x 232,5 jt (69,75 jt) = 163,75 jt."
+ },
+ {
+  "n": 28,
+  "sub": "Penghitungan - norma",
+  "q": "Ny. Tari (pengusaha OP terdaftar 2023, masih dalam jangka waktu PP 55/2022) memiliki peredaran bruto 2026 Rp900 juta. PPh final yang terutang setahun adalah ...",
+  "o": [
+   "Rp0",
+   "Rp4.500.000",
+   "Rp2.000.000",
+   "Rp2.500.000"
+  ],
+  "ans": 2,
+  "exp": "PP 55/2022: WP OP dengan peredaran bruto tertentu tidak dikenai PPh atas bagian peredaran bruto sampai Rp500 juta setahun. (900 - 500) x 0,5% = 2.000.000."
+ },
+ {
+  "n": 29,
+  "sub": "Penghitungan - norma",
+  "q": "Tuan Umar (K/1) pegawai dengan neto Rp150 juta (PPh 21 dipotong Rp14.600.000) dan memiliki usaha dengan neto (norma) Rp200 juta (tidak memilih PP 55). PPh Pasal 29 adalah ...",
+  "o": [
+   "Rp11.550.000",
+   "Rp40.750.000",
+   "Rp26.150.000",
+   "Rp32.500.000"
+  ],
+  "ans": 2,
+  "exp": "Neto total 350 jt - PTKP K/1 63 jt = PKP 287 jt. PPh = 3 + 28,5 + 25% x 37 (9,25) = 40,75 jt. Dikurangi kredit PPh 21 14,6 jt → PPh 29 = 26,15 jt."
+ },
+ {
+  "n": 30,
+  "sub": "Penghitungan - keluarga",
+  "q": "Penghasilan anak yang belum dewasa (belum 18 tahun dan belum kawin) dalam penghitungan PPh ...",
+  "o": [
+   "Dikenai PPh final",
+   "Digabungkan dengan penghasilan orang tuanya",
+   "Tidak dikenakan pajak",
+   "Dikenakan pajak tersendiri"
+  ],
+  "ans": 1,
+  "exp": "Pasal 8 ayat (4) UU PPh: penghasilan anak yang belum dewasa digabung dengan penghasilan orang tuanya."
+ },
+ {
+  "n": 31,
+  "sub": "Penghitungan - keluarga",
+  "q": "Penghasilan istri yang semata-mata diterima dari satu pemberi kerja yang telah dipotong PPh 21 dan pekerjaan tersebut tidak ada hubungannya dengan usaha suami/anggota keluarga ...",
+  "o": [
+   "Wajib digabung dengan penghasilan suami",
+   "Tidak digabung dengan penghasilan suami (dianggap selesai dipotong)",
+   "Digabung dan mendapat PTKP tambahan",
+   "Dikenai PPh final 5%"
+  ],
+  "ans": 1,
+  "exp": "Pasal 8 ayat (1) UU PPh: penghasilan istri dari satu pemberi kerja yang telah dipotong PPh 21 dan tidak berhubungan dengan usaha keluarga tidak digabung dengan penghasilan suami."
+ },
+ {
+  "n": 32,
+  "sub": "Penghitungan - keluarga",
+  "q": "Pasangan dengan perjanjian pisah harta (PH): neto suami Rp300 juta, neto istri Rp200 juta, PTKP K/1/1. PPh terutang yang ditanggung suami adalah...",
+  "o": [
+   "Rp38.850.000",
+   "Rp25.900.000",
+   "Rp45.600.000",
+   "Rp64.750.000"
+  ],
+  "ans": 0,
+  "exp": "PTKP K/1/1 = 54 + 4,5 + 54 + 4,5 = 117 jt. PKP gabungan = 500 - 117 = 383 jt. PPh gabungan = 3 + 28,5 + 25% x 133 (33,25) = 64,75 jt. Bagian suami = 300/500 × 64,75 = 38,85 jt (Pasal 8 ayat (2) dan (3))."
+ },
+ {
+  "n": 33,
+  "sub": "Penghitungan - keluarga",
+  "q": "Istri memilih menjalankan hak dan kewajiban perpajakan sendiri (MT). Neto suami Rp400 juta, neto istri Rp100 juta, tanpa tanggungan. PPh terutang istri adalah ...",
+  "o": [
+   "Rp7.300.000",
+   "Rp65.875.000",
+   "Rp52.700.000",
+   "Rp13.175.000"
+  ],
+  "ans": 3,
+  "exp": "PTKP K/1/0 = 54 + 4,5 + 54 = 112,5 jt. PKP gabungan = 500 - 112,5 = 387,5 jt. PPh = 31,5 + 25% x 137,5 (34,375) = 65,875 jt. Bagian istri = 100/500 x 65,875 = 13,175 jt."
+ },
+ {
+  "n": 34,
+  "sub": "Penghitungan - keluarga",
+  "q": "Suami istri yang telah hidup berpisah berdasarkan putusan hakim (HB) dikenai pajak …..",
+  "o": [
+   "Proporsional",
+   "Secara terpisah, masing-masing dengan PTKP dan tanggungan sesuai keadaan",
+   "Digabung",
+   "Hanya suami yang dikenai pajak"
+  ],
+  "ans": 1,
+  "exp": "Pasal 8 ayat (3) UU PPh: penghasilan suami istri dikenai pajak secara terpisah apabila hidup berpisah berdasarkan putusan hakim; masing-masing menghitung PPh dengan PTKP sendiri."
+ },
+ {
+  "n": 35,
+  "sub": "Penghitungan - keluarga",
+  "q": "Dalam penghitungan PPh pasangan PH/MT, dasar penentuan pembagian PPh terutang adalah ...",
+  "o": [
+   "Sesuai kesepakatan",
+   "Perbandingan penghasilan bruto",
+   "Perbandingan penghasilan neto masing-masing terhadap jumlah penghasilan neto gabungan",
+   "Sama rata 50:50"
+  ],
+  "ans": 2,
+  "exp": "Pasal 8 ayat (2) UU PPh: PPh terutang dihitung atas gabungan penghasilan neto, lalu dibagi sebanding dengan penghasilan neto masing-masing."
+ },
+ {
+  "n": 36,
+  "sub": "Penghitungan - lain",
+  "q": "Tuan Vino menerima dividen dari PT DN Rp100 juta (tidak diinvestasikan kembali) dan bunga deposito Rp50 juta. Penghasilan tersebut dalam penghitungan PPh tarif Pasal 17 ..",
+  "o": [
+   "Digabung hanya dividen",
+   "Tidak digabung karena telah dikenai PPh final",
+   "Digabung hanya bunga",
+   "Digabung dengan penghasilan lain"
+  ],
+  "ans": 1,
+  "exp": "Dividen yang tidak diinvestasikan dikenai PPh final 10% (Pasal 17 ayat (2c)) dan bunga deposito PPh final 20% (Pasal 4 ayat (2)), sehingga tidak dihitung ulang dengan tarif Pasal 17 ayat (1) huruf a."
+ },
+ {
+  "n": 37,
+  "sub": "Penghitungan - lain",
+  "q": "Tuan Wawan (TK/0) memiliki penghasilan neto Rp54 juta setahun. Kewajiban perpajakannya ...",
+  "o": [
+   "Wajib membayar PPh 25",
+   "PPh terutang 5%",
+   "PPh terutang Rp2,7 juta",
+   "PPh terutang nihil karena PKP nihil"
+  ],
+  "ans": 3,
+  "exp": "Neto sama dengan PTKP TK/0 sehingga PKP nihil dan PPh terutang nihil."
+ },
+ {
+  "n": 38,
+  "sub": "Penghitungan - lain",
+  "q": "Pasangan suami istri K/1/3 dengan neto gabungan Rp500 juta. PTKP dan PKP gabungan adalah ..",
+  "o": [
+   "Rp72 juta dan Rp428 juta",
+   "Rp121,5 juta dan Rp378,5 juta",
+   "Rp130,5 juta dan Rp369,5 juta",
+   "Rp126 juta dan Rp374 juta"
+  ],
+  "ans": 3,
+  "exp": "PTKP K/1/3 = 54 + 4,5 + 54 + 13,5 = 126 jt. PKP = 500 - 126 = 374 jt."
+ },
+ {
+  "n": 39,
+  "sub": "Penghitungan - lain",
+  "q": "Melanjutkan soal sebelumnya, PPh terutang gabungan adalah ...",
+  "o": [
+   "Rp62.000.000",
+   "Rp93.500.000",
+   "Rp62.500.000",
+   "Rp31.500.000"
+  ],
+  "ans": 2,
+  "exp": "PKP 374 jt: 5% x 60 jt (3 jt) + 15% x 190 jt (28,5 jt) + 25% x 124 jt (31 jt) = 62,5 jt."
+ },
+ {
+  "n": 40,
+  "sub": "Penghitungan - lain",
+  "q": "Ny. Yuni (K/1, penghasilannya tidak digabung dengan suami karena suami tidak berpenghasilan dan ia menunjukkan keterangan tertulis) memiliki penghasilan neto Rp120 juta. PPh terutang setahun adalah ...",
+  "o": [
+   "Rp6.000.000",
+   "Rp3.300.000",
+   "Rp2.850.000",
+   "Rp3.075.000"
+  ],
+  "ans": 2,
+  "exp": "PTKP K/1 = 54 + 4,5 + 4,5 = 63 jt. PKP = 120 - 63 = 57 jt. PPh = 5% x 57 jt = 2.850.000."
+ }
+]

@@ -232,6 +232,8 @@ export interface LearningTopic {
   slug: string;
   title: string;
   description?: string;
+  /** Shows the topic card as active even before it has modules (for example a navigable branch). */
+  active?: boolean;
   order: number;
   status: "draft" | "published";
 }

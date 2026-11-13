@@ -56,7 +56,7 @@ export default async function LearningCatalogRoute({ params }: Props) {
     if (!module || !registration) notFound();
     return <LearningPlayer key={module.id} module={module} slug="audit-sme" publicCode={registration.publicCode} />;
   }
-  const children = getChildTopics(domain.id, topic?.id || null).map((entry) => ({ href: `/belajar/${domain.slug}/${topicPath(entry).join("/")}`, title: entry.title, description: entry.description, moduleCount: getModulesForTopic(entry.id, { descendants: true }).length }));
+  const children = getChildTopics(domain.id, topic?.id || null).map((entry) => ({ href: `/belajar/${domain.slug}/${topicPath(entry).join("/")}`, title: entry.title, description: entry.description, active: Boolean(entry.active), moduleCount: getModulesForTopic(entry.id, { descendants: true }).length }));
   const modules = (topic ? getModulesForTopic(topic.id) : getModulesForDomain(domain.id)).map(moduleCard);
   return <><SiteHeader currentKey="belajar" /><CatalogExplorer title={topic?.title || domain.title} description={topic?.description || domain.description} crumbs={breadcrumbs(domain, topic)} topics={children} modules={modules} /><SiteFooter /></>;
 }

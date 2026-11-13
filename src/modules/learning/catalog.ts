@@ -1,6 +1,7 @@
 import asetTetap from "./content/aset-tetap.plf.json";
 import { auditMicroModulesBySlug } from "./content/audit-micro-modules";
 import { auditSmeModule } from "./content/audit-sme.plf";
+import { ukpCModulesBySlug } from "./content/ukp-c-modules";
 import selfLearningTemplate from "./content/template-self-learning.plf.json";
 import { getPublishedModuleCards } from "./registry";
 import type { LearningModule, LearningNode, ModuleCard } from "./types";
@@ -10,6 +11,7 @@ const modules: Record<string, LearningModule> = {
   "template-self-learning": selfLearningTemplate as LearningModule,
   ...auditMicroModulesBySlug,
   "audit-sme": auditSmeModule,
+  ...ukpCModulesBySlug,
 };
 
 export function getLearningModule(slug: string) {
