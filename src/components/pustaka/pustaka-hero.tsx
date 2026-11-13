@@ -5,10 +5,7 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./pustaka-hero.module.css";
-import { BOARD_CONTENT, CANVAS, SCENE_ASSETS, pct, type SceneAsset } from "./scene-manifest";
-
-/** Board center on the canvas: the push grows from here so hands stay glued to the edges. */
-const PUSH_ORIGIN = { x: 777, y: 563 };
+import { BOARD_CONTENT, CANVAS, PUSH_ORIGIN, SCENE_ASSETS, pct, type SceneAsset } from "./scene-manifest";
 
 function LayerImage({ asset, priority }: { asset: SceneAsset; priority?: boolean }) {
   return (
@@ -19,17 +16,17 @@ function LayerImage({ asset, priority }: { asset: SceneAsset; priority?: boolean
       width={asset.width}
       height={asset.height}
       priority={priority}
-      sizes="(min-width: 1536px) 1536px, 100vw"
+      sizes="100vw"
       draggable={false}
       className={styles.layer}
       data-layer={asset.id}
       style={{
-        left: pct.x(asset.x),
+        left: asset.anchorX === "left" ? `calc(50% - 50vw + ${(asset.x / CANVAS.width) * 100}cqw)` : pct.x(asset.x),
         top: pct.y(asset.y),
         width: pct.x(asset.width),
         height: pct.y(asset.height),
         zIndex: asset.zIndex,
-        transform: `scale(${asset.scale}) rotate(${asset.rotation}deg)`,
+        transform: `${asset.tilt ? `perspective(1800px) rotateX(${asset.tilt}deg) ` : ""}${asset.flipX ? "scaleX(-1) " : ""}scale(${asset.scale}) rotate(${asset.rotation}deg)`,
         transformOrigin: asset.transformOrigin,
       }}
     />
@@ -45,7 +42,7 @@ export function PustakaHero() {
   const stageRef = useRef<HTMLDivElement>(null);
 
   const ready = SCENE_ASSETS.filter((a) => a.status === "ready").sort((a, b) => a.zIndex - b.zIndex);
-  const scenery = ready.filter((a) => a.group === "background" || a.group === "character");
+  const scenery = ready.filter((a) => a.group !== "board" && a.group !== "hands");
   const pushed = ready.filter((a) => a.group === "board" || a.group === "hands");
 
   useLayoutEffect(() => {
@@ -58,7 +55,7 @@ export function PustakaHero() {
     media.add("(prefers-reduced-motion: no-preference)", () => {
       const push = stage.querySelector<HTMLElement>("[data-push]")!;
       const body = stage.querySelector<HTMLElement>('[data-layer="pus-body"]');
-      const back = stage.querySelector<HTMLElement>('[data-layer="background-base"]');
+      const back = stage.querySelector<HTMLElement>('[data-layer="background-wall"]');
       const text = stage.querySelector<HTMLElement>("[data-board-text]")!;
       const cover = stage.querySelector<HTMLElement>("[data-cover]")!;
 
@@ -72,7 +69,7 @@ export function PustakaHero() {
       tl.to(push, { scale: 1.35, rotate: 0, duration: 0.25, ease: "power1.in" }, 0.2)
         .to(push, { scale: 3.2, duration: 0.25, ease: "power2.in" }, 0.45)
         // 70–90%: board fills the screen.
-        .to(push, { scale: 7, duration: 0.2, ease: "power2.in" }, 0.7)
+        .to(push, { scale: 9, duration: 0.2, ease: "power2.in" }, 0.7)
         .to(text, { opacity: 0, duration: 0.15 }, 0.72)
         .to(cover, { opacity: 1, duration: 0.12 }, 0.8);
       if (body) tl.to(body, { scale: 1.05, y: 12, duration: 0.5 }, 0.2);
