@@ -258,20 +258,41 @@ function downloadXml(xml: string, filename = "makalah.xml") {
 
 export function MakalahGeneratorClient() {
   const [previewReady, setPreviewReady] = useState(false);
-  const [printRequested, setPrintRequested] = useState(false);
+  const [printRequested, setPrintRequested] = useState<null | "print" | "pdf">(null);
+  const [exporting, setExporting] = useState(false);
+  const printing = useRef(false);
   useEffect(() => {
-    if (!printRequested || !previewReady) return;
-    let cancelled = false;
+    if (!printRequested || !previewReady || printing.current) return;
+    printing.current = true;
     void (async () => {
-      await document.fonts.ready;
-      await Promise.all(Array.from(document.querySelectorAll<HTMLImageElement>("[data-paper-page] img")).map((img) => img.decode().catch(() => undefined)));
-      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-      if (cancelled) return;
-      setPrintRequested(false);
-      document.body.classList.add("makalah-printing");
-      window.print();
+      try {
+        await document.fonts.ready;
+        await Promise.all(Array.from(document.querySelectorAll<HTMLImageElement>("[data-paper-page] img")).map((img) => Promise.race([img.decode().catch(() => undefined), new Promise<void>((resolve) => setTimeout(resolve, 3000))])));
+        await new Promise<void>((resolve) => { const timer = setTimeout(resolve, 200); requestAnimationFrame(() => requestAnimationFrame(() => { clearTimeout(timer); resolve(); })); });
+        if (!document.querySelector("[data-paper-page]")) return;
+        if (printRequested === "pdf") {
+          setExporting(true);
+          const pages = Array.from(document.querySelectorAll<HTMLElement>("[data-paper-page]"));
+          const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas-pro"), import("jspdf")]);
+          const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
+          for (let index = 0; index < pages.length; index += 1) {
+            const canvas = await html2canvas(pages[index], { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+            if (index) pdf.addPage("a4", "portrait");
+            pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 210, 297, undefined, "FAST");
+          }
+          pdf.save("makalah.pdf");
+        } else {
+          document.body.classList.add("makalah-printing");
+          window.print();
+        }
+      } catch (error) {
+        setNotice(error instanceof Error ? `PDF gagal dibuat: ${error.message}` : "PDF gagal dibuat.");
+      } finally {
+        printing.current = false;
+        setExporting(false);
+        setPrintRequested(null);
+      }
     })();
-    return () => { cancelled = true; };
   }, [previewReady, printRequested]);
   const [view, setView] = useState<View>("import");
   const [doc, setDoc] = useState<DocumentState>(sample);
@@ -304,22 +325,24 @@ export function MakalahGeneratorClient() {
     const file = event.target.files?.[0]; if (!file) return;
     const reader = new FileReader(); reader.onload = () => importXml(String(reader.result || "")); reader.readAsText(file); event.target.value = "";
   };
-  const handlePrint = () => {
+  const handlePrint = (mode: "print" | "pdf" = "print") => {
+    if (printing.current) return;
+    if (view !== "preview") setPreviewReady(false);
     setView("preview");
-    setPrintRequested(true);
+    setPrintRequested(mode);
   };
   const headings: Record<View, [string, string]> = {
     import: ["Import XML & Style", "Masukkan struktur makalah, lalu atur identitas dan format halaman."], editor: ["Structured Editor", "Edit isi makalah tanpa perlu menulis kode XML secara manual."],
     preview: ["Preview A4", "Tinjau hasil akhir makalah sebelum dicetak atau disimpan sebagai PDF."], xml: ["XML Output", "Salin atau unduh XML hasil penyusunan makalah."],
   };
   return <div className={styles.studio}>
-    <header className={styles.topbar}><div><span className={styles.kicker}>RIPITA · DOCUMENT ESSENTIALS</span><h2>{headings[view][0]}</h2><p>{headings[view][1]}</p></div><div className={styles.topActions}><button type="button" className={styles.button} onClick={() => downloadXml(templateXml, "template-makalah-lengkap.xml")}>Download Template XML</button><button type="button" className={styles.button} onClick={() => downloadXml(xml)}>Export XML</button><button type="button" className={`${styles.button} ${styles.primary}`} onClick={handlePrint}>Print / PDF</button></div></header>
+    <header className={styles.topbar}><div><span className={styles.kicker}>RIPITA · DOCUMENT ESSENTIALS</span><h2>{headings[view][0]}</h2><p>{headings[view][1]}</p></div><div className={styles.topActions}><button type="button" className={styles.button} onClick={() => downloadXml(templateXml, "template-makalah-lengkap.xml")}>Download Template XML</button><button type="button" className={styles.button} onClick={() => downloadXml(xml)}>Export XML</button><button type="button" className={`${styles.button} ${styles.primary}`} onClick={() => handlePrint("print")}>Print</button><button type="button" className={`${styles.button} ${styles.primary}`} disabled={exporting} onClick={() => handlePrint("pdf")}>{exporting ? "Membuat PDF…" : "Download PDF"}</button></div></header>
     <div className={styles.layout}>
       <aside className={styles.sidebar}><div className={styles.brand}><span aria-hidden="true">✦</span><div><strong>Makalah Generator</strong><small>RIPITA Studio</small></div></div><p className={styles.sidebarLabel}>RUANG KERJA</p><nav aria-label="Tahap penyusunan makalah">{(["import", "editor", "preview", "xml"] as View[]).map((item, index) => <button key={item} type="button" className={view === item ? styles.active : ""} onClick={() => setView(item)}><b>{index + 1}</b>{headings[item][0]}</button>)}</nav><p className={styles.sidebarFoot}>Data makalah diproses di perangkatmu dan tidak disimpan ke server.</p></aside>
       <section className={styles.workspace}>
         {view === "import" && <><div className={styles.importGrid}><section className={styles.card}><h3>Unggah file XML</h3><p>Gunakan XML dari studio sebelumnya atau template yang sesuai struktur makalah.</p><div className={styles.dropzone} onClick={() => fileInput.current?.click()}><strong>Pilih file XML</strong><span>Klik untuk memilih file dari perangkatmu.</span><input ref={fileInput} type="file" accept=".xml,text/xml,application/xml" onChange={onFile} /></div><div className={styles.actions}><button className={styles.button} type="button" onClick={() => { setDoc(sample); setNotice("Contoh makalah dimuat."); setView("editor"); }}>Muat Contoh</button><button className={styles.button} type="button" onClick={() => { setDoc(sample); setPaste(""); setNotice("Dokumen direset ke contoh awal."); }}>Reset</button></div><p className={styles.notice}>{notice}</p></section><section className={styles.card}><h3>Paste XML</h3><p>Tempel struktur XML dari AI atau dokumen sebelumnya.</p><textarea value={paste} onChange={(event) => setPaste(event.target.value)} placeholder="Paste XML di sini..." /><div className={styles.actions}><button className={`${styles.button} ${styles.primary}`} type="button" onClick={() => importXml(paste)}>Import XML dari teks</button><button className={styles.button} type="button" onClick={() => { try { readXml(paste, doc); setNotice("Struktur XML valid dan siap diimpor."); } catch (error) { setNotice(error instanceof Error ? error.message : "XML tidak valid."); } }}>Validasi XML</button></div></section></div><DocumentSettings doc={doc} update={update} /></>}
         {view === "editor" && <><div className={styles.editorActions}>{(["heading", "paragraph", "list", "table", "pagebreak"] as Exclude<Block["type"], "bibliography">[]).map((type) => <button className={styles.button} type="button" key={type} onClick={() => addBlock(type)}>+ {type === "heading" ? "Subbab" : type === "paragraph" ? "Paragraf" : type === "list" ? "Daftar" : type === "table" ? "Tabel" : "Page Break"}</button>)}</div><QualityPanel doc={doc} hints={hints} /><div className={styles.editor}>{doc.blocks.map((block, index) => <BlockEditor key={`${block.type}-${index}`} block={block} index={index} onChange={updateBlock} onRemove={removeBlock} onMove={moveBlock} />)}</div></>}
-        {view === "preview" && <><div className={styles.previewActions}><button className={`${styles.button} ${styles.primary}`} type="button" onClick={handlePrint}>Print / Save PDF</button><button className={styles.button} type="button" onClick={() => setView("editor")}>Kembali ke Editor</button></div><PaperPreview doc={doc} onReady={setPreviewReady} /></>}
+        {view === "preview" && <><div className={styles.previewActions}><button className={`${styles.button} ${styles.primary}`} type="button" onClick={() => handlePrint("print")}>Print</button><button className={`${styles.button} ${styles.primary}`} type="button" disabled={exporting} onClick={() => handlePrint("pdf")}>{exporting ? "Membuat PDF…" : "Download PDF"}</button><button className={styles.button} type="button" onClick={() => setView("editor")}>Kembali ke Editor</button></div><PaperPreview doc={doc} onReady={setPreviewReady} /></>}
         {view === "xml" && <section className={styles.xmlCard}><div className={styles.actions}><button className={styles.button} type="button" onClick={() => navigator.clipboard?.writeText(xml).then(() => setNotice("XML disalin ke clipboard."))}>Copy XML</button><button className={`${styles.button} ${styles.primary}`} type="button" onClick={() => downloadXml(xml)}>Download XML</button></div><textarea aria-label="XML output" readOnly value={xml} /></section>}
       </section>
     </div>
