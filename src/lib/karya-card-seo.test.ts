@@ -5,7 +5,7 @@ import { MINI_TOOLS } from "./mini-tools";
 describe("Karya card SEO registry", () => {
   it("covers every card and indexes only tools that are available", () => {
     expect(Object.keys(KARYA_CARD_SEO)).toHaveLength(MINI_TOOLS.length);
-    expect(getIndexableKaryaCards()).toHaveLength(11);
+    expect(getIndexableKaryaCards()).toHaveLength(12);
     expect(getIndexableKaryaCards().every((tool) => tool.status === "available")).toBe(true);
   });
 

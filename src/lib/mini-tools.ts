@@ -45,4 +45,5 @@ export const MINI_TOOLS: MiniTool[] = [
   { number: "16", category: "Document Essentials", title: "Compile Dokumen", description: "Menggabungkan PDF dan gambar menjadi satu file yang rapi.", icon: "▣", iconSrc: "/images/artworks/tool-compile-dokumen.png", status: "available", href: "/karya/tools/compile-dokumen" },
   { number: "17", category: "Document Essentials", title: "Digital Signing", description: "Membubuhkan tanda tangan digital pada dokumen secara praktis.", icon: "✦", iconSrc: "/images/artworks/tool-digital-signing.png", status: "maintenance", href: "/karya/tools/digital-signing" },
   { number: "21", category: "Document Essentials", title: "Makalah Generator", description: "Membantu menyusun makalah menjadi dokumen yang rapi dan terstruktur.", icon: "✎", iconSrc: "/images/artworks/tool-makalah-generator.png", status: "available", href: "/karya/tools/makalah-generator" },
+  { number: "25", category: "Document Essentials", title: "Hand Writing", description: "Siapkan lembar B5 bergaris 26 baris untuk dicetak dan ditulis manual.", icon: "✎", status: "available", href: "/karya/tools/hand-writing-b5" },
 ];

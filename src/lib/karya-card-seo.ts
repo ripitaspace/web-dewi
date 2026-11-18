@@ -82,6 +82,14 @@ const activeSeo: Record<string, ActiveSeo> = {
     faqs: [{ question: "Apakah hasilnya dapat langsung dikumpulkan?", answer: "Periksa kembali isi, sumber, dan ketentuan kampus sebelum menggunakan hasil akhir." }, { question: "Untuk apa template digunakan?", answer: "Template membantu menjaga struktur dokumen tetap konsisten saat disusun." }],
     relatedHrefs: ["/karya/tools/compile-dokumen", "/karya/tools/quotation-generator", "/belajar"],
   },
+  "/karya/tools/hand-writing-b5": {
+    title: "Hand Writing — Template B5 26 Baris", h1: "Hand Writing: Template B5 26 Baris",
+    description: "Impor XML catatan atau Makalah Generator, lalu susun sebagai lembar B5 bergaris 26 baris untuk dicetak atau disimpan sebagai PDF.",
+    intent: "template kertas B5 26 baris PDF", guideTitle: "Cara menyiapkan lembar B5",
+    steps: ["Impor XML <handwriting> atau XML <paper> dari Makalah Generator untuk mengisi judul dan catatan.", "Pilih jarak antarbaris 6 mm atau 8 mm lalu tinjau margin merah pada pratinjau.", "Pilih Cetak / Simpan PDF lalu atur kertas B5 dan skala 100% di dialog printer."],
+    faqs: [{ question: "Format XML apa yang dapat diimpor?", answer: "Tool menerima XML <handwriting> serta XML <paper> atau <ripidoc> dari Makalah Generator dengan blok isi yang didukung." }, { question: "Apakah halaman ini menyimpan isi atau data pengguna?", answer: "Tidak. Impor, pengaturan, dan cetak berjalan langsung di browser." }, { question: "Mengapa hasil cetak harus memakai skala 100%?", answer: "Skala 100% menjaga jarak garis fisik tetap sesuai pilihan 6 mm atau 8 mm." }],
+    relatedHrefs: ["/karya/tools/makalah-generator", "/karya/tools/compile-dokumen"],
+  },
 };
 
 function fallbackSeo(tool: MiniTool): KaryaCardSeo {
