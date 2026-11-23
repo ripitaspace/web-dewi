@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SERVICES } from "@/lib/site-data";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
+import { ConfirmationEntryForm } from "@/components/confirmation/confirmation-entry-form";
 
 type AvailabilitySlot = { startUtc: string; endUtc: string };
 type AvailabilityDay = { date: string; slots: AvailabilitySlot[] };
@@ -268,6 +269,17 @@ export function KerjaBersamaClient() {
               <strong>?</strong>
               <span>Trigona · Kerja Bersama</span>
             </div>
+          </div>
+        </section>
+
+        <section className="section-tight confirmation-entry-section">
+          <div className="container confirmation-entry-layout">
+            <div>
+              <span className="eyebrow text-sirih">Jawaban Konfirmasi</span>
+              <h2 className="display-md">Terima dan kirim jawaban konfirmasi audit.</h2>
+              <p className="lead muted">Gunakan tautan unik dari auditor atau masukkan kode klien dan token akses. Anda dapat mengisi jawaban online atau mencetak lalu mengunggah dokumen.</p>
+            </div>
+            <div className="card card-pad"><ConfirmationEntryForm /></div>
           </div>
         </section>
 

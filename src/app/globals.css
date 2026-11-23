@@ -2878,6 +2878,30 @@ body:has(.payroll-hero) .visitor-stamp { display: none; }
 }
 
 .card-pad { padding: 26px; }
+.confirmation-entry-section { border-top: 1px solid var(--line); background: rgba(184, 204, 145, 0.13); }
+.confirmation-entry-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr); gap: 32px; align-items: center; }
+.confirmation-entry-form label { display: block; font-size: 0.82rem; font-weight: 800; margin-bottom: 8px; }
+.confirmation-entry-row { display: flex; gap: 10px; }
+.confirmation-entry-row input { min-width: 0; flex: 1; }
+.confirmation-page { padding: calc(var(--nav-height) + 54px) 20px 72px; min-height: 72vh; background: rgba(248, 245, 243, 0.66); }
+.confirmation-shell { width: min(820px, 100%); margin: 0 auto; }
+.confirmation-shell h1 { margin: 4px 0 12px; font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1; }
+.confirmation-summary { padding: 22px; margin: 26px 0 18px; }
+.confirmation-summary dl, .confirmation-extra { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 26px; margin: 0; }
+.confirmation-summary dt { color: var(--muted); font-size: 0.82rem; }
+.confirmation-summary dd { margin: 3px 0 0; font-weight: 750; }
+.confirmation-extra { margin-top: 16px !important; padding-top: 16px; border-top: 1px solid var(--line); }
+.confirmation-methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 22px 0; }
+.confirmation-methods button { appearance: none; width: 100%; padding: 20px; color: inherit; text-align: left; cursor: pointer; }
+.confirmation-methods button strong, .confirmation-methods button span { display: block; }
+.confirmation-methods button span { margin-top: 7px; color: var(--muted); line-height: 1.5; }
+.confirmation-methods button.selected { border-color: var(--sirih); box-shadow: 0 0 0 2px rgba(129, 14, 45, 0.12); }
+.confirmation-download { margin-bottom: 18px; }
+.confirmation-form { margin-top: 18px; }
+.confirmation-form small { display: block; margin-top: 5px; color: var(--muted); }
+.confirmation-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 20px; font-weight: 650; line-height: 1.45; }
+.confirmation-consent input { width: auto; margin-top: 3px; }
+.confirmation-privacy { color: var(--muted); font-size: 0.85rem; margin-top: 20px; }
 .card h3 { font-size: clamp(1.5rem, 2.2vw, 2.2rem); }
 .card-hover { transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease; }
 .card-hover:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: rgba(30, 27, 24, 0.28); }
@@ -4229,6 +4253,8 @@ code.notion-inline-code {
   .thought-toolbar-controls { grid-template-columns: minmax(0, 1fr); }
   .thought-toolbar-controls .field-control { width: 100%; min-width: 0; }
   .form-grid { grid-template-columns: 1fr; }
+  .confirmation-entry-layout, .confirmation-methods, .confirmation-summary dl, .confirmation-extra { grid-template-columns: 1fr; }
+  .confirmation-entry-row { flex-direction: column; }
   .form-field.full { grid-column: auto; }
   .date-grid { grid-template-columns: repeat(3, 1fr); }
   .time-grid { grid-template-columns: repeat(2, 1fr); }

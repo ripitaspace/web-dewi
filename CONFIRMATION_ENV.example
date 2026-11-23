@@ -1,0 +1,23 @@
+# Folder root KONFIRMASI. Default aplikasi memakai folder yang telah diberikan.
+CONFIRMATION_DRIVE_ROOT_FOLDER_ID="1xv0q2NNBFO8_DzaIiMn9yUCkhusA0YUM"
+# Gunakan hanya bila folder master/jawaban berada di lokasi khusus.
+# CONFIRMATION_DRIVE_MASTER_FOLDER_ID=""
+# CONFIRMATION_DRIVE_ANSWERS_FOLDER_ID=""
+
+# Service account Google dengan peran Editor pada folder KONFIRMASI.
+GOOGLE_SERVICE_ACCOUNT_EMAIL="service-account@project.iam.gserviceaccount.com"
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+# HTTPS production URL untuk tautan yang dihasilkan CLI.
+NEXT_PUBLIC_SITE_URL="https://domain-anda"
+
+# SMTP TLS langsung (umumnya port 465). Email tidak menghambat penyimpanan jawaban.
+SMTP_HOST="smtp.example.com"
+SMTP_PORT="465"
+SMTP_SECURE="true"
+SMTP_USER="smtp-user"
+SMTP_PASSWORD="smtp-password"
+SMTP_FROM="PuspitaCore <audit@domain-anda>"
+
+# Diperlukan untuk POST /api/confirmation/initialize.
+CRON_SECRET="ganti-dengan-rahasia-panjang"
