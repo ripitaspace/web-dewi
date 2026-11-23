@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>RIPIDIT - Konfirmasi Utang Piutang</title>
+    <link rel="stylesheet" href="workspace.css" />
+
+    <style>
+      .batch-banner {
+        margin: 14px 20px 0;
+        padding: 13px 14px;
+        border: 1px solid #d9e2b7;
+        background: var(--olive-soft);
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+      }
+      .batch-banner[hidden] {
+        display: none;
+      }
+      .batch-banner strong {
+        display: block;
+        font-size: 11px;
+        color: var(--olive);
+      }
+      .batch-banner span {
+        display: block;
+        font-size: 10px;
+        color: #647047;
+        margin-top: 3px;
+        line-height: 1.4;
+      }
+      .batch-count {
+        flex: 0 0 auto;
+        background: #fff;
+        border: 1px solid #d5dfae;
+        color: var(--olive);
+        font-weight: 900;
+        font-size: 10px;
+        padding: 6px 9px;
+        border-radius: 999px;
+      }
+      .download-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(37, 21, 26, 0.46);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        padding: 20px;
+      }
+      .download-overlay.show {
+        display: flex;
+      }
+      .download-card {
+        width: min(520px, 100%);
+        background: #fff;
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 26px 70px rgba(36, 13, 22, 0.28);
+      }
+      .download-card h3 {
+        font-size: 16px;
+        margin: 0 0 6px;
+      }
+      .download-card p {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 0;
+      }
+      .download-progress-track {
+        height: 9px;
+        background: #eee6e7;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 16px 0 9px;
+      }
+      .download-progress-bar {
+        height: 100%;
+        width: 0;
+        background: var(--wine);
+        transition: width 0.15s;
+      }
+      .download-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .download-file {
+        margin-top: 10px;
+        padding: 9px 10px;
+        background: #faf7f6;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        font-size: 10px;
+        color: #4f3c42;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .download-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div style="display: flex; align-items: center">
+        <nav class="main-nav" aria-label="Navigasi aplikasi">
+          <button class="active" data-view="workspace">Input Surat</button
+          ><button data-view="import">Impor Excel</button
+          ><button data-view="list">Daftar Surat</button
+          ><button data-view="settings">Pengaturan</button>
+        </nav>
+      </div>
+      <div class="top-right">
+        <span class="local-note"
+          ><span class="local-dot"></span>Data tersimpan lokal</span
+        ><button id="newLetterTop" class="btn btn-light btn-sm">
+          ＋ Surat baru
+        </button>
+      </div>
+    </header>
+    <main class="page">
+      <section id="workspace" class="view active">
+        <div class="heading">
+          <div>
+            <div class="eyebrow">Konfirmasi utang & piutang</div>
+            <h1>Input surat & saldo</h1>
+            <p>
+              Buat surat konfirmasi untuk pelanggan atau supplier. Surat yang
+              disimpan dapat dibuka kembali di browser ini.
+            </p>
+          </div>
+          <div class="head-actions">
+            <button id="goImport" class="btn btn-light">↥ Impor Excel</button
+            ><button id="draftPrint" class="btn btn-light">Cetak draf</button
+            ><button id="printCurrent" class="btn btn-lime">
+              ⇩ Download PDF surat ini
+            </button>
+          </div>
+        </div>
+        <div class="workspace">
+          <section class="panel editor-panel">
+            <div class="panel-top">
+              <div>
+                <h2 id="editorTitle">Buat surat konfirmasi baru</h2>
+                <p id="editorDescription">
+                  Pilih jenis surat lebih dahulu, lalu isi data lawan transaksi
+                  dan saldo menurut pembukuan klien.
+                </p>
+              </div>
+              <span id="editorStatus" class="status-pill">Draft baru</span>
+            </div>
+            <div id="batchBanner" class="batch-banner" hidden>
+              <div>
+                <strong id="batchTitle">Batch impor aktif</strong
+                ><span id="batchDescription"
+                  >Input umum akan diterapkan ke seluruh surat dalam batch ini.
+                  Nama lawan transaksi, saldo, dan rincian tetap berbeda per
+                  surat.</span
+                >
+              </div>
+              <div id="batchCount" class="batch-count">0 surat</div>
+            </div>
+            <div class="editor-body">
+              <form id="letterForm" autocomplete="off">
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>01. Jenis & identitas surat</h3>
+                    <span
+                      ><span class="required">*</span> wajib untuk
+                      menyimpan</span
+                    >
+                  </div>
+                  <div class="type-picker">
+                    <button
+                      type="button"
+                      class="type-card active"
+                      data-type="receivable"
+                    >
+                      <span class="symbol">↗</span><b>Konfirmasi Piutang</b
+                      ><span
+                        >Dikirim ke pelanggan/debitur untuk menegaskan saldo
+                        piutang perusahaan.</span
+                      ></button
+                    ><button
+                      type="button"
+                      class="type-card"
+                      data-type="payable"
+                    >
+                      <span class="symbol">↙</span><b>Konfirmasi Utang</b
+                      ><span
+                        >Dikirim ke supplier/kreditur untuk menegaskan saldo
+                        utang perusahaan.</span
+                      >
+                    </button>
+                  </div>
+                  <div class="grid" style="margin-top: 14px">
+                    <div class="field">
+                      <label for="fCode"
+                        >Kode Konfirmasi <span class="required">*</span></label
+                      ><input id="fCode" placeholder="KP-20260625-001" />
+                    </div>
+                    <div class="field">
+                      <label for="fNumber"
+                        >Nomor Surat <small>(opsional)</small></label
+                      ><input
+                        id="fNumber"
+                        placeholder="001/INSTANSI/KP/VI/2026"
+                      />
+                    </div>
+                    <div class="field">
+                      <label for="fCity"
+                        >Kota Surat <span class="required">*</span></label
+                      ><input id="fCity" placeholder="Surabaya" />
+                    </div>
+                    <div class="field">
+                      <label for="fLetterDate"
+                        >Tanggal Surat <span class="required">*</span></label
+                      ><input id="fLetterDate" type="date" />
+                    </div>
+                    <div class="field">
+                      <label for="fBalanceDate"
+                        >Tanggal Saldo <span class="required">*</span></label
+                      ><input id="fBalanceDate" type="date" />
+                    </div>
+                    <div class="field">
+                      <label for="fDeadlineDays"
+                        >Batas Jawaban <small>(hari)</small></label
+                      ><input
+                        id="fDeadlineDays"
+                        type="number"
+                        min="1"
+                        max="99"
+                        placeholder="7"
+                      />
+                    </div>
+                    <div class="field full">
+                      <label for="fStatus">Status</label
+                      ><select id="fStatus">
+                        <option value="draft">Draft</option>
+                        <option value="ready">Siap Cetak</option>
+                        <option value="sent">Sudah Dikirim</option>
+                        <option value="answered">Sudah Dijawab</option>
+                        <option value="difference">Ada Selisih</option>
+                        <option value="noreply">Tidak Ada Balasan</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>02. Klien & lawan transaksi</h3>
+                    <span id="counterpartyCaption"
+                      >Data pelanggan / debitur</span
+                    >
+                  </div>
+                  <div class="grid">
+                    <div class="field full">
+                      <label for="fClient"
+                        >Nama Klien <span class="required">*</span></label
+                      ><input id="fClient" placeholder="PT ..." />
+                    </div>
+                    <div class="field full">
+                      <label for="fClientAddress"
+                        >Alamat Klien
+                        <small>(opsional - arsip internal)</small></label
+                      ><textarea
+                        id="fClientAddress"
+                        placeholder="Alamat lengkap klien"
+                      ></textarea>
+                    </div>
+                    <div class="field full">
+                      <label id="counterpartyLabel" for="fCounterparty"
+                        >Nama Pelanggan <span class="required">*</span></label
+                      ><input
+                        id="fCounterparty"
+                        placeholder="PT / CV / Nama pihak"
+                      />
+                    </div>
+                    <div class="field full">
+                      <label
+                        id="counterpartyAddressLabel"
+                        for="fCounterpartyAddress"
+                        >Alamat Pelanggan <small>(opsional)</small></label
+                      ><textarea
+                        id="fCounterpartyAddress"
+                        placeholder="Alamat tujuan surat"
+                      ></textarea>
+                    </div>
+                    <div class="field">
+                      <label for="fAttention"
+                        >Up. / PIC <small>(opsional)</small></label
+                      ><input
+                        id="fAttention"
+                        placeholder="Bagian Keuangan / Nama PIC"
+                      />
+                    </div>
+                    <div class="field">
+                      <label for="fPhone"
+                        >Telepon / WhatsApp <small>(opsional)</small></label
+                      ><input id="fPhone" placeholder="08xx / 031-..." />
+                    </div>
+                    <div class="field full">
+                      <label for="fEmail">Email <small>(opsional)</small></label
+                      ><input
+                        id="fEmail"
+                        placeholder="keuangan@perusahaan.co.id"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>03. Saldo menurut pembukuan klien</h3>
+                    <span>Nominal ditulis angka tanpa simbol Rp</span>
+                  </div>
+                  <div class="grid">
+                    <div class="field">
+                      <label for="fAmount"
+                        >Saldo <span class="required">*</span></label
+                      ><input
+                        id="fAmount"
+                        inputmode="decimal"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div class="field">
+                      <label for="fCurrency">Mata Uang</label
+                      ><select id="fCurrency">
+                        <option>IDR</option>
+                        <option>USD</option>
+                        <option>SGD</option>
+                        <option>EUR</option>
+                        <option>CNY</option>
+                        <option>AUD</option>
+                      </select>
+                    </div>
+                    <div class="field full">
+                      <label for="fReference"
+                        >Referensi Dokumen <small>(opsional)</small></label
+                      ><input
+                        id="fReference"
+                        placeholder="Contoh: Saldo per subledger / daftar invoice terlampir"
+                      />
+                    </div>
+                    <div class="field full">
+                      <label for="fExplanation"
+                        >Catatan / Keterangan Saldo
+                        <small>(opsional)</small></label
+                      ><textarea
+                        id="fExplanation"
+                        placeholder="Contoh: Tidak termasuk invoice yang masih dalam proses klaim."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>
+                      04. Tujuan pengiriman balasan <small>(opsional)</small>
+                    </h3>
+                    <span>Per surat mengalahkan default pada Pengaturan</span>
+                  </div>
+                  <div class="grid">
+                    <div class="field full">
+                      <label for="fRecipientName"
+                        >Nama pihak / instansi penerima balasan</label
+                      ><input
+                        id="fRecipientName"
+                        placeholder="Contoh: KJA Ari Prawesthi / KAP ..."
+                      />
+                    </div>
+                    <div class="field full">
+                      <label for="fRecipientAddress"
+                        >Alamat tujuan balasan</label
+                      ><textarea
+                        id="fRecipientAddress"
+                        placeholder="Alamat lengkap pihak yang menerima jawaban"
+                      ></textarea>
+                    </div>
+                    <div class="field">
+                      <label for="fRecipientCity">Kota tujuan balasan</label
+                      ><input id="fRecipientCity" placeholder="Surabaya" />
+                    </div>
+                    <div class="field">
+                      <label for="fRecipientAttention"
+                        >Up. / PIC penerima balasan</label
+                      ><input
+                        id="fRecipientAttention"
+                        placeholder="Tim Audit / Nama PIC"
+                      />
+                    </div>
+                    <div class="field">
+                      <label for="fRecipientPhone">Telepon tujuan balasan</label
+                      ><input id="fRecipientPhone" placeholder="031-..." />
+                    </div>
+                    <div class="field">
+                      <label for="fReplyContact">Email / kontak balasan</label
+                      ><input
+                        id="fReplyContact"
+                        placeholder="audit@kantor.co.id"
+                      />
+                    </div>
+                    <div class="field full">
+                      <label for="fReplyMethod">Metode pengiriman balasan</label
+                      ><input
+                        id="fReplyMethod"
+                        placeholder="Contoh: melalui email langsung ke alamat di atas"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>05. Penandatangan klien</h3>
+                    <span>Dicetak pada surat pengantar</span>
+                  </div>
+                  <div class="grid">
+                    <div class="field">
+                      <label for="fSigner"
+                        >Nama Penandatangan
+                        <span class="required">*</span></label
+                      ><input id="fSigner" placeholder="Nama Direktur" />
+                    </div>
+                    <div class="field">
+                      <label for="fRole"
+                        >Jabatan <span class="required">*</span></label
+                      ><input id="fRole" placeholder="Direktur Utama" />
+                    </div>
+                    <div class="field full">
+                      <label for="fNote"
+                        >Catatan untuk lawan transaksi
+                        <small>(opsional)</small></label
+                      ><textarea
+                        id="fNote"
+                        placeholder="Contoh: Mohon jawaban dikirimkan langsung kepada auditor."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>
+                      06. Rincian invoice / tagihan <small>(opsional)</small>
+                    </h3>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <label class="checkline"
+                        ><input id="fIncludeDetail" type="checkbox" /> Tampilkan
+                        sebagai lampiran</label
+                      ><button
+                        type="button"
+                        id="addDetail"
+                        class="btn btn-ghost btn-sm"
+                      >
+                        ＋ Tambah rincian
+                      </button>
+                    </div>
+                  </div>
+                  <div class="detail-head">
+                    <span>Tanggal</span><span>No. Dokumen</span
+                    ><span>Uraian</span><span>Jatuh Tempo</span
+                    ><span>Nilai</span><span>Pembayaran / Kredit</span
+                    ><span></span>
+                  </div>
+                  <div id="details" class="details"></div>
+                  <p class="detail-note">
+                    Rincian tidak perlu diisi untuk surat konfirmasi saldo
+                    tunggal. Bila lampiran dicentang, sistem mencetak tabel
+                    rincian pada halaman tambahan.
+                  </p>
+                </div>
+                <div class="form-section">
+                  <div class="section-caption">
+                    <h3>
+                      07. QR unggah jawaban Google Form
+                      <small>(opsional)</small>
+                    </h3>
+                    <label class="checkline"
+                      ><input id="fQrEnabled" type="checkbox" /> Tampilkan QR
+                      pada surat</label
+                    >
+                  </div>
+                  <div class="qr-config">
+                    <div id="qrSetupPreview" class="qr-setup-preview">
+                      <div class="qr-empty">
+                        Aktifkan QR dan tempel link Google Form untuk melihat
+                        preview.
+                      </div>
+                    </div>
+                    <div>
+                      <div class="grid">
+                        <div class="field full">
+                          <label for="fQrFormUrl"
+                            >Link Google Form / link prefilled</label
+                          ><input
+                            id="fQrFormUrl"
+                            placeholder="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url"
+                          />
+                        </div>
+                        <div class="field">
+                          <label for="fQrEntryCode">ID Kode Konfirmasi</label
+                          ><input
+                            id="fQrEntryCode"
+                            placeholder="entry.123456789"
+                          />
+                        </div>
+                        <div class="field">
+                          <label for="fQrEntryType">ID Jenis Konfirmasi</label
+                          ><input
+                            id="fQrEntryType"
+                            placeholder="entry.123456789"
+                          />
+                        </div>
+                        <div class="field">
+                          <label for="fQrEntryYear">ID Tahun Buku</label
+                          ><input
+                            id="fQrEntryYear"
+                            placeholder="entry.123456789"
+                          />
+                        </div>
+                        <div class="field">
+                          <label for="fQrEntryCounterparty"
+                            >ID Lawan Transaksi</label
+                          ><input
+                            id="fQrEntryCounterparty"
+                            placeholder="entry.123456789"
+                          />
+                        </div>
+                        <div class="field full">
+                          <label for="fQrEntryClient">ID Nama PT Klien</label
+                          ><input
+                            id="fQrEntryClient"
+                            placeholder="entry.123456789"
+                          />
+                        </div>
+                        <div class="field full">
+                          <label for="fQrCaption">Teks di bawah QR</label
+                          ><input
+                            id="fQrCaption"
+                            placeholder="Pindai untuk mengunggah jawaban konfirmasi"
+                          />
+                        </div>
+                      </div>
+                      <div class="qr-inline-actions" style="margin-top: 10px">
+                        <button
+                          type="button"
+                          id="testQrLink"
+                          class="btn btn-ghost btn-sm"
+                        >
+                          ↗ Uji buka link</button
+                        ><span id="qrUrlStatus" class="qr-link-info"
+                          >ID entry bersifat opsional. Bila dikosongkan, QR
+                          membuka link yang ditempel apa adanya.</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <p class="qr-note">
+                    Untuk batch impor, pengaturan QR termasuk data umum. Klik
+                    <b>Terapkan data umum ke kelompok impor</b> agar setiap PDF
+                    memperoleh QR unik berisi kode, jenis, tahun buku, lawan
+                    transaksi, dan nama klien.
+                  </p>
+                </div>
+              </form>
+            </div>
+            <div class="save-strip">
+              <span id="formHint" class="mini"
+                >Belum disimpan. Kamu dapat mencetak draf meskipun informasi
+                tertentu masih kosong.</span
+              >
+              <div class="save-actions">
+                <button id="resetForm" type="button" class="btn btn-light">
+                  Reset</button
+                ><button
+                  id="saveCurrent"
+                  type="button"
+                  class="btn btn-light"
+                  style="display: none"
+                >
+                  Simpan surat ini</button
+                ><button id="saveForm" type="button" class="btn btn-primary">
+                  Simpan surat
+                </button>
+              </div>
+            </div>
+          </section>
+          <aside class="panel preview-panel">
+            <div class="preview-head">
+              <div>
+                <h2>Preview surat & jawaban</h2>
+                <p id="previewMeta">Preview mengikuti data form.</p>
+              </div>
+              <div class="preview-controls">
+                <button data-scale=".30">S</button
+                ><button class="active" data-scale=".37">M</button
+                ><button data-scale=".44">L</button>
+              </div>
+            </div>
+            <div id="previewWrap" class="preview-wrap">
+              <div class="preview-placeholder">
+                <div>
+                  <b>Mulai isi data surat</b>Surat pengantar dan lembar jawaban
+                  akan muncul di sini.
+                </div>
+              </div>
+            </div>
+            <div class="preview-foot">
+              <span>Preview halaman cetak A4</span
+              ><button id="openPrintFromPreview" class="btn btn-ghost btn-sm">
+                Download PDF surat ini
+              </button>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section id="import" class="view">
+        <div class="heading">
+          <div>
+            <div class="eyebrow">Bulk input</div>
+            <h1>Impor dari Excel</h1>
+            <p>
+              Utang dan piutang memakai template terpisah. Satu baris pada sheet
+              surat membentuk satu konfirmasi; sheet rincian hanya digunakan
+              bila ada lampiran invoice atau tagihan.
+            </p>
+          </div>
+        </div>
+        <div class="import-layout">
+          <section class="panel import-card">
+            <h2>Unduh template sesuai jenis</h2>
+            <p>
+              Pilih format impor yang tepat sebelum mengisi data. File diproses
+              sepenuhnya di browser. Unduh template lalu isi di perangkatmu.
+            </p>
+            <div class="template-buttons">
+              <a
+                id="downloadTemplatePiutang"
+                class="btn btn-lime"
+                download
+                href="FORMAT_IMPORT_KONFIRMASI_PIUTANG.xlsx"
+                >⇩ Template Piutang</a
+              ><a
+                id="downloadTemplateUtang"
+                class="btn btn-light"
+                download
+                href="FORMAT_IMPORT_KONFIRMASI_UTANG.xlsx"
+                >⇩ Template Utang</a
+              >
+            </div>
+            <div id="dropzone" class="dropzone" role="button" tabindex="0">
+              <input
+                id="importFile"
+                type="file"
+                accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+              />
+              <div>
+                <div class="dropicon">↥</div>
+                <strong>Tarik file Excel ke sini</strong
+                ><span
+                  >atau klik untuk memilih file .xlsx / .csv (format Excel
+                  modern)</span
+                ><button
+                  type="button"
+                  id="chooseImportFile"
+                  class="btn btn-primary"
+                >
+                  Pilih file
+                </button>
+              </div>
+            </div>
+            <div id="importResult" class="import-result"></div>
+          </section>
+          <aside class="panel import-card">
+            <h2>Struktur yang dibaca</h2>
+            <p>
+              Format dipisahkan agar tidak ada kesalahan arah saldo saat
+              konfirmasi.
+            </p>
+            <div class="how">
+              <div class="step">
+                <b>1</b>
+                <div>
+                  <strong>Piutang</strong>
+                  <p>
+                    Gunakan <b>SURAT_PIUTANG</b> dan, bila perlu,
+                    <b>RINCIAN_PIUTANG</b>.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <b>2</b>
+                <div>
+                  <strong>Utang</strong>
+                  <p>
+                    Gunakan <b>SURAT_UTANG</b> dan, bila perlu,
+                    <b>RINCIAN_UTANG</b>.
+                  </p>
+                </div>
+              </div>
+              <div class="step">
+                <b>3</b>
+                <div>
+                  <strong>Kode Konfirmasi</strong>
+                  <p>
+                    Ulangi kode yang sama pada rincian agar otomatis masuk ke
+                    lampiran surat yang benar.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="format-card" style="margin-top: 14px">
+              <b>Prinsip pembaruan data</b>Jika Kode Konfirmasi yang sama sudah
+              tersimpan, data dari file terbaru akan menggantikan surat lama
+              dengan kode tersebut.
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section id="list" class="view">
+        <div class="heading">
+          <div>
+            <div class="eyebrow">Arsip kerja</div>
+            <h1>Daftar surat konfirmasi</h1>
+            <p>
+              Pilih beberapa surat untuk dikemas dalam satu ZIP. Di dalam ZIP,
+              setiap lawan transaksi tetap memperoleh satu PDF dengan nama
+              otomatis.
+            </p>
+          </div>
+          <div class="head-actions">
+            <button id="printSelected" class="btn btn-lime">
+              ⇩ Download ZIP PDF terpilih</button
+            ><button id="clearAll" class="btn btn-danger">
+              Hapus semua data
+            </button>
+          </div>
+        </div>
+        <section class="panel list-shell">
+          <div class="list-tools">
+            <div>
+              <h2 id="listTitle">Belum ada surat</h2>
+              <p id="listSubtitle">Surat yang tersimpan akan muncul di sini.</p>
+            </div>
+            <div class="list-actions">
+              <input
+                id="search"
+                class="search"
+                placeholder="Cari pihak, klien, kode, atau nominal"
+              /><button id="selectAll" class="btn btn-light btn-sm">
+                Pilih semua
+              </button>
+            </div>
+          </div>
+          <div id="listContent" class="table-scroll"></div>
+          <div class="table-foot">
+            <span id="tableFoot">Tidak ada data.</span
+            ><span id="selectionFoot">0 dipilih</span>
+          </div>
+        </section>
+      </section>
+      <section id="settings" class="view">
+        <div class="heading">
+          <div>
+            <div class="eyebrow">Konfigurasi</div>
+            <h1>Default Tujuan Balasan</h1>
+            <p>
+              Opsional. Data ini menjadi cadangan bila tujuan jawaban pada surat
+              tertentu dibiarkan kosong.
+            </p>
+          </div>
+        </div>
+        <div class="settings-layout">
+          <section class="panel settings-card">
+            <h2>Data tujuan default</h2>
+            <p>
+              Gunakan untuk KJA, KAP, perusahaan, PIC, atau pihak lain penerima
+              jawaban konfirmasi.
+            </p>
+            <div class="grid">
+              <div class="field full">
+                <label for="sOfficeName">Nama pihak / instansi penerima</label
+                ><input
+                  id="sOfficeName"
+                  placeholder="Contoh: KJA Ari Prawesthi"
+                />
+              </div>
+              <div class="field full">
+                <label for="sOfficeAddress">Alamat tujuan</label
+                ><textarea
+                  id="sOfficeAddress"
+                  placeholder="Alamat lengkap penerima balasan"
+                ></textarea>
+              </div>
+              <div class="field">
+                <label for="sOfficeCity">Kota tujuan</label
+                ><input id="sOfficeCity" />
+              </div>
+              <div class="field">
+                <label for="sAttention">Up. / PIC</label
+                ><input id="sAttention" />
+              </div>
+              <div class="field">
+                <label for="sPhone">Telepon</label><input id="sPhone" />
+              </div>
+              <div class="field">
+                <label for="sEmail">Email / kontak</label><input id="sEmail" />
+              </div>
+              <div class="field full">
+                <label for="sReplyMethod">Metode pengiriman balasan</label
+                ><input
+                  id="sReplyMethod"
+                  placeholder="Contoh: melalui email langsung ke alamat di atas"
+                />
+              </div>
+            </div>
+            <div style="margin-top: 16px">
+              <button id="saveSettings" class="btn btn-primary">
+                Simpan pengaturan default
+              </button>
+            </div>
+          </section>
+          <aside class="panel settings-card">
+            <h2>Prioritas tujuan balasan</h2>
+            <p>
+              Tujuan yang diisi di form surat selalu lebih diutamakan daripada
+              data default di halaman ini.
+            </p>
+            <div class="privacy">
+              <b>Per surat atau default</b>Isi tujuan langsung di form bila
+              pihak yang menerima balasan berbeda. Gunakan default apabila
+              sebagian besar jawaban masuk ke tujuan yang sama.
+            </div>
+            <div class="privacy" style="margin-top: 12px">
+              <b>Ekspor PDF & ZIP</b>Surat tunggal diunduh langsung sebagai PDF.
+              Surat yang dipilih pada Daftar Surat dikemas menjadi satu ZIP
+              berisi PDF terpisah untuk setiap lawan transaksi.
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <div id="toast" class="toast"></div>
+    <div id="printRoot" class="print-root"></div>
+    <div id="downloadOverlay" class="download-overlay" aria-live="polite">
+      <div class="download-card">
+        <h3 id="downloadTitle">Menyiapkan PDF</h3>
+        <p id="downloadDescription">
+          Setiap lawan transaksi dibuat sebagai PDF terpisah. Untuk unduhan
+          massal, seluruh PDF dikemas dalam satu file ZIP.
+        </p>
+        <div class="download-progress-track">
+          <div id="downloadBar" class="download-progress-bar"></div>
+        </div>
+        <div class="download-meta">
+          <span id="downloadCounter">0 dari 0</span
+          ><span id="downloadPercent">0%</span>
+        </div>
+        <div id="downloadFileName" class="download-file">—</div>
+        <div class="download-actions">
+          <button id="cancelDownloads" class="btn btn-light btn-sm">
+            Batalkan
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="qr.js"></script>
+    <script src="workspace.js"></script>
+  </body>
+</html>

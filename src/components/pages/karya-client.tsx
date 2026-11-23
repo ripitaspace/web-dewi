@@ -77,7 +77,7 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
           <div className="container">
             <div className="mini-tools-notice mini-tools-notice--centered">
               <span className="mini-tools-notice__icon" aria-hidden="true">⌁</span>
-              <p><strong>Diproses di perangkatmu.</strong> Seluruh mini tools dirancang 100% offline, tanpa login, database pengguna, atau penyimpanan transaksi. Isi data secara manual atau unggah Excel/CSV, proses di browser, lalu unduh hasilnya.</p>
+              <p><strong>Diproses di perangkatmu.</strong> Mini tools memproses data di browser. Surat yang kamu simpan di Confirmation Generator tersedia kembali di browser yang sama. Isi data secara manual atau unggah Excel/CSV, proses di browser, lalu unduh hasilnya.</p>
             </div>
             <div className="tabs" id="workTabs">
               {categories.map((cat) => (
