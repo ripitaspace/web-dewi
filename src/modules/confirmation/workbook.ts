@@ -79,7 +79,7 @@ export function parseWorkbook(buffer: Buffer, clientCode: string): { settings: C
       const token = text(row.token_akses);
       if (!confirmationCode && !token) continue;
       for (const column of COMMON_COLUMNS) {
-        if (!text(row[column])) throw new ConfirmationError("WORKBOOK_INVALID", `Data ${type} belum lengkap.`, 503);
+        if (!text(row[column])) throw new ConfirmationError("WORKBOOK_INVALID", `Data ${type} belum lengkap: ${column}.`, 503);
       }
       if (!/^[A-Za-z0-9_-]{22,}$/.test(token)) {
         throw new ConfirmationError("WORKBOOK_INVALID", "Token akses pada workbook tidak memenuhi standar keamanan.", 503);
