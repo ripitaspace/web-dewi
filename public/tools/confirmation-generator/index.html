@@ -135,11 +135,11 @@
       <section id="workspace" class="view active">
         <div class="heading">
           <div>
-            <div class="eyebrow">Konfirmasi utang & piutang</div>
+            <div class="eyebrow">Konfirmasi bank, utang & piutang</div>
             <h1>Input surat & saldo</h1>
             <p>
-              Buat surat konfirmasi untuk pelanggan atau supplier. Surat yang
-              disimpan dapat dibuka kembali di browser ini.
+              Buat surat konfirmasi untuk bank, pelanggan, atau pemasok. Surat
+              yang disimpan dapat dibuka kembali di browser ini.
             </p>
           </div>
           <div class="head-actions">
@@ -184,6 +184,13 @@
                     >
                   </div>
                   <div class="type-picker">
+                    <button type="button" class="type-card" data-type="bank">
+                      <span class="symbol">▤</span><b>Konfirmasi Bank</b
+                      ><span
+                        >Saldo rekening, fasilitas dan informasi
+                        perbankan.</span
+                      >
+                    </button>
                     <button
                       type="button"
                       class="type-card active"
@@ -289,6 +296,10 @@
                         placeholder="PT / CV / Nama pihak"
                       />
                     </div>
+                    <div class="field full bank-only">
+                      <label for="fBranch">Cabang bank *</label>
+                      <input id="fBranch" placeholder="Nama cabang tujuan" />
+                    </div>
                     <div class="field full">
                       <label
                         id="counterpartyAddressLabel"
@@ -321,6 +332,16 @@
                     </div>
                   </div>
                 </div>
+                <section class="form-section bank-only">
+                  <div class="section-caption">
+                    <h3>Daftar rekening</h3>
+                    <button type="button" class="btn btn-light" id="addAccount">
+                      Tambah rekening
+                    </button>
+                  </div>
+                  <p>Kosongkan jika rekening belum diketahui.</p>
+                  <div id="accounts"></div>
+                </section>
                 <div class="form-section">
                   <div class="section-caption">
                     <h3>03. Saldo menurut pembukuan klien</h3>
@@ -508,6 +529,7 @@
                             id="fQrFormUrl"
                             placeholder="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url"
                           />
+                          <button type="button" id="generateQr" class="btn btn-primary" aria-controls="qrSetupPreview">Generate QR untuk surat</button>
                         </div>
                         <div class="field">
                           <label for="fQrEntryCode">ID Kode Konfirmasi</label
@@ -560,7 +582,7 @@
                           class="btn btn-ghost btn-sm"
                         >
                           ↗ Uji buka link</button
-                        ><span id="qrUrlStatus" class="qr-link-info"
+                        ><span id="qrUrlStatus" class="qr-link-info" role="status"
                           >ID entry bersifat opsional. Bila dikosongkan, QR
                           membuka link yang ditempel apa adanya.</span
                         >
@@ -632,32 +654,24 @@
             <div class="eyebrow">Bulk input</div>
             <h1>Impor dari Excel</h1>
             <p>
-              Utang dan piutang memakai template terpisah. Satu baris pada sheet
-              surat membentuk satu konfirmasi; sheet rincian hanya digunakan
-              bila ada lampiran invoice atau tagihan.
+              Siapkan permintaan bank, utang, dan piutang untuk satu penugasan
+              dalam satu workbook.
             </p>
           </div>
         </div>
         <div class="import-layout">
           <section class="panel import-card">
-            <h2>Unduh template sesuai jenis</h2>
+            <h2>Template konfirmasi audit</h2>
             <p>
-              Pilih format impor yang tepat sebelum mengisi data. File diproses
-              sepenuhnya di browser. Unduh template lalu isi di perangkatmu.
+              Satu baris di DAFTAR_SURAT menghasilkan satu surat. File diproses
+              di browser ini.
             </p>
             <div class="template-buttons">
               <a
-                id="downloadTemplatePiutang"
                 class="btn btn-lime"
                 download
-                href="FORMAT_IMPORT_KONFIRMASI_PIUTANG.xlsx"
-                >⇩ Template Piutang</a
-              ><a
-                id="downloadTemplateUtang"
-                class="btn btn-light"
-                download
-                href="FORMAT_IMPORT_KONFIRMASI_UTANG.xlsx"
-                >⇩ Template Utang</a
+                href="FORMAT_IMPORT_KONFIRMASI_UNIVERSAL.xlsx"
+                >Unduh Template Universal</a
               >
             </div>
             <div id="dropzone" class="dropzone" role="button" tabindex="0">
@@ -684,43 +698,20 @@
             <div id="importResult" class="import-result"></div>
           </section>
           <aside class="panel import-card">
-            <h2>Struktur yang dibaca</h2>
+            <h2>Cara mengisi workbook</h2>
             <p>
-              Format dipisahkan agar tidak ada kesalahan arah saldo saat
-              konfirmasi.
+              Buka PANDUAN untuk contoh. Isi PENUGASAN sekali untuk data klien,
+              KAP, dan QR default.
             </p>
-            <div class="how">
-              <div class="step">
-                <b>1</b>
-                <div>
-                  <strong>Piutang</strong>
-                  <p>
-                    Gunakan <b>SURAT_PIUTANG</b> dan, bila perlu,
-                    <b>RINCIAN_PIUTANG</b>.
-                  </p>
-                </div>
-              </div>
-              <div class="step">
-                <b>2</b>
-                <div>
-                  <strong>Utang</strong>
-                  <p>
-                    Gunakan <b>SURAT_UTANG</b> dan, bila perlu,
-                    <b>RINCIAN_UTANG</b>.
-                  </p>
-                </div>
-              </div>
-              <div class="step">
-                <b>3</b>
-                <div>
-                  <strong>Kode Konfirmasi</strong>
-                  <p>
-                    Ulangi kode yang sama pada rincian agar otomatis masuk ke
-                    lampiran surat yang benar.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <p>
+              Di DAFTAR_SURAT, pilih jenis dan gunakan kode unik. Isian per
+              surat dapat menggantikan default.
+            </p>
+            <p>
+              Gunakan kode yang sama di RINCIAN_DAGANG untuk invoice atau
+              REKENING_BANK untuk rekening. Keduanya boleh kosong.
+            </p>
+            <p>Workbook versi sebelumnya tetap dapat diimpor.</p>
             <div class="format-card" style="margin-top: 14px">
               <b>Prinsip pembaruan data</b>Jika Kode Konfirmasi yang sama sudah
               tersimpan, data dari file terbaru akan menggantikan surat lama
@@ -752,6 +743,9 @@
           <div class="list-tools">
             <div>
               <h2 id="listTitle">Belum ada surat</h2>
+              <button id="allBatches" class="btn btn-light" hidden>
+                Lihat seluruh arsip
+              </button>
               <p id="listSubtitle">Surat yang tersimpan akan muncul di sini.</p>
             </div>
             <div class="list-actions">

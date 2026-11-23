@@ -35,6 +35,7 @@
     selected: new Set(),
     editingCode: null,
     lastBatchId: null,
+    listBatch: null,
     downloadCancelled: false,
     downloadBusy: false,
     settings: { ...DEFAULT_SETTINGS },
@@ -130,10 +131,12 @@
     difference: "Ada Selisih",
     noreply: "Tidak Ada Balasan",
   };
-  const typeText = (t) => (t === "payable" ? "Utang" : "Piutang");
-  const typeCounterparty = (t) => (t === "payable" ? "Supplier" : "Pelanggan");
+  const typeText = (t) =>
+    t === "bank" ? "Bank" : t === "payable" ? "Utang" : "Piutang";
+  const typeCounterparty = (t) =>
+    t === "bank" ? "Bank" : t === "payable" ? "Supplier" : "Pelanggan";
   const nextCode = (t) =>
-    `${t === "payable" ? "KU" : "KP"}-${today().replaceAll("-", "")}-${String(state.letters.length + 1).padStart(3, "0")}`;
+    `${t === "bank" ? "KB" : t === "payable" ? "KU" : "KP"}-${today().replaceAll("-", "")}-${String(state.letters.length + 1).padStart(3, "0")}`;
   function toast(msg, type = "ok") {
     let e = $("toast");
     e.textContent = msg;
@@ -184,20 +187,64 @@
   }
   function setType(t, resetCode = false) {
     state.type = t;
+    document.body.classList.toggle("bank-mode", t === "bank");
     document
       .querySelectorAll(".type-card")
       .forEach((b) => b.classList.toggle("active", b.dataset.type === t));
     $("counterpartyCaption").textContent =
       "Data " +
       typeCounterparty(t) +
-      (t === "payable" ? " / kreditur" : " / debitur");
+      (t === "bank"
+        ? " & cabang tujuan"
+        : t === "payable"
+          ? " / kreditur"
+          : " / debitur");
     $("counterpartyLabel").innerHTML =
       "Nama " + typeCounterparty(t) + ' <span class="required">*</span>';
     $("counterpartyAddressLabel").innerHTML =
-      "Alamat " + typeCounterparty(t) + " <small>(opsional)</small>";
+      t === "bank"
+        ? 'Alamat cabang <span class="required">*</span>'
+        : "Alamat " + typeCounterparty(t) + " <small>(opsional)</small>";
     $("fCounterparty").placeholder = "PT / CV / Nama " + typeCounterparty(t);
     if (resetCode) $("fCode").value = nextCode(t);
     renderPreview();
+  }
+  function addAccount(a = {}) {
+    const row = document.createElement("div");
+    row.className = "account-row";
+    for (const [key, label] of [
+      ["type", "Jenis rekening"],
+      ["number", "Nomor rekening"],
+      ["currency", "Valuta"],
+    ]) {
+      const input = document.createElement("input");
+      input.placeholder = label;
+      input.setAttribute("aria-label", label);
+      input.dataset.field = key;
+      input.value = a[key] || "";
+      row.append(input);
+    }
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "Hapus";
+    button.onclick = () => {
+      row.remove();
+      renderPreview();
+    };
+    row.append(button);
+    $("accounts").append(row);
+  }
+  function readAccounts() {
+    return [...$("accounts").children]
+      .map((row) =>
+        Object.fromEntries(
+          [...row.querySelectorAll("input")].map((i) => [
+            i.dataset.field,
+            i.value.trim(),
+          ]),
+        ),
+      )
+      .filter((a) => Object.values(a).some(Boolean));
   }
   function detailRow(d = {}) {
     let r = document.createElement("div");
@@ -245,6 +292,10 @@
   function getForm() {
     return {
       type: state.type,
+      ...(state.type === "bank" && {
+        branch: safe($("fBranch").value),
+        accounts: readAccounts(),
+      }),
       code: safe($("fCode").value),
       number: safe($("fNumber").value),
       client: safe($("fClient").value),
@@ -293,6 +344,9 @@
     state.type = l.type || "receivable";
     setVal("fCode", l.code || nextCode(state.type));
     setVal("fNumber", l.number);
+    setVal("fBranch", l.branch);
+    $("accounts").replaceChildren();
+    (l.accounts || []).forEach(addAccount);
     setVal("fClient", l.client);
     setVal("fClientAddress", l.clientAddress);
     setVal("fCity", l.city);
@@ -337,7 +391,6 @@
     renderQrSetupPreview(getForm());
   }
   const BATCH_COMMON_FIELDS = [
-    "type",
     "client",
     "clientAddress",
     "city",
@@ -429,7 +482,7 @@
     setForm({});
     $("editorTitle").textContent = "Buat surat konfirmasi baru";
     $("editorDescription").textContent =
-      "Pilih jenis surat dan lengkapi saldo yang akan dikonfirmasikan.";
+      "Pilih jenis surat, lalu lengkapi data tujuan dan informasi yang akan dikonfirmasikan.";
     $("editorStatus").textContent = "Draft baru";
     $("formHint").textContent =
       "Belum disimpan. Kamu dapat mencetak draf meskipun informasi tertentu masih kosong.";
@@ -453,7 +506,15 @@
     switchView("workspace");
   }
   function validate(l) {
-    if (l.amount == null) return "Saldo";
+    if (l.type === "bank") {
+      if (!safe(l.branch)) return "Cabang bank";
+      if (!safe(l.counterpartyAddress)) return "Alamat cabang";
+      if (l.accounts.some((a) => !a.type || !a.number || !a.currency))
+        return "Jenis, nomor dan valuta setiap rekening";
+      const r = recipient(l);
+      if (!r.name || !(r.address || r.email))
+        return "Nama dan alamat atau email tujuan balasan";
+    } else if (l.amount == null) return "Saldo";
     let fields = [
       ["code", "Kode Konfirmasi"],
       ["client", "Nama Klien"],
@@ -553,7 +614,7 @@
       let u = new URL(raw),
         pairs = [
           [l.qrEntryCode, l.code],
-          [l.qrEntryType, l.type === "payable" ? "UTANG" : "PIUTANG"],
+          [l.qrEntryType, typeText(l.type).toUpperCase()],
           [l.qrEntryYear, yearOf(l.balanceDate)],
           [l.qrEntryCounterparty, l.counterparty],
           [l.qrEntryClient, l.client],
@@ -654,22 +715,17 @@
     let box = $("qrSetupPreview"),
       status = $("qrUrlStatus");
     if (!box || !status) return;
-    let url = buildQrUrl(l);
-    if (!l.qrEnabled) {
-      box.innerHTML =
-        '<div class="qr-empty">Aktifkan “Tampilkan QR pada surat”.</div>';
-      status.textContent = "QR belum diaktifkan.";
-      return;
-    }
+    // Preview the destination independently of the option to print it.
+    let url = buildQrUrl({ ...l, qrEnabled: true });
     if (!url) {
       box.innerHTML =
         '<div class="qr-empty">Tempel link Google Form yang diawali https://.</div>';
-      status.textContent = "Link Google Form belum valid.";
+      status.textContent = l.qrFormUrl ? "Masukkan tautan HTTPS yang valid." : "Isi tautan untuk melihat QR.";
       return;
     }
     try {
       box.innerHTML = qrSvgMarkup(url);
-      status.textContent = "Link unik: " + url;
+      status.textContent = (l.qrEnabled ? "QR ditampilkan pada surat. " : "Pratinjau QR. Klik Generate QR untuk memasukkannya ke surat. ") + url;
     } catch (e) {
       box.innerHTML =
         '<div class="qr-empty">' +
@@ -679,10 +735,10 @@
     }
   }
   function openQrLink() {
-    let l = getForm(),
+    let l = { ...getForm(), qrEnabled: true },
       url = buildQrUrl(l);
     if (!url) {
-      toast("Aktifkan QR dan isi link Google Form yang valid.", "err");
+      toast("Isi tautan HTTPS yang valid.", "err");
       return;
     }
     window.open(url, "_blank", "noopener,noreferrer");
@@ -773,11 +829,12 @@
     return chunks
       .map(
         (rows, idx) =>
-          `<div class="letter-page"><div class="doc-title">LAMPIRAN RINCIAN ${l.type === "payable" ? "TAGIHAN / UTANG" : "INVOICE / PIUTANG"}</div><div class="continuation-note">${esc(l.counterparty)} - ${esc(l.client)} - per ${esc(fmtDate(l.balanceDate))}${idx ? " - lanjutan " + (idx + 1) : ""}</div><table class="detail-table"><thead><tr><th>Tanggal</th><th>No. Dokumen</th><th>Uraian</th><th>Jatuh Tempo</th><th>Nilai</th><th>Pembayaran / Kredit</th><th>Saldo</th></tr></thead><tbody>${rows.map((x) => `<tr><td>${esc(fmtDate(x.date))}</td><td>${esc(x.document)}</td><td>${esc(x.description)}</td><td>${esc(fmtDate(x.dueDate))}</td><td class="num">${esc(fmtMoney(x.amount, l.currency))}</td><td class="num">${esc(fmtMoney(x.payment, l.currency))}</td><td class="num">${esc(fmtMoney(Math.max(0, money(x.amount) - money(x.payment)), l.currency))}</td></tr>`).join("")}</tbody></table><div class="footer-note">Kode Konfirmasi: ${esc(l.code)} | Lampiran ${idx + 1}</div></div>`,
+          `<div class="letter-page"><div class="doc-title">LAMPIRAN RINCIAN ${l.type === "payable" ? "TAGIHAN / UTANG" : "INVOICE / PIUTANG"}</div><div class="continuation-note">${esc(l.counterparty)} - ${esc(l.client)} - per ${esc(fmtDate(l.balanceDate))}${idx ? " - lanjutan " + (idx + 1) : ""}</div><table class="detail-table"><thead><tr><th>Tanggal</th><th>No. Dokumen</th><th>Uraian</th><th>Jatuh Tempo</th><th>Nilai</th><th>Pembayaran / Kredit</th><th>Saldo / rekening</th></tr></thead><tbody>${rows.map((x) => `<tr><td>${esc(fmtDate(x.date))}</td><td>${esc(x.document)}</td><td>${esc(x.description)}</td><td>${esc(fmtDate(x.dueDate))}</td><td class="num">${esc(fmtMoney(x.amount, l.currency))}</td><td class="num">${esc(fmtMoney(x.payment, l.currency))}</td><td class="num">${esc(fmtMoney(Math.max(0, money(x.amount) - money(x.payment)), l.currency))}</td></tr>`).join("")}</tbody></table><div class="footer-note">Kode Konfirmasi: ${esc(l.code)} | Lampiran ${idx + 1}</div></div>`,
       )
       .join("");
   }
   function renderDocument(l) {
+    if (l.type === "bank") return bankPreview(l);
     return mainPage(l) + detailPages(l);
   }
   function renderPreview() {
@@ -1238,8 +1295,281 @@
       );
     }
   }
+  // Both the SVG print preview and the PDF consume the same A4 drawing.
+  function bankPages(l) {
+    const pages = [],
+      left = 16,
+      right = 194,
+      width = right - left;
+    const bank = [l.counterparty, l.branch].filter(Boolean).join(" - ");
+    const reply = recipient(l),
+      accounts = l.accounts || [];
+    let page, y;
+    const op = (...args) => page.push(args);
+    function start(title, subtitle) {
+      page = [];
+      pages.push(page);
+      y = 21;
+      paragraph(title, 14, true);
+      paragraph(subtitle, 9);
+      op("line", left, y, right, y, 0.6);
+      y += 8;
+    }
+    function room(height) {
+      if (y + height > 273)
+        start("Lanjutan konfirmasi bank", bank + " | " + l.client);
+    }
+    function paragraph(value, size = 10, bold = false) {
+      for (const line of wrapPdf(value || "", width, size, bold)) {
+        room(5);
+        op("text", left, y, line, size, bold);
+        y += 5;
+      }
+    }
+    function table(headers, widths, rows) {
+      function row(values, heading = false) {
+        const cells = values.map((v, i) =>
+          wrapPdf(String(v || ""), widths[i] - 4, 8, heading),
+        );
+        const height = Math.max(8, ...cells.map((c) => c.length * 3.6 + 3));
+        if (y + height > 272) {
+          start("Lanjutan konfirmasi bank", bank + " | " + l.client);
+          if (!heading) row(headers, true);
+        }
+        let x = left;
+        cells.forEach((lines, i) => {
+          op("rect", x, y, widths[i], height, 0.2);
+          lines.forEach((v, n) =>
+            op("text", x + 2, y + 4.5 + n * 3.6, v, 8, heading),
+          );
+          x += widths[i];
+        });
+        y += height;
+      }
+      room(20);
+      row(headers, true);
+      rows.forEach((r) => row(r));
+      y += 4;
+    }
+    const blank = (count, n) =>
+      Array.from({ length: count }, () => Array(n).fill(""));
+    start(l.client || "Nama klien", l.clientAddress);
+    op(
+      "text",
+      right,
+      y,
+      [l.city, fmtDate(l.letterDate)].filter(Boolean).join(", "),
+      10,
+      false,
+      "right",
+    );
+    y += 9;
+    if (l.number) paragraph("Nomor: " + l.number);
+    paragraph("Kepada Yth.");
+    paragraph("Pimpinan " + bank, 10, true);
+    if (l.attention) paragraph("U.p. " + l.attention);
+    paragraph(l.counterpartyAddress);
+    y += 3;
+    paragraph("Perihal: Permintaan Konfirmasi Bank", 11, true);
+    y += 3;
+    paragraph("Dengan hormat,");
+    paragraph(
+      "Sehubungan dengan pemeriksaan laporan keuangan perusahaan per " +
+        fmtDate(l.balanceDate) +
+        ", kami memohon konfirmasi tertulis berdasarkan catatan bank mengenai rekening, fasilitas kredit, jaminan, kewajiban kontinjensi, dan informasi perbankan lain yang relevan.",
+    );
+    // Keep the QR and reply address on the first sheet, even for long account lists.
+    y += 4;
+    paragraph("Mohon kirimkan jawaban langsung kepada:", 10, true);
+    const contact = [
+      reply.name,
+      reply.attention,
+      reply.address,
+      reply.city,
+      reply.email,
+      reply.phone,
+      reply.method,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    const replyY = y;
+    const url = buildQrUrl(l);
+    for (const line of wrapPdf(contact, url ? 135 : width, 9)) {
+      op("text", left, y, line, 9);
+      y += 4;
+    }
+    if (url) {
+      try {
+        op("qr", qrMatrix(url), right - 24, replyY - 3, 24);
+        y = Math.max(y, replyY + 25);
+        paragraph(l.qrCaption, 8);
+      } catch {
+        paragraph("QR belum dapat dibuat.", 8);
+      }
+    }
+    paragraph("Mohon tidak mengirimkan jawaban melalui perusahaan kami.", 9);
+    if (accounts.length) {
+      y += 3;
+      paragraph("Rekening yang diketahui dan dimintakan konfirmasi:", 10, true);
+      table(
+        ["No.", "Jenis rekening", "Nomor rekening", "Valuta"],
+        [14, 54, 85, 25],
+        accounts.map((a, i) => [i + 1, a.type, a.number, a.currency]),
+      );
+    }
+    if (l.note) paragraph(l.note, 9);
+    room(40);
+    y += 5;
+    op("text", 132, y, "Hormat kami,", 10);
+    y += 21;
+    op("line", 132, y, right, y, 0.2);
+    y += 5;
+    op("text", 132, y, l.signer || "Nama penandatangan", 10, true);
+    op("text", 132, y + 5, l.role || "Jabatan", 9);
+    const identity = [l.client, bank, "Posisi " + fmtDate(l.balanceDate)]
+      .filter(Boolean)
+      .join(" | ");
+    start("FORMULIR JAWABAN KONFIRMASI BANK", identity);
+    paragraph("Kepada: " + contact, 9);
+    y += 3;
+    paragraph("1. Saldo rekening bank", 11, true);
+    paragraph(
+      "Mohon isi menurut catatan bank dan tambahkan rekening lain apabila ada.",
+      9,
+    );
+    table(
+      [
+        "Jenis",
+        "Nomor rekening",
+        "Valuta",
+        "Jumlah",
+        "Bunga",
+        "Pembatasan / catatan",
+      ],
+      [28, 40, 18, 30, 17, 45],
+      [
+        ...accounts.map((a) => [a.type, a.number, a.currency, "", "", ""]),
+        ...blank(3, 6),
+      ],
+    );
+    paragraph("2. Pinjaman dan fasilitas bank", 11, true);
+    table(
+      [
+        "Jenis fasilitas",
+        "Jumlah",
+        "Valuta",
+        "Tanggal diberikan",
+        "Jatuh tempo",
+        "Bunga",
+        "Jaminan / catatan",
+      ],
+      [32, 25, 17, 27, 25, 15, 37],
+      [
+        "Jangka pendek",
+        "",
+        "Jangka panjang",
+        "",
+        "Bank garansi",
+        "",
+        "Lain-lain",
+        "",
+      ].map((v) => [v, "", "", "", "", "", ""]),
+    );
+    paragraph(
+      "Tuliskan Nihil jika tidak ada saldo atau fasilitas pada bagian terkait.",
+      9,
+    );
+    start("FORMULIR JAWABAN KONFIRMASI BANK", identity);
+    paragraph("3. Kewajiban kontinjensi", 11, true);
+    table(
+      [
+        "Jumlah",
+        "Valuta",
+        "Jenis",
+        "Pembuat",
+        "Tanggal diberikan",
+        "Jatuh tempo",
+        "Bunga",
+        "Kolektibilitas",
+      ],
+      [25, 16, 21, 22, 26, 24, 16, 28],
+      blank(6, 8),
+    );
+    paragraph("4. Rekening lain dan informasi perbankan lainnya", 11, true);
+    for (const label of [
+      "Kertas berharga yang disimpan oleh bank",
+      "Dokumen untuk diinkaso",
+      "Trust account",
+      "Pihak yang berhak menandatangani cek pada tahun " +
+        yearOf(l.balanceDate),
+      "Informasi lainnya",
+    ]) {
+      paragraph(label, 9);
+      y += 4;
+      op("line", left, y, right, y, 0.15);
+      y += 5;
+    }
+    paragraph("Keterangan tambahan pihak bank");
+    op("rect", left, y, width, 17, 0.2);
+    y += 25;
+    paragraph(
+      "Tempat / tanggal: ........................................................",
+      9,
+    );
+    y += 13;
+    paragraph("Tanda tangan pejabat dan stempel bank", 9);
+    paragraph(
+      "Nama: .................................................     Jabatan: .................................................",
+      9,
+    );
+    pages.forEach((p, i) =>
+      p.push(
+        ["line", left, 280, right, 280, 0.2],
+        [
+          "text",
+          left,
+          286,
+          [l.code, bank, fmtDate(l.balanceDate)].filter(Boolean).join(" | "),
+          8,
+        ],
+        ["text", right, 286, i + 1 + " / " + pages.length, 8, false, "right"],
+      ),
+    );
+    return pages;
+  }
+  function drawBank(pdf, l) {
+    bankPages(l).forEach((page, i) => {
+      if (i) pdf.addPage();
+      for (const [action, ...args] of page) {
+        if (action === "qr") drawQrPdf(pdf, ...args);
+        else pdf[action](...args);
+      }
+    });
+  }
+  function bankPreview(l) {
+    const svg = {
+      text: (x, y, v, size, bold, align) =>
+        `<text x="${x}" y="${y}" font-family="Arial" font-size="${(size * 25.4) / 72}" font-weight="${bold ? 700 : 400}" text-anchor="${align === "right" ? "end" : "start"}">${esc(v)}</text>`,
+      rect: (x, y, w, h, lw) =>
+        `<rect x="${x}" y="${y}" width="${w}" height="${h}" stroke="black" stroke-width="${lw}" fill="none"/>`,
+      line: (x, y, u, v, lw) =>
+        `<line x1="${x}" y1="${y}" x2="${u}" y2="${v}" stroke="black" stroke-width="${lw}"/>`,
+      qr: (m, x, y, size) =>
+        `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="-4 -4 ${m.length + 8} ${m.length + 8}"><path d="${m.flatMap((row, r) => row.map((on, c) => (on ? `M${c} ${r}h1v1h-1z` : ""))).join("")}"/></svg>`,
+    };
+    return bankPages(l)
+      .map(
+        (page) =>
+          `<svg class="bank-paper" role="img" aria-label="Halaman konfirmasi bank" viewBox="0 0 210 297">${page.map(([action, ...args]) => svg[action](...args)).join("")}</svg>`,
+      )
+      .join("");
+  }
   function buildPdfBlob(l) {
     let pdf = new RipiditPDF();
+    if (l.type === "bank") {
+      drawBank(pdf, l);
+      return pdf.blob();
+    }
     drawMainPdf(pdf, l);
     drawDetailsPdf(pdf, l);
     return pdf.blob();
@@ -1254,7 +1584,7 @@
     );
   }
   function pdfFileName(l, used) {
-    let base = `KONFIRMASI_${l.type === "payable" ? "UTANG" : "PIUTANG"}_${yearOf(l.balanceDate)}_${cleanFilePart(l.counterparty)}_PADA_${cleanFilePart(l.client)}`,
+    let base = `KONFIRMASI_${typeText(l.type).toUpperCase()}_${yearOf(l.balanceDate)}_${cleanFilePart(l.type === "bank" ? l.counterparty + " " + l.branch : l.counterparty)}_PADA_${cleanFilePart(l.client)}`,
       name = base + ".PDF",
       n = 2;
     while (used.has(name.toUpperCase())) name = base + "_" + n++ + ".PDF";
@@ -1275,12 +1605,14 @@
     return new Promise((r) => setTimeout(r, ms));
   }
   function zipFileName(docs) {
-    let types = [
-      ...new Set(docs.map((l) => (l.type === "payable" ? "UTANG" : "PIUTANG"))),
-    ];
+    let types = [...new Set(docs.map((l) => typeText(l.type).toUpperCase()))];
     let years = [...new Set(docs.map((l) => yearOf(l.balanceDate)))];
     let clients = [...new Set(docs.map((l) => cleanFilePart(l.client)))];
-    let typePart = types.length === 1 ? types[0] : "UTANG_PIUTANG";
+    let typePart = types.includes("BANK")
+      ? types.join("_")
+      : types.length === 1
+        ? types[0]
+        : "UTANG_PIUTANG";
     let yearPart = years.length === 1 ? years[0] : "MULTI TAHUN";
     let clientPart = clients.length === 1 ? clients[0] : "BEBERAPA PT KLIEN";
     return `KONFIRMASI_${typePart}_${yearPart}_PADA_${clientPart}.ZIP`;
@@ -1540,14 +1872,25 @@
 
   function filtered() {
     let q = state.search.toLowerCase().trim();
+    const letters = state.listBatch
+      ? state.letters.filter((l) => l.batchId === state.listBatch)
+      : state.letters;
     return q
-      ? state.letters.filter((l) =>
-          [l.type, l.code, l.client, l.counterparty, l.amount, l.balanceDate]
+      ? letters.filter((l) =>
+          [
+            l.type,
+            l.code,
+            l.client,
+            l.counterparty,
+            l.branch,
+            l.amount,
+            l.balanceDate,
+          ]
             .join(" ")
             .toLowerCase()
             .includes(q),
         )
-      : state.letters;
+      : letters;
   }
   function renderList() {
     let items = filtered();
@@ -1555,9 +1898,20 @@
       ? state.letters.length + " surat tersimpan"
       : "Belum ada surat";
     $("listSubtitle").textContent = state.letters.length
-      ? `${state.letters.filter((l) => l.type === "receivable").length} piutang dan ${state.letters.filter((l) => l.type === "payable").length} utang dari input manual maupun impor Excel.`
+      ? `${state.letters.filter((l) => l.type === "receivable").length} piutang dan ${state.letters.filter((l) => l.type === "payable").length} utang, ${state.letters.filter((l) => l.type === "bank").length} bank.`
       : "Simpan form atau impor Excel untuk memulai.";
     $("selectionFoot").textContent = state.selected.size + " dipilih";
+    $("allBatches").hidden = !state.listBatch;
+    if (state.listBatch) {
+      const batch = state.letters.filter((l) => l.batchId === state.listBatch);
+      $("listTitle").textContent =
+        "Hasil impor · " + (batch[0]?.importName || "");
+      $("listSubtitle").textContent = ["bank", "receivable", "payable"]
+        .map(
+          (t) => batch.filter((l) => l.type === t).length + " " + typeText(t),
+        )
+        .join(" · ");
+    }
     if (!items.length) {
       $("listContent").innerHTML =
         `<div class="empty-state"><div class="mark">⌁</div><h3>${state.letters.length ? "Surat tidak ditemukan" : "Belum ada surat konfirmasi"}</h3><p>${state.letters.length ? "Coba kata kunci lain." : "Kamu bisa mengisi form langsung atau impor data dari Excel."}</p><button class="btn btn-primary" id="emptyNew">＋ Buat surat</button></div>`;
@@ -1568,7 +1922,7 @@
       return;
     }
     $("listContent").innerHTML =
-      `<table class="table"><thead><tr><th><input id="selectAllCheck" class="check" type="checkbox" ${items.every((l) => state.selected.has(l.code)) ? "checked" : ""}></th><th>Jenis & Lawan Transaksi</th><th>Klien</th><th>Saldo</th><th>Tanggal Saldo</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${items.map((l) => `<tr><td><input class="check rowCheck" type="checkbox" data-code="${esc(l.code)}" ${state.selected.has(l.code) ? "checked" : ""}></td><td><span class="kind ${l.type}">${typeText(l.type)}</span><div class="counterparty" style="margin-top:5px">${esc(l.counterparty || "Belum diisi")}</div><div class="sub">${esc(l.code)}</div></td><td>${esc(l.client || "Belum diisi")}</td><td>${esc(fmtMoney(l.amount, l.currency))}<div class="sub">${l.details?.length || 0} rincian</div></td><td>${esc(fmtDate(l.balanceDate))}</td><td><span class="badge ${esc(l.status || "draft")}">${esc(statusMap[l.status] || "Draft")}</span></td><td><button class="rowbtn editBtn" data-code="${esc(l.code)}" title="Edit">✎</button><button class="rowbtn printBtn" data-code="${esc(l.code)}" title="Cetak">▣</button><button class="rowbtn deleteBtn" data-code="${esc(l.code)}" title="Hapus">×</button></td></tr>`).join("")}</tbody></table>`;
+      `<table class="table"><thead><tr><th><input id="selectAllCheck" class="check" type="checkbox" ${items.every((l) => state.selected.has(l.code)) ? "checked" : ""}></th><th>Jenis & Lawan Transaksi</th><th>Klien</th><th>Saldo</th><th>Tanggal Saldo</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${items.map((l) => `<tr><td><input class="check rowCheck" type="checkbox" data-code="${esc(l.code)}" ${state.selected.has(l.code) ? "checked" : ""}></td><td><span class="kind ${l.type}">${typeText(l.type)}</span><div class="counterparty" style="margin-top:5px">${esc(l.counterparty || "Belum diisi")}</div><div class="sub">${esc(l.code)}</div></td><td>${esc(l.client || "Belum diisi")}</td><td>${l.type === "bank" ? `${l.accounts.length} rekening<div class="sub">${esc(l.branch)}</div>` : `${esc(fmtMoney(l.amount, l.currency))}<div class="sub">${l.details?.length || 0} rincian</div>`}</td><td>${esc(fmtDate(l.balanceDate))}</td><td><span class="badge ${esc(l.status || "draft")}">${esc(statusMap[l.status] || "Draft")}</span></td><td><button class="rowbtn editBtn" data-code="${esc(l.code)}" title="Edit">✎</button><button class="rowbtn printBtn" data-code="${esc(l.code)}" title="Cetak">▣</button><button class="rowbtn deleteBtn" data-code="${esc(l.code)}" title="Hapus">×</button></td></tr>`).join("")}</tbody></table>`;
     $("tableFoot").textContent =
       `Menampilkan ${items.length} dari ${state.letters.length} surat.`;
     $("selectAllCheck").onchange = (e) => {
@@ -1627,11 +1981,11 @@
       },
     };
   }
-  function sheetFromMatrix(m) {
-    let rows = m.filter((r) => r.some((v) => safe(v))),
+  function sheetFromMatrix(m, headerKey = "kodekonfirmasi") {
+    let rows = m,
       at = -1;
     for (let i = 0; i < Math.min(rows.length, 16); i++) {
-      if (rows[i].map(norm).includes("kodekonfirmasi")) {
+      if (rows[i]?.map(norm).includes(headerKey)) {
         at = i;
         break;
       }
@@ -1641,12 +1995,14 @@
     rows[at].forEach((v, i) => {
       if (safe(v)) h[norm(v)] = i;
     });
-    let data = [];
+    let data = [],
+      rowNumbers = [];
     for (let i = at + 1; i < rows.length; i++) {
-      if (!rows[i].some((v) => safe(v))) continue;
+      if (!rows[i]?.some((v) => safe(v))) continue;
       data.push(rows[i]);
+      rowNumbers.push(i + 1);
     }
-    return { headers: h, rows: data };
+    return { headers: h, rows: data, rowNumbers };
   }
   function col(ref) {
     let n = 0;
@@ -1771,7 +2127,10 @@
           matrix[ri][ci] = val;
         });
       });
-      out[name] = sheetFromMatrix(matrix.map((x) => x || []));
+      out[name] = sheetFromMatrix(
+        matrix,
+        norm(name) === "penugasan" ? "namaklien" : "kodekonfirmasi",
+      );
     }
     return out;
   }
@@ -1807,22 +2166,23 @@
   function findSheet(sheets, n) {
     return Object.entries(sheets).find(([k]) => norm(k) === norm(n))?.[1];
   }
-  function makeImported(surat, rinci, type) {
+  function makeImported(surat, rinci, type, seen) {
     let required = [
       "kodekonfirmasi",
       "namaklien",
       "kotasurat",
       "tanggalsurat",
       "tanggalsaldo",
-      "namalawantransaksi",
-      "saldo",
+      ...(type === "bank"
+        ? ["namabank", "cabangbank", "alamatcabang"]
+        : ["namalawantransaksi", "saldo"]),
       "namapenandatangan",
       "jabatanpenandatangan",
     ];
     let missing = required.filter((x) => surat.headers[x] === undefined);
     if (missing.length)
       throw new Error("Kolom wajib belum lengkap: " + missing.join(", "));
-    let dm = {};
+    let dm = Object.create(null);
     (rinci?.rows || []).forEach((row) => {
       let { g } = mapRow(row, rinci.headers || {}),
         code = safe(g("Kode Konfirmasi"));
@@ -1838,15 +2198,48 @@
       if (!dm[code]) dm[code] = [];
       dm[code].push(x);
     });
-    let out = [],
-      seen = new Set();
-    for (let row of surat.rows) {
+    let out = [];
+    for (const [index, row] of surat.rows.entries()) {
       let { g } = mapRow(row, surat.headers),
         code = safe(g("Kode Konfirmasi"));
+      const sheet = surat.sourceName || "SURAT_" + typeText(type).toUpperCase();
+      if (!code && type === "bank") invalid("Kode Konfirmasi", "wajib diisi.");
       if (!code) continue;
-      if (seen.has(code)) throw new Error("Kode Konfirmasi duplikat: " + code);
+      if (seen.has(code)) invalid("Kode Konfirmasi", "kode duplikat: " + code);
       seen.add(code);
       let details = dm[code] || [];
+
+      function invalid(column, reason) {
+        const inherited = surat.inherited?.[index]?.has(norm(column));
+        throw new Error(
+          `${inherited ? "PENUGASAN" : sheet}, baris ${inherited ? surat.defaultRow : surat.rowNumbers[index]}, kolom "${column}": ${reason}`,
+        );
+      }
+      function choice(column, fallback) {
+        const value = safe(g(column)).toLowerCase();
+        if (!value) return fallback;
+        if (value === "ya") return true;
+        if (value === "tidak") return false;
+        invalid(column, "gunakan Ya atau Tidak.");
+      }
+      function entry(column) {
+        const id = safe(g(column));
+        if (id && !/^entry\.\d+$/.test(id))
+          invalid(column, "gunakan format entry.123456.");
+        return id;
+      }
+      const kap = (name) => g(name + " (KAP)", name);
+      const qrEnabled = choice("Tampilkan QR", false);
+      const qrFormUrl = safe(g("Link Formulir QR"));
+      if (
+        qrEnabled &&
+        (!/^https:\/\//i.test(qrFormUrl) || !URL.canParse(qrFormUrl))
+      ) {
+        invalid(
+          "Link Formulir QR",
+          "isi tautan HTTPS yang valid saat QR aktif.",
+        );
+      }
       out.push({
         type,
         code,
@@ -1857,40 +2250,46 @@
         letterDate: iso(g("Tanggal Surat")),
         balanceDate: iso(g("Tanggal Saldo", "Tanggal Neraca")),
         deadlineDays: Number(g("Batas Jawaban (Hari)", "Batas Jawaban") || 7),
+        ...(type === "bank" && { branch: g("Cabang Bank"), accounts: [] }),
         counterparty: g(
-          "Nama Lawan Transaksi",
+          type === "bank" ? "Nama Bank" : "Nama Lawan Transaksi",
           type === "payable" ? "Nama Supplier" : "Nama Pelanggan",
         ),
         counterpartyAddress: g(
-          "Alamat Lawan Transaksi",
+          type === "bank" ? "Alamat Cabang" : "Alamat Lawan Transaksi",
           type === "payable" ? "Alamat Supplier" : "Alamat Pelanggan",
         ),
-        attention: g("UP / PIC", "UP / PIC Lawan Transaksi"),
+        attention: g(
+          type === "bank" ? "Bagian / Pejabat Tujuan" : "UP / PIC",
+          "UP / PIC Lawan Transaksi",
+        ),
         phone: g("Telepon / WhatsApp"),
         email: g("Email"),
         amount: safe(g("Saldo")) === "" ? null : money(g("Saldo")),
         currency: String(g("Mata Uang") || "IDR").toUpperCase(),
         reference: g("Referensi Dokumen"),
         explanation: g("Catatan / Keterangan Saldo", "Keterangan Saldo"),
-        recipientName: g("Nama Penerima Balasan"),
-        recipientAddress: g("Alamat Penerima Balasan"),
-        recipientCity: g("Kota Penerima Balasan"),
-        recipientAttention: g("UP Penerima Balasan"),
-        recipientPhone: g("Telepon Penerima Balasan"),
-        replyContact: g("Email / Kontak Balasan"),
-        replyMethod: g("Metode Pengiriman Balasan"),
+        recipientName: kap("Nama Penerima Balasan"),
+        recipientAddress: kap("Alamat Penerima Balasan"),
+        recipientCity: kap("Kota Penerima Balasan"),
+        recipientAttention: kap("UP Penerima Balasan"),
+        recipientPhone: kap("Telepon Penerima Balasan"),
+        replyContact: kap("Email / Kontak Balasan"),
+        replyMethod: kap("Metode Pengiriman Balasan"),
         signer: g("Nama Penandatangan"),
         role: g("Jabatan Penandatangan"),
         note: g("Catatan untuk Lawan Transaksi", "Catatan"),
-        includeDetail: details.length > 0,
-        qrEnabled: false,
-        qrFormUrl: "",
-        qrEntryCode: "",
-        qrEntryType: "",
-        qrEntryYear: "",
-        qrEntryCounterparty: "",
-        qrEntryClient: "",
-        qrCaption: "Pindai untuk mengunggah jawaban konfirmasi",
+        includeDetail: choice("Tampilkan Lampiran", details.length > 0),
+        qrEnabled,
+        qrFormUrl,
+        qrEntryCode: entry("ID Kode Konfirmasi"),
+        qrEntryType: entry("ID Jenis Konfirmasi"),
+        qrEntryYear: entry("ID Tahun Buku"),
+        qrEntryCounterparty: entry("ID Lawan Transaksi"),
+        qrEntryClient: entry("ID Nama Klien"),
+        qrCaption:
+          safe(g("Teks di Bawah QR")) ||
+          "Pindai untuk mengunggah jawaban konfirmasi",
         status: g("Status") || "draft",
         details,
       });
@@ -1898,23 +2297,145 @@
     if (!out.length)
       throw new Error(
         "Tidak ada data surat valid pada sheet " +
-          (type === "payable" ? "SURAT_UTANG" : "SURAT_PIUTANG") +
+          ("SURAT_" + typeText(type).toUpperCase()) +
           ".",
       );
     return out;
   }
+  function universalLetters(sheets, list) {
+    const defaults = findSheet(sheets, "PENUGASAN");
+    if (!defaults || defaults.headers.namaklien === undefined)
+      throw new Error('PENUGASAN, baris 1: kolom "Nama Klien" diperlukan.');
+    if (defaults.rows.length > 1)
+      throw new Error(
+        `PENUGASAN, baris ${defaults.rowNumbers[1]}, kolom "Nama Klien": gunakan satu baris per penugasan.`,
+      );
+    const types = new Map([
+      ["bank", "BANK"],
+      ["piutang", "PIUTANG"],
+      ["utang", "UTANG"],
+    ]);
+    const owners = new Map(),
+      grouped = {};
+    const aliases = {
+      namabank: "namapenerima",
+      namalawantransaksi: "namapenerima",
+      alamatcabang: "alamatpenerima",
+      alamatlawantransaksi: "alamatpenerima",
+      bagianpejabattujuan: "uppic",
+      saldo: "saldomenurutklien",
+      matauang: "valutasaldo",
+    };
+    const headers = { ...list.headers };
+    for (const [target, source] of Object.entries(aliases))
+      if (headers[source] !== undefined) headers[target] = headers[source];
+    if (!list.rows.length)
+      throw new Error(
+        'DAFTAR_SURAT, baris 2, kolom "Kode Konfirmasi": isi minimal satu surat.',
+      );
+    for (const [i, raw] of list.rows.entries()) {
+      const row = raw.slice(),
+        n = list.rowNumbers[i],
+        { g } = mapRow(row, headers);
+      const code = safe(g("Kode Konfirmasi")),
+        type = types.get(norm(g("Jenis")));
+      function fail(column, message) {
+        throw new Error(
+          `DAFTAR_SURAT, baris ${n}, kolom "${column}": ${message}`,
+        );
+      }
+      if (!code || owners.has(code))
+        fail(
+          "Kode Konfirmasi",
+          code ? "kode duplikat: " + code : "wajib diisi.",
+        );
+      if (!type) fail("Jenis", "pilih Bank, Utang, atau Piutang.");
+      const inherited = new Set();
+      for (const [field, pos] of Object.entries(defaults.headers)) {
+        const dst = headers[field],
+          value = defaults.rows[0]?.[pos];
+        if (dst !== undefined && !safe(row[dst]) && safe(value)) {
+          row[dst] = value;
+          inherited.add(field);
+        }
+      }
+      owners.set(code, type);
+      const group = (grouped["SURAT_" + type] ??= {
+        headers,
+        rows: [],
+        rowNumbers: [],
+        inherited: [],
+        sourceName: "DAFTAR_SURAT",
+        defaultRow: defaults.rowNumbers?.[0],
+      });
+      group.rows.push(row);
+      group.rowNumbers.push(n);
+      group.inherited.push(inherited);
+    }
+    for (const sheet of ["RINCIAN_DAGANG", "REKENING_BANK"]) {
+      const details = findSheet(sheets, sheet);
+      for (const [i, row] of (details?.rows || []).entries()) {
+        const code = safe(mapRow(row, details.headers).g("Kode Konfirmasi")),
+          type = owners.get(code);
+        if (!type || (sheet === "REKENING_BANK") !== (type === "BANK"))
+          throw new Error(
+            `${sheet}, baris ${details.rowNumbers[i]}, kolom "Kode Konfirmasi": kode induk tidak ditemukan atau jenis surat tidak sesuai.`,
+          );
+        const group = (grouped[type === "BANK" ? sheet : "RINCIAN_" + type] ??=
+          { headers: details.headers, rows: [], rowNumbers: [] });
+        group.rows.push(row);
+        group.rowNumbers.push(details.rowNumbers[i]);
+      }
+    }
+    const byCode = new Map(importSheets(grouped).map((l) => [l.code, l]));
+    return [...owners.keys()].map((code) => byCode.get(code));
+  }
   function importSheets(sheets) {
+    const list = findSheet(sheets, "DAFTAR_SURAT");
+    if (list) return universalLetters(sheets, list);
     let sp = findSheet(sheets, "SURAT_PIUTANG"),
       su = findSheet(sheets, "SURAT_UTANG"),
       rp = findSheet(sheets, "RINCIAN_PIUTANG"),
       ru = findSheet(sheets, "RINCIAN_UTANG");
-    if (!sp && !su)
+    const bankSheet = findSheet(sheets, "SURAT_BANK"),
+      seen = new Set();
+    if (!bankSheet && !sp && !su)
       throw new Error(
-        "Sheet SURAT_PIUTANG atau SURAT_UTANG tidak ditemukan. Gunakan format impor yang disediakan.",
+        "Sheet SURAT_BANK, SURAT_PIUTANG, atau SURAT_UTANG tidak ditemukan. Gunakan format impor yang disediakan.",
       );
     let out = [];
-    if (sp) out.push(...makeImported(sp, rp, "receivable"));
-    if (su) out.push(...makeImported(su, ru, "payable"));
+    if (bankSheet) {
+      const letters = makeImported(bankSheet, null, "bank", seen);
+      const byCode = new Map(letters.map((l) => [l.code, l]));
+      const accounts = findSheet(sheets, "REKENING_BANK");
+      if (accounts)
+        for (const [index, row] of accounts.rows.entries()) {
+          const { g } = mapRow(row, accounts.headers),
+            code = safe(g("Kode Konfirmasi"));
+          const account = {
+            type: safe(g("Jenis Rekening")),
+            number: safe(g("Nomor Rekening")),
+            currency: safe(g("Valuta")),
+          };
+          const column = !byCode.has(code)
+            ? "Kode Konfirmasi"
+            : !account.type
+              ? "Jenis Rekening"
+              : !account.number
+                ? "Nomor Rekening"
+                : !account.currency
+                  ? "Valuta"
+                  : "";
+          if (column)
+            throw new Error(
+              `REKENING_BANK, baris ${accounts.rowNumbers[index]}, kolom "${column}": periksa isian dan kode surat induk.`,
+            );
+          byCode.get(code).accounts.push(account);
+        }
+      out.push(...letters);
+    }
+    if (sp) out.push(...makeImported(sp, rp, "receivable", seen));
+    if (su) out.push(...makeImported(su, ru, "payable", seen));
     return out;
   }
   async function importFile(file) {
@@ -1949,15 +2470,21 @@
       letters.forEach((l) => m.set(l.code, l));
       state.letters = [...m.values()];
       state.lastBatchId = batchId;
+      const mixed = new Set(letters.map((l) => l.type)).size > 1;
+      state.listBatch = mixed ? batchId : null;
+      if (mixed) {
+        state.selected.clear();
+        state.search = "";
+        $("search").value = "";
+      }
       letters.forEach((l) => state.selected.add(l.code));
       saveState();
       renderList();
       res.className = "import-result show ok";
       res.innerHTML = `Berhasil mengimpor <b>${letters.length} surat</b> dan <b>${letters.reduce((n, l) => n + (l.details?.length || 0), 0)} rincian</b> sebagai satu batch. Isi data umum pada Input Surat lalu klik <b>Terapkan data umum ke kelompok impor</b>.`;
-      setTimeout(() => {
-        editLetter(letters[0].code);
-        toast(letters.length + " surat berhasil diimpor sebagai satu batch.");
-      }, 450);
+      if (mixed) switchView("list");
+      else editLetter(letters[0].code);
+      toast(letters.length + " surat berhasil diimpor sebagai satu batch.");
     } catch (e) {
       console.error(e);
       res.className = "import-result show err";
@@ -1974,6 +2501,10 @@
     setVal("sReplyMethod", state.settings.replyMethod);
   }
   function bind() {
+    $("allBatches").onclick = () => {
+      state.listBatch = null;
+      renderList();
+    };
     window.addEventListener("ripidit-qr-ready", () => {
       renderQrSetupPreview();
       renderPreview();
@@ -1983,10 +2514,22 @@
       .querySelectorAll(".main-nav button")
       .forEach((b) => (b.onclick = () => switchView(b.dataset.view)));
     $("newLetterTop").onclick = newLetter;
+    $("addAccount").onclick = () => addAccount();
     $("goImport").onclick = () => switchView("import");
     $("printCurrent").onclick = printCurrent;
     $("openPrintFromPreview").onclick = printCurrent;
     $("testQrLink").onclick = openQrLink;
+    $("generateQr").onclick = () => {
+      const letter = { ...getForm(), qrEnabled: true };
+      renderQrSetupPreview(letter);
+      if (!$("qrSetupPreview").querySelector("svg")) {
+        $("fQrFormUrl").focus();
+        return;
+      }
+      $("fQrEnabled").checked = true;
+      renderPreview();
+      $("qrSetupPreview").scrollIntoView({block:"nearest"});
+    };
     document
       .querySelectorAll(".type-card")
       .forEach((b) => (b.onclick = () => setType(b.dataset.type, true)));

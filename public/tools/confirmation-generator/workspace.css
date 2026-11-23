@@ -1288,3 +1288,47 @@ button {
     flex-wrap: wrap;
   }
 }
+.bank-only {
+  display: none !important;
+}
+.bank-mode .bank-only {
+  display: block !important;
+}
+.bank-mode .form-section:has(#fAmount),
+.bank-mode .form-section:has(#details),
+.bank-mode .field:has(#fPhone),
+.bank-mode .field:has(#fEmail) {
+  display: none;
+}
+.account-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 0.65fr auto;
+  gap: 6px;
+  margin-block: 8px;
+}
+.account-row input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.bank-paper {
+  display: block;
+  width: 210mm;
+  height: 297mm;
+  background: white;
+}
+@page bank-form {
+  size: A4 portrait;
+  margin: 0;
+}
+@media print {
+  .bank-paper {
+    page: bank-form;
+    break-after: page;
+  }
+  .bank-paper:last-child {
+    break-after: auto;
+  }
+}
