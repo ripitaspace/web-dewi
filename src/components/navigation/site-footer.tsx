@@ -4,6 +4,7 @@ import { SurpriseLink } from "./footer-interactions";
 import styles from "./site-footer.module.css";
 
 type SocialPlatform = "linkedin" | "instagram" | "threads" | "facebook" | "tiktok" | "youtube" | "x";
+type TechnologyPlatform = (typeof FOOTER_CONTENT.technologies)[number]["platform"];
 
 function SocialIcon({ platform }: { platform: SocialPlatform }) {
   switch (platform) {
@@ -22,6 +23,20 @@ function SocialIcon({ platform }: { platform: SocialPlatform }) {
     case "x":
       return <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3.5h2.8l-6.1 7 7.2 10h-5.6l-4.4-6-5.2 6H4.8l6.5-7.4-6.9-9.6H10l4 5.6 4.9-5.6Zm-1 15.2h1.5L9.2 5.2H7.6l10.3 13.5Z" /></svg>;
   }
+}
+
+const TECHNOLOGY_LOGOS: Record<TechnologyPlatform, string> = {
+  nextjs: "https://cdn.simpleicons.org/nextdotjs/781B34",
+  react: "https://cdn.simpleicons.org/react/781B34",
+  typescript: "https://cdn.simpleicons.org/typescript/781B34",
+  prisma: "https://cdn.simpleicons.org/prisma/781B34",
+  notion: "https://cdn.simpleicons.org/notion/781B34",
+  "google-calendar": "https://cdn.simpleicons.org/googlecalendar/781B34",
+};
+
+function TechnologyLogo({ platform, label }: { platform: TechnologyPlatform; label: string }) {
+  // eslint-disable-next-line @next/next/no-img-element -- lightweight SVG brand marks do not benefit from image optimization.
+  return <img src={TECHNOLOGY_LOGOS[platform]} alt="" aria-hidden="true" width="40" height="40" data-technology={label} />;
 }
 
 export function SiteFooter() {
@@ -77,6 +92,17 @@ export function SiteFooter() {
                 {FOOTER_CONTENT.contact.label} <span aria-hidden="true">↗</span>
               </a>
             </div>
+            <section className={styles.technology} aria-labelledby="footer-technology-title">
+              <h3 id="footer-technology-title">Yang bekerja di balik layar</h3>
+              <ul className={styles.technologyList}>
+                {FOOTER_CONTENT.technologies.map((technology) => (
+                  <li key={technology.platform} className={styles.technologyItem}>
+                    <span className={styles.technologyIcon}><TechnologyLogo platform={technology.platform} label={technology.label} /></span>
+                    <span>{technology.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
 

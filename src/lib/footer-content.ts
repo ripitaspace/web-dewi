@@ -11,6 +11,14 @@ export const FOOTER_CONTENT = {
     { platform: "youtube", label: "YouTube", href: "https://www.youtube.com/@PuspitaDewiRahmawati" },
     { platform: "x", label: "X", href: "https://x.com/pustara_27?s=11" },
   ],
+  technologies: [
+    { platform: "nextjs", label: "Next.js" },
+    { platform: "react", label: "React" },
+    { platform: "typescript", label: "TypeScript" },
+    { platform: "prisma", label: "Prisma" },
+    { platform: "notion", label: "Notion" },
+    { platform: "google-calendar", label: "Google Calendar" },
+  ],
   navigation: [
     { title: "Jelajahi", links: [
       { label: "Pemikiran", href: "/pemikiran" },
