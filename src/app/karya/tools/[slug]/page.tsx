@@ -48,6 +48,10 @@ export default async function MiniToolPage({ params }: MiniToolPageProps) {
 
   if (!tool) notFound();
 
+  if (tool.protected) {
+    return <iframe title="Dashboard investigasi pajak PDU 2023" src="/tools/pdu/index.html" style={{ display: "block", width: "100%", height: "100dvh", border: 0 }} />;
+  }
+
   return (
     <>
       <SiteHeader currentKey="karya" />

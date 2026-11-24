@@ -2,12 +2,13 @@
 
 import { SystemState } from "@/components/system-state/system-state";
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { type BlogPost } from "@/modules/cms/types";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { SiteFooter } from "@/components/navigation/site-footer";
 import { ModalDialog } from "@/components/shared/modal-dialog";
-import { MINI_TOOL_FILTERS, MINI_TOOLS } from "@/lib/mini-tools";
+import { MINI_TOOL_FILTERS, MINI_TOOLS, type MiniTool } from "@/lib/mini-tools";
 
 interface KaryaClientProps {
   posts?: BlogPost[];
@@ -15,8 +16,37 @@ interface KaryaClientProps {
 
 
 export function KaryaClient({ posts = [] }: KaryaClientProps) {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("Semua");
   const [selectedWork, setSelectedWork] = useState<BlogPost | null>(null);
+  const [protectedTool, setProtectedTool] = useState<MiniTool | null>(null);
+  const [accessCode, setAccessCode] = useState("");
+  const [accessError, setAccessError] = useState("");
+  const [showAccessCode, setShowAccessCode] = useState(false);
+
+  const openProtectedTool = (tool: MiniTool) => {
+    setProtectedTool(tool);
+    setAccessCode("");
+    setAccessError("");
+    setShowAccessCode(false);
+  };
+
+  const closeProtectedTool = () => {
+    setProtectedTool(null);
+    setAccessCode("");
+    setAccessError("");
+    setShowAccessCode(false);
+  };
+
+  const unlockProtectedTool = () => {
+    if (!protectedTool) return;
+    if (accessCode === "Nananinu") {
+      router.push(protectedTool.href);
+      closeProtectedTool();
+      return;
+    }
+    setAccessError("Sandi belum sesuai. Coba lagi.");
+  };
 
   const categories = useMemo(() => {
     const cats = new Set<string>(MINI_TOOL_FILTERS.map((filter) => filter.value));
@@ -110,11 +140,15 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
                           </div>
                           <span className={`mini-tool-status mini-tool-status--${tool.status}`}>
                             <span aria-hidden="true">{tool.status === "available" ? "●" : "◌"}</span>
-                            {tool.status === "available" ? "Available" : "Under Maintenance"}
+                            {tool.protected ? "Akses terbatas" : tool.status === "available" ? "Available" : "Under Maintenance"}
                           </span>
                         </>;
 
-                        return (
+                        return tool.protected ? (
+                          <button key={tool.number} className={`mini-tool-card mini-tool-card--${tool.status} mini-tool-card--protected card card-hover`} aria-label={`Buka ${tool.title}`} onClick={() => openProtectedTool(tool)} type="button">
+                            {content}
+                          </button>
+                        ) : (
                           <Link key={tool.number} href={tool.href} className={`mini-tool-card mini-tool-card--${tool.status} card card-hover`} aria-label={`Buka ${tool.title}`}>
                             {content}
                           </Link>
@@ -215,6 +249,37 @@ export function KaryaClient({ posts = [] }: KaryaClientProps) {
             </div>
           </div>
         )}
+      </ModalDialog>
+
+      <ModalDialog
+        isOpen={!!protectedTool}
+        onClose={closeProtectedTool}
+        kicker="Akses terbatas"
+        title={protectedTool?.title || ""}
+      >
+        <form onSubmit={(event) => { event.preventDefault(); unlockProtectedTool(); }}>
+          <p className="lead">Masukkan sandi rahasia untuk membuka halaman ini.</p>
+          <label className="tool-access-label" htmlFor="tool-access-code">Sandi rahasia</label>
+          <div className="tool-access-field">
+            <input
+              id="tool-access-code"
+              className="tool-access-input"
+              type={showAccessCode ? "text" : "password"}
+              value={accessCode}
+              onChange={(event) => { setAccessCode(event.target.value); setAccessError(""); }}
+              autoComplete="off"
+              autoFocus
+              aria-describedby={accessError ? "tool-access-error" : undefined}
+            />
+            <button className="tool-access-toggle" type="button" onClick={() => setShowAccessCode((visible) => !visible)} aria-label={showAccessCode ? "Sembunyikan sandi" : "Tampilkan sandi"} title={showAccessCode ? "Sembunyikan sandi" : "Tampilkan sandi"}>
+              <span aria-hidden="true">{showAccessCode ? "🙈" : "👁️"}</span>
+            </button>
+          </div>
+          {accessError ? <p className="tool-access-error" id="tool-access-error" role="alert">{accessError}</p> : null}
+          <div className="button-row" style={{ marginTop: "24px" }}>
+            <button className="btn btn-primary" type="submit">Buka halaman</button>
+          </div>
+        </form>
       </ModalDialog>
 
       <SiteFooter />

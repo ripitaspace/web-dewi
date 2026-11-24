@@ -2,13 +2,14 @@ export type MiniToolStatus = "available" | "maintenance";
 
 export interface MiniTool {
   number: string;
-  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials" | "Document Essentials" | "Kalkulator";
+  category: "Business Essentials" | "Finance Essentials" | "Tax Essentials" | "Audit Essentials" | "Document Essentials" | "Kalkulator" | "KerjaKerjaKerja";
   title: string;
   description: string;
   icon: string;
   iconSrc?: string;
   status: MiniToolStatus;
   href: string;
+  protected?: boolean;
 }
 
 export const MINI_TOOL_FILTERS = [
@@ -18,6 +19,7 @@ export const MINI_TOOL_FILTERS = [
   { value: "Tax Essentials", label: "Tax" },
   { value: "Audit Essentials", label: "Audit" },
   { value: "Document Essentials", label: "Document" },
+  { value: "KerjaKerjaKerja", label: "KerjaKerjaKerja" },
 ] as const;
 
 export const MINI_TOOLS: MiniTool[] = [
@@ -39,6 +41,7 @@ export const MINI_TOOLS: MiniTool[] = [
   { number: "20", category: "Tax Essentials", title: "Cetak BUPOT", description: "Buat dokumen BUPOT dari ekspor Excel Coretax dengan cap RIPITA yang jelas.", icon: "▧", iconSrc: "/images/artworks/tool-cetak-bupot.png", status: "available", href: "/karya/tools/cetak-bupot" },
   { number: "14", category: "Tax Essentials", title: "Payroll & PPh 21 Studio", description: "Kelola penerima dan penghasilan, telusuri PPh 21/26, lalu siapkan slip pembayaran dan XML Coretax. Data diproses di perangkatmu.", icon: "₨", iconSrc: "/images/artworks/tool-pph21-calculator.png", status: "available", href: "/karya/tools/pph-21-calculator" },
   { number: "24", category: "Tax Essentials", title: "SPT Orang Pribadi", description: "SPT OP Studio: kelola formulir, lampiran, draft lokal, impor data, dan cetak persiapan SPT.", icon: "✓", iconSrc: "/images/artworks/tool-spt-orang-pribadi.png", status: "available", href: "/karya/tools/spt-op" },
+  { number: "26", category: "KerjaKerjaKerja", title: "SP2DK PDU K00002", description: "Dashboard investigasi pajak PDU 2023.", icon: "✉", iconSrc: "/images/artworks/tool-pdu-peternakan.png", status: "maintenance", href: "/karya/tools/sp2dk-pdu-k00002", protected: true },
   { number: "11", category: "Audit Essentials", title: "Confirmation Generator", description: "Buat surat konfirmasi audit bank, utang, dan piutang, satuan atau massal dari Excel.", icon: "✓", iconSrc: "/images/artworks/tool-confirmation.png", status: "available", href: "/karya/tools/confirmation-generator" },
   { number: "12", category: "Audit Essentials", title: "Sampling Picker", description: "Memilih sampel audit dari data Excel atau CSV.", icon: "⊙", iconSrc: "/images/artworks/tool-sampling-picker.png", status: "maintenance", href: "/karya/tools/sampling-picker" },
   { number: "15", category: "Document Essentials", title: "Compress Data", description: "Mengecilkan ukuran file data agar lebih ringkas untuk disimpan atau dibagikan.", icon: "⇣", iconSrc: "/images/artworks/tool-compress-data.png", status: "maintenance", href: "/karya/tools/compress-data" },

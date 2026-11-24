@@ -2390,6 +2390,7 @@ body.modal-open {
 .payroll-hero .display-lg { font-size: clamp(2rem, 4vw, 3.6rem); }
 .payroll-hero .lead { max-width: 800px; font-size: .95rem; }
 body:has(.payroll-hero) .visitor-stamp { display: none; }
+body:has(iframe[src="/tools/pdu/index.html"]) .visitor-stamp { display: none; }
 .section-tight.payroll-workspace { padding-block: 28px 56px; }
 .container {
   width: min(calc(100% - 40px), var(--content));
@@ -3398,6 +3399,7 @@ code.notion-inline-code {
 .mini-tool-card { display: grid; grid-template-columns: 44px 64px minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 24px 28px; }
 .mini-tool-card--available { text-decoration: none; }
 .mini-tool-card--maintenance { background: rgba(216, 195, 157, .18); color: inherit; text-decoration: none; }
+.mini-tool-card--protected { width: 100%; border: 0; text-align: left; font: inherit; }
 .mini-tool-index { color: rgba(30, 27, 24, .52); font-size: .76rem; font-weight: 900; letter-spacing: .1em; }
 .mini-tool-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; color: var(--gading); background: var(--delima); font: 2rem/1 var(--display); }
 .mini-tool-icon img { width: 88%; height: 88%; object-fit: contain; }
@@ -3412,6 +3414,14 @@ code.notion-inline-code {
 .mini-tool-status--maintenance { color: #795b43; background: rgba(121, 91, 67, .08); }
 .mini-tool-card--available:focus-visible { outline: 3px solid var(--rempah); outline-offset: 4px; }
 .mini-tool-card--maintenance:focus-visible { outline: 3px solid var(--rempah); outline-offset: 4px; }
+.tool-access-label { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 800; }
+.tool-access-field { position: relative; }
+.tool-access-input { width: 100%; min-height: 46px; border: 1px solid var(--line-strong); border-radius: 10px; padding: 10px 52px 10px 12px; background: var(--gading); color: var(--arang); font: inherit; }
+.tool-access-input:focus-visible { outline: 3px solid var(--rempah); outline-offset: 3px; }
+.tool-access-toggle { position: absolute; top: 4px; right: 4px; bottom: 4px; width: 40px; border: 0; border-radius: 7px; background: transparent; font-size: 1.1rem; }
+.tool-access-toggle:hover { background: rgba(30, 27, 24, .08); }
+.tool-access-toggle:focus-visible { outline: 3px solid var(--rempah); outline-offset: 2px; }
+.tool-access-error { margin: 8px 0 0; color: var(--delima); font-weight: 700; }
 .tool-placeholder { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 28px; align-items: start; max-width: 860px; margin: 0 auto; padding: clamp(28px, 5vw, 56px); }
 .tool-placeholder__icon { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; background: var(--delima); color: var(--gading); font: 2.5rem/1 var(--display); }
 .tool-placeholder h2 { margin: 12px 0; font-size: clamp(1.8rem, 4vw, 3rem); }
